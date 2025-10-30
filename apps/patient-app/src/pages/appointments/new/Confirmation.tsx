@@ -62,16 +62,25 @@ export default function Confirmation({ appointmentType = 'standard' }: Confirmat
     >
       <PageContainer hasBottomButton style={{ background: '#FAFAFA' }}>
         {/* Progress Steps */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 0 0.625rem 0' }}>
           <ProgressSteps
             currentStep={appointmentType === 'quick' ? 3 : 4}
             totalSteps={appointmentType === 'quick' ? 3 : 4}
-            labels={appointmentType === 'quick' ? [t('appointment.symptoms'), t('appointment.questionnaire'), t('appointment.confirmation')] : [t('appointment.date'), t('appointment.symptoms'), t('appointment.questionnaire'), t('appointment.confirmation')]}
+            labels={appointmentType === 'quick' ? [
+              t('appointment.progressSteps.symptoms'),
+              t('appointment.progressSteps.questionnaire'),
+              t('appointment.progressSteps.confirmation')
+            ] : [
+              t('appointment.progressSteps.date'),
+              t('appointment.progressSteps.symptoms'),
+              t('appointment.progressSteps.questionnaire'),
+              t('appointment.progressSteps.confirmation')
+            ]}
           />
         </PageSection>
 
         {/* Check Icon and Message */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <div className="flex flex-col items-center gap-[1.875rem] pt-10 pb-5">
             <img
               src="/assets/icons/check-large.svg"

@@ -92,6 +92,7 @@
     "paymentStatusPendingBilling": "รอการเรียกเก็บเงิน",
     "paymentStatusPendingPayment": "รอการชำระเงิน",
     "paymentStatusComplete": "ชำระเงินแล้ว",
+    "symptomsInput": "เข้าอาการ",
     "symptoms": "อาการ",
     "enterSymptoms": "กรุณากรอกอาการ",
     "symptomsTitle": "กรุณากรอกอาการและ\nแนบรูปภาพหากจำเป็น",

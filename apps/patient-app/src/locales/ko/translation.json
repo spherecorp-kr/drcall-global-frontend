@@ -100,6 +100,7 @@
     "paymentStatusPendingBilling": "청구 예정",
     "paymentStatusPendingPayment": "결제 대기",
     "paymentStatusComplete": "결제 완료",
+    "symptomsInput": "증상 입력",
     "symptoms": "증상",
     "enterSymptoms": "증상을 입력해주세요",
     "symptomsTitle": "진료를 위해 증상을 입력하고,\n필요 시 이미지를 첨부해 주세요.",

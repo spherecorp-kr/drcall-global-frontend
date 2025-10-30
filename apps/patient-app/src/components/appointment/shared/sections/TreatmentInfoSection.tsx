@@ -6,6 +6,8 @@ import DoctorAdviceSection from '@appointment/completed/sections/treatment/Docto
 import AiSummarySection from '@appointment/completed/sections/treatment/AiSummarySection';
 
 interface TreatmentInfoSectionProps {
+  background?: 'white' | 'gray';
+
   symptoms: string;
   symptomImages?: string[];
   onSymptomsChange?: (value: string) => void;
@@ -45,7 +47,8 @@ export default function TreatmentInfoSection({
   doctorAdvice,
   prescriptionStatus,
   paymentStatus,
-  onViewPrescription
+  onViewPrescription,
+  background = 'white'
 }: TreatmentInfoSectionProps) {
   const { t } = useTranslation();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -60,7 +63,7 @@ export default function TreatmentInfoSection({
   }, [symptoms, readOnly]);
 
   return (
-    <div style={{ background: '#FFFFFF', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div style={{ background: background === 'white' ? '#FFFFFF' : '#FAFAFA', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       {/* 제목 */}
       <h2 style={{ color: '#1F1F1F', fontSize: '1.125rem', fontWeight: '600', margin: 0 }}>
         {t('appointment.treatmentInfo')}
