@@ -1,0 +1,156 @@
+name: Deploy Frontend to S3 + CloudFront
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+    tags:
+      - 'v*'
+      - 'v*-stg'
+
+env:
+  AWS_REGION: ap-northeast-2  # DEV는 서울, STG/PROD는 방콕
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    strategy:
+      matrix:
+        app:
+          - patient-app
+          - hospital-app
+          - admin-app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine environment
+        id: env
+        run: |
+          if [[ $GITHUB_REF == refs/tags/*-stg ]]; then
+            echo "environment=stg" >> $GITHUB_OUTPUT
+            echo "region=ap-southeast-1" >> $GITHUB_OUTPUT
+          elif [[ $GITHUB_REF == refs/tags/v* ]]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+            echo "region=ap-southeast-1" >> $GITHUB_OUTPUT
+          elif [[ $GITHUB_REF == refs/heads/main ]]; then
+            echo "environment=dev" >> $GITHUB_OUTPUT
+            echo "region=ap-northeast-2" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/${{ matrix.app }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/${{ matrix.app }}
+        run: npm ci
+
+      - name: Build
+        working-directory: frontend/${{ matrix.app }}
+        run: npm run build
+        env:
+          VITE_ENV: ${{ steps.env.outputs.environment }}
+          VITE_API_URL: ${{ steps.env.outputs.environment == 'dev' && 'http://localhost:8080' || format('https://api-{0}.drcall.global', steps.env.outputs.environment) }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ steps.env.outputs.region }}
+
+      - name: Deploy to S3
+        working-directory: frontend/${{ matrix.app }}
+        run: |
+          BUCKET_NAME="${{ steps.env.outputs.environment }}-${{ matrix.app }}-frontend"
+          aws s3 sync dist/ s3://${BUCKET_NAME}/ --delete --cache-control "public,max-age=31536000,immutable"
+          # index.html은 캐시 안 함
+          aws s3 cp dist/index.html s3://${BUCKET_NAME}/index.html --cache-control "no-cache"
+
+      - name: Get CloudFront Distribution ID
+        id: cloudfront
+        run: |
+          BUCKET_NAME="${{ steps.env.outputs.environment }}-${{ matrix.app }}-frontend"
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?Origins.Items[?DomainName=='${BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com']].Id | [0]" \
+            --output text \
+            --region ${{ steps.env.outputs.region }})
+          echo "distribution_id=${DISTRIBUTION_ID}" >> $GITHUB_OUTPUT
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
+            --paths "/*" \
+            --region ${{ steps.env.outputs.region }}
+
+      - name: Get CloudFront URL
+        id: url
+        run: |
+          DOMAIN=$(aws cloudfront get-distribution \
+            --id ${{ steps.cloudfront.outputs.distribution_id }} \
+            --query "Distribution.DomainName" \
+            --output text \
+            --region ${{ steps.env.outputs.region }})
+          echo "url=https://${DOMAIN}" >> $GITHUB_OUTPUT
+
+      - name: Output deployment info
+        run: |
+          echo "### 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**App**: ${{ matrix.app }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment**: ${{ steps.env.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**URL**: ${{ steps.url.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+
+  notify-success:
+    needs: deploy-frontend
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Notify Slack
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST $SLACK_WEBHOOK_URL -H 'Content-Type: application/json' -d '{
+            "text": "✅ Frontend deployed successfully!",
+            "attachments": [{
+              "color": "good",
+              "fields": [
+                {"title": "Ref", "value": "${{ github.ref }}", "short": true},
+                {"title": "Commit", "value": "${{ github.sha }}", "short": true}
+              ]
+            }]
+          }'
+
+  notify-failure:
+    needs: deploy-frontend
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Notify Slack
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST $SLACK_WEBHOOK_URL -H 'Content-Type: application/json' -d '{
+            "text": "❌ Frontend deployment failed!",
+            "attachments": [{
+              "color": "danger",
+              "fields": [
+                {"title": "Ref", "value": "${{ github.ref }}", "short": true},
+                {"title": "Commit", "value": "${{ github.sha }}", "short": true}
+              ]
+            }]
+          }'
