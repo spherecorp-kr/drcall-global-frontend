@@ -1,7 +1,11 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
 import { useMemo } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
-import type { AppointmentType, WaitingTableColumnProps } from '@/shared/types/appointment';
+import type {
+	AppointmentType,
+	PatientLevel,
+	WaitingTableColumnProps,
+} from '@/shared/types/appointment';
 import { cn } from '@/shared/utils/cn';
 import { levelBadgeMap } from '@/shared/utils/constants';
 import { PatientBadge } from '@/shared/components/ui/Badge';
@@ -70,6 +74,17 @@ const sampleData: WaitingTableColumnProps[] = [
 
 const cellSpanClass: string = 'font-normal leading-normal text-base text-text-100';
 
+const ColGroup = () => (
+	<colgroup>
+		<col width="10%" />
+		<col width="13%" />
+		<col width="19%" />
+		<col width="7%" />
+		<col width="38%" />
+		<col width="13%" />
+	</colgroup>
+);
+
 const WaitingTable = () => {
 	const columns = useMemo<ColumnDef<WaitingTableColumnProps>[]>(() => [
 		{
@@ -93,19 +108,18 @@ const WaitingTable = () => {
 		},
 		{
 			accessorKey: 'patientName',
-			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
 			enableSorting: false,
 			header: '환자명',
-			minSize: 100,
 		},
 		{
 			accessorKey: 'patientLevel',
 			cell: ({ getValue }) => {
-				const level = getValue<'VIP' | 'Risk' | undefined>();
-				if (!level) return null;
-				const badgeConfig = levelBadgeMap[level];
+				const value = getValue<PatientLevel | undefined>();
+				if (!value) return null;
+				const { label, level } = levelBadgeMap[value];
 				return (
-					<PatientBadge level={badgeConfig.level}>{badgeConfig.label}</PatientBadge>
+					<PatientBadge level={level}>{label}</PatientBadge>
 				);
 			},
 			enableSorting: false,
@@ -114,10 +128,9 @@ const WaitingTable = () => {
 		},
 		{
 			accessorKey: 'symptom',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
 			enableSorting: false,
 			header: '증상',
-			minSize: 100,
 		},
 		{
 			accessorKey: 'appointmentRequestTime',
@@ -132,8 +145,10 @@ const WaitingTable = () => {
 		<div className="bg-white border border-[#e0e0e0] flex flex-col gap-2.5 h-full rounded-[0.625rem]">
 			<Table
 				className="flex-1 h-auto"
+				colgroup={<ColGroup />}
 				columns={columns}
 				data={sampleData}
+				disableHorizontalScroll
 				emptyState={<EmptyState message="예약 대기 목록이 없습니다." />}
 				enableSelection
 				getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
