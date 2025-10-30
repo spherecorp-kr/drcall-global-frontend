@@ -1,0 +1,67 @@
+import { type ReactNode } from 'react';
+import { cn } from '@/shared/utils/cn';
+import { NumberBadge } from '@/shared/components/ui/Badge';
+import { useTranslation } from 'react-i18next';
+
+interface SideNavigationItemProps {
+	active?: boolean;
+	badges?: Array<number | 'dot'>;
+	icon: ReactNode;
+	isExpanded: boolean;
+	id: string;
+	onClick?: () => void;
+}
+
+export function SideNavigationItem({
+	active = false,
+	badges,
+	icon,
+	isExpanded,
+	id,
+	onClick,
+}: SideNavigationItemProps) {
+	const { t } = useTranslation();
+	return (
+		<button
+			onClick={onClick}
+			className={cn(
+				'h-[42px] rounded-[10px] relative overflow-visible',
+				'transition-[width,background-color] duration-500 ease-in-out',
+				isExpanded ? 'w-60' : 'w-[42px]',
+				active ? 'bg-primary-70' : 'bg-bg-white hover:bg-bg-disabled',
+			)}
+		>
+			<div className="absolute inset-0 py-[9px] px-[9px] flex items-center justify-between overflow-hidden">
+				<div className="flex items-center gap-2 flex-shrink-0">
+					<div className={cn('w-6 h-6', active && 'brightness-0 invert')}>{icon}</div>
+					<div
+						className={cn(
+							'text-16 font-medium font-pretendard whitespace-nowrap',
+							'transition-opacity duration-500 ease-in-out',
+							isExpanded ? 'opacity-100' : 'opacity-0',
+							active ? 'text-text-0' : 'text-text-100',
+						)}
+					>
+						{t(`menu.${id}`)}
+					</div>
+				</div>
+				{badges && badges.length > 0 && (
+					<div
+						className={cn(
+							'flex items-center gap-2 flex-shrink-0 transition-opacity duration-500 ease-in-out',
+							isExpanded ? 'opacity-100' : 'opacity-0',
+						)}
+					>
+						{badges.map((badge, badgeIndex) => (
+							<NumberBadge key={badgeIndex} count={badge} color="red" />
+						))}
+					</div>
+				)}
+			</div>
+			{/* Dot badge outside the overflow-hidden container */}
+			{badges && badges.length > 0 && !isExpanded && (
+				<NumberBadge count="dot" color="red" className="absolute -top-1 -right-1 z-[100]" />
+			)}
+		</button>
+	);
+}

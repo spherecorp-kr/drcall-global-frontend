@@ -1,0 +1,105 @@
+{
+	"language": {
+		"en": "English",
+		"ko": "한국어",
+		"th": "ไทย"
+	},
+	"role": {
+		"coordinator": "Coordinator",
+		"doctor": "Doctor",
+		"patient": "Patient"
+	},
+	"menu": {
+		"appointment": "Appointment",
+		"consultation": "Doctor's office",
+		"dashboard": "Dashboard",
+		"doctor": "Doctor management",
+		"hospital": "Hospital management",
+		"myinfo": "My Info management",
+		"patient": "Patient management",
+		"payment": "Payment management"
+	},
+	"dashboard": {
+		"section": {
+			"summary": {
+				"title": "Status summary",
+				"card": {
+					"todayCount": {
+						"description": "Yesterday's appointments: 22",
+						"label": "Today's appointments",
+						"tooltip": "Total number of appointments received today. You can check the increase or decrease compared to yesterday's appointment count.",
+						"value": "{{value}}"
+					},
+					"todaySales": {
+						"description": "Yesterday's total sales: 48,000 THB",
+						"label": "Today's total sales",
+						"tooltip": "Total sales amount generated today. Shows increase/decrease trend compared to yesterday's sales.",
+						"value": "{{value}} THB"
+					},
+					"monthlyCount": {
+						"description": "July appointments: 220",
+						"label": "This month's appointments",
+						"tooltip": "Cumulative number of appointments this month. You can check monthly changes compared to last month's appointment count.",
+						"value": "{{value}}"
+					},
+					"monthlyNewPatient": {
+						"description": "July new patients: 1,000",
+						"label": "This month's new patients",
+						"tooltip": "Number of new patients who visited for the first time this month. Shows increase/decrease compared to last month's new patient count.",
+						"value": "{{value}}"
+					}
+				}
+			},
+			"chart": {
+				"title": "Patient statistics",
+				"viewOption": {
+					"weekly": "Weekly",
+					"monthly": "Monthly"
+				},
+				"legend": {
+					"new": "New",
+					"fu": "Follow-up visit"
+				}
+			},
+			"appointments": {
+				"title": "Treatment scheduled for today"
+			},
+			"doctors": {
+				"title": "Doctor list"
+			}
+		}
+	},
+	"chat": {
+		"title": "Chat",
+		"chatList": "Chat List",
+		"chatRoom": "Chat Room",
+		"search": "Enter patient/doctor name",
+		"enterMessage": "Type a message",
+		"sending": "Sending...",
+		"noMessages": "No messages",
+		"noSearchResults": "No search results",
+		"noChatRooms": "No chat rooms",
+		"noChats": "No chats available",
+		"newMessage": "New Message",
+		"spamWarning": "You are sending messages too quickly",
+		"waitPlease": "Please wait...",
+		"today": "Today",
+		"yesterday": "Yesterday",
+		"closed": "Closed",
+		"closedMessage": "This conversation has been closed.",
+		"closedPlaceholder": "This conversation is closed",
+		"unknownUser": "Unknown User",
+		"willReopenOnSend": "Sending a message will reopen the conversation.",
+		"reopening": "Reopening conversation...",
+		"endSession": "End Session",
+		"systemMessage": {
+			"channelCreated": "Chat room has been created.",
+			"channelClosed": "Chat room has been closed.",
+			"channelReopened": "Chat room has been reopened."
+		},
+		"filter": {
+			"userType": "User Type",
+			"reset": "Reset Filters"
+		}
+	}
+}
