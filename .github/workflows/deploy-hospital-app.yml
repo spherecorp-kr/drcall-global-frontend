@@ -24,6 +24,9 @@ env:
   PNPM_VERSION: '9.0.0'
   NODE_VERSION: '20'
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Build and Deploy

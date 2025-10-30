@@ -16,7 +16,10 @@
     "lint:hospital": "pnpm --filter hospital-app lint",
     "lint:patient": "pnpm --filter patient-app lint",
     "lint:all": "pnpm -r lint",
-    "clean": "pnpm -r clean && rm -rf node_modules"
+    "clean": "pnpm -r clean && rm -rf node_modules",
+    "release:patch": "./scripts/release.sh patch",
+    "release:minor": "./scripts/release.sh minor",
+    "release:major": "./scripts/release.sh major"
   },
   "devDependencies": {
     "typescript": "~5.9.3"

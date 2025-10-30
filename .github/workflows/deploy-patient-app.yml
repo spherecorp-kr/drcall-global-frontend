@@ -24,6 +24,10 @@ env:
   PNPM_VERSION: '9.0.0'
   NODE_VERSION: '20'
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   deploy:
     name: Build and Deploy
@@ -32,6 +36,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 전체 히스토리 가져오기 (태그 포함)
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -48,18 +54,104 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Determine environment
+      - name: Determine environment and version type
         id: env
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+            echo "VERSION_TYPE=patch" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "DEPLOY_ENV=prod" >> $GITHUB_ENV
+            echo "VERSION_TYPE=minor" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
             echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+            echo "VERSION_TYPE=patch" >> $GITHUB_ENV
           else
             echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+            echo "VERSION_TYPE=patch" >> $GITHUB_ENV
           fi
+
+      - name: Bump version and create tag
+        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]')
+        id: version
+        run: |
+          # Git 설정
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # 현재 버전 가져오기
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: $CURRENT_VERSION"
+
+          # 버전 증가
+          npm version ${{ env.VERSION_TYPE }} --no-git-tag-version
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          echo "New version: $NEW_VERSION"
+
+          # 환경에 따라 태그 형식 결정
+          if [ "${{ env.DEPLOY_ENV }}" == "prod" ]; then
+            TAG="v${NEW_VERSION}"
+          else
+            TAG="v${NEW_VERSION}-${{ env.DEPLOY_ENV }}"
+          fi
+
+          echo "TAG=${TAG}" >> $GITHUB_ENV
+          echo "NEW_VERSION=${NEW_VERSION}" >> $GITHUB_ENV
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+
+          # package.json 변경사항 커밋
+          git add package.json
+          git commit -m "chore: bump version to ${NEW_VERSION} [skip ci]"
+
+          # 태그 생성
+          git tag -a "${TAG}" -m "Release ${TAG}"
+
+          # 푸시
+          git push origin HEAD:${{ github.ref_name }}
+          git push origin "${TAG}"
+
+      - name: Generate release notes
+        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]')
+        id: release_notes
+        run: |
+          # 마지막 태그 가져오기
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+
+          # 릴리즈 노트 생성
+          if [ -z "$LAST_TAG" ]; then
+            COMMITS=$(git log --oneline --pretty=format:"- %s (%h)" HEAD)
+          else
+            COMMITS=$(git log --oneline --pretty=format:"- %s (%h)" ${LAST_TAG}..HEAD)
+          fi
+
+          # 멀티라인 출력을 위한 EOF 사용
+          {
+            echo "RELEASE_NOTES<<EOF"
+            echo "## What's Changed"
+            echo ""
+            echo "$COMMITS"
+            echo ""
+            echo "## Deployment"
+            echo ""
+            echo "- **Environment**: ${{ env.DEPLOY_ENV }}"
+            echo "- **Patient App**: https://patient.${{ env.DEPLOY_ENV }}.drcall.global"
+            echo "- **Hospital App**: https://hospital.${{ env.DEPLOY_ENV }}.drcall.global"
+            echo ""
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${LAST_TAG}...${{ env.TAG }}"
+            echo "EOF"
+          } >> $GITHUB_ENV
+
+      - name: Create GitHub Release
+        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG }}
+          release_name: Release ${{ env.TAG }}
+          body: ${{ env.RELEASE_NOTES }}
+          draft: false
+          prerelease: ${{ env.DEPLOY_ENV != 'prod' }}
 
       - name: Build Patient App
         env:
