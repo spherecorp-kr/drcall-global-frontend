@@ -196,9 +196,30 @@ git push origin main
 
 자세한 내용: [docs/VERSIONING.md](docs/VERSIONING.md)
 
+## Commit Convention
+
+이 프로젝트는 **Conventional Commits** 스펙을 따르며, commitlint로 자동 검증합니다.
+
+### 기본 형식
+
+```
+<type>(<scope>): <subject>
+```
+
+### 예시
+
+```bash
+feat: add appointment cancellation feature
+fix: resolve login page crash on mobile
+docs: update deployment guide
+refactor: extract payment logic to service
+```
+
+자세한 내용: [docs/COMMIT_CONVENTION.md](docs/COMMIT_CONVENTION.md)
+
 ## Notes
 
 - Each app maintains its own git history from migration
 - Shared code should only contain truly reusable utilities
 - App-specific code (UI components, business logic) stays in respective apps
-- channel-specific utilities (LINE, Telegram, etc.) remain in patient-app only
+- Channel-specific utilities (LINE, Telegram, etc.) remain in patient-app only
