@@ -6,8 +6,8 @@ on:
       - main
       - develop
     paths:
-      - 'frontend/apps/hospital-app/**'
-      - 'frontend/packages/**'
+      - 'apps/hospital-app/**'
+      - 'packages/**'
       - '.github/workflows/deploy-hospital-app.yml'
   workflow_dispatch:
     inputs:
@@ -43,10 +43,9 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install dependencies
-        working-directory: ./frontend
         run: pnpm install --frozen-lockfile
 
       - name: Determine environment
@@ -63,7 +62,6 @@ jobs:
           fi
 
       - name: Build Hospital App
-        working-directory: ./frontend
         env:
           VITE_API_URL: ${{ secrets[format('HOSPITAL_APP_{0}_API_URL', env.DEPLOY_ENV)] }}
           VITE_ENVIRONMENT: ${{ env.DEPLOY_ENV }}
@@ -83,7 +81,7 @@ jobs:
           echo "CLOUDFRONT_ID=${{ secrets[format('HOSPITAL_APP_{0}_CLOUDFRONT_ID', env.DEPLOY_ENV)] }}" >> $GITHUB_ENV
 
       - name: Deploy to S3
-        working-directory: ./frontend/apps/hospital-app
+        working-directory: ./apps/hospital-app
         run: |
           aws s3 sync dist/ s3://${{ env.S3_BUCKET }}/ \
             --delete \
