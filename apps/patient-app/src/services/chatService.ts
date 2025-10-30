@@ -6,15 +6,19 @@ import { apiClient } from './api';
  * SendBird 기반 1:1 Direct Message 채팅 API
  */
 
-export enum ChannelCustomType {
-  STAFF_INITIATED = 'STAFF_INITIATED',
-  INTERNAL = 'INTERNAL',
-}
+export const ChannelCustomType = {
+  STAFF_INITIATED: 'STAFF_INITIATED',
+  INTERNAL: 'INTERNAL',
+} as const;
 
-export enum ChannelStatus {
-  ACTIVE = 'active',
-  CLOSED = 'closed',
-}
+export type ChannelCustomType = typeof ChannelCustomType[keyof typeof ChannelCustomType];
+
+export const ChannelStatus = {
+  ACTIVE: 'active',
+  CLOSED: 'closed',
+} as const;
+
+export type ChannelStatus = typeof ChannelStatus[keyof typeof ChannelStatus];
 
 export interface ChatMember {
   user_id: string;

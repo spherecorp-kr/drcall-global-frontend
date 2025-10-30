@@ -4,14 +4,16 @@
  * 백엔드에서 전달되는 실시간 채팅 이벤트
  */
 
-export enum ChatEventType {
-  MESSAGE = 'message',           // 새 메시지
-  READ = 'read',                 // 읽음 상태 변경
-  TYPING = 'typing',             // 타이핑 중
-  CHANNEL_UPDATED = 'channel_updated',  // 채널 정보 변경
-  CHANNEL_CLOSED = 'channel_closed',    // 채널 종료
-  CHANNEL_REOPENED = 'channel_reopened' // 채널 재개
-}
+export const ChatEventType = {
+  MESSAGE: 'message',           // 새 메시지
+  READ: 'read',                 // 읽음 상태 변경
+  TYPING: 'typing',             // 타이핑 중
+  CHANNEL_UPDATED: 'channel_updated',  // 채널 정보 변경
+  CHANNEL_CLOSED: 'channel_closed',    // 채널 종료
+  CHANNEL_REOPENED: 'channel_reopened' // 채널 재개
+} as const;
+
+export type ChatEventType = typeof ChatEventType[keyof typeof ChatEventType];
 
 export interface ChatEvent {
   channelUrl: string;
@@ -22,7 +24,7 @@ export interface ChatEvent {
 }
 
 export interface ChatEventMessage extends ChatEvent {
-  type: ChatEventType.MESSAGE;
+  type: 'message';
   data: {
     message_id: number;
     message: string;
@@ -38,7 +40,7 @@ export interface ChatEventMessage extends ChatEvent {
 }
 
 export interface ChatEventRead extends ChatEvent {
-  type: ChatEventType.READ;
+  type: 'read';
   data: {
     user_id: string;
     timestamp: number;
@@ -47,7 +49,7 @@ export interface ChatEventRead extends ChatEvent {
 }
 
 export interface ChatEventTyping extends ChatEvent {
-  type: ChatEventType.TYPING;
+  type: 'typing';
   data: {
     user_id: string;
     is_typing: boolean;

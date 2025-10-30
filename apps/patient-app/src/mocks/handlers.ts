@@ -293,7 +293,7 @@ export const handlers = [
    * 예약 생성
    */
   http.post(`${API_BASE_URL}/api/v1/appointments`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
     console.log('[MSW] 📅 예약 생성:', body);
 
     await new Promise(resolve => setTimeout(resolve, 500));
@@ -310,7 +310,7 @@ export const handlers = [
    * 예약 수정
    */
   http.put(`${API_BASE_URL}/api/v1/appointments/:id`, async ({ params, request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
     console.log('[MSW] 📅 예약 수정:', params.id, body);
 
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -371,7 +371,7 @@ export const handlers = [
    * 건강 기록 생성
    */
   http.post(`${API_BASE_URL}/api/v1/phr`, async ({ request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
     console.log('[MSW] 📊 건강 기록 생성:', body);
 
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -388,7 +388,7 @@ export const handlers = [
    * 건강 기록 수정
    */
   http.put(`${API_BASE_URL}/api/v1/phr/:id`, async ({ params, request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
     console.log('[MSW] 📊 건강 기록 수정:', params.id, body);
 
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -471,7 +471,7 @@ export const handlers = [
    * 채팅 메시지 전송
    */
   http.post(`${API_BASE_URL}/api/v1/chat/channels/:channelUrl/messages`, async ({ params, request }) => {
-    const body = await request.json();
+    const body = (await request.json()) as Record<string, unknown>;
     console.log('[MSW] 💬 채팅 메시지 전송:', params.channelUrl, body);
 
     await new Promise(resolve => setTimeout(resolve, 200));

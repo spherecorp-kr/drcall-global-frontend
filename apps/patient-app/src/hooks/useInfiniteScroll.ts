@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, DependencyList } from 'react';
+import { useState, useEffect, useRef, useCallback, type DependencyList } from 'react';
 
 interface UseInfiniteScrollOptions {
   itemsPerPage?: number;

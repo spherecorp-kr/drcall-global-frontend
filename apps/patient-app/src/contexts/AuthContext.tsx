@@ -79,7 +79,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // - 401: handled by axios interceptor
       // - Network errors: expected when backend is down (dev environment)
       // Only log in development mode
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         const isAxiosError = typeof err === 'object' && err !== null && 'response' in err;
         const status = isAxiosError ? (err as { response?: { status?: number } }).response?.status : undefined;
         const message = err instanceof Error ? err.message : String(err);

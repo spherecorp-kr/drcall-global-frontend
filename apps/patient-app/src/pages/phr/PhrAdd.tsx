@@ -75,7 +75,7 @@ export default function PhrAdd() {
         parsedData.value = parseFloat(data.value || '0');
       }
 
-      await createRecord(typeInfo.type, parsedData);
+      await createRecord(typeInfo.type, parsedData as any);
 
       // Show success toast
       setShowSuccessToast(true);

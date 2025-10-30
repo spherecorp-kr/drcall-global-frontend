@@ -51,7 +51,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
 
   // Fetch channel and messages
   useEffect(() => {
