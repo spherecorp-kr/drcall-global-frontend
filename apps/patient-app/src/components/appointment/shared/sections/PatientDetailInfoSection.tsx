@@ -196,7 +196,7 @@ export default function PatientDetailInfoSection({
                     fontWeight: '400'
                   }}
                 >
-                  {t('appointment.alcohol')}
+                  {t('appointment.alcoholUnit')}
                 </div>
                 <div
                   style={{
@@ -211,7 +211,7 @@ export default function PatientDetailInfoSection({
             )
           ) : (
             <ToggleButtonGroup
-              label={t('appointment.alcohol')}
+              label={t('appointment.alcoholUnit')}
               options={['0', '1~2', '3+'] as const}
               selectedValue={data.alcohol}
               onChange={(value) => handleChange('alcohol', value)}
@@ -239,7 +239,7 @@ export default function PatientDetailInfoSection({
                     fontWeight: '400'
                   }}
                 >
-                  {t('appointment.smoking')}
+                  {t('appointment.smokingUnit')}
                 </div>
                 <div
                   style={{
@@ -254,7 +254,7 @@ export default function PatientDetailInfoSection({
             )
           ) : (
             <ToggleButtonGroup
-              label={t('appointment.smoking')}
+              label={t('appointment.smokingUnit')}
               options={['0', '1~5', '6+'] as const}
               selectedValue={data.smoking}
               onChange={(value) => handleChange('smoking', value)}
@@ -352,7 +352,7 @@ export default function PatientDetailInfoSection({
           style={{
             width: '1.25rem',
             height: '1.25rem',
-            transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+            transform: isExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
             transition: 'transform 0.2s'
           }}
         />

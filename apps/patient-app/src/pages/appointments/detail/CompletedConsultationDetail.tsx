@@ -45,6 +45,7 @@ export default function CompletedConsultationDetail() {
   return (
     <AppointmentDetailLayout
       title={t('appointment.completedDetail')}
+      titleStyle={{ padding: '0 1.25rem' }}
       onBack={handleBack}
       onClose={handleClose}
       pageTitle={t('appointment.completedTitle')}

@@ -78,7 +78,7 @@ export default function TreatmentInfoSection({
             style={{ width: '1.375rem', height: '1.375rem' }}
           />
           <div style={{ color: '#1F1F1F', fontSize: '1.125rem', fontWeight: '600' }}>
-            {t('appointment.symptoms')}
+            {t('appointment.primarySymptoms')}
           </div>
         </div>
         <textarea

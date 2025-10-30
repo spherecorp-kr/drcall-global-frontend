@@ -54,6 +54,7 @@ export default function PendingAppointmentDetail() {
     <>
       <AppointmentDetailLayout
         title={t('appointment.pendingDetail')}
+        titleStyle={{ padding: '0 1.25rem' }}
         onBack={handleBack}
         onClose={handleClose}
         pageTitle={t('appointment.pendingTitle')}
@@ -79,8 +80,8 @@ export default function PendingAppointmentDetail() {
         patientBasicInfo={mockPatientBasicInfo}
         patientDetailInfo={mockPatientDetailInfo}
         noticeItems={[
-          t('appointment.notices.pending.modify'),
-          t('appointment.notices.pending.confirmed')
+          t('appointment.notices.pending'),
+          t('appointment.notices.pendingToConfirmed')
         ]}
         hasBottomButton
         bottomButton={
