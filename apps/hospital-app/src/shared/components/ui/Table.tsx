@@ -11,9 +11,11 @@ import { useState } from 'react';
 
 interface TableProps<TData> {
 	className?: string;
+	colgroup?: ReactNode;
 	// eslint-disable-next-line
 	columns: ColumnDef<TData, any>[];
 	data: TData[];
+	disableHorizontalScroll?: boolean;
 	emptyState?: ReactNode;
 	enableSelection?: boolean;
 	getRowClassName?: (row: Row<TData>) => string;
@@ -54,8 +56,10 @@ const SortIcon = ({ isSorted }: { isSorted: false | 'asc' | 'desc' }) => {
 
 const Table = <TData,>({
 	className,
+	colgroup,
 	columns,
 	data,
+	disableHorizontalScroll = false,
 	emptyState,
 	enableSelection = false,
 	getRowClassName,
@@ -121,12 +125,14 @@ const Table = <TData,>({
 		<div className={cn('w-full h-full overflow-auto flex flex-col', className)}>
 			<div
 				className={cn(
-					'w-full flex-1 overflow-x-auto',
+					'w-full flex-1',
+					disableHorizontalScroll ? 'overflow-x-hidden' : 'overflow-x-auto',
 					stickyHeader ? '' : 'pt-4',
 					'px-3 pb-3 sm:px-4 sm:pb-4 md:px-5 md:pb-5',
 				)}
 			>
-				<table className="w-full h-auto" style={{ minWidth }}>
+				<table className="table-fixed w-full h-auto" style={{ minWidth }}>
+					{colgroup}
 					<thead
 						className={cn(
 							"relative border-t-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[0.5px] after:bg-stroke-input after:content-['']",
