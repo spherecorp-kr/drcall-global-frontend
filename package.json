@@ -1,0 +1,25 @@
+{
+  "name": "drcall-global-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DrCall Global Frontend Monorepo",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:hospital": "pnpm --filter hospital-app dev",
+    "dev:patient": "pnpm --filter patient-app dev",
+    "build:hospital": "pnpm --filter hospital-app build",
+    "build:patient": "pnpm --filter patient-app build",
+    "build:all": "pnpm -r build",
+    "lint:hospital": "pnpm --filter hospital-app lint",
+    "lint:patient": "pnpm --filter patient-app lint",
+    "lint:all": "pnpm -r lint",
+    "clean": "pnpm -r clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
