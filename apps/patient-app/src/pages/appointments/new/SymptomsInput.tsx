@@ -87,15 +87,15 @@ export default function SymptomsInput({ appointmentType }: SymptomsInputProps) {
 
   return (
     <MainLayout
-      title={t('appointment.symptoms')}
+      title={t('appointment.symptomsInput')}
       onBack={handleBack}
       onClose={handleClose}
       fullWidth
       contentClassName="p-0"
     >
-      <PageContainer hasBottomButton>
+      <PageContainer hasBottomButton style={{ background: 'transparent' }}>
         {/* Progress Steps */}
-        <PageSection padding background="white">
+        <PageSection style={{ padding: '0' }}>
           <ProgressSteps
             currentStep={isQuick ? 1 : 2}
             totalSteps={isQuick ? 3 : 4}
@@ -115,12 +115,13 @@ export default function SymptomsInput({ appointmentType }: SymptomsInputProps) {
         <Divider />
 
         {/* Page Title */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <PageTitle>{t('appointment.symptomsTitle')}</PageTitle>
         </PageSection>
 
         {/* Treatment Info Section */}
         <TreatmentInfoSection
+          background='gray'
           symptoms={symptoms}
           symptomImages={images}
           onSymptomsChange={setSymptoms}

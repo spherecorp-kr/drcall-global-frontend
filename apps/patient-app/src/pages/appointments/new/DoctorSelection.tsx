@@ -54,9 +54,9 @@ export default function DoctorSelection() {
       fullWidth
       contentClassName="p-0"
     >
-      <PageContainer hasBottomButton>
+      <PageContainer hasBottomButton style={{ background: 'transparent' }}>
         {/* Progress Steps */}
-        <PageSection padding background="white">
+        <PageSection style={{ padding: '0' }}>
           <ProgressSteps
             currentStep={1}
             totalSteps={4}
@@ -72,12 +72,12 @@ export default function DoctorSelection() {
         <Divider />
 
         {/* Title */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <PageTitle>{t('appointment.selectDateTime')}</PageTitle>
         </PageSection>
 
         {/* Date Picker Button */}
-        <PageSection padding>
+        <PageSection style={{ padding: '1.25rem 1.25rem 0 1.25rem' }}>
           <button
             onClick={openCalendar}
             style={{
@@ -112,8 +112,6 @@ export default function DoctorSelection() {
             />
           </button>
         </PageSection>
-
-        <Divider />
 
         {/* Doctor Cards or Empty State */}
         {mockDoctors.length > 0 ? (

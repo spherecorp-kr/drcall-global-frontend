@@ -133,27 +133,34 @@ export default function Questionnaire({ appointmentType = 'standard' }: Question
       fullWidth
       contentClassName="p-0"
     >
-      <PageContainer hasBottomButton>
+      <PageContainer hasBottomButton style={{ background: 'transparent' }}>
         {/* Progress Steps */}
-        <PageSection padding background="white">
+        <PageSection style={{ padding: '0' }}>
           <ProgressSteps
             currentStep={appointmentType === 'quick' ? 2 : 3}
             totalSteps={appointmentType === 'quick' ? 3 : 4}
-            labels={appointmentType === 'quick' ? [t('appointment.symptoms'), t('appointment.questionnaire'), t('appointment.confirmation')] : [t('appointment.date'), t('appointment.symptoms'), t('appointment.questionnaire'), t('appointment.confirmation')]}
+            labels={appointmentType === 'quick' ? [
+              t('appointment.progressSteps.symptoms'),
+              t('appointment.progressSteps.questionnaire'),
+              t('appointment.progressSteps.confirmation')
+            ] : [
+              t('appointment.progressSteps.date'),
+              t('appointment.progressSteps.symptoms'),
+              t('appointment.progressSteps.questionnaire'),
+              t('appointment.progressSteps.confirmation')
+            ]}
           />
         </PageSection>
 
         <Divider />
 
         {/* Page Title */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <PageTitle>{t('appointment.questionnaireTitle')}</PageTitle>
         </PageSection>
 
         {/* Patient Basic Info Section (Read-only) */}
         <PatientBasicInfoSection data={patientBasicData} />
-
-        <Divider />
 
         {/* Patient Detail Info Section (Editable, Always Expanded) */}
         <PageSection title={t('appointment.healthInfo')} gap="md" padding>
@@ -164,8 +171,6 @@ export default function Questionnaire({ appointmentType = 'standard' }: Question
             expandable={false}
           />
         </PageSection>
-
-        <Divider />
 
         {/* Terms Agreement */}
         <PageSection padding>
@@ -195,9 +200,7 @@ export default function Questionnaire({ appointmentType = 'standard' }: Question
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '0.625rem',
-              marginTop: '1.25rem',
-              paddingLeft: '2.125rem'
+              gap: '0.625rem'
             }}
           >
             <div style={{ flex: 1, color: '#8A8A8A', fontSize: '1rem', fontWeight: '400' }}>
