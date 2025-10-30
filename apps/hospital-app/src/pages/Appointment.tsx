@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { AppointmentStatusTab } from '@/shared/components/ui';
 import type { AppointmentStatus } from '@/shared/types/appointment';
 import { SearchConfirmed, SearchWaiting } from '@/shared/components/ui/AppointmentSearch';
-import { WaitingTable } from '@/shared/components/ui/AppointmentTables';
+import { ConfirmedTable, WaitingTable } from '@/shared/components/ui/AppointmentTables';
 
 export function Appointment() {
 	const [status, setStatus] = useState<AppointmentStatus>('waiting');
@@ -21,6 +21,7 @@ export function Appointment() {
 				return (
 					<>
 						<SearchConfirmed />
+						<ConfirmedTable />
 					</>
 				);
 			case 'completed':

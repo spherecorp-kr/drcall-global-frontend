@@ -1,22 +1,19 @@
-import WarningIcon from '@/shared/assets/icons/ic_circle_warning_grey.svg?react';
+import React from 'react';
+import warningIcon from '@/shared/assets/icons/ic_circle_warning_grey.svg';
+import { cn } from '@/shared/utils/cn';
 
 interface EmptyStateProps {
-	message: string;
 	className?: string;
+	message: string;
 }
 
-export function EmptyState({ message, className = '' }: EmptyStateProps) {
+const EmptyState: React.FC<EmptyStateProps> = ({ className = '', message }) => {
 	return (
-		<div
-			className={`w-full h-full bg-bg-gray rounded-[10px] flex items-center justify-center gap-[6px] ${className}`}
-		>
-			<WarningIcon className="w-6 h-6" />
-			<div
-				className="text-text-40 text-18 font-pretendard font-normal"
-				style={{ wordWrap: 'break-word' }}
-			>
-				{message}
-			</div>
+		<div className={cn('bg-bg-gray flex gap-1.5 h-full items-center justify-center rounded-[0.625rem] w-full', className)}>
+			<img alt='warning' className='h-6 w-6' src={warningIcon} />
+			<div className='font-normal font-pretendard text-18 text-text-40' style={{ wordWrap: 'break-word' }}>{message}</div>
 		</div>
 	);
 }
+
+export default EmptyState;

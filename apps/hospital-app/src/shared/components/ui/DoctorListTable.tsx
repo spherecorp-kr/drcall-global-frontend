@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react';
 import type { ColumnDef, Row } from '@tanstack/react-table';
 import { cn } from '@/shared/utils/cn';
-import { Table } from '@/shared/components/ui';
+import { EmptyState, Table } from '@/shared/components/ui';
 import { Section } from './Section';
 import { DoctorStatusBadge } from '@/shared/components/ui/Badge';
-import { EmptyState } from './EmptyState';
 import defaultAvatar from '@/assets/img_profile.svg';
 import { useLayoutStore } from '@/shared/store/layoutStore';
 
