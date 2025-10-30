@@ -90,6 +90,38 @@ git push origin main
 | **STG** | patient.stg.drcall.global | hospital.stg.drcall.global |
 | **PROD** | patient.drcall.global | hospital.drcall.global |
 
+### GitHub Secrets 설정
+
+다음 시크릿이 설정되어 있어야 합니다:
+
+```bash
+# AWS 인증
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
+
+# Patient App ({ENV} = DEV, STG, PROD)
+PATIENT_APP_{ENV}_API_URL
+PATIENT_APP_{ENV}_CLOUDFRONT_ID
+PATIENT_APP_{ENV}_S3_BUCKET
+
+# Hospital App
+HOSPITAL_APP_{ENV}_API_URL
+HOSPITAL_APP_{ENV}_CLOUDFRONT_ID
+HOSPITAL_APP_{ENV}_S3_BUCKET
+```
+
+### 배포 프로세스
+
+1. **체크아웃**: 코드 클론
+2. **설치**: Node.js 20 + pnpm 9 설치
+3. **빌드**: 환경변수 주입 후 빌드
+4. **S3 업로드**: 정적 파일 업로드
+5. **캐시 무효화**: CloudFront 캐시 삭제
+
+**캐시 전략:**
+- JS/CSS/이미지: 1년 캐시
+- index.html: 캐시 없음
+
 ## 📝 커밋 규칙
 
 Conventional Commits 사용 (commitlint 자동 검증)
