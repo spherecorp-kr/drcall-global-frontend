@@ -133,7 +133,7 @@ export default function AppointmentInfoSection({
                   ? t('appointment.completedDateTime')
                   : status === 'confirmed'
                     ? t('appointment.scheduledDateTime')
-                    : t('appointment.preferredDateTime')}
+                    : t('appointment.preferredDateTimeDoctor')}
               </div>
 
               {/* 수정 버튼 (옵션) */}

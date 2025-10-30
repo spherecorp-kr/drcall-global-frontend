@@ -129,7 +129,7 @@ export default function MedicalHistory() {
     { key: 'pending', label: t('appointment.pending') },
     { key: 'confirmed', label: t('appointment.confirmed') },
     { key: 'completed', label: t('appointment.completed') },
-    { key: 'cancelled', label: t('appointment.cancelled') }
+    { key: 'cancelled', label: t('appointment.cancel') }
   ];
 
   const handleOpenModal = () => {

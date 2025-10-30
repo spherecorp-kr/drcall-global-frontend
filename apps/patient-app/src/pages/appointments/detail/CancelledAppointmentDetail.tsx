@@ -37,6 +37,7 @@ export default function CancelledAppointmentDetail() {
   return (
     <AppointmentDetailLayout
       title={t('appointment.cancelledDetail')}
+      titleStyle={{ padding: '0 1.25rem' }}
       onBack={handleBack}
       onClose={handleClose}
       pageTitle={t('appointment.cancelledTitle')}

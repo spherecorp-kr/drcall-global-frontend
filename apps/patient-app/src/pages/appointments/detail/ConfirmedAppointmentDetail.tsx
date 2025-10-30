@@ -101,6 +101,7 @@ export default function ConfirmedAppointmentDetail() {
     <>
       <AppointmentDetailLayout
         title={t('appointment.confirmedDetail')}
+        titleStyle={{ padding: '0 1.25rem' }}
         onBack={handleBack}
         onClose={handleClose}
         pageTitle={t('appointment.confirmedTitle')}
@@ -113,7 +114,7 @@ export default function ConfirmedAppointmentDetail() {
               lineHeight: '1.5'
             }}
           >
-            {t('appointment.confirmedDateTime')}{'\n'}
+            {t('appointment.confirmedDateTime')}{': \n'}
             {confirmedDateTime}
           </div>
         }

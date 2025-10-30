@@ -217,7 +217,7 @@ export default function AppointmentEdit() {
     >
       <PageContainer hasBottomButton background="white">
         {/* 페이지 타이틀 */}
-        <PageSection padding background="white">
+        <PageSection background="white" style={{ padding: '0 1.25rem' }}>
           <PageTitle>{t('appointment.editPendingTitle')}</PageTitle>
         </PageSection>
 
