@@ -12,7 +12,8 @@ type ErrorContext = {
 };
 
 class ErrorHandler {
-  private isDevelopment = import.meta.env.DEV;
+  // Development mode check - will be set by the consuming application
+  private isDevelopment = false;
 
   /**
    * Log error for debugging purposes

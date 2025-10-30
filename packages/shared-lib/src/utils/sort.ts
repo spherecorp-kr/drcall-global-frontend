@@ -6,7 +6,7 @@
  * Parse date string to timestamp
  * Handles various date formats (YYYY-MM-DD, YYYY/MM/DD, etc.)
  */
-export function parseDate(dateString: string): number {
+function parseDateToTimestamp(dateString: string): number {
   // Replace / with - for consistent parsing
   const normalized = dateString.replace(/\//g, '-');
   return new Date(normalized).getTime();
@@ -20,8 +20,8 @@ export function sortByDateNewest<T>(
   getDate: (item: T) => string
 ): T[] {
   return [...items].sort((a, b) => {
-    const dateA = parseDate(getDate(a));
-    const dateB = parseDate(getDate(b));
+    const dateA = parseDateToTimestamp(getDate(a));
+    const dateB = parseDateToTimestamp(getDate(b));
     return dateB - dateA;
   });
 }
@@ -34,8 +34,8 @@ export function sortByDateOldest<T>(
   getDate: (item: T) => string
 ): T[] {
   return [...items].sort((a, b) => {
-    const dateA = parseDate(getDate(a));
-    const dateB = parseDate(getDate(b));
+    const dateA = parseDateToTimestamp(getDate(a));
+    const dateB = parseDateToTimestamp(getDate(b));
     return dateA - dateB;
   });
 }

@@ -1,1 +1,1 @@
-export { default as apiClient } from './client';
+// API utilities will be exported here when needed
