@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 export type ButtonVariant = 'primary' | 'dark' | 'outline' | 'ghost';
