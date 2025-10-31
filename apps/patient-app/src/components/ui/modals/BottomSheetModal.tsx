@@ -100,9 +100,7 @@ export default function BottomSheetModal({
               justifyContent: 'center'
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M1 1L15 15M15 1L1 15" stroke={COLORS.text.primary} strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <img src='/assets/icons/btn_close_pupup.svg' alt='close_popup' width={24} height={24}/>
           </button>
         </div>
 

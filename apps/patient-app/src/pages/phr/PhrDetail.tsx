@@ -234,14 +234,7 @@ export default function PhrDetail() {
                 onClick={() => setAddModalOpen(false)}
                 style={{ width: '1.5rem', height: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M2 2L14 14M2 14L14 2"
-                    stroke="#1F1F1F"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <img src='/assets/icons/btn_close_pupup.svg' alt='close_popup' width={24} height={24}/>
               </button>
             </div>
 
