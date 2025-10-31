@@ -9,6 +9,11 @@
 		"doctor": "คุณหมอ",
 		"patient": "ผู้ป่วย"
 	},
+	"canceler": {
+		"hospital": "โรงพยาบาล",
+		"patient": "ผู้ป่วย",
+		"system": "ระบบ"
+	},
 	"menu": {
 		"appointment": "การนัดหมาย",
 		"consultation": "ห้องตรวจโรค",

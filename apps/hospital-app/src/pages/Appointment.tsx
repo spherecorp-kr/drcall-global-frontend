@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { AppointmentStatusTab } from '@/shared/components/ui';
 import type { AppointmentStatus } from '@/shared/types/appointment';
 import {
@@ -7,13 +7,18 @@ import {
 	SearchConfirmed,
 	SearchWaiting
 } from '@/shared/components/ui/AppointmentSearch';
-import { CompletedTable, ConfirmedTable, WaitingTable } from '@/shared/components/ui/AppointmentTables';
+import {
+	CancelledTable,
+	CompletedTable,
+	ConfirmedTable,
+	WaitingTable
+} from '@/shared/components/ui/AppointmentTables';
 
-export function Appointment() {
+const Appointment = () => {
 	const [status, setStatus] = useState<AppointmentStatus>('waiting');
 
 	// 상태별 UI 렌더링 함수
-	const renderStatusContent = () => {
+	const renderStatusContent = useCallback(() => {
 		switch (status) {
 			case 'waiting':
 				return (
@@ -40,12 +45,13 @@ export function Appointment() {
 				return (
 					<>
 						<SearchCancelled />
+						<CancelledTable />
 					</>
 				);
 			default:
 				return null;
 		}
-	};
+	}, [status]);
 
 	return (
 		<div className="flex flex-col h-full overflow-hidden">
@@ -56,3 +62,5 @@ export function Appointment() {
 		</div>
 	);
 }
+
+export default Appointment;

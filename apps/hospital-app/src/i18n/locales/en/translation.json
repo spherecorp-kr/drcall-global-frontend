@@ -9,6 +9,11 @@
 		"doctor": "Doctor",
 		"patient": "Patient"
 	},
+	"canceler": {
+		"hospital": "Hospital",
+		"patient": "Patient",
+		"system": "System"
+	},
 	"menu": {
 		"appointment": "Appointment",
 		"consultation": "Doctor's office",

@@ -7,19 +7,19 @@ interface SideNavigationItemProps {
 	active?: boolean;
 	badges?: Array<number | 'dot'>;
 	icon: ReactNode;
-	isExpanded: boolean;
 	id: string;
+	isExpanded: boolean;
 	onClick?: () => void;
 }
 
-export function SideNavigationItem({
+const SideNavigationItem = ({
 	active = false,
 	badges,
 	icon,
-	isExpanded,
 	id,
+	isExpanded,
 	onClick,
-}: SideNavigationItemProps) {
+}: SideNavigationItemProps) => {
 	const { t } = useTranslation();
 	return (
 		<button
@@ -65,3 +65,5 @@ export function SideNavigationItem({
 		</button>
 	);
 }
+
+export default SideNavigationItem;

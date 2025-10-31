@@ -1,6 +1,7 @@
 export type AppointmentStatus = 'waiting' | 'confirmed' | 'completed' | 'cancelled';
 export type AppointmentType = 'aptmt' | 'sdn'; // 예약 유형
 export type PatientLevel = 'VIP' | 'Risk'; // 환자 등급
+export type Canceler = 'HOSPITAL' | 'PATIENT' | 'SYSTEM';
 
 export interface StatusTabProps {
 	handleClick: (value: AppointmentStatus) => void;
@@ -36,4 +37,13 @@ export interface CompletedTableColumnProps {
 	prescriptionStatus: string; // 처방전 상태 TODO api에 맞추기
 	paymentStatus: string; // 결제 상태 TODO api에 맞추기
 	deliveryStatus: string; // 배송 상태 TODO api에 맞추기
+}
+
+// 예약 취소 리스트 컬럼 속성
+export interface CancelledTableColumnProps {
+	appointmentNumber: string; // 예약 번호
+	cancelledDatetime: string; // 예약 취소 일시
+	canceler: Canceler; // 취소자
+	doctorName: string; // 의사
+	patientName: string; // 환자명
 }

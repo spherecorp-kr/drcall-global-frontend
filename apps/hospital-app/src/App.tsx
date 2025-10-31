@@ -1,16 +1,18 @@
-import { useCallback, useMemo } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
-import { MainLayout } from '@/shared/components/layout/MainLayout';
-import { Dashboard } from '@/pages/Dashboard';
-import { Appointment } from '@/pages/Appointment';
-import { Payment } from '@/pages/Payment';
-import { Patient } from '@/pages/Patient';
-import { Doctor } from '@/pages/Doctor';
-import { Hospital } from '@/pages/Hospital';
-import { MyInfo } from '@/pages/MyInfo';
-import { Consultation } from '@/pages/Consultation';
-import TextLogo from '@/assets/logo_drcall.svg';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useCallback, useMemo } from 'react';
+import { MainLayout } from '@/shared/components/layout';
+import TextLogo from '@/assets/logo_drcall.svg';
+import {
+	AppointmentPage,
+	ConsultationPage,
+	DashboardPage,
+	DoctorPage,
+	HospitalPage,
+	MyInfoPage,
+	PatientPage,
+	PaymentPage,
+} from '@/pages';
 
 function AppContent() {
 	const navigate = useNavigate();
@@ -20,7 +22,7 @@ function AppContent() {
 
 	// 현재 경로에 따른 페이지 타이틀
 	const pageTitle: string = useMemo(() => {
-		const path = location.pathname;
+		const path: string = location.pathname;
 		if (path.includes('appointment')) return t('menu.appointment');
 		if (path.includes('consultation')) return t('menu.consultation');
 		if (path.includes('dashboard')) return t('menu.dashboard');
@@ -33,12 +35,9 @@ function AppContent() {
 	}, [location.pathname, t]);
 
 	// 메뉴 클릭 핸들러
-	const handleMenuClick = useCallback(
-		(menuId: string) => {
-			navigate(`/${menuId}`);
-		},
-		[navigate],
-	);
+	const handleMenuClick = useCallback((menuId: string) => {
+		navigate(`/${menuId}`);
+	}, [navigate]);
 
 	return (
 		<Routes>
@@ -56,14 +55,14 @@ function AppContent() {
 				}
 			>
 				<Route index element={<Navigate to="/dashboard" replace />} />
-				<Route path="dashboard" element={<Dashboard />} />
-				<Route path="appointment" element={<Appointment />} />
-				<Route path="payment" element={<Payment />} />
-				<Route path="patient" element={<Patient />} />
-				<Route path="doctor" element={<Doctor />} />
-				<Route path="hospital" element={<Hospital />} />
-				<Route path="myinfo" element={<MyInfo />} />
-				<Route path="consultation" element={<Consultation />} />
+				<Route path="dashboard" element={<DashboardPage />} />
+				<Route path="appointment" element={<AppointmentPage />} />
+				<Route path="payment" element={<PaymentPage />} />
+				<Route path="patient" element={<PatientPage />} />
+				<Route path="doctor" element={<DoctorPage />} />
+				<Route path="hospital" element={<HospitalPage />} />
+				<Route path="myinfo" element={<MyInfoPage />} />
+				<Route path="consultation" element={<ConsultationPage />} />
 				<Route path="*" element={<Navigate to="/dashboard" replace />} />
 			</Route>
 		</Routes>
