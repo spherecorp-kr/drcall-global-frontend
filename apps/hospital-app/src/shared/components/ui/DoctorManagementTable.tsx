@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
 import Table from './Table';
 import { Tooltip } from './Tooltip';
+import { TooltipIcon } from './TooltipIcon';
 import { cn } from '@/shared/utils/cn';
 import type { DoctorManagement, AvailableScheduleDto, DayOfWeek, TimeSlotDto } from '@/shared/types/doctor';
 
@@ -10,6 +11,7 @@ interface DoctorManagementTableProps {
 	selectedDoctorId?: string;
 	onRowClick?: (doctor: DoctorManagement) => void;
 	className?: string;
+	emptyState?: ReactNode;
 }
 
 // 진료 시간을 포맷팅하는 함수
@@ -50,6 +52,7 @@ export function DoctorManagementTable({
 	selectedDoctorId,
 	onRowClick,
 	className,
+	emptyState,
 }: DoctorManagementTableProps) {
 	const columns = useMemo<ColumnDef<DoctorManagement>[]>(
 		() => [
@@ -94,31 +97,10 @@ export function DoctorManagementTable({
 				header: () => (
 					<div className="flex items-center gap-1.5">
 						<span>진료 가능 시간</span>
-						<Tooltip
-							content={
-								<div className="whitespace-pre-line">
-									진료 시간{'\n'}
-									월 : 09:00 ~ 12:00 / 18:00 ~ 20:00{'\n'}
-									화 : -{'\n'}
-									수 : 09:00 ~ 12:00{'\n'}
-									목 : -{'\n'}
-									금 : 09:00 ~ 10:00 / 12:00 ~ 13:00 / 18:00 ~ 19:00 / 20:00 ~ 21:00{'\n'}
-									토 : -{'\n'}
-									일 : -
-								</div>
-							}
+						<TooltipIcon
+							content="목록에 있는 진료 가능 시간에 마우스 호버 시, 해당 의사에 대한 요일별 진료 가능 시간을 확인할 수 있습니다."
 							position="bottom"
-						>
-							<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-								<circle cx="8" cy="8" r="6.5" stroke="#6E6E6E" strokeWidth="1" />
-								<path
-									d="M8 7V11M8 5V5.5"
-									stroke="#6E6E6E"
-									strokeWidth="1.5"
-									strokeLinecap="round"
-								/>
-							</svg>
-						</Tooltip>
+						/>
 					</div>
 				),
 				minSize: 240,
@@ -182,6 +164,8 @@ export function DoctorManagementTable({
 					return 'bg-bg-white hover:bg-bg-gray';
 				}}
 				minWidth="1080px"
+				emptyState={emptyState}
+				disableScroll={true}
 			/>
 		</div>
 	);

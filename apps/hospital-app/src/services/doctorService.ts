@@ -7,8 +7,8 @@ import type {
 	UpdateDoctorRequest,
 	DoctorManagement,
 	DayOfWeek,
-	DAY_MAP,
 } from '@/shared/types/doctor';
+import { DAY_MAP } from '@/shared/types/doctor';
 import { mockDoctors } from '@/mocks/doctorData';
 
 // 개발 환경에서 목 데이터 사용 여부

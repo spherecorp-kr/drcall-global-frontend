@@ -46,15 +46,19 @@ export function useDoctorManagement(initialPageSize = 10): UseDoctorManagementRe
 				isRegisteredOnly: filters.isRegisteredOnly || undefined,
 			};
 
+			console.log('[useDoctorManagement] Fetching doctors with params:', params);
 			const response = await doctorService.getDoctors(params);
+			console.log('[useDoctorManagement] Response:', response);
 
 			// DTO를 UI 모델로 변환
 			const transformedDoctors = response.content.map(transformDoctorDto);
+			console.log('[useDoctorManagement] Transformed doctors:', transformedDoctors);
 
 			setDoctors(transformedDoctors);
 			setTotalElements(response.totalElements);
 			setTotalPages(response.totalPages);
 		} catch (err) {
+			console.error('[useDoctorManagement] Error:', err);
 			setError(err as Error);
 			setDoctors([]);
 		} finally {
