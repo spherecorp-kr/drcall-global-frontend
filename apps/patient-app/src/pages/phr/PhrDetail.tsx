@@ -143,7 +143,7 @@ export default function PhrDetail() {
     <MainLayout title={typeInfo.title} showHeader onBack={() => navigate('/phr')} fullWidth contentClassName="p-0">
       <PageContainer style={{ background: '#FAFAFA' }}>
         {/* Header: 상세기록 + 추가 버튼 */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem' }}>
           <div className="flex items-center justify-between">
             <span className="text-[#1F1F1F] text-[1rem] font-normal">{t('phr.recordDetail')}</span>
             <button
