@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { COLORS } from '@/constants';
 
 interface TextareaFieldProps {
   label?: string;
@@ -94,9 +95,9 @@ export default function TextareaField({
         {label && (
           <div
             style={{
-              color: '#1F1F1F',
-              fontSize: '1.125rem',
-              fontWeight: '600',
+              color: COLORS.text.secondary,
+              fontSize: '0.875rem',
+              fontWeight: '400',
               marginBottom: '0.5rem'
             }}
           >

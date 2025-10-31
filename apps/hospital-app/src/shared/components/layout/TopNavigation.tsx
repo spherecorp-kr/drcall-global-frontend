@@ -14,7 +14,7 @@ interface TopNavigationProps {
 	userRole: 'coordinator' | 'doctor';
 }
 
-export function TopNavigation({
+const TopNavigation = ({
 	className,
 	onBack,
 	showBackButton = false,
@@ -22,7 +22,7 @@ export function TopNavigation({
 	userAvatar,
 	userName,
 	userRole,
-}: TopNavigationProps) {
+}: TopNavigationProps) => {
 	const { t } = useTranslation();
 	return (
 		<div
@@ -71,3 +71,5 @@ export function TopNavigation({
 		</div>
 	);
 }
+
+export default TopNavigation;

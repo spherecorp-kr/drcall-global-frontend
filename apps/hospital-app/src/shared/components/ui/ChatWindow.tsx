@@ -82,7 +82,7 @@ const mockChats: ChatItem[] = [
 	},
 ];
 
-export function ChatWindow({ isOpen, onClose, className, buttonPosition }: ChatWindowProps) {
+const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowProps) => {
 	const { t } = useTranslation();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedChat, setSelectedChat] = useState<string | null>(null);
@@ -625,3 +625,5 @@ export function ChatWindow({ isOpen, onClose, className, buttonPosition }: ChatW
 		</div>
 	);
 }
+
+export default ChatWindow;

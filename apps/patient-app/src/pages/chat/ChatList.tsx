@@ -160,10 +160,7 @@ export default function ChatList() {
               pointerEvents: 'none'
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="7" stroke="#00A0D2" strokeWidth="2"/>
-              <path d="M16 16L21 21" stroke="#00A0D2" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <img src='/assets/icons/btn_search.svg' alt='search' width={28} height={28}/>
           </div>
         </div>
 

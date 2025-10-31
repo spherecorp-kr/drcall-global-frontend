@@ -82,7 +82,6 @@ export default function TermsList() {
         style={{
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem'
         }}
       >
@@ -134,9 +133,7 @@ export default function TermsList() {
                 </div>
 
                 {/* 오른쪽 화살표 */}
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
-                  <path d="M9 18L15 12L9 6" stroke="#D0D0D0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <img src='/assets/icons/btn_more.svg' alt='more' width={24} height={24}/>
               </div>
             ))}
           </div>

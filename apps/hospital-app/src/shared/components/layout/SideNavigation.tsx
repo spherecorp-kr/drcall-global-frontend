@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/shared/utils/cn';
-import { SideNavigationItem } from './SideNavigationItem';
+import { SideNavigationItem } from '@/shared/components/layout';
 import LogoutIcon from '@/assets/icons/ic_logout.svg';
 import CircleLogo from '@/assets/logo_circle.png';
 import ToggleFoldIcon from '@/assets/icons/ic_toggle.svg';
@@ -22,13 +22,13 @@ interface SideNavigationProps {
 	onToggle?: () => void;
 }
 
-export function SideNavigation({
+const SideNavigation = ({
 	isExpanded = true,
-	onToggle,
-	menuItems,
 	logo,
+	menuItems,
 	onLogout,
-}: SideNavigationProps) {
+	onToggle,
+}: SideNavigationProps) => {
 	return (
 		<div
 			className={cn(
@@ -147,3 +147,5 @@ export function SideNavigation({
 		</div>
 	);
 }
+
+export default SideNavigation;

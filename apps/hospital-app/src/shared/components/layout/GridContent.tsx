@@ -6,7 +6,7 @@ interface GridContentProps {
 	className?: string;
 }
 
-export function GridContent({ children, className }: GridContentProps) {
+const GridContent = ({ children, className }: GridContentProps) => {
 	return (
 		<div className="h-full w-full overflow-auto bg-bg-gray">
 			<div
@@ -20,3 +20,5 @@ export function GridContent({ children, className }: GridContentProps) {
 		</div>
 	);
 }
+
+export default GridContent;

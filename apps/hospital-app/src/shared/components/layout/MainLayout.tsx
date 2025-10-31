@@ -1,11 +1,9 @@
 import { type ReactNode, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-import { SideNavigation } from './SideNavigation';
-import { TopNavigation } from './TopNavigation';
-import { ChatFloatingButton } from '@/shared/components/ui/ChatFloatingButton';
-import { ChatWindow } from '@/shared/components/ui/ChatWindow';
-import { getMenuByRole } from '@/shared/config/menuConfig';
 import { useLayoutStore } from '@/shared/store/layoutStore';
+import { Outlet, useLocation } from 'react-router-dom';
+import { getMenuByRole } from '@/shared/config/menuConfig';
+import { SideNavigation, TopNavigation } from '@/shared/components/layout';
+import { ChatFloatingButton, ChatWindow } from '@/shared/components/ui';
 
 interface MainLayoutProps {
 	logo: ReactNode;
@@ -19,7 +17,7 @@ interface MainLayoutProps {
 	userRole: 'coordinator' | 'doctor';
 }
 
-export function MainLayout({
+const MainLayout = ({
 	logo,
 	onBack,
 	onLogout,
@@ -29,7 +27,7 @@ export function MainLayout({
 	userAvatar,
 	userName,
 	userRole,
-}: MainLayoutProps) {
+}: MainLayoutProps) => {
 	const { isSideNavExpanded, toggleSideNav } = useLayoutStore();
 	const location = useLocation();
 	const [isChatOpen, setIsChatOpen] = useState(false);
@@ -89,4 +87,6 @@ export function MainLayout({
 			/>
 		</div>
 	);
-}
+};
+
+export default MainLayout;

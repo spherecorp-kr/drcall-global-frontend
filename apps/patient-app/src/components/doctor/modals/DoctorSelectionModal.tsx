@@ -104,14 +104,7 @@ export default function DoctorSelectionModal({
               justifyContent: 'center'
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M6 6L18 18M18 6L6 18"
-                stroke="#1F1F1F"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+            <img src='/assets/icons/btn-끄기.svg' alt='close_popup' width={24} height={24}/>
           </button>
         </div>
 

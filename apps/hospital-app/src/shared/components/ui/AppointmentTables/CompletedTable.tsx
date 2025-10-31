@@ -137,16 +137,16 @@ const CompletedTable = () => {
 
 	return (
 		<div className="bg-white border border-[#e0e0e0] flex flex-col gap-2.5 h-full rounded-[0.625rem]">
-		<Table
-			className='flex-1 h-auto'
-			colgroup={<ColGroup />}
-			columns={columns}
-			data={sampleData}
-			disableHorizontalScroll
-			emptyState={<EmptyState message="진료 완료 목록이 없습니다." />}
-			enableSelection
-			getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
-		/>
+			<Table
+				className='flex-1 h-auto'
+				colgroup={<ColGroup />}
+				columns={columns}
+				data={sampleData}
+				disableHorizontalScroll
+				emptyState={<EmptyState message="진료 완료 목록이 없습니다." />}
+				enableSelection
+				getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
+			/>
 			<Pagination />
 		</div>
 	);

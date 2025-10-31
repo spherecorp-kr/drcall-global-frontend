@@ -57,7 +57,7 @@ export default function PhrDashboard() {
     <MainLayout title={t('phr.title')} showHeader onBack={() => navigate('/')} fullWidth contentClassName="p-0">
       <PageContainer style={{ background: 'transparent' }}>
         {/* Title */}
-        <PageSection padding style={{ background: 'transparent' }}>
+        <PageSection style={{ background: 'transparent', padding: '0 1.25rem' }}>
           <PageTitle>{t('phr.dashboardTitle')}</PageTitle>
         </PageSection>
 

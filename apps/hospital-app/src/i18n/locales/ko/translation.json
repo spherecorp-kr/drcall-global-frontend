@@ -9,6 +9,11 @@
 		"doctor": "의사",
 		"patient": "환자"
 	},
+	"canceler": {
+		"hospital": "병원",
+		"patient": "환자",
+		"system": "시스템"
+	},
 	"menu": {
 		"appointment": "예약",
 		"consultation": "진료실",

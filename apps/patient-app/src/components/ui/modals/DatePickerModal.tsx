@@ -86,9 +86,7 @@ export default function DatePickerModal({ isOpen, onClose, onConfirm, initialDat
               cursor: 'pointer'
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6L18 18" stroke="#1f1f1f" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <img src='/assets/icons/btn_close_pupup.svg' alt='close_popup' width={24} height={24}/>
           </button>
         </div>
 

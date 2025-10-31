@@ -210,7 +210,7 @@ const sampleDoctors = [
 
 type SectionId = 'chart' | 'appointments' | 'doctors';
 
-export function Dashboard() {
+const Dashboard = () => {
 	const [activeSection, setActiveSection] = useState<SectionId | null>(null);
 	const isExpandOpen = useMemo(() => activeSection !== null, [activeSection]);
 
@@ -314,3 +314,5 @@ export function Dashboard() {
 		</div>
 	);
 }
+
+export default Dashboard;
