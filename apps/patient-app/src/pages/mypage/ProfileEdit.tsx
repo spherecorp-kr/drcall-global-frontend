@@ -111,7 +111,7 @@ export default function ProfileEdit() {
     >
       <PageContainer hasBottomButton style={{ background: 'transparent' }}>
         {/* Page Title */}
-        <PageSection padding style={{ paddingBottom: '1.25rem' }}>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <PageTitle>{t('mypage.profileTitle')}</PageTitle>
         </PageSection>
 

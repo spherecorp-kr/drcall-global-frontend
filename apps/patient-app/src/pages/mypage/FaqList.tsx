@@ -115,7 +115,6 @@ export default function FaqList() {
         style={{
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem',
           display: 'flex',
           flexDirection: 'column',

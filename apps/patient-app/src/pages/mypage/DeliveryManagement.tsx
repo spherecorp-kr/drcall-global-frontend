@@ -154,7 +154,6 @@ export default function DeliveryManagement() {
         style={{
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem'
         }}
       >

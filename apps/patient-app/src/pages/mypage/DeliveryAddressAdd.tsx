@@ -258,7 +258,6 @@ export default function DeliveryAddressAdd({
           overflowY: 'auto',
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem',
           minHeight: 0
         }}

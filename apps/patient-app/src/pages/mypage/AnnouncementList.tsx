@@ -88,7 +88,6 @@ export default function AnnouncementList() {
         style={{
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem'
         }}
       >
