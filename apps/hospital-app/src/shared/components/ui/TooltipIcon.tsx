@@ -5,13 +5,12 @@ import { type ReactNode } from 'react';
 
 interface TooltipIconProps {
 	content: ReactNode;
-	title?: string;
 	position?: 'top' | 'bottom' | 'left' | 'right';
 }
 
-export function TooltipIcon({ content, title, position = 'bottom' }: TooltipIconProps) {
+export function TooltipIcon({ content, position = 'bottom' }: TooltipIconProps) {
 	return (
-		<Tooltip content={content} title={title} position={position}>
+		<Tooltip content={content} position={position}>
 			{({ isOpen }) => (
 				<button className="flex items-center justify-center">
 					{isOpen ? (
