@@ -9,7 +9,6 @@ import { useDoctorManagement } from '@/shared/hooks/useDoctorManagement';
 export function Doctor() {
 	const {
 		doctors,
-		loading,
 		filters,
 		setFilters,
 		currentPage,
