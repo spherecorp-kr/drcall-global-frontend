@@ -16,8 +16,6 @@ const Pagination = ({
 	onPageChange,
 	maxVisiblePages = 10
 }: PaginationProps) => {
-	// 0-based index를 1-based로 변환
-	const displayPage = currentPage + 1;
 	const isFirstPage = currentPage === 0;
 	const isLastPage = currentPage === totalPages - 1;
 
