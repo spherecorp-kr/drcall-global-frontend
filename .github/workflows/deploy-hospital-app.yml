@@ -8,45 +8,36 @@ on:
     paths:
       - 'apps/hospital-app/**'
       - 'packages/**'
-      - '.github/workflows/deploy-hospital-app.yml'
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy'
+        description: 'Deploy environment'
         required: true
         type: choice
         options:
           - dev
-          - stg
           - prod
 
 env:
   PNPM_VERSION: '9.0.0'
   NODE_VERSION: '20'
 
-permissions:
-  contents: read
-
 jobs:
   deploy:
-    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-          cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -58,59 +49,42 @@ jobs:
             echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "DEPLOY_ENV=prod" >> $GITHUB_ENV
-          elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-            echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
           else
             echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
           fi
 
-      - name: Build Hospital App
+      - name: Build
         env:
           VITE_API_BASE_URL: ${{ secrets[format('HOSPITAL_APP_{0}_API_URL', env.DEPLOY_ENV)] }}
           VITE_ENVIRONMENT: ${{ env.DEPLOY_ENV }}
         run: pnpm build:hospital
 
-      - name: Configure AWS credentials
+      - name: Configure AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Set S3 bucket and CloudFront ID
-        id: aws-resources
-        run: |
-          echo "S3_BUCKET=${{ env.DEPLOY_ENV }}-hospital-app-frontend" >> $GITHUB_ENV
-          echo "CLOUDFRONT_ID=${{ secrets[format('HOSPITAL_APP_{0}_CLOUDFRONT_ID', env.DEPLOY_ENV)] }}" >> $GITHUB_ENV
-
       - name: Deploy to S3
         working-directory: ./apps/hospital-app
         run: |
-          aws s3 sync dist/ s3://${{ env.S3_BUCKET }}/ \
-            --delete \
-            --cache-control "public, max-age=31536000, immutable" \
-            --exclude "index.html" \
-            --exclude "*.map"
+          BUCKET="${{ env.DEPLOY_ENV }}-hospital-app-frontend"
+          aws s3 sync dist/ s3://$BUCKET/ --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "index.html"
+          aws s3 cp dist/index.html s3://$BUCKET/index.html \
+            --cache-control "no-cache"
 
-          # Upload index.html with no-cache
-          aws s3 cp dist/index.html s3://${{ env.S3_BUCKET }}/index.html \
-            --cache-control "public, max-age=0, must-revalidate" \
-            --content-type "text/html"
-
-      - name: Invalidate CloudFront cache
+      - name: Invalidate CloudFront
         run: |
+          DISTRIBUTION_ID="${{ secrets[format('HOSPITAL_APP_{0}_CLOUDFRONT_ID', env.DEPLOY_ENV)] }}"
           aws cloudfront create-invalidation \
-            --distribution-id ${{ env.CLOUDFRONT_ID }} \
+            --distribution-id $DISTRIBUTION_ID \
             --paths "/*"
 
-      - name: Deployment summary
+      - name: Summary
         run: |
-          echo "### Deployment Summary :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **App**: Hospital App" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployed Hospital App" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment**: ${{ env.DEPLOY_ENV }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **S3 Bucket**: ${{ env.S3_BUCKET }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **CloudFront**: ${{ env.CLOUDFRONT_ID }}" >> $GITHUB_STEP_SUMMARY
           echo "- **URL**: https://hospital.${{ env.DEPLOY_ENV }}.drcall.global" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Deployed at: $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
