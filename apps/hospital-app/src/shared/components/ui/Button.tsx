@@ -26,7 +26,7 @@ const sizeStyles: Record<ButtonSize, string> = {
 	small: 'h-7 px-3 text-14',
 };
 
-export function Button({
+const Button = ({
 	variant = 'primary',
 	size = 'default',
 	icon,
@@ -35,7 +35,7 @@ export function Button({
 	className,
 	disabled,
 	...props
-}: ButtonProps) {
+}: ButtonProps) => {
 	const iconSize = size === 'small' ? 'w-5 h-5' : 'w-5 h-5';
 
 	return (
@@ -56,3 +56,5 @@ export function Button({
 		</button>
 	);
 }
+
+export default Button;
