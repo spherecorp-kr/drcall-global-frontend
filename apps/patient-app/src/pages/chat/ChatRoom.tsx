@@ -492,9 +492,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
                 cursor: 'pointer'
               }}
             >
-              <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <path d="M18.75 21.25L11.25 15L18.75 8.75" stroke="#1F1F1F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <img src="/assets/icons/btn_back.svg" alt='back' width={30} height={30}/>
             </div>
 
             {/* 프로필 이미지 */}

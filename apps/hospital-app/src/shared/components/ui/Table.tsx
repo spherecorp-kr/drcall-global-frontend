@@ -5,7 +5,7 @@ import {
 	getSortedRowModel,
 	flexRender,
 } from '@tanstack/react-table';
-import type { ColumnDef, Row, SortingState } from '@tanstack/react-table';
+import type { ColumnDef, Row, SortingState, ColumnResizeMode, VisibilityState } from '@tanstack/react-table';
 import { cn } from '@/shared/utils/cn';
 import { useState } from 'react';
 
@@ -16,14 +16,18 @@ interface TableProps<TData> {
 	columns: ColumnDef<TData, any>[];
 	data: TData[];
 	disableHorizontalScroll?: boolean;
+	disableScroll?: boolean;
 	emptyState?: ReactNode;
 	enableSelection?: boolean;
+	enableColumnResizing?: boolean;
 	getRowClassName?: (row: Row<TData>) => string;
 	getRowId?: (row: TData) => string;
 	minWidth?: string;
 	onRowClick?: (row: Row<TData>, event: React.MouseEvent) => void;
 	onSelectionChange?: (selectedIds: Set<string>) => void;
 	onSortingChange?: (sorting: SortingState) => void;
+	// eslint-disable-next-line
+	onTableReady?: (table: any) => void;
 	selectedIds?: Set<string>;
 	sorting?: SortingState;
 	stickyHeader?: boolean;
@@ -60,8 +64,10 @@ const Table = <TData,>({
 	columns,
 	data,
 	disableHorizontalScroll = false,
+	disableScroll = false,
 	emptyState,
 	enableSelection = false,
+	enableColumnResizing = false,
 	getRowClassName,
 	// eslint-disable-next-line
 	getRowId = (row: any) => row.id,
@@ -69,11 +75,14 @@ const Table = <TData,>({
 	onRowClick,
 	onSelectionChange,
 	onSortingChange: externalOnSortingChange,
+	onTableReady,
 	selectedIds = new Set(),
 	sorting: externalSorting,
 	stickyHeader = false,
 }: TableProps<TData>) => {
 	const [internalSorting, setInternalSorting] = useState<SortingState>([]);
+	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+	const [columnSizing, setColumnSizing] = useState({});
 
 	// 안전하게 배열로 변환
 	const sorting = Array.isArray(externalSorting)
@@ -88,14 +97,27 @@ const Table = <TData,>({
 		columns,
 		state: {
 			sorting,
+			columnVisibility,
+			columnSizing,
 		},
 		onSortingChange: (updater) => {
 			const newSorting = typeof updater === 'function' ? updater(sorting) : updater;
 			setSorting(newSorting);
 		},
+		onColumnVisibilityChange: setColumnVisibility,
+		onColumnSizingChange: setColumnSizing,
+		columnResizeMode: 'onChange' as ColumnResizeMode,
+		enableColumnResizing,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
 	});
+
+	// Table 인스턴스를 외부로 전달
+	React.useEffect(() => {
+		if (onTableReady) {
+			onTableReady(table);
+		}
+	}, [table, onTableReady]);
 
 	const handleRowClick = (row: Row<TData>, event: React.MouseEvent) => {
 		if (enableSelection && onSelectionChange) {
@@ -121,12 +143,110 @@ const Table = <TData,>({
 		return getRowClassName?.(row) || '';
 	};
 
+	// 데이터가 없고 emptyState가 있는 경우
+	if (table.getRowModel().rows.length === 0 && emptyState) {
+		return (
+			<div className={cn('w-full h-full flex flex-col', className)}>
+				<div className={cn('w-full', stickyHeader ? '' : 'pt-4', 'px-3 sm:px-4 md:px-5')}>
+					<table className="table-fixed w-full" style={{ minWidth }}>
+						{colgroup}
+						<thead
+							className={cn(
+								"relative border-t-0 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[0.5px] after:bg-stroke-input after:content-['']",
+								stickyHeader && 'sticky top-0 z-10 bg-bg-white',
+							)}
+						>
+							{stickyHeader && (
+								<tr>
+									<th
+										className="h-4 bg-bg-white"
+										colSpan={table.getAllColumns().length}
+									></th>
+								</tr>
+							)}
+							{table.getHeaderGroups().map((headerGroup) => (
+								<tr key={headerGroup.id} className="bg-bg-white">
+									{headerGroup.headers.map((header) => {
+										const canSort = header.column.getCanSort();
+										const meta = header.column.columnDef.meta as
+											| { align?: 'left' | 'center' | 'right'; truncate?: boolean }
+											| undefined;
+
+										return (
+											<th
+												key={header.id}
+												className={cn(
+													'h-6 bg-bg-white text-left relative',
+													canSort && 'cursor-pointer select-none',
+												)}
+												style={{
+													width: enableColumnResizing
+														? header.getSize()
+														: header.getSize() !== 150
+															? header.getSize()
+															: undefined,
+													minWidth: header.column.columnDef.minSize,
+													maxWidth: header.column.columnDef.maxSize,
+												}}
+												onClick={
+													canSort
+														? header.column.getToggleSortingHandler()
+														: undefined
+												}
+											>
+												{header.isPlaceholder ? null : (
+													<div
+														className={cn(
+															'flex items-center gap-1.5 px-2.5',
+														meta?.align === 'center' ? 'justify-center' : meta?.align === 'right' ? 'justify-end' : 'justify-start',
+														)}
+													>
+														<span className="text-text-30 text-14 font-normal font-pretendard leading-normal">
+															{flexRender(
+																header.column.columnDef.header,
+																header.getContext(),
+															)}
+														</span>
+														{canSort && (
+															<SortIcon
+																isSorted={header.column.getIsSorted()}
+															/>
+														)}
+													</div>
+												)}
+												{enableColumnResizing && header.column.getCanResize() && (
+													<div
+														onMouseDown={header.getResizeHandler()}
+														onTouchStart={header.getResizeHandler()}
+														onDoubleClick={() => header.column.resetSize()}
+														className={cn(
+															'absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none',
+															'hover:bg-primary-70 hover:w-[2px]',
+															header.column.getIsResizing() && 'bg-primary-70 w-[2px]',
+														)}
+													/>
+												)}
+											</th>
+										);
+									})}
+								</tr>
+							))}
+						</thead>
+					</table>
+				</div>
+				<div className="flex-1 px-3 pb-3 sm:px-4 sm:pb-4 md:px-5 md:pb-5">
+					{emptyState}
+				</div>
+			</div>
+		);
+	}
+
 	return (
-		<div className={cn('w-full h-full overflow-auto flex flex-col', className)}>
+		<div className={cn('w-full h-full flex flex-col', disableScroll ? 'overflow-hidden' : 'overflow-auto', className)}>
 			<div
 				className={cn(
 					'w-full flex-1',
-					disableHorizontalScroll ? 'overflow-x-hidden' : 'overflow-x-auto',
+					disableScroll ? 'overflow-hidden' : (disableHorizontalScroll ? 'overflow-x-hidden' : 'overflow-x-auto'),
 					stickyHeader ? '' : 'pt-4',
 					'px-3 pb-3 sm:px-4 sm:pb-4 md:px-5 md:pb-5',
 				)}
@@ -152,22 +272,21 @@ const Table = <TData,>({
 								{headerGroup.headers.map((header) => {
 									const canSort = header.column.getCanSort();
 									const meta = header.column.columnDef.meta as
-										| { align?: 'left' | 'center' | 'right' }
+										| { align?: 'left' | 'center' | 'right'; truncate?: boolean }
 										| undefined;
 
 									return (
 										<th
 											key={header.id}
 											className={cn(
-												'h-6 bg-bg-white',
-												meta?.align === 'center'
-													? 'text-center'
-													: 'text-left',
+												'h-6 bg-bg-white relative',
+												meta?.align === 'center' ? 'text-center' : meta?.align === 'right' ? 'text-right' : 'text-left',
 												canSort && 'cursor-pointer select-none',
 											)}
 											style={{
-												width:
-													header.getSize() !== 150
+												width: enableColumnResizing
+													? header.getSize()
+													: header.getSize() !== 150
 														? header.getSize()
 														: undefined,
 												minWidth: header.column.columnDef.minSize,
@@ -183,8 +302,7 @@ const Table = <TData,>({
 												<div
 													className={cn(
 														'flex items-center gap-1.5 px-2.5',
-														meta?.align === 'center' &&
-															'justify-center',
+														meta?.align === 'center' ? 'justify-center' : meta?.align === 'right' ? 'justify-end' : 'justify-start',
 													)}
 												>
 													<span className="text-text-30 text-14 font-normal font-pretendard leading-normal">
@@ -199,6 +317,18 @@ const Table = <TData,>({
 														/>
 													)}
 												</div>
+											)}
+											{enableColumnResizing && header.column.getCanResize() && (
+												<div
+													onMouseDown={header.getResizeHandler()}
+													onTouchStart={header.getResizeHandler()}
+													onDoubleClick={() => header.column.resetSize()}
+													className={cn(
+														'absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none',
+														'hover:bg-primary-70 hover:w-[2px]',
+														header.column.getIsResizing() && 'bg-primary-70 w-[2px]',
+													)}
+												/>
 											)}
 										</th>
 									);
@@ -231,21 +361,27 @@ const Table = <TData,>({
 								>
 									{row.getVisibleCells().map((cell) => {
 										const meta = cell.column.columnDef.meta as
-											| { align?: 'left' | 'center' | 'right' }
+											| { align?: 'left' | 'center' | 'right'; truncate?: boolean }
 											| undefined;
 										return (
 											<td key={cell.id} className="h-[72px]">
 												<div
 													className={cn(
 														'flex items-center h-full px-2.5',
-														meta?.align === 'center' &&
-															'justify-center',
+														meta?.align === 'center'
+															? 'justify-center'
+															: meta?.align === 'right'
+																? 'justify-end'
+																: 'justify-start',
+														meta?.truncate && 'overflow-hidden',
 													)}
 												>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext(),
-													)}
+													<div className={cn(meta?.truncate && 'truncate')}>
+														{flexRender(
+															cell.column.columnDef.cell,
+															cell.getContext(),
+														)}
+													</div>
 												</div>
 											</td>
 										);

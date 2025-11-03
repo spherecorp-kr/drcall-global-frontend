@@ -67,7 +67,7 @@ export default function MyPage() {
     >
       <PageContainer style={{ background: 'transparent' }}>
         {/* Title */}
-        <PageSection padding style={{ marginBottom: '1.25rem' }}>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <PageTitle>{t('mypage.menuTitle')}</PageTitle>
         </PageSection>
 

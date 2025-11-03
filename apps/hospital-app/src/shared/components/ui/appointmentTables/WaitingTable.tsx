@@ -170,7 +170,7 @@ const WaitingTable = () => {
 				getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
 				onRowClick={navigateToDetails}
 			/>
-			<Pagination />
+			<Pagination currentPage={0} totalPages={1} onPageChange={() => {}} />
 		</div>
 	);
 };

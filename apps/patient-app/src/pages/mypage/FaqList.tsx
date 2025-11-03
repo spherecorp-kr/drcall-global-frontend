@@ -115,7 +115,6 @@ export default function FaqList() {
         style={{
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem',
           display: 'flex',
           flexDirection: 'column',
@@ -140,10 +139,7 @@ export default function FaqList() {
               justifyContent: 'center'
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="7" stroke="#00A0D2" strokeWidth="2"/>
-              <path d="M16 16L21 21" stroke="#00A0D2" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <img src='/assets/icons/search.svg' alt='search' width={24} height={24}/>
           </div>
           <input
             type="text"
@@ -184,9 +180,7 @@ export default function FaqList() {
                 cursor: 'pointer'
               }}
             >
-              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                <path d="M1 1L9 9M9 1L1 9" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-              </svg>
+              <img src='/assets/icons/btn_txt_delete.svg' alt='close' width={24} height={24}/>
             </div>
           )}
         </div>

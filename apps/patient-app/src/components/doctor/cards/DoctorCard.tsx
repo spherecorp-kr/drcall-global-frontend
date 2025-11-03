@@ -132,6 +132,13 @@ export default function DoctorCard({
             const isSelected = selectedTimeSlot === slot.time;
             const isDisabled = !slot.available;
 
+            const timeIconSrc =
+              isSelected
+                ? '/assets/icons/ic_selected_time.svg' : isDisabled 
+                ? '/assets/icons/ic_disabled_time.svg' : '/assets/icons/ic_active_time.svg';
+            const timeIconAlt =
+              isSelected ? 'selected-time' : isDisabled ? 'disabled-time' : 'time';
+
             return (
               <button
                 key={idx}
@@ -160,21 +167,7 @@ export default function DoctorCard({
                   whiteSpace: 'nowrap'
                 }}
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <circle
-                    cx="8"
-                    cy="8"
-                    r="6.5"
-                    stroke={isSelected ? 'white' : isDisabled ? '#A6A6A6' : '#41444B'}
-                    strokeWidth="1.5"
-                  />
-                  <path
-                    d="M8 4V8L10.5 10.5"
-                    stroke={isSelected ? 'white' : isDisabled ? '#A6A6A6' : '#41444B'}
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <img src={timeIconSrc} alt={timeIconAlt} width={16} height={16} />
                 <span
                   style={{
                     color: isSelected ? 'white' : isDisabled ? '#A6A6A6' : '#41444B',
