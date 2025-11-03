@@ -3,37 +3,9 @@ import { SegmentedControl } from './SegmentedControl';
 import { SearchInput } from './SearchInput';
 import Dropdown from './Dropdown';
 import { Button } from './Button';
-
-const CalendarIcon = () => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-    <rect x="3" y="4" width="18" height="18" rx="2" stroke="#9CA3AF" strokeWidth="2"/>
-    <path d="M3 10h18M8 2v4M16 2v4" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round"/>
-  </svg>
-);
-
-const InfoIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <circle cx="10" cy="10" r="8.33" stroke="currentColor" strokeWidth="1.5" />
-    <path
-      d="M10 10V13.33M10 6.67H10.0083"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const RefreshIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path
-      d="M17.5 10C17.5 14.1421 14.1421 17.5 10 17.5C5.85786 17.5 2.5 14.1421 2.5 10C2.5 5.85786 5.85786 2.5 10 2.5C12.5 2.5 14.5 3.5 16 5.5"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-    <path d="M16 2V5.5H12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';
+import InfoIcon from '@/shared/assets/icons/btn_circle_help.svg?react';
+import RefreshIcon from '@/shared/assets/icons/ic_ reset.svg?react';
 
 interface PaymentSearchProps {
   onSearch?: (filters: {
@@ -128,7 +100,7 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
   };
 
   return (
-    <div className="bg-bg-white rounded-[10px] border border-stroke-input p-5 flex flex-col gap-[10px]">
+    <div className="bg-bg-white rounded-[10px] border border-stroke-input p-3 sm:p-4 md:p-5 flex flex-col gap-3 sm:gap-4 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
       {/* Date Range Section */}
       <div className="flex items-center gap-[10px]">
         <div className="w-[100px] flex items-center gap-1">

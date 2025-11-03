@@ -42,7 +42,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '결제번호',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.paymentNumber}
           </div>
         ),
@@ -52,7 +52,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '예약번호',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.appointmentNumber}
           </div>
         ),
@@ -62,7 +62,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '결제 일시',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.paymentDatetime || '-'}
           </div>
         ),
@@ -76,7 +76,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
           const isPending = status === 'pending';
           return (
             <div
-              className={`text-16 font-normal font-pretendard ${isPending ? 'text-system-successful2' : 'text-text-100'}`}
+              className={`text-14 font-normal font-pretendard ${isPending ? 'text-system-successful2' : 'text-text-100'}`}
             >
               {paymentStatusLabels[status]}
             </div>
@@ -88,7 +88,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '결제 수단',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.paymentMethod ? paymentMethodLabels[row.original.paymentMethod] : '-'}
           </div>
         ),
@@ -98,7 +98,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '결제 금액(A+B+C+D)',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-semibold font-pretendard">
             {row.original.totalAmount.toLocaleString()} THB
           </div>
         ),
@@ -109,7 +109,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '진료비(A)',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.consultationFee.toLocaleString()}
           </div>
         ),
@@ -120,7 +120,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '처방비(B)',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.prescriptionFee > 0 ? row.original.prescriptionFee.toLocaleString() : '-'}
           </div>
         ),
@@ -131,7 +131,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '서비스비(C)',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.serviceFee.toLocaleString()}
           </div>
         ),
@@ -142,7 +142,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         header: '배송비(D)',
         enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-text-100 text-16 font-normal font-pretendard">
+          <div className="text-text-100 text-14 font-normal font-pretendard">
             {row.original.deliveryFee > 0 ? row.original.deliveryFee.toLocaleString() : '-'}
           </div>
         ),
