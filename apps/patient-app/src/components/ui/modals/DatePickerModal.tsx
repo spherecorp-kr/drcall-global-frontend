@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { COLORS } from '@/constants';
+
 interface DatePickerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -203,7 +205,7 @@ function PickerColumn({ values, selectedValue, onChange, isFirst, isLast }: Pick
       justifyContent: 'center',
       fontSize: isSelected ? '1.25rem' : '1rem',
       fontWeight: isSelected ? '500' : '400',
-      color: isSelected ? '#1f1f1f' : '#BBBBBB',
+      color: isSelected ? COLORS.text.primary : '#979797',
       cursor: 'pointer',
       userSelect: 'none' as const,
       scrollSnapAlign: 'center' as const,
