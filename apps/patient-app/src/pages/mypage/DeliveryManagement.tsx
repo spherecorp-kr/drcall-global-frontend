@@ -162,15 +162,14 @@ export default function DeliveryManagement() {
           <button
             onClick={handleAddAddress}
             style={{
-              width: '6.75rem',
-              height: '2rem',
               background: '#00A0D2',
               borderRadius: '0.25rem',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              padding: '0.375rem 1.125rem'
             }}
           >
             <div
