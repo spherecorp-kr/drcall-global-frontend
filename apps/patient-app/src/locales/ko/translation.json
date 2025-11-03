@@ -321,6 +321,7 @@
     "editDeliveryAddress": "배송지 수정",
     "deleteDeliveryAddress": "배송지 삭제",
     "confirmDelete": "삭제 하시겠습니까?",
+    "confirmDeleteDeliveryAddress": "배송지를 삭제하시겠습니까?",
     "deleteSuccess": "삭제되었습니다",
     "announcements": "공지사항",
     "announcementsDescription": "다양한 소식을 확인하세요.",
