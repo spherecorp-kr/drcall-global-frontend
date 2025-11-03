@@ -6,13 +6,13 @@ import {
 	SearchCompleted,
 	SearchConfirmed,
 	SearchWaiting
-} from '@/shared/components/ui/AppointmentSearch';
+} from '@/shared/components/ui/appointmentSearch';
 import {
 	CancelledTable,
 	CompletedTable,
 	ConfirmedTable,
 	WaitingTable
-} from '@/shared/components/ui/AppointmentTables';
+} from '@/shared/components/ui/appointmentTables';
 
 const Appointment = () => {
 	const [status, setStatus] = useState<AppointmentStatus>('waiting');
