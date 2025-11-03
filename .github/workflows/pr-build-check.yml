@@ -5,21 +5,29 @@ on:
     branches:
       - main
       - develop
-    paths:
-      - 'apps/**'
-      - 'packages/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - 'pnpm-workspace.yaml'
 
 jobs:
   buildExpected:
     name: buildExpected
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Comment PR - Build Started
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🔨 **Build Started**\n\nRunning lint and build checks...'
+            })
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
@@ -57,3 +65,27 @@ jobs:
           else
             echo "❌ **Status**: Build failed" >> $GITHUB_STEP_SUMMARY
           fi
+
+      - name: Comment PR - Build Success
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **Build Passed**\n\nAll checks completed successfully!\n- Lint: ✅\n- Build: ✅'
+            })
+
+      - name: Comment PR - Build Failed
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **Build Failed**\n\nPlease check the workflow logs for details.\n\n[View Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+            })
