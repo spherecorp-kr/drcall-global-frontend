@@ -1,6 +1,6 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
-import { useMemo } from 'react';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useCallback, useMemo } from 'react';
+import type { ColumnDef, Row } from '@tanstack/react-table';
 import type {
 	AppointmentType,
 	PatientLevel,
@@ -9,10 +9,12 @@ import type {
 import { cn } from '@/shared/utils/cn';
 import { levelBadgeMap } from '@/shared/utils/constants';
 import { PatientBadge } from '@/shared/components/ui/Badge';
+import { useNavigate } from 'react-router-dom';
 
 // 샘플 데이터
 const sampleData: WaitingTableColumnProps[] = [
 	{
+		appointmentSequence: 9,
 		appointmentType: 'aptmt',
 		appointmentDatetime: '22/06/25 14:01~14:15',
 		patientName: '환자1',
@@ -21,6 +23,7 @@ const sampleData: WaitingTableColumnProps[] = [
 		appointmentRequestTime: '21/06/25 09:45:18',
 	},
 	{
+		appointmentSequence: 8,
 		appointmentType: 'sdn',
 		patientName: '환자1',
 		patientLevel: 'VIP',
@@ -28,6 +31,7 @@ const sampleData: WaitingTableColumnProps[] = [
 		appointmentRequestTime: '21/06/25 09:45:18',
 	},
 	{
+		appointmentSequence: 6,
 		appointmentType: 'aptmt',
 		appointmentDatetime: '22/06/25 14:01~14:15',
 		patientName: '환자1',
@@ -36,6 +40,7 @@ const sampleData: WaitingTableColumnProps[] = [
 		appointmentRequestTime: '21/06/25 09:45:18',
 	},
 	{
+		appointmentSequence: 5,
 		appointmentType: 'sdn',
 		patientName: '환자1',
 		patientLevel: 'Risk',
@@ -43,6 +48,7 @@ const sampleData: WaitingTableColumnProps[] = [
 		appointmentRequestTime: '21/06/25 09:45:18',
 	},
 	{
+		appointmentSequence: 4,
 		appointmentType: 'aptmt',
 		appointmentDatetime: '22/06/25 14:01~14:15',
 		patientName: '환자1',
@@ -50,12 +56,14 @@ const sampleData: WaitingTableColumnProps[] = [
 		appointmentRequestTime: '21/06/25 09:45:18',
 	},
 	{
+		appointmentSequence: 3,
 		appointmentType: 'sdn',
 		patientName: '환자1',
 		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
 		appointmentRequestTime: '21/06/25 09:45:18',
 	},
 	{
+		appointmentSequence: 2,
 		appointmentType: 'aptmt',
 		appointmentDatetime: '22/06/25 14:01~14:15',
 		patientName: '환자1',
@@ -64,6 +72,7 @@ const sampleData: WaitingTableColumnProps[] = [
 		appointmentRequestTime: '21/06/25 09:45:18',
 	},
 	{
+		appointmentSequence: 1,
 		appointmentType: 'sdn',
 		patientName: '환자1',
 		patientLevel: 'Risk',
@@ -86,6 +95,8 @@ const ColGroup = () => (
 );
 
 const WaitingTable = () => {
+	const navigate = useNavigate();
+
 	const columns = useMemo<ColumnDef<WaitingTableColumnProps>[]>(() => [
 		{
 			accessorKey: 'appointmentType',
@@ -141,6 +152,11 @@ const WaitingTable = () => {
 		},
 	], []);
 
+	// 상세 페이지로 이동
+	const navigateToDetails = useCallback((row: Row<WaitingTableColumnProps>) => {
+		navigate(`/appointment/${row.original.appointmentSequence}`);
+	}, [navigate]);
+
 	return (
 		<div className="bg-white border border-[#e0e0e0] flex flex-col gap-2.5 h-full rounded-[0.625rem]">
 			<Table
@@ -152,6 +168,7 @@ const WaitingTable = () => {
 				emptyState={<EmptyState message="예약 대기 목록이 없습니다." />}
 				enableSelection
 				getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
+				onRowClick={navigateToDetails}
 			/>
 			<Pagination />
 		</div>

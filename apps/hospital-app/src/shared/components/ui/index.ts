@@ -1,4 +1,5 @@
 export { default as AppointmentStatusTab } from './AppointmentStatusTab';
+export { default as Button } from './Button';
 export { default as ChatFloatingButton } from './ChatFloatingButton';
 export { default as ChatWindow } from './ChatWindow';
 export { Checkbox } from './Checkbox';

@@ -27,7 +27,7 @@ const sizeStyles: Record<ButtonSize, string> = {
 	small: 'h-10 px-4 text-14 rounded-md',
 };
 
-export function Button({
+const Button = ({
 	variant = 'primary',
 	size = 'medium',
 	icon,
@@ -36,7 +36,7 @@ export function Button({
 	className,
 	disabled,
 	...props
-}: ButtonProps) {
+}: ButtonProps) => {
 	return (
 		<button
 			className={cn(
@@ -55,3 +55,5 @@ export function Button({
 		</button>
 	);
 }
+
+export default Button;
