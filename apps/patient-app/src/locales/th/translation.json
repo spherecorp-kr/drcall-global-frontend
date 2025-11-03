@@ -313,6 +313,7 @@
     "editDeliveryAddress": "แก้ไขที่อยู่จัดส่ง",
     "deleteDeliveryAddress": "ลบที่อยู่จัดส่ง",
     "confirmDelete": "คุณต้องการลบหรือไม่?",
+    "confirmDeleteDeliveryAddress": "คุณต้องการลบที่อยู่นี้หรือไม่?",
     "deleteSuccess": "ลบสำเร็จ",
     "announcements": "ประกาศ",
     "announcementsDescription": "ตรวจสอบข่าวสารต่างๆ",

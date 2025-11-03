@@ -216,7 +216,7 @@ export default function DeliveryManagement() {
       {/* 배송지 삭제 확인 모달 */}
       <ConfirmModal
         isOpen={deleteConfirmOpen}
-        message={t('mypage.confirmDelete')}
+        message={t('mypage.confirmDeleteDeliveryAddress')}
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
         confirmText={t('common.confirm')}
