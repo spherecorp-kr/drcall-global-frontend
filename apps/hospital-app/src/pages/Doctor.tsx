@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/shared/components/ui/Button';
 import { SearchInput } from '@/shared/components/ui/SearchInput';
 import { DoctorManagementTable } from '@/shared/components/ui/DoctorManagementTable';
 import Pagination from '@/shared/components/ui/Pagination';
 import EmptyState from '@/shared/components/ui/EmptyState';
+import { DoctorRegistrationModal, type DoctorFormData } from '@/shared/components/ui/DoctorRegistrationModal';
 import { useDoctorManagement } from '@/shared/hooks/useDoctorManagement';
 
 export function Doctor() {
+	const navigate = useNavigate();
 	const {
 		doctors,
 		filters,
@@ -16,7 +19,7 @@ export function Doctor() {
 		setPage,
 	} = useDoctorManagement(10);
 
-	const [selectedDoctorId, setSelectedDoctorId] = useState<string | undefined>(undefined);
+	const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
 
 	const handleSearchChange = (value: string) => {
 		setFilters({
@@ -26,12 +29,12 @@ export function Doctor() {
 	};
 
 	const handleDoctorClick = (doctor: { id: string }) => {
-		setSelectedDoctorId(doctor.id);
+		navigate(`/doctor/${doctor.id}`);
 	};
 
-	const handleAddDoctor = () => {
-		// TODO: 의사 등록 모달 열기
-		console.log('의사 등록');
+	const handleDoctorRegister = (data: DoctorFormData) => {
+		// TODO: 실제 API 호출
+		console.log('의사 등록:', data);
 	};
 
 	return (
@@ -50,9 +53,7 @@ export function Doctor() {
 								/>
 							</svg>
 						}
-						onClick={() => {
-						// TODO: 의료진 등록 모달 열기
-					}}
+						onClick={() => setIsRegistrationModalOpen(true)}
 					>
 						의료진 등록
 					</Button>
@@ -65,13 +66,19 @@ export function Doctor() {
 				/>
 			</div>
 
+			{/* 의료진 등록 모달 */}
+			<DoctorRegistrationModal
+				isOpen={isRegistrationModalOpen}
+				onClose={() => setIsRegistrationModalOpen(false)}
+				onSubmit={handleDoctorRegister}
+			/>
+
 			{/* 테이블 */}
 			<div className="flex-1 px-5 pb-3 min-h-0">
 				<div className="h-full bg-white rounded-[10px] border border-stroke-input flex flex-col">
 					<div className="flex-1 min-h-0">
 						<DoctorManagementTable
 							doctors={doctors}
-							selectedDoctorId={selectedDoctorId}
 							onRowClick={handleDoctorClick}
 							emptyState={<EmptyState message="의료진 목록이 없습니다." />}
 						/>
@@ -87,24 +94,6 @@ export function Doctor() {
 					)}
 				</div>
 			</div>
-
-			{/* 의사 등록 플로팅 버튼 (예비) */}
-			<button
-				onClick={handleAddDoctor}
-				className="fixed bottom-8 right-8 w-[84px] h-[84px] bg-primary-70 rounded-full border-[1.5px] border-white shadow-lg flex flex-col items-center justify-center gap-0.5 hover:bg-primary-80 transition-colors group"
-				aria-label="의사 등록"
-			>
-				<svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-					<path
-						d="M16 8V24M8 16H24"
-						stroke="white"
-						strokeWidth="2"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-					/>
-				</svg>
-				<span className="text-text-0 text-16 font-semibold font-pretendard">등록</span>
-			</button>
 		</div>
 	);
 }

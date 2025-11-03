@@ -6,6 +6,7 @@ interface TooltipProps {
 	children: ReactNode | ((props: { isOpen: boolean }) => ReactNode);
 	position?: 'top' | 'bottom' | 'left' | 'right';
 	className?: string;
+	contentClassName?: string;
 	delay?: number;
 }
 
@@ -14,6 +15,7 @@ export function Tooltip({
 	children,
 	position = 'bottom',
 	className = '',
+	contentClassName = '',
 	delay = 0,
 }: TooltipProps) {
 	const [isVisible, setIsVisible] = useState(false);
@@ -136,7 +138,7 @@ export function Tooltip({
 
 	return (
 		<>
-			<div className={`relative inline-block ${className}`}>
+			<div className="relative inline-block">
 				<div
 					ref={triggerRef}
 					onMouseEnter={showTooltip}
@@ -155,16 +157,20 @@ export function Tooltip({
 					<div
 						ref={tooltipRef}
 						style={tooltipStyle}
-						className="fixed z-[9999] w-[248px] rounded-[10px] bg-tap-1 p-4 shadow-lg animate-in fade-in zoom-in-95 duration-200"
+						className={`fixed z-[9999] w-[248px] rounded-[10px] bg-tap-1 p-4 shadow-lg animate-in fade-in zoom-in-95 duration-200 ${className}`}
 						onClick={(e) => e.stopPropagation()}
 					>
 						<div
-							className="w-full text-text-0 text-16 font-pretendard font-normal leading-[24px]"
-							style={{
-								wordBreak: 'keep-all',
-								overflowWrap: 'break-word',
-								whiteSpace: 'normal',
-							}}
+							className={`w-full text-text-0 text-16 font-pretendard font-normal leading-[24px] ${contentClassName}`}
+							style={
+								contentClassName
+									? undefined
+									: {
+											wordBreak: 'keep-all',
+											overflowWrap: 'break-word',
+											whiteSpace: 'normal',
+									  }
+							}
 						>
 							{content}
 						</div>
