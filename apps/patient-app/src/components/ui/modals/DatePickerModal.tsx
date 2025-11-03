@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { COLORS } from '@/constants';
+
 interface DatePickerModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -72,7 +74,7 @@ export default function DatePickerModal({ isOpen, onClose, onConfirm, initialDat
           position: 'relative',
           borderBottom: '1px solid #F0F0F0'
         }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', margin: 0 }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: '400', color: '#1f1f1f', margin: 0 }}>
             {modalTitle}
           </h3>
           <button
@@ -94,7 +96,7 @@ export default function DatePickerModal({ isOpen, onClose, onConfirm, initialDat
         <div style={{
           display: 'flex',
           height: '15rem',
-          padding: '1rem 0',
+          padding: '1rem 0.625rem',
           overflow: 'hidden'
         }}>
           {/* Day */}
@@ -102,6 +104,7 @@ export default function DatePickerModal({ isOpen, onClose, onConfirm, initialDat
             values={days}
             selectedValue={selectedDay}
             onChange={setSelectedDay}
+            isFirst
           />
           {/* Month */}
           <PickerColumn
@@ -114,6 +117,7 @@ export default function DatePickerModal({ isOpen, onClose, onConfirm, initialDat
             values={years}
             selectedValue={selectedYear}
             onChange={setSelectedYear}
+            isLast
           />
         </div>
 
@@ -142,9 +146,11 @@ interface PickerColumnProps {
   values: number[];
   selectedValue: number;
   onChange: (value: number) => void;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
-function PickerColumn({ values, selectedValue, onChange }: PickerColumnProps) {
+function PickerColumn({ values, selectedValue, onChange, isFirst, isLast }: PickerColumnProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const ITEM_HEIGHT = 48; // 3rem = 48px
@@ -198,8 +204,8 @@ function PickerColumn({ values, selectedValue, onChange }: PickerColumnProps) {
       alignItems: 'center',
       justifyContent: 'center',
       fontSize: isSelected ? '1.25rem' : '1rem',
-      fontWeight: isSelected ? '700' : '400',
-      color: isSelected ? '#1f1f1f' : '#BBBBBB',
+      fontWeight: isSelected ? '500' : '400',
+      color: isSelected ? COLORS.text.primary : '#979797',
       cursor: 'pointer',
       userSelect: 'none' as const,
       scrollSnapAlign: 'center' as const,
@@ -225,9 +231,13 @@ function PickerColumn({ values, selectedValue, onChange }: PickerColumnProps) {
         left: 0,
         right: 0,
         height: '3rem',
-        background: '#F5F5F5',
+        background: '#F6F6F6',
         zIndex: 0,
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        borderTopLeftRadius: isFirst ? '0.625rem' : 0,
+        borderBottomLeftRadius: isFirst ? '0.625rem' : 0,
+        borderTopRightRadius: isLast ? '0.625rem' : 0,
+        borderBottomRightRadius: isLast ? '0.625rem' : 0
       }} />
 
       <div
