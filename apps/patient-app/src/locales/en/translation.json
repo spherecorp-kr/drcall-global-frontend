@@ -348,6 +348,7 @@
     "addRecord": "Add Record",
     "editRecord": "Edit Record",
     "deleteRecord": "Delete Record",
+    "deleteRecordConfirm": "Do you want to delete this record?",
     "recordDetail": "Record Detail",
     "noRecords": "No records",
     "bloodPressure": "Blood Pressure",

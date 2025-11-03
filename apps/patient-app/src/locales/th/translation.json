@@ -348,6 +348,7 @@
     "addRecord": "เพิ่มบันทึก",
     "editRecord": "แก้ไขบันทึก",
     "deleteRecord": "ลบบันทึก",
+    "deleteRecordConfirm": "คุณต้องการลบข้อมูลนี้หรือไม่?",
     "recordDetail": "รายละเอียดบันทึก",
     "noRecords": "ไม่มีบันทึก",
     "bloodPressure": "ความดันโลหิต",

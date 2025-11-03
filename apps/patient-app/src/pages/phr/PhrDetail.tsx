@@ -183,7 +183,7 @@ export default function PhrDetail() {
         isOpen={deleteModalOpen}
         onCancel={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        message={t('mypage.confirmDelete')}
+        message={t('phr.deleteRecordConfirm')}
         confirmText={t('common.delete')}
         cancelText={t('common.cancel')}
       />
