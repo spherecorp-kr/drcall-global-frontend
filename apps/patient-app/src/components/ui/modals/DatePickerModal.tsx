@@ -72,7 +72,7 @@ export default function DatePickerModal({ isOpen, onClose, onConfirm, initialDat
           position: 'relative',
           borderBottom: '1px solid #F0F0F0'
         }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', margin: 0 }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: '400', color: '#1f1f1f', margin: 0 }}>
             {modalTitle}
           </h3>
           <button
