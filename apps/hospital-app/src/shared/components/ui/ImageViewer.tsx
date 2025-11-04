@@ -142,7 +142,7 @@ const ImageViewer = ({
 							initialScale={1}
 							maxScale={2}
 							minScale={0.5}
-							onInit={(ref) => {
+							onInit={(ref: ReactZoomPanPinchRef) => {
 								transformRefs.current.set(page, ref);
 								if (page === initialIndex || transformRefs.current.size === 1) {
 									setCurrentTransformRef(ref);
