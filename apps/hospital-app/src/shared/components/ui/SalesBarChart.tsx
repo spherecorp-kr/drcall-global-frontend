@@ -40,7 +40,7 @@ export function SalesBarChart({ data, infoText }: SalesBarChartProps) {
 		return value.toLocaleString();
 	};
 
-	const CustomTooltip = ({ active, payload }: any) => {
+	const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: SalesChartData; value: number }> }) => {
 		if (active && payload && payload.length) {
 			return (
 				<div className="bg-tap-1 rounded-[10px] p-4 shadow-lg">

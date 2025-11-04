@@ -13,7 +13,7 @@ interface SalesDonutChartProps {
 export function SalesDonutChart({ data, title, totalAmount, infoText }: SalesDonutChartProps) {
 	const isEmpty = data.length === 0 || totalAmount === 0;
 
-	const CustomTooltip = ({ active, payload }: any) => {
+	const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: PaymentMethodData | SalesItemData }> }) => {
 		if (active && payload && payload.length) {
 			const item = payload[0].payload;
 			return (
