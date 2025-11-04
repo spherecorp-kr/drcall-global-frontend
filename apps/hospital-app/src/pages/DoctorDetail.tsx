@@ -243,7 +243,7 @@ export function DoctorDetail() {
 									<div className="h-6 border-b border-stroke-input" />
 
 									{/* 헤더 - 요일 */}
-									{WEEKDAYS.map((day) => (
+									{WEEKDAYS.map((day, dayIndex) => (
 										<div
 											key={day}
 											className={cn(
@@ -251,6 +251,7 @@ export function DoctorDetail() {
 												day === 'saturday' && 'text-[#3076DF]',
 												day === 'sunday' && 'text-[#FC0606]',
 												day !== 'saturday' && day !== 'sunday' && 'text-text-100',
+												dayIndex === WEEKDAYS.length - 1 && 'border-r',
 											)}
 										>
 											{DAY_MAP[day]}
@@ -266,7 +267,7 @@ export function DoctorDetail() {
 											</div>
 
 											{/* 00분~30분 셀들 */}
-											{WEEKDAYS.map((day) => {
+											{WEEKDAYS.map((day, dayIndex) => {
 												const slots = doctor.availableSchedule[day] || [];
 												const currentMinutes = hour * 60;
 												const nextHalfMinutes = hour * 60 + 30;
@@ -277,19 +278,22 @@ export function DoctorDetail() {
 													return startMinutes < nextHalfMinutes && endMinutes > currentMinutes;
 												});
 
+												const isLastColumn = dayIndex === WEEKDAYS.length - 1;
+
 												return (
 													<div
 														key={`${day}-${hour}-00`}
 														className={cn(
 															'px-3 py-2.5 border-l border-t border-stroke-input',
 															isAvailable && 'bg-[#80D0E9]',
+															isLastColumn && 'border-r',
 														)}
 													/>
 												);
 											})}
 
 											{/* 30분~60분 셀들 */}
-											{WEEKDAYS.map((day) => {
+											{WEEKDAYS.map((day, dayIndex) => {
 												const slots = doctor.availableSchedule[day] || [];
 												const currentMinutes = hour * 60 + 30;
 												const nextHourMinutes = (hour + 1) * 60;
@@ -301,6 +305,7 @@ export function DoctorDetail() {
 												});
 
 												const isLastRow = hourIndex === HOURS.length - 1;
+												const isLastColumn = dayIndex === WEEKDAYS.length - 1;
 
 												return (
 													<div
@@ -309,6 +314,7 @@ export function DoctorDetail() {
 															'px-3 py-2.5 border-l border-t border-stroke-input',
 															isAvailable && 'bg-[#80D0E9]',
 															isLastRow && 'border-b',
+															isLastColumn && 'border-r',
 														)}
 													/>
 												);
