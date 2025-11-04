@@ -48,3 +48,8 @@ export interface CancelledTableColumnProps {
 	doctorName: string; // 의사
 	patientName: string; // 환자명
 }
+
+export interface DoctorSchedule {
+	displayTime: string;
+	time: string;
+}

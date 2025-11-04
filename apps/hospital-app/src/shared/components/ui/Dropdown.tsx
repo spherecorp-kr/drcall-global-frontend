@@ -137,7 +137,7 @@ const Dropdown = ({
 				className={cn(
 					'relative h-10 w-full px-4',
 					'flex items-center justify-between gap-2',
-					'active:bg-text-10 bg-bg-white hover:bg-bg-gray rounded-lg',
+					'active:bg-text-10 bg-bg-white hover:bg-bg-gray rounded',
 					'outline outline-1 -outline-offset-1',
 					'transition-colors',
 					isOpen

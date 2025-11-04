@@ -20,7 +20,7 @@ const TopButtons = () => {
 			</div>
 			<div className='flex gap-2.5 items-center'>
 				<Button
-					className='active:bg-white active:border-primary-90 bg-white border border-primary-70 gap-1.5 h-10 hover:bg-bg-blue rounded-sm text-primary-70'
+					className='active:bg-white active:border-primary-90 bg-white border border-primary-70 gap-1.5 h-10 hover:bg-bg-blue rounded-sm !text-primary-70'
 					icon={<img alt='Edit' className='h-5 w-5' src={editIcon} />}
 				>예약 수정</Button>
 				<Button
@@ -28,7 +28,7 @@ const TopButtons = () => {
 					icon={<img alt='Cancel' className='h-5 w-5' src={cancelIcon} />}
 				>예약 취소</Button>
 				<Button
-					className='active:bg-white active:border-primary-90 bg-white border border-primary-70 gap-1.5 h-10 hover:bg-bg-blue rounded-sm text-primary-70'
+					className='active:bg-white active:border-primary-90 bg-white border border-primary-70 gap-1.5 h-10 hover:bg-bg-blue rounded-sm !text-primary-70'
 					icon={<img alt='Check' className='h-5 w-5' src={checkIcon} />}
 				>예약 확정</Button>
 			</div>

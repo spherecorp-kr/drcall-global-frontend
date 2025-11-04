@@ -90,6 +90,9 @@ export default {
 				md: '8px',
 				lg: '12px',
 			},
+			boxShadow: {
+				dialog: '4px 4px 10px 0 rgba(0, 0, 0, 0.25)',
+			},
 		},
 	},
 	plugins: [],
