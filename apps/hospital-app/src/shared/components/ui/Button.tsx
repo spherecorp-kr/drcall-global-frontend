@@ -17,8 +17,8 @@ const variantStyles: Record<ButtonVariant, string> = {
 		'bg-primary-70 !text-text-0 hover:bg-primary-80 active:bg-primary-90 disabled:bg-primary-30 disabled:!text-text-0',
 	dark: 'bg-tap-1 !text-text-0 hover:bg-text-80 active:bg-text-90 disabled:bg-text-50 disabled:!text-text-20',
 	outline:
-		'border border-primary-70 !text-primary-70 bg-bg-white hover:bg-bg-blue active:outline active:outline-primary-90 active:-outline-offset-1 disabled:border-stroke-input disabled:!text-text-20 disabled:bg-bg-disabled',
-	ghost: 'border border-stroke-input !text-text-100 bg-bg-white hover:bg-bg-gray active:outline active:outline-text-90 active:-outline-offset-1 disabled:border-stroke-input disabled:bg-bg-disabled',
+		'border border-primary-70 !text-primary-70 bg-bg-white hover:bg-bg-blue active:bg-bg-white active:outline active:outline-primary-90 active:-outline-offset-1 disabled:border-stroke-input disabled:!text-text-20 disabled:bg-bg-disabled',
+	ghost: 'border border-stroke-input !text-text-100 bg-bg-white hover:bg-bg-gray active:bg-bg-white active:outline active:outline-text-90 active:-outline-offset-1 disabled:border-stroke-input disabled:bg-bg-disabled',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

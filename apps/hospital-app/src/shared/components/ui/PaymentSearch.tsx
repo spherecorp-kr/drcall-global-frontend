@@ -3,8 +3,10 @@ import { SegmentedControl } from './SegmentedControl';
 import { SearchInput } from './SearchInput';
 import Dropdown from './Dropdown';
 import Button from './Button';
+import { Tooltip } from './Tooltip';
 import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';
-import InfoIcon from '@/shared/assets/icons/btn_circle_help.svg?react';
+import helpIcon from '@/shared/assets/icons/btn_circle_help.svg';
+import helpIconBlue from '@/shared/assets/icons/btn_circle_help_blue.svg';
 import RefreshIcon from '@/shared/assets/icons/ic_ reset.svg?react';
 
 interface PaymentSearchProps {
@@ -105,9 +107,27 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
       <div className="flex items-center gap-[10px]">
         <div className="w-[100px] flex items-center gap-1">
           <span className="text-text-100 text-16 font-normal font-pretendard">조회 기간</span>
-          <div className="w-5 h-5 text-text-70">
-            <InfoIcon />
-          </div>
+          <Tooltip
+            content={
+              <>
+                조회 기간은 버튼을 선택하거나 시작일·종료일을 직접 선택하여 설정할 수 있습니다.
+                <br />
+                단, 시작일로부터 최대 1년 이내까지만 조회 가능하며, 오늘을 포함한 과거 날짜만 선택할 수 있습니다.
+              </>
+            }
+            position="bottom"
+            className="w-[400px]"
+          >
+            {({ isOpen }) => (
+              <button type="button" className="flex items-center justify-center w-5 h-5">
+                {isOpen ? (
+                  <img alt="Help icon blue" className="w-5 h-5" src={helpIconBlue} />
+                ) : (
+                  <img alt="Help icon" className="w-5 h-5" src={helpIcon} />
+                )}
+              </button>
+            )}
+          </Tooltip>
         </div>
         <div className="flex items-center gap-[10px]">
           <SegmentedControl
