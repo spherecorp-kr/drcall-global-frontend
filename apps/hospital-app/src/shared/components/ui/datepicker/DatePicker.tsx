@@ -76,7 +76,7 @@ const DatePicker = ({ dateStr, onDateChange }: Props) => {
 			onChange={handleDateChange}
 			onMonthChange={handleChangeYearMonth}
 			onYearChange={handleChangeYearMonth}
-			renderCustomHeader={(params) => <DatePickerHeader {...params} {...yearMonth} />}
+			renderCustomHeader={(params: Parameters<NonNullable<React.ComponentProps<typeof ReactDatePicker>['renderCustomHeader']>>[0]) => <DatePickerHeader {...params} {...yearMonth} />}
 			selected={selectedDate}
 		/>
 	);
