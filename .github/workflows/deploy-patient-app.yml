@@ -22,9 +22,6 @@ env:
   PNPM_VERSION: '9.0.0'
   NODE_VERSION: '20'
 
-permissions:
-  contents: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -32,8 +29,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -48,51 +43,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Determine environment
+        id: env
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
             echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
-            echo "VERSION_TYPE=patch" >> $GITHUB_ENV
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "DEPLOY_ENV=prod" >> $GITHUB_ENV
-            echo "VERSION_TYPE=minor" >> $GITHUB_ENV
           else
             echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
-            echo "VERSION_TYPE=patch" >> $GITHUB_ENV
           fi
-
-      - name: Bump version and tag
-        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]')
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          npm version ${{ env.VERSION_TYPE }} --no-git-tag-version
-          VERSION=$(node -p "require('./package.json').version")
-
-          if [ "${{ env.DEPLOY_ENV }}" == "prod" ]; then
-            TAG="v${VERSION}"
-          else
-            TAG="v${VERSION}-${{ env.DEPLOY_ENV }}"
-          fi
-
-          echo "TAG=${TAG}" >> $GITHUB_ENV
-
-          git add package.json
-          git commit -m "chore: bump version to ${VERSION} [skip ci]"
-          git tag -a "${TAG}" -m "Release ${TAG}"
-          git push origin HEAD:${{ github.ref_name }}
-          git push origin "${TAG}"
-
-      - name: Create Release
-        if: github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip ci]') && env.DEPLOY_ENV == 'prod'
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ env.TAG }}
-          release_name: ${{ env.TAG }}
-          draft: false
-          prerelease: false
 
       - name: Build
         env:
@@ -129,6 +88,3 @@ jobs:
           echo "### Deployed Patient App" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment**: ${{ env.DEPLOY_ENV }}" >> $GITHUB_STEP_SUMMARY
           echo "- **URL**: https://patient.${{ env.DEPLOY_ENV }}.drcall.global" >> $GITHUB_STEP_SUMMARY
-          if [ -n "${{ env.TAG }}" ]; then
-            echo "- **Version**: ${{ env.TAG }}" >> $GITHUB_STEP_SUMMARY
-          fi
