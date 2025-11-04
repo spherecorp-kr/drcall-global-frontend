@@ -6,7 +6,6 @@ import type {
 	PatientLevel,
 	WaitingTableColumnProps,
 } from '@/shared/types/appointment';
-import { cn } from '@/shared/utils/cn';
 import { levelBadgeMap } from '@/shared/utils/constants';
 import { PatientBadge } from '@/shared/components/ui/Badge';
 import { useNavigate } from 'react-router-dom';

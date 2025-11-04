@@ -1,5 +1,4 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
-import { cn } from '@/shared/utils/cn';
 import type { ConfirmedTableColumnProps, PatientLevel } from '@/shared/types/appointment';
 import { useMemo } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
