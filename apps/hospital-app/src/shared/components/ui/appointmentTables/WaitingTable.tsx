@@ -6,7 +6,6 @@ import type {
 	PatientLevel,
 	WaitingTableColumnProps,
 } from '@/shared/types/appointment';
-import { cn } from '@/shared/utils/cn';
 import { levelBadgeMap } from '@/shared/utils/constants';
 import { PatientBadge } from '@/shared/components/ui/Badge';
 import { useNavigate } from 'react-router-dom';
@@ -167,7 +166,7 @@ const WaitingTable = () => {
 				disableHorizontalScroll
 				emptyState={<EmptyState message="예약 대기 목록이 없습니다." />}
 				enableSelection
-				getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
 				onRowClick={navigateToDetails}
 			/>
 			<Pagination currentPage={0} totalPages={1} onPageChange={() => {}} />

@@ -211,11 +211,7 @@ export function AppointmentTable({
 				onSelectionChange={setSelectedRowIds}
 				getRowId={(appointment) => appointment.id}
 				getRowClassName={(row: Row<Appointment>) =>
-					cn(
-						row.index % 2 === 0
-							? 'bg-bg-white hover:bg-gray-100'
-							: 'bg-bg-gray hover:bg-gray-100',
-					)
+					row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'
 				}
 				stickyHeader={appointmentTableHeaderFixed}
 				sorting={sorting}

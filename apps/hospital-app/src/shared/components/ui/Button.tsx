@@ -15,15 +15,20 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const variantStyles: Record<ButtonVariant, string> = {
 	primary:
 		'bg-primary-70 !text-text-0 hover:bg-primary-80 active:bg-primary-90 disabled:bg-primary-30 disabled:!text-text-0',
-	dark: 'bg-tap-1 text-text-0 hover:bg-text-80 active:bg-text-90 disabled:bg-text-50 disabled:text-text-20',
+	dark: 'bg-tap-1 !text-text-0 hover:bg-text-80 active:bg-text-90 disabled:bg-text-50 disabled:!text-text-20',
 	outline:
-		'border border-primary-70 text-primary-70 bg-bg-white hover:bg-bg-blue active:outline active:outline-primary-90 active:-outline-offset-1 disabled:border-stroke-input disabled:text-primary-70 disabled:bg-bg-disabled',
-	ghost: 'border border-stroke-input text-text-100 bg-bg-white hover:bg-bg-gray active:outline active:outline-text-90 active:-outline-offset-1 disabled:border-stroke-input disabled:text-text-40 disabled:bg-bg-disabled',
+		'border border-primary-70 !text-primary-70 bg-bg-white hover:bg-bg-blue active:bg-bg-white active:outline active:outline-primary-90 active:-outline-offset-1 disabled:border-stroke-input disabled:!text-text-20 disabled:bg-bg-disabled',
+	ghost: 'border border-stroke-input !text-text-100 bg-bg-white hover:bg-bg-gray active:bg-bg-white active:outline active:outline-text-90 active:-outline-offset-1 disabled:border-stroke-input disabled:bg-bg-disabled',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-	default: 'h-10 px-5 text-16',
-	small: 'h-7 px-3 text-14',
+	default: 'h-10 px-5 text-16 font-medium',
+	small: 'h-7 px-3 text-14 font-normal',
+};
+
+const ghostDisabledTextStyles: Record<ButtonSize, string> = {
+	default: 'disabled:!text-text-20',
+	small: 'disabled:!text-text-40',
 };
 
 const Button = ({
@@ -41,10 +46,11 @@ const Button = ({
 	return (
 		<button
 			className={cn(
-				'inline-flex items-center justify-center gap-1.5 font-pretendard font-medium transition-colors rounded',
+				'inline-flex items-center justify-center gap-1.5 font-pretendard transition-colors rounded-sm',
 				'disabled:cursor-not-allowed',
 				variantStyles[variant],
 				sizeStyles[size],
+				variant === 'ghost' && ghostDisabledTextStyles[size],
 				className,
 			)}
 			disabled={disabled}

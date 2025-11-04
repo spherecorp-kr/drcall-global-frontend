@@ -1,5 +1,4 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
-import { cn } from '@/shared/utils/cn.ts';
 import type { CancelledTableColumnProps } from '@/shared/types/appointment';
 import { useMemo } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
@@ -94,7 +93,7 @@ const CancelledTable = () => {
 				disableHorizontalScroll
 				emptyState={<EmptyState message="예약 취소 목록이 없습니다." />}
 				enableSelection
-				getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
 			/>
 			<Pagination currentPage={0} totalPages={1} onPageChange={() => {}} />
 		</div>
