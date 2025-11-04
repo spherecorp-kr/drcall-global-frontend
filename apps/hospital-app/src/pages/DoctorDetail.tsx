@@ -73,7 +73,6 @@ export function DoctorDetail() {
 	const [hoveredSlot, setHoveredSlot] = useState<string | null>(null);
 	const [tooltipContent, setTooltipContent] = useState<string>('');
 	const tooltipRef = useRef<HTMLDivElement>(null);
-	const [isScheduleHeaderFixed, setIsScheduleHeaderFixed] = useState(false);
 	const scheduleContainerRef = useRef<HTMLDivElement>(null);
 
 	// 해당 셀이 속한 슬롯 찾기
@@ -136,34 +135,6 @@ export function DoctorDetail() {
 							진료 시간표
 						</h2>
 					</div>
-					<div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
-						<button
-							onClick={() => setIsScheduleHeaderFixed(!isScheduleHeaderFixed)}
-							className={cn(
-								'flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded transition-colors',
-								isScheduleHeaderFixed
-									? 'bg-primary-70 text-text-0 hover:bg-primary-80'
-									: 'bg-bg-gray text-text-60 hover:bg-gray-200',
-							)}
-							title={isScheduleHeaderFixed ? '컬럼명 고정 해제' : '컬럼명 고정'}
-						>
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-								<g
-									stroke="currentColor"
-									strokeLinecap="round"
-									strokeLinejoin="round"
-									strokeWidth="2"
-									transform="rotate(45 12 12)"
-								>
-									<path d="M8 5h8" />
-									<path d="M8 5 C11 7.5, 11 11.5, 8 14" />
-									<path d="M16 5 C13 7.5, 13 11.5, 16 14" />
-									<path d="M8 14h8" />
-									<path d="M12 14V22" />
-								</g>
-							</svg>
-						</button>
-					</div>
 				</div>
 			</div>
 
@@ -183,7 +154,7 @@ export function DoctorDetail() {
 				</div>
 
 				{/* 헤더 그리드 */}
-				<div className={cn('px-5 bg-bg-white', isScheduleHeaderFixed && 'sticky top-0 z-10')}>
+				<div className="px-5 bg-bg-white">
 					<div className="grid grid-cols-[60px_repeat(7,1fr)]">
 						<div className="h-6 border-b border-stroke-input" />
 						{WEEKDAYS.map((day) => (
