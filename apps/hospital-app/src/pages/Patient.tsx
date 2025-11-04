@@ -1,9 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import { Button, EmptyState, Pagination } from '@/shared/components/ui';
 import { SearchInput } from '@/shared/components/ui/SearchInput';
 import { PatientManagementTable } from '@/shared/components/ui/PatientManagementTable';
 import { usePatientManagement } from '@/shared/hooks/usePatientManagement';
+import RegisterIcon from '@/shared/assets/icons/ic_register.svg?react';
 
 export function Patient() {
+	const navigate = useNavigate();
 	const {
 		patients,
 		filters,
@@ -26,8 +29,7 @@ export function Patient() {
 	};
 
 	const handlePatientRegister = () => {
-		// TODO: 환자 등록 모달 열기
-		console.log('환자 등록');
+		navigate('/patient/register');
 	};
 
 	return (
@@ -38,14 +40,7 @@ export function Patient() {
 					<Button
 						variant="primary"
 						size="default"
-						icon={
-							<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-								<path
-									d="M16.9024 4.35528C17.2582 3.93329 17.8883 3.87959 18.3106 4.23516C18.7329 4.59098 18.7875 5.22196 18.4317 5.64434L9.16506 16.6443L8.51955 17.409L1.35549 11.3641C0.933427 11.008 0.879351 10.377 1.23537 9.95489C1.5915 9.53281 2.22244 9.47967 2.64455 9.83574L8.27931 14.5897L16.9024 4.35528Z"
-									fill="currentColor"
-								/>
-							</svg>
-						}
+						icon={<RegisterIcon />}
 						onClick={handlePatientRegister}
 					>
 						환자 등록

@@ -49,7 +49,9 @@ export function PatientManagementTable({
 			{
 				accessorKey: 'grade',
 				header: '환자 등급',
+				size: 100,
 				minSize: 100,
+				maxSize: 100,
 				cell: ({ row }) => (
 					<div className="flex items-center">
 						<PatientGradeBadge grade={row.original.grade} />
@@ -59,10 +61,9 @@ export function PatientManagementTable({
 			{
 				accessorKey: 'name',
 				header: '환자명',
-				minSize: 200,
 				cell: ({ row }) => (
-					<div className="flex items-center">
-						<span className="text-text-100 text-16 font-normal font-pretendard leading-normal truncate">
+					<div className="flex items-center overflow-hidden w-full">
+						<span className="text-text-100 text-16 font-normal font-pretendard leading-normal overflow-hidden text-ellipsis whitespace-nowrap max-w-full block">
 							{row.original.name}
 						</span>
 					</div>
@@ -71,7 +72,9 @@ export function PatientManagementTable({
 			{
 				accessorKey: 'gender',
 				header: '성별',
+				size: 120,
 				minSize: 120,
+				maxSize: 120,
 				cell: ({ row }) => (
 					<div className="flex items-center">
 						<span className="text-text-100 text-16 font-normal font-pretendard leading-normal">
@@ -83,7 +86,9 @@ export function PatientManagementTable({
 			{
 				accessorKey: 'birthDate',
 				header: '생년월일',
+				size: 200,
 				minSize: 200,
+				maxSize: 200,
 				cell: ({ row }) => (
 					<div className="flex items-center">
 						<span className="text-text-100 text-16 font-normal font-pretendard leading-normal">
@@ -95,7 +100,9 @@ export function PatientManagementTable({
 			{
 				accessorKey: 'age',
 				header: '나이',
+				size: 120,
 				minSize: 120,
+				maxSize: 120,
 				cell: ({ row }) => (
 					<div className="flex items-center">
 						<span className="text-text-100 text-16 font-normal font-pretendard leading-normal">
@@ -107,7 +114,9 @@ export function PatientManagementTable({
 			{
 				accessorKey: 'phoneNumber',
 				header: '휴대폰 번호',
+				size: 200,
 				minSize: 200,
+				maxSize: 200,
 				cell: ({ row }) => (
 					<div className="flex items-center">
 						<span className="text-text-100 text-16 font-normal font-pretendard leading-normal">
@@ -119,7 +128,9 @@ export function PatientManagementTable({
 			{
 				accessorKey: 'lastVisitDate',
 				header: '마지막 진료 날짜',
+				size: 200,
 				minSize: 200,
+				maxSize: 200,
 				cell: ({ row }) => (
 					<div className="flex items-center">
 						<span className="text-text-100 text-16 font-normal font-pretendard leading-normal">

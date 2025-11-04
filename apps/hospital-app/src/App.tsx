@@ -13,12 +13,14 @@ import {
 	HospitalPage,
 	MyInfoPage,
 	PatientPage,
+	PatientRegistrationPage,
 	PaymentPage,
 } from '@/pages';
 
 // 라우트 설정 정의 (확장 시 여기에 추가)
 const ROUTE_CONFIGS = [
 	{ pattern: /^\/appointment\/\d+$/, showBackButton: true }, // 예약 상세
+	{ pattern: /^\/patient\/register$/, showBackButton: true }, // 환자 등록
 	{ pattern: /^\/patient\/\d+$/, showBackButton: true }, // 환자 상세
 	{ pattern: /^\/doctor\/\d+$/,  showBackButton: true }, // 의사 상세
 ] as const;
@@ -39,6 +41,7 @@ function AppContent() {
 		if (path.includes('doctor')) return t('menu.doctor');
 		if (path.includes('hospital')) return t('menu.hospital');
 		if (path.includes('myinfo')) return t('menu.myinfo');
+		if (path === '/patient/register') return '환자 등록';
 		if (path.includes('patient')) return t('menu.patient');
 		if (path.includes('payment')) return t('menu.payment');
 		return t('menu.dashboard');
@@ -85,6 +88,7 @@ function AppContent() {
 				<Route path="appointment" element={<AppointmentPage />} />
 				<Route path="payment" element={<PaymentPage />} />
 				<Route path="patient" element={<PatientPage />} />
+				<Route path="patient/register" element={<PatientRegistrationPage />} />
 				<Route path="doctor" element={<DoctorPage />} />
 				<Route path="doctor/:id" element={<DoctorDetailPage />} />
 				<Route path="hospital" element={<HospitalPage />} />
