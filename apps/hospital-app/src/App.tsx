@@ -9,6 +9,7 @@ import {
 	ConsultationPage,
 	DashboardPage,
 	DoctorPage,
+	DoctorDetailPage,
 	HospitalPage,
 	MyInfoPage,
 	PatientPage,
@@ -34,6 +35,7 @@ function AppContent() {
 		if (path.includes('appointment')) return t('menu.appointment');
 		if (path.includes('consultation')) return t('menu.consultation');
 		if (path.includes('dashboard')) return t('menu.dashboard');
+		if (path.match(/^\/doctor\/[^/]+$/)) return '의사 계정 상세';
 		if (path.includes('doctor')) return t('menu.doctor');
 		if (path.includes('hospital')) return t('menu.hospital');
 		if (path.includes('myinfo')) return t('menu.myinfo');
@@ -77,17 +79,18 @@ function AppContent() {
 					/>
 				}
 			>
-			<Route index element={<Navigate to="/dashboard" replace />} />
-			<Route path="dashboard" element={<DashboardPage />} />
-			<Route path="appointment/:appointmentSequence" element={<AppointmentDetailPage />} />
-			<Route path="appointment" element={<AppointmentPage />} />
-			<Route path="payment" element={<PaymentPage />} />
-			<Route path="patient" element={<PatientPage />} />
-			<Route path="doctor" element={<DoctorPage />} />
-			<Route path="hospital" element={<HospitalPage />} />
-			<Route path="myinfo" element={<MyInfoPage />} />
-			<Route path="consultation" element={<ConsultationPage />} />
-			<Route path="*" element={<Navigate to="/dashboard" replace />} />
+				<Route index element={<Navigate to="/dashboard" replace />} />
+				<Route path="dashboard" element={<DashboardPage />} />
+				<Route path="appointment/:appointmentSequence" element={<AppointmentDetailPage />} />
+				<Route path="appointment" element={<AppointmentPage />} />
+				<Route path="payment" element={<PaymentPage />} />
+				<Route path="patient" element={<PatientPage />} />
+				<Route path="doctor" element={<DoctorPage />} />
+				<Route path="doctor/:id" element={<DoctorDetailPage />} />
+				<Route path="hospital" element={<HospitalPage />} />
+				<Route path="myinfo" element={<MyInfoPage />} />
+				<Route path="consultation" element={<ConsultationPage />} />
+				<Route path="*" element={<Navigate to="/dashboard" replace />} />
 			</Route>
 		</Routes>
 	);

@@ -28,7 +28,7 @@ function formatAvailableTime(schedule: AvailableScheduleDto): string {
 
 	const days: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
-	const result: string[] = [];
+	const result: string[] = ['진료 시간'];
 
 	days.forEach((day) => {
 		const slots = schedule[day];
@@ -109,7 +109,11 @@ export function DoctorManagementTable({
 					const tooltipContent = formatAvailableTime(schedule);
 
 					return (
-						<Tooltip content={<div className="whitespace-pre-line">{tooltipContent}</div>}>
+						<Tooltip
+							content={tooltipContent}
+							className="!w-auto !min-w-[400px] !max-w-[600px]"
+							contentClassName="!whitespace-pre"
+						>
 							{({ isOpen }) => (
 								<div className="flex items-center cursor-pointer">
 									<span
@@ -157,11 +161,8 @@ export function DoctorManagementTable({
 				onRowClick={(row) => onRowClick?.(row.original)}
 				getRowId={(doctor) => doctor.id}
 				getRowClassName={(row) => {
-					const isSelected = selectedDoctorId === row.original.id;
-					if (isSelected) {
-						return 'bg-bg-blue hover:bg-bg-blue';
-					}
-					return 'bg-bg-white hover:bg-bg-gray';
+					const isEvenRow = row.index % 2 === 0;
+					return isEvenRow ? 'bg-bg-white' : 'bg-bg-gray';
 				}}
 				minWidth="1080px"
 				emptyState={emptyState}

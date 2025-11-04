@@ -10,7 +10,7 @@ interface TooltipIconProps {
 
 export function TooltipIcon({ content, position = 'bottom' }: TooltipIconProps) {
 	return (
-		<Tooltip content={content} position={position}>
+		<Tooltip content={content} position={position} className="!w-[400px]">
 			{({ isOpen }) => (
 				<button className="flex items-center justify-center">
 					{isOpen ? (
