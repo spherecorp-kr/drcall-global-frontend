@@ -258,7 +258,7 @@ export function DoctorDetail() {
 									))}
 
 									{/* 시간 행들 - 30분 단위 */}
-									{HOURS.map((hour) => (
+									{HOURS.map((hour, hourIndex) => (
 										<>
 											{/* 시간 셀 (2개 row 병합) */}
 											<div className="row-span-2 px-3 py-2.5 flex items-center justify-center text-14 text-text-100 border-b border-stroke-input">
@@ -300,12 +300,15 @@ export function DoctorDetail() {
 													return startMinutes < nextHourMinutes && endMinutes > currentMinutes;
 												});
 
+												const isLastRow = hourIndex === HOURS.length - 1;
+
 												return (
 													<div
 														key={`${day}-${hour}-30`}
 														className={cn(
 															'px-3 py-2.5 border-l border-t border-stroke-input',
 															isAvailable && 'bg-[#80D0E9]',
+															isLastRow && 'border-b',
 														)}
 													/>
 												);
