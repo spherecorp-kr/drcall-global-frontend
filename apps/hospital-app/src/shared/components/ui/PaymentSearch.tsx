@@ -33,7 +33,7 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
 
   const calculateDates = (periodValue: string) => {
     const today = new Date(2025, 9, 28);
-    let startDate = new Date(today);
+    const startDate = new Date(today);
 
     switch (periodValue) {
       case 'today':

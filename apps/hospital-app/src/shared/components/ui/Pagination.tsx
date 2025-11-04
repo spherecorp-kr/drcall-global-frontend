@@ -23,8 +23,8 @@ const Pagination = ({
 	const currentBlock = Math.floor(currentPage / maxVisiblePages);
 	const totalBlocks = Math.ceil(totalPages / maxVisiblePages);
 
-	const isFirstBlock = currentBlock === 0;
-	const isLastBlock = currentBlock === totalBlocks - 1;
+	const _isFirstBlock = currentBlock === 0;
+	const _isLastBlock = currentBlock === totalBlocks - 1;
 
 	const handlePageChange = (page: number) => {
 		if (page >= 0 && page < totalPages) {

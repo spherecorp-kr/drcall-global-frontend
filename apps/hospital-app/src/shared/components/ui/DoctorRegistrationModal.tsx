@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Modal } from './Modal';
 import { Input } from './Input';
 import { Textarea } from './Textarea';
-import { Button } from './Button';
 import { cn } from '@/shared/utils/cn';
 import ValidationInfoIcon from '@/shared/assets/icons/ic_validation_info.svg';
 import BlankProfileImage from '@/shared/assets/icons/img_blank_profile.svg';
