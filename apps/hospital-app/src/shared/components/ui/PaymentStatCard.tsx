@@ -8,7 +8,7 @@ interface PaymentStatCardProps {
   icon: ReactNode;
   amount: string;
   date: string;
-  tooltip: string;
+  tooltip?: string;
 }
 
 export function PaymentStatCard({ title, icon, amount, date, tooltip }: PaymentStatCardProps) {
@@ -25,21 +25,23 @@ export function PaymentStatCard({ title, icon, amount, date, tooltip }: PaymentS
         <div className="text-text-100 text-20 font-semibold font-pretendard">
           {title}
         </div>
-        <Tooltip content={tooltip} position="bottom">
-          {({ isOpen }) => (
-            <button className="flex items-center justify-center w-5 h-5">
-              {isOpen ? (
-                <img
-                  alt="Help icon blue"
-                  className="w-5 h-5"
-                  src={helpIconBlue}
-                />
-              ) : (
-                <img alt="Help icon" className="w-5 h-5" src={helpIcon} />
-              )}
-            </button>
-          )}
-        </Tooltip>
+        {tooltip && (
+          <Tooltip content={tooltip} position="bottom">
+            {({ isOpen }) => (
+              <button className="flex items-center justify-center w-5 h-5">
+                {isOpen ? (
+                  <img
+                    alt="Help icon blue"
+                    className="w-5 h-5"
+                    src={helpIconBlue}
+                  />
+                ) : (
+                  <img alt="Help icon" className="w-5 h-5" src={helpIcon} />
+                )}
+              </button>
+            )}
+          </Tooltip>
+        )}
       </div>
 
       {/* Icon + Amount */}
