@@ -26,8 +26,21 @@ const paymentMethodLabels: Record<string, string> = {
 
 export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: PaymentHistoryTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
+  const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 10;
   const totalPages = Math.ceil(total / itemsPerPage);
+
+  const formatDatetime = (dateStr: string) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  };
 
   const currentPageData = useMemo(() => {
     const startIndex = currentPage * itemsPerPage;
@@ -41,8 +54,9 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'paymentNumber',
         header: '결제번호',
         enableSorting: true,
+        size: 120,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
+          <div className="text-text-100 text-16 font-normal font-pretendard">
             {row.original.paymentNumber}
           </div>
         ),
@@ -51,9 +65,21 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'appointmentNumber',
         header: '예약번호',
         enableSorting: true,
+        size: 120,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
+          <div className="text-text-100 text-16 font-normal font-pretendard">
             {row.original.appointmentNumber}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'paymentRequestDatetime',
+        header: '결제 요청 일시',
+        enableSorting: true,
+        size: 180,
+        cell: ({ row }) => (
+          <div className="text-text-100 text-16 font-normal font-pretendard">
+            {formatDatetime(row.original.paymentRequestDatetime)}
           </div>
         ),
       },
@@ -61,9 +87,10 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'paymentDatetime',
         header: '결제 일시',
         enableSorting: true,
+        size: 180,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
-            {row.original.paymentDatetime || '-'}
+          <div className="text-text-100 text-16 font-normal font-pretendard">
+            {formatDatetime(row.original.paymentDatetime)}
           </div>
         ),
       },
@@ -71,12 +98,13 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'paymentStatus',
         header: '결제 상태',
         enableSorting: true,
+        size: 100,
         cell: ({ row }) => {
           const status = row.original.paymentStatus;
           const isPending = status === 'pending';
           return (
             <div
-              className={`text-14 font-normal font-pretendard ${isPending ? 'text-system-successful2' : 'text-text-100'}`}
+              className={`text-16 font-normal font-pretendard ${isPending ? 'text-system-successful2' : 'text-text-100'}`}
             >
               {paymentStatusLabels[status]}
             </div>
@@ -87,8 +115,9 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'paymentMethod',
         header: '결제 수단',
         enableSorting: true,
+        size: 100,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
+          <div className="text-text-100 text-16 font-normal font-pretendard">
             {row.original.paymentMethod ? paymentMethodLabels[row.original.paymentMethod] : '-'}
           </div>
         ),
@@ -97,8 +126,9 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'totalAmount',
         header: '결제 금액(A+B+C+D)',
         enableSorting: true,
+        size: 180,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-semibold font-pretendard">
+          <div className="text-text-100 text-16 font-semibold font-pretendard">
             {row.original.totalAmount.toLocaleString()} THB
           </div>
         ),
@@ -108,8 +138,9 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'consultationFee',
         header: '진료비(A)',
         enableSorting: true,
+        size: 110,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
+          <div className="text-text-100 text-16 font-normal font-pretendard">
             {row.original.consultationFee.toLocaleString()}
           </div>
         ),
@@ -119,8 +150,9 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'prescriptionFee',
         header: '처방비(B)',
         enableSorting: true,
+        size: 110,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
+          <div className="text-text-100 text-16 font-normal font-pretendard">
             {row.original.prescriptionFee > 0 ? row.original.prescriptionFee.toLocaleString() : '-'}
           </div>
         ),
@@ -130,8 +162,9 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'serviceFee',
         header: '서비스비(C)',
         enableSorting: true,
+        size: 110,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
+          <div className="text-text-100 text-16 font-normal font-pretendard">
             {row.original.serviceFee.toLocaleString()}
           </div>
         ),
@@ -141,8 +174,9 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         accessorKey: 'deliveryFee',
         header: '배송비(D)',
         enableSorting: true,
+        size: 110,
         cell: ({ row }) => (
-          <div className="text-text-100 text-14 font-normal font-pretendard">
+          <div className="text-text-100 text-16 font-normal font-pretendard">
             {row.original.deliveryFee > 0 ? row.original.deliveryFee.toLocaleString() : '-'}
           </div>
         ),
@@ -151,9 +185,10 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
       {
         id: 'actions',
         header: '액션',
+        size: 120,
         cell: () => (
           <div className="flex justify-center">
-            <Button variant="outline" size="small">
+            <Button variant="ghost" size="small">
               자세히 보기
             </Button>
           </div>
@@ -181,6 +216,16 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
         <Table
           columns={columns}
           data={currentPageData}
+          stickyHeader={false}
+          enableSelection={true}
+          selectedIds={selectedRowIds}
+          onSelectionChange={setSelectedRowIds}
+          getRowId={(row) => row.paymentNumber}
+          getRowClassName={(row) =>
+            row.index % 2 === 0
+              ? 'bg-bg-white'
+              : 'bg-bg-gray'
+          }
         />
       </div>
       <div className="pb-4 flex justify-center">

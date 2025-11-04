@@ -7,7 +7,7 @@ import { type PaymentTab } from '@/shared/types/payment';
 import InvoiceIcon from '@/shared/assets/icons/ic_invoice.svg?react';
 import CoinsIcon from '@/shared/assets/icons/Coins.svg?react';
 import PayWaitingIcon from '@/shared/assets/icons/ic_pay waiting.svg?react';
-import InfoIcon from '@/shared/assets/icons/btn_circle_help.svg?react';
+import ValidationInfoIcon from '@/shared/assets/icons/ic_validation_info.svg';
 
 export function Payment() {
   const [activeTab, setActiveTab] = useState<PaymentTab>('history');
@@ -17,10 +17,10 @@ export function Payment() {
     switch (activeTab) {
       case 'history':
         return (
-          <div className="flex flex-col gap-3 sm:gap-4 md:gap-5">
+          <div className="flex flex-col gap-5">
             {/* Info Banner */}
-            <div className="flex items-center gap-1 text-primary-60">
-              <InfoIcon />
+            <div className="flex items-center gap-2 text-primary-60">
+              <img src={ValidationInfoIcon} alt="info" className="w-3.5 h-3.5 flex-shrink-0" />
               <div className="text-14 font-normal font-pretendard">
                 <span className="font-semibold">결제 내역은 환자 결제 기준(Gross)</span>으로 산출되며,{' '}
                 <span className="font-semibold">실제 수령 금액은 정산 처리 탭</span>에서 확인 가능합니다.
@@ -28,28 +28,34 @@ export function Payment() {
             </div>
 
             {/* Stats Cards */}
-            <div className="flex gap-3 sm:gap-4">
-              <PaymentStatCard
-                title="총 청구 금액"
-                icon={<InvoiceIcon />}
-                amount={`${mockPaymentStats.totalBilled.toLocaleString()} THB`}
-                date={mockPaymentStats.asOfDate}
-                tooltip="선택한 기간 동안 환자에게 청구된 전체 금액입니다.(수수료 미포함 금액 기준)"
-              />
-              <PaymentStatCard
-                title="총 결제 완료 금액"
-                icon={<CoinsIcon />}
-                amount={`${mockPaymentStats.totalCompleted.toLocaleString()} THB`}
-                date={mockPaymentStats.asOfDate}
-                tooltip="선택한 기간 동안 환자가 결제를 완료한 총 금액입니다.(수수료 미포함 금액 기준)"
-              />
-              <PaymentStatCard
-                title="총 결제 대기 금액"
-                icon={<PayWaitingIcon />}
-                amount={`${mockPaymentStats.totalPending.toLocaleString()} THB`}
-                date={mockPaymentStats.asOfDate}
-                tooltip="선택한 기간 동안 청구되었으나 아직 결제되지 않은 금액의 합계입니다.(수수료 미포함 금액 기준)"
-              />
+            <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
+              <div className="rounded-[10px] border border-stroke-input bg-bg-white px-7 py-5 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
+                <PaymentStatCard
+                  title="총 청구 금액"
+                  icon={<InvoiceIcon />}
+                  amount={`${mockPaymentStats.totalBilled.toLocaleString()} THB`}
+                  date={mockPaymentStats.asOfDate}
+                  tooltip="선택한 기간 동안 환자에게 청구된 전체 금액입니다.(수수료 미포함 금액 기준)"
+                />
+              </div>
+              <div className="rounded-[10px] border border-stroke-input bg-bg-white px-7 py-5 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
+                <PaymentStatCard
+                  title="총 결제 완료 금액"
+                  icon={<CoinsIcon />}
+                  amount={`${mockPaymentStats.totalCompleted.toLocaleString()} THB`}
+                  date={mockPaymentStats.asOfDate}
+                  tooltip="선택한 기간 동안 환자가 결제를 완료한 총 금액입니다.(수수료 미포함 금액 기준)"
+                />
+              </div>
+              <div className="rounded-[10px] border border-stroke-input bg-bg-white px-7 py-5 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
+                <PaymentStatCard
+                  title="총 결제 대기 금액"
+                  icon={<PayWaitingIcon />}
+                  amount={`${mockPaymentStats.totalPending.toLocaleString()} THB`}
+                  date={mockPaymentStats.asOfDate}
+                  tooltip="선택한 기간 동안 청구되었으나 아직 결제되지 않은 금액의 합계입니다.(수수료 미포함 금액 기준)"
+                />
+              </div>
             </div>
 
             {/* Search Filters */}
@@ -84,28 +90,7 @@ export function Payment() {
   };
 
   return (
-    <div className="relative flex flex-col h-full overflow-hidden">
-      {/* Expanded Table Modal */}
-      {isTableExpanded && (
-        <>
-          <div
-            className="absolute inset-0 z-30 bg-neutral-950/40 backdrop-blur-sm"
-            onClick={() => setIsTableExpanded(false)}
-          />
-          <div className="absolute inset-0 z-40 flex h-full w-full flex-col overflow-hidden bg-bg-gray shadow-xl">
-            <div className="h-full w-full overflow-auto p-3 sm:p-4 md:p-5">
-              <PaymentHistoryTable
-                data={mockPaymentHistory}
-                total={480}
-                onExpand={() => setIsTableExpanded(false)}
-                isExpanded={true}
-              />
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Tab Header */}
+    <div className="flex flex-col h-full">
       <div className="bg-white border-b border-b-[#e0e0e0] flex flex-col h-20 items-start justify-end px-5 shrink-0">
         <div className="flex gap-10 h-12 items-start px-5 self-stretch shrink-0">
           <div
@@ -113,7 +98,7 @@ export function Payment() {
             onClick={() => setActiveTab('history')}
           >
             <h2
-              className={`leading-normal text-xl font-pretendard ${
+              className={`leading-normal text-xl ${
                 activeTab === 'history'
                   ? 'font-semibold text-primary-70'
                   : 'font-normal text-text-100'
@@ -128,7 +113,7 @@ export function Payment() {
             onClick={() => setActiveTab('settlement')}
           >
             <h2
-              className={`leading-normal text-xl font-pretendard ${
+              className={`leading-normal text-xl ${
                 activeTab === 'settlement'
                   ? 'font-semibold text-primary-70'
                   : 'font-normal text-text-100'
@@ -143,7 +128,7 @@ export function Payment() {
             onClick={() => setActiveTab('report')}
           >
             <h2
-              className={`leading-normal text-xl font-pretendard ${
+              className={`leading-normal text-xl ${
                 activeTab === 'report'
                   ? 'font-semibold text-primary-70'
                   : 'font-normal text-text-100'
@@ -155,11 +140,7 @@ export function Payment() {
           </div>
         </div>
       </div>
-
-      {/* Tab Content */}
-      <div className={`bg-bg-gray flex flex-1 flex-col gap-3 px-3 py-3 sm:gap-4 sm:px-4 sm:py-4 md:gap-5 md:px-5 md:py-5 overflow-auto ${isTableExpanded ? 'pointer-events-none select-none opacity-30' : ''}`}>
-        {renderTabContent()}
-      </div>
+      <div className="bg-bg-gray flex flex-1 flex-col gap-5 p-5">{renderTabContent()}</div>
     </div>
   );
 }
