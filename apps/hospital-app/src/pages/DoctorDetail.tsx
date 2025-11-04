@@ -115,20 +115,8 @@ export function DoctorDetail() {
 		setTooltipContent('');
 	};
 
-	const _handlePasswordChange = () => {
-		console.log('비밀번호 변경');
-	};
-
-	const _handlePasswordReset = () => {
-		console.log('비밀번호 초기화');
-	};
-
 	const handleEditInfo = () => {
 		console.log('의사 정보 수정');
-	};
-
-	const _handleToggleAccount = () => {
-		console.log('계정 활성화/비활성화');
 	};
 
 	// 진료 가능 시간 문자열 생성
@@ -235,11 +223,11 @@ export function DoctorDetail() {
 								</div>
 
 								{/* 00분~30분 셀들 */}
-								{WEEKDAYS.map((day, dayIndex) => {
+								{WEEKDAYS.map((day) => {
 									const currentMinutes = hour * 60;
 									const slotInfo = findSlotForCell(day, currentMinutes);
 									const isAvailable = slotInfo !== null;
-									const isLastColumn = dayIndex === WEEKDAYS.length - 1;
+								const slotKey = isAvailable ? `${day}-${slotInfo.index}` : null;
 									const isHovered = slotKey === hoveredSlot;
 									const content = isAvailable && slotInfo ? `${DAY_MAP[day]} : ${slotInfo.slot.startTime} ~ ${slotInfo.slot.endTime}` : '';
 
@@ -267,7 +255,7 @@ export function DoctorDetail() {
 									const currentMinutes = hour * 60 + 30;
 									const slotInfo = findSlotForCell(day, currentMinutes);
 									const isAvailable = slotInfo !== null;
-									const isLastRow = hourIndex === HOURS.length - 1;
+								const slotKey = isAvailable ? `${day}-${slotInfo.index}` : null;
 									const isHovered = slotKey === hoveredSlot;
 									const content = isAvailable && slotInfo ? `${DAY_MAP[day]} : ${slotInfo.slot.startTime} ~ ${slotInfo.slot.endTime}` : '';
 
