@@ -48,3 +48,30 @@ export interface DeliveryFeeItem {
 	status: SettlementStatus;
 	paymentCompletedDate?: string;
 }
+
+// Sales Report Types
+export interface SalesReportStats {
+	totalSales: number;
+	paymentCount: number;
+	averagePayment: number;
+	dateRange: string;
+}
+
+export interface SalesChartData {
+	date: string;
+	amount: number;
+}
+
+export interface PaymentMethodData {
+	name: string;
+	value: number;
+	percentage: number;
+	color: string;
+}
+
+export interface SalesItemData {
+	name: string;
+	value: number;
+	percentage: number;
+	color: string;
+}

@@ -1,4 +1,4 @@
-import type { PaymentStats, PaymentHistoryItem, SettlementStats, SettlementHistoryItem, DeliveryFeeItem, SettlementStatus } from '@/shared/types/payment';
+import type { PaymentStats, PaymentHistoryItem, SettlementStats, SettlementHistoryItem, DeliveryFeeItem, SettlementStatus, SalesReportStats, SalesChartData, PaymentMethodData, SalesItemData } from '@/shared/types/payment';
 
 export const mockPaymentStats: PaymentStats = {
 	totalBilled: 1234567,
@@ -69,3 +69,51 @@ export const mockDeliveryFeeHistory: DeliveryFeeItem[] = Array.from({ length: 11
 		paymentCompletedDate: hasPaymentDate ? new Date(2023, 4, 16, 16, 27, 0).toISOString() : undefined,
 	};
 });
+
+// Sales Report Mock Data
+export const mockSalesReportStats: SalesReportStats = {
+	totalSales: 52000000,
+	paymentCount: 2090,
+	averagePayment: 20000,
+	dateRange: '2025.09.15',
+};
+
+// Generate 365 days of sales data
+const generateYearlySalesData = (): SalesChartData[] => {
+	const data: SalesChartData[] = [];
+	const startDate = new Date(2024, 0, 1); // 2024-01-01
+
+	for (let i = 0; i < 365; i++) {
+		const currentDate = new Date(startDate);
+		currentDate.setDate(startDate.getDate() + i);
+
+		const day = String(currentDate.getDate()).padStart(2, '0');
+		const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+		const year = currentDate.getFullYear();
+
+		// Generate random amount between 20M and 70M
+		const amount = Math.floor(Math.random() * 50000000) + 20000000;
+
+		data.push({
+			date: `${day}/${month}/${year}`,
+			amount,
+		});
+	}
+
+	return data;
+};
+
+export const mockSalesChartData: SalesChartData[] = generateYearlySalesData();
+
+export const mockPaymentMethodData: PaymentMethodData[] = [
+	{ name: 'QR', value: 34560000, percentage: 64, color: '#11AC51' },
+	{ name: '카드', value: 13500000, percentage: 25, color: '#047EA5' },
+	{ name: '계좌이체', value: 5940000, percentage: 11, color: '#FFB054' },
+];
+
+export const mockSalesItemData: SalesItemData[] = [
+	{ name: '진찰비', value: 33480000, percentage: 62, color: '#00CAD2' },
+	{ name: '조제비', value: 6480000, percentage: 12, color: '#00A0D2' },
+	{ name: '서비스비', value: 9180000, percentage: 17, color: '#9072FF' },
+	{ name: '배송비', value: 4860000, percentage: 9, color: '#F580D6' },
+];

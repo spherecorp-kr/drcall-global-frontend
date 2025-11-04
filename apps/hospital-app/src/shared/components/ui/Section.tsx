@@ -4,7 +4,7 @@ import { SectionTitle } from './SectionTitle';
 import { SearchInput } from './SearchInput';
 
 interface SectionProps {
-	title: string;
+	title: string | ReactNode;
 	count?: number;
 	actions?: ReactNode;
 	filters?: ReactNode;
@@ -78,7 +78,13 @@ export function Section({
 					{/* Title Row */}
 					<div className="flex items-center justify-between gap-2">
 						<div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-							<SectionTitle>{title}</SectionTitle>
+							{typeof title === 'string' ? (
+								<SectionTitle>{title}</SectionTitle>
+							) : (
+								<div className="flex items-center gap-1.5 sm:gap-2">
+									{title}
+								</div>
+							)}
 							{count !== undefined && (
 								<span className="text-primary-70 text-sm sm:text-base font-semibold font-pretendard leading-normal flex-shrink-0">
 									({count})
