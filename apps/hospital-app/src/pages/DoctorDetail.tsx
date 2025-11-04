@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { Button } from '@/shared/components/ui/Button';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { cn } from '@/shared/utils/cn';
 import type { DayOfWeek, TimeSlotDto, AvailableScheduleDto } from '@/shared/types/doctor';
 import icAccount from '@/shared/assets/icons/ic_account.svg';
@@ -70,6 +70,50 @@ export function DoctorDetail() {
 	// TODO: API에서 id를 사용하여 의사 정보 가져오기
 	console.log('Doctor ID:', id);
 	const [doctor] = useState(mockDoctorData);
+	const [hoveredSlot, setHoveredSlot] = useState<string | null>(null);
+	const [tooltipContent, setTooltipContent] = useState<string>('');
+	const tooltipRef = useRef<HTMLDivElement>(null);
+	const [isScheduleHeaderFixed, setIsScheduleHeaderFixed] = useState(false);
+	const scheduleContainerRef = useRef<HTMLDivElement>(null);
+
+	// 해당 셀이 속한 슬롯 찾기
+	const findSlotForCell = (day: DayOfWeek, currentMinutes: number): { slot: TimeSlotDto; index: number } | null => {
+		const slots = doctor.availableSchedule[day] || [];
+		for (let i = 0; i < slots.length; i++) {
+			const slot = slots[i];
+			const startMinutes = timeToMinutes(slot.startTime);
+			const endMinutes = timeToMinutes(slot.endTime);
+			if (currentMinutes >= startMinutes && currentMinutes < endMinutes) {
+				return { slot, index: i };
+			}
+		}
+		return null;
+	};
+
+	const handleCellMouseEnter = (slotKey: string | null, content: string) => {
+		if (slotKey) {
+			setHoveredSlot(slotKey);
+			setTooltipContent(content);
+		}
+	};
+
+	const handleTableMouseMove = (e: React.MouseEvent) => {
+		if (hoveredSlot && tooltipRef.current) {
+			tooltipRef.current.style.left = `${e.clientX + 10}px`;
+			tooltipRef.current.style.top = `${e.clientY + 10}px`;
+		}
+	};
+
+	const handleCellMouseLeave = () => {
+		setHoveredSlot(null);
+		setTooltipContent('');
+	};
+
+	const handleScroll = () => {
+		// 스크롤 시 즉시 툴팁 숨기기
+		setHoveredSlot(null);
+		setTooltipContent('');
+	};
 
 	const handlePasswordChange = () => {
 		console.log('비밀번호 변경');
@@ -92,6 +136,171 @@ export function DoctorDetail() {
 		if (!slots || slots.length === 0) return '-';
 		return slots.map((slot) => `${slot.startTime} - ${slot.endTime}`).join(' / ');
 	};
+
+	// 타임테이블 섹션 렌더링
+	const renderTimeTableSection = () => (
+		<div className="flex flex-col h-full w-full" style={{ gap: '10px' }}>
+			{/* Header */}
+			<div className="flex-shrink-0">
+				<div className="flex items-center justify-between gap-2">
+					<div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+						<h2 className="text-text-100 text-20 font-semibold font-pretendard leading-normal">
+							진료 시간표
+						</h2>
+					</div>
+					<div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+						<button
+							onClick={() => setIsScheduleHeaderFixed(!isScheduleHeaderFixed)}
+							className={cn(
+								'flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded transition-colors',
+								isScheduleHeaderFixed
+									? 'bg-primary-70 text-text-0 hover:bg-primary-80'
+									: 'bg-bg-gray text-text-60 hover:bg-gray-200',
+							)}
+							title={isScheduleHeaderFixed ? '컬럼명 고정 해제' : '컬럼명 고정'}
+						>
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+								<g
+									stroke="currentColor"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									strokeWidth="2"
+									transform="rotate(45 12 12)"
+								>
+									<path d="M8 5h8" />
+									<path d="M8 5 C11 7.5, 11 11.5, 8 14" />
+									<path d="M16 5 C13 7.5, 13 11.5, 16 14" />
+									<path d="M8 14h8" />
+									<path d="M12 14V22" />
+								</g>
+							</svg>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			{/* Content */}
+			<div
+				ref={scheduleContainerRef}
+				className="flex-1 min-h-0 overflow-auto bg-bg-white rounded-[10px] border border-stroke-input"
+				onScroll={handleScroll}
+				onMouseMove={handleTableMouseMove}
+			>
+				{/* 안내 메시지 */}
+				<div className="px-5 pt-5 pb-2.5 flex justify-end items-center gap-1">
+					<img src={ValidationInfoIcon} alt="info" className="w-3 h-3" />
+					<div className="text-14 text-primary-70 text-right">
+						파란색 블록은 진료 가능 시간을 표시하며, 한 블록은 30분을 의미합니다.
+					</div>
+				</div>
+
+				{/* 헤더 그리드 */}
+				<div className={cn('px-5 bg-bg-white', isScheduleHeaderFixed && 'sticky top-0 z-10')}>
+					<div className="grid grid-cols-[60px_repeat(7,1fr)]">
+						<div className="h-6 border-b border-stroke-input" />
+						{WEEKDAYS.map((day) => (
+							<div
+								key={day}
+								className={cn(
+									'h-6 flex items-center justify-center text-14 border-b border-stroke-input transition-colors',
+									'hover:bg-bg-gray cursor-default',
+									day === 'saturday' && 'text-[#3076DF]',
+									day === 'sunday' && 'text-[#FC0606]',
+									day !== 'saturday' && day !== 'sunday' && 'text-text-100',
+								)}
+							>
+								{DAY_MAP[day]}
+							</div>
+						))}
+					</div>
+				</div>
+
+				{/* 본문 그리드 */}
+				<div className="px-5 pb-5">
+					<div className="grid grid-cols-[60px_repeat(7,1fr)]">
+						{/* 시간 행들 - 30분 단위 */}
+						{HOURS.map((hour, hourIndex) => {
+						const isEvenRow = hourIndex % 2 === 0;
+						const isLastRow = hourIndex === HOURS.length - 1;
+						return (
+							<>
+								{/* 시간 셀 (2개 row 병합) */}
+								<div
+									className={cn(
+										'row-span-2 px-3 py-2.5 flex items-center justify-center text-14 text-text-100 transition-colors',
+										'cursor-default border-r border-b border-stroke-input',
+										isEvenRow ? 'bg-bg-white hover:bg-bg-gray' : 'bg-bg-gray hover:bg-[#F5F5F5]',
+									)}
+								>
+									{hour.toString().padStart(2, '0')}:00
+								</div>
+
+								{/* 00분~30분 셀들 */}
+								{WEEKDAYS.map((day, dayIndex) => {
+									const currentMinutes = hour * 60;
+									const slotInfo = findSlotForCell(day, currentMinutes);
+									const isAvailable = slotInfo !== null;
+									const isLastColumn = dayIndex === WEEKDAYS.length - 1;
+									const slotKey = isAvailable ? `${day}-${slotInfo.index}` : null;
+									const isHovered = slotKey === hoveredSlot;
+									const content = isAvailable && slotInfo ? `${DAY_MAP[day]} : ${slotInfo.slot.startTime} ~ ${slotInfo.slot.endTime}` : '';
+
+									return (
+										<div
+											key={`${day}-${hour}-00`}
+											onMouseEnter={() => handleCellMouseEnter(slotKey, content)}
+											onMouseLeave={handleCellMouseLeave}
+											className={cn(
+												'px-3 py-2.5 border-b border-r border-stroke-input transition-colors',
+												isAvailable
+													? isHovered
+														? 'bg-primary-50 cursor-pointer'
+														: 'bg-primary-30 cursor-pointer'
+													: isEvenRow
+														? 'bg-bg-white hover:bg-bg-gray'
+														: 'bg-bg-gray hover:bg-[#F5F5F5]',
+											)}
+										/>
+									);
+								})}
+
+								{/* 30분~60분 셀들 */}
+								{WEEKDAYS.map((day, dayIndex) => {
+									const currentMinutes = hour * 60 + 30;
+									const slotInfo = findSlotForCell(day, currentMinutes);
+									const isAvailable = slotInfo !== null;
+									const isLastRow = hourIndex === HOURS.length - 1;
+									const isLastColumn = dayIndex === WEEKDAYS.length - 1;
+									const slotKey = isAvailable ? `${day}-${slotInfo.index}` : null;
+									const isHovered = slotKey === hoveredSlot;
+									const content = isAvailable && slotInfo ? `${DAY_MAP[day]} : ${slotInfo.slot.startTime} ~ ${slotInfo.slot.endTime}` : '';
+
+									return (
+										<div
+											key={`${day}-${hour}-30`}
+											onMouseEnter={() => handleCellMouseEnter(slotKey, content)}
+											onMouseLeave={handleCellMouseLeave}
+											className={cn(
+												'px-3 py-2.5 border-b border-r border-stroke-input transition-colors',
+												isAvailable
+													? isHovered
+														? 'bg-primary-50 cursor-pointer'
+														: 'bg-primary-30 cursor-pointer'
+													: isEvenRow
+														? 'bg-bg-white hover:bg-bg-gray'
+														: 'bg-bg-gray hover:bg-[#F5F5F5]',
+											)}
+										/>
+									);
+								})}
+							</>
+						);
+					})}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 
 	return (
 		<div className="relative h-full w-full overflow-hidden">
@@ -225,108 +434,29 @@ export function DoctorDetail() {
 					</div>
 
 					{/* 진료 시간표 */}
-					<div>
-						<h2 className="text-text-100 text-20 font-semibold font-pretendard mb-2.5">진료 시간표</h2>
-						<div className="bg-bg-white rounded-[10px] border border-stroke-input p-5">
-							{/* 안내 메시지 */}
-							<div className="flex justify-end items-center gap-1 mb-2.5">
-								<img src={ValidationInfoIcon} alt="info" className="w-3 h-3" />
-								<div className="text-14 text-primary-70 text-right">
-									파란색 블록은 진료 가능 시간을 표시하며, 한 블록은 30분을 의미합니다.
-								</div>
-							</div>
-
-							{/* 시간표 그리드 */}
-							<div className="overflow-x-auto">
-								<div className="grid grid-cols-[60px_repeat(7,1fr)]">
-									{/* 헤더 - 빈 셀 */}
-									<div className="h-6 border-b border-stroke-input" />
-
-									{/* 헤더 - 요일 */}
-									{WEEKDAYS.map((day, dayIndex) => (
-										<div
-											key={day}
-											className={cn(
-												'h-6 flex items-center justify-center text-14 border-b border-stroke-input',
-												day === 'saturday' && 'text-[#3076DF]',
-												day === 'sunday' && 'text-[#FC0606]',
-												day !== 'saturday' && day !== 'sunday' && 'text-text-100',
-												dayIndex === WEEKDAYS.length - 1 && 'border-r',
-											)}
-										>
-											{DAY_MAP[day]}
-										</div>
-									))}
-
-									{/* 시간 행들 - 30분 단위 */}
-									{HOURS.map((hour, hourIndex) => (
-										<>
-											{/* 시간 셀 (2개 row 병합) */}
-											<div className="row-span-2 px-3 py-2.5 flex items-center justify-center text-14 text-text-100 border-b border-stroke-input">
-												{hour.toString().padStart(2, '0')}:00
-											</div>
-
-											{/* 00분~30분 셀들 */}
-											{WEEKDAYS.map((day, dayIndex) => {
-												const slots = doctor.availableSchedule[day] || [];
-												const currentMinutes = hour * 60;
-												const nextHalfMinutes = hour * 60 + 30;
-
-												const isAvailable = slots.some((slot: TimeSlotDto) => {
-													const startMinutes = timeToMinutes(slot.startTime);
-													const endMinutes = timeToMinutes(slot.endTime);
-													return startMinutes < nextHalfMinutes && endMinutes > currentMinutes;
-												});
-
-												const isLastColumn = dayIndex === WEEKDAYS.length - 1;
-
-												return (
-													<div
-														key={`${day}-${hour}-00`}
-														className={cn(
-															'px-3 py-2.5 border-l border-t border-stroke-input',
-															isAvailable && 'bg-[#80D0E9]',
-															isLastColumn && 'border-r',
-														)}
-													/>
-												);
-											})}
-
-											{/* 30분~60분 셀들 */}
-											{WEEKDAYS.map((day, dayIndex) => {
-												const slots = doctor.availableSchedule[day] || [];
-												const currentMinutes = hour * 60 + 30;
-												const nextHourMinutes = (hour + 1) * 60;
-
-												const isAvailable = slots.some((slot: TimeSlotDto) => {
-													const startMinutes = timeToMinutes(slot.startTime);
-													const endMinutes = timeToMinutes(slot.endTime);
-													return startMinutes < nextHourMinutes && endMinutes > currentMinutes;
-												});
-
-												const isLastRow = hourIndex === HOURS.length - 1;
-												const isLastColumn = dayIndex === WEEKDAYS.length - 1;
-
-												return (
-													<div
-														key={`${day}-${hour}-30`}
-														className={cn(
-															'px-3 py-2.5 border-l border-t border-stroke-input',
-															isAvailable && 'bg-[#80D0E9]',
-															isLastRow && 'border-b',
-															isLastColumn && 'border-r',
-														)}
-													/>
-												);
-											})}
-										</>
-									))}
-								</div>
-							</div>
-						</div>
+					<div className="min-h-[600px]">
+						{renderTimeTableSection()}
 					</div>
 				</div>
 			</div>
+
+			{/* 커스텀 툴팁 */}
+			{hoveredSlot && tooltipContent && (
+				<div
+					ref={tooltipRef}
+					style={{
+						position: 'fixed',
+						left: '0px',
+						top: '0px',
+						zIndex: 9999,
+					}}
+					className="w-auto rounded-[10px] bg-tap-1 p-4 shadow-lg pointer-events-none"
+				>
+					<div className="w-full text-text-0 text-16 font-pretendard font-normal leading-[24px] whitespace-nowrap">
+						{tooltipContent}
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

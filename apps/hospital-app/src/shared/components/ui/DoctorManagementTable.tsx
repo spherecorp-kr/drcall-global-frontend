@@ -162,10 +162,11 @@ export function DoctorManagementTable({
 				getRowId={(doctor) => doctor.id}
 				getRowClassName={(row) => {
 					const isSelected = selectedDoctorId === row.original.id;
+					const isEvenRow = row.index % 2 === 0;
 					if (isSelected) {
 						return 'bg-bg-blue hover:bg-bg-blue';
 					}
-					return 'bg-bg-white hover:bg-bg-gray';
+					return isEvenRow ? 'bg-bg-white hover:bg-bg-gray' : 'bg-bg-gray hover:bg-[#F5F5F5]';
 				}}
 				minWidth="1080px"
 				emptyState={emptyState}
