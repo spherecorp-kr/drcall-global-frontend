@@ -36,7 +36,7 @@ export default {
 					white: '#FFFFFF',
 				},
 				stroke: {
-					input: '#E6E6E6',
+					input: '#E0E0E0',
 					segmented: '#D9D9D9',
 				},
 				system: {

@@ -10,6 +10,7 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>
 	size?: InputSize;
 	state?: InputState;
 	wrapperClassName?: string;
+	compact?: boolean;
 }
 
 const sizeStyles: Record<InputSize, { wrapper: string; input: string; radius: string }> = {
@@ -50,6 +51,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			placeholder,
 			size = 'medium',
 			wrapperClassName,
+			compact = false,
 			...props
 		},
 		ref,
@@ -65,13 +67,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 					wrapper,
 					radius,
 					outlineStyle,
+					compact && 'px-4',
 					wrapperClassName,
 				)}
 			>
 				<div
 					className={cn(
-						'flex flex-1 items-center gap-2 self-stretch pl-4',
-						!icon && 'pr-4',
+						'flex flex-1 items-center gap-2 self-stretch',
+						!compact && 'pl-4',
+						!icon && !compact && 'pr-4',
 					)}
 				>
 					<input
@@ -82,7 +86,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 							'flex-1 bg-transparent font-pretendard outline-none',
 							'text-text-100 placeholder:text-text-30',
 							'disabled:cursor-not-allowed disabled:text-text-100',
-							input,
+							!compact && input,
+							compact && 'text-16',
 							className,
 						)}
 						{...props}

@@ -19,17 +19,20 @@ const Pagination = ({
 	const isFirstPage = currentPage === 0;
 	const isLastPage = currentPage === totalPages - 1;
 
+	// 현재 페이지가 속한 블록 계산 (0-based)
+	const currentBlock = Math.floor(currentPage / maxVisiblePages);
+
 	const handlePageChange = (page: number) => {
 		if (page >= 0 && page < totalPages) {
 			onPageChange(page);
 		}
 	};
 
-	// 표시할 페이지 번호 계산
+	// 현재 블록의 페이지들 계산
 	const getVisiblePages = () => {
 		const pages: number[] = [];
-		const start = Math.max(0, currentPage - Math.floor(maxVisiblePages / 2));
-		const end = Math.min(totalPages, start + maxVisiblePages);
+		const start = currentBlock * maxVisiblePages;
+		const end = Math.min(start + maxVisiblePages, totalPages);
 
 		for (let i = start; i < end; i++) {
 			pages.push(i);
@@ -39,6 +42,21 @@ const Pagination = ({
 	};
 
 	const visiblePages = getVisiblePages();
+
+	// 이전/다음 10페이지로 이동
+	const handlePrevBlock = () => {
+		const prevPage = Math.max(0, currentPage - maxVisiblePages);
+		handlePageChange(prevPage);
+	};
+
+	const handleNextBlock = () => {
+		const nextPage = Math.min(currentPage + maxVisiblePages, totalPages - 1);
+		handlePageChange(nextPage);
+	};
+
+	// < > 버튼 disabled 조건
+	const isPrevBlockDisabled = currentPage < maxVisiblePages;
+	const isNextBlockDisabled = currentPage + maxVisiblePages >= totalPages;
 
 	return (
 		<div className="flex gap-2 h-9 items-center justify-center">
@@ -74,14 +92,14 @@ const Pagination = ({
 					/>
 				</svg>
 			</button>
-			{/* 이전 페이지 */}
+			{/* 이전 10페이지 */}
 			<button
 				className={cn(
 					'bg-white h-9 w-9',
-					isFirstPage ? 'cursor-not-allowed' : 'cursor-pointer',
+					isPrevBlockDisabled ? 'cursor-not-allowed' : 'cursor-pointer',
 				)}
-				disabled={isFirstPage}
-				onClick={() => handlePageChange(currentPage - 1)}
+				disabled={isPrevBlockDisabled}
+				onClick={handlePrevBlock}
 			>
 				<svg
 					height="36"
@@ -92,7 +110,7 @@ const Pagination = ({
 				>
 					<path
 						d="M20.3438 25.3633L13.7031 18.4208L20.3438 11.4783"
-						stroke={isFirstPage ? DISABLED_STROKE : AVAILABLE_STROKE}
+						stroke={isPrevBlockDisabled ? DISABLED_STROKE : AVAILABLE_STROKE}
 						strokeLinecap="round"
 						strokeLinejoin="round"
 						strokeWidth="2"
@@ -114,14 +132,14 @@ const Pagination = ({
 					{pageIndex + 1}
 				</button>
 			))}
-			{/* 다음 페이지 */}
+			{/* 다음 10페이지 */}
 			<button
 				className={cn(
 					'bg-white h-9 w-9',
-					isLastPage ? 'cursor-not-allowed' : 'cursor-pointer',
+					isNextBlockDisabled ? 'cursor-not-allowed' : 'cursor-pointer',
 				)}
-				disabled={isLastPage}
-				onClick={() => handlePageChange(currentPage + 1)}
+				disabled={isNextBlockDisabled}
+				onClick={handleNextBlock}
 			>
 				<svg
 					height="36"
@@ -132,7 +150,7 @@ const Pagination = ({
 				>
 					<path
 						d="M15.6562 25.3633L22.2969 18.4208L15.6562 11.4782"
-						stroke={isLastPage ? DISABLED_STROKE : AVAILABLE_STROKE}
+						stroke={isNextBlockDisabled ? DISABLED_STROKE : AVAILABLE_STROKE}
 						strokeLinecap="round"
 						strokeLinejoin="round"
 						strokeWidth="2"
