@@ -145,7 +145,7 @@ const CompletedTable = () => {
 				disableHorizontalScroll
 				emptyState={<EmptyState message="진료 완료 목록이 없습니다." />}
 				enableSelection
-				getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
 			/>
 			<Pagination currentPage={0} totalPages={1} onPageChange={() => {}} />
 		</div>

@@ -26,6 +26,7 @@ const paymentMethodLabels: Record<string, string> = {
 
 export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: PaymentHistoryTableProps) {
   const [currentPage, setCurrentPage] = useState(0);
+  const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 10;
   const totalPages = Math.ceil(total / itemsPerPage);
 
@@ -216,10 +217,14 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
           columns={columns}
           data={currentPageData}
           stickyHeader={false}
+          enableSelection={true}
+          selectedIds={selectedRowIds}
+          onSelectionChange={setSelectedRowIds}
+          getRowId={(row) => row.paymentNumber}
           getRowClassName={(row) =>
             row.index % 2 === 0
-              ? 'bg-bg-white hover:bg-gray-100'
-              : 'bg-bg-gray hover:bg-gray-100'
+              ? 'bg-bg-white'
+              : 'bg-bg-gray'
           }
         />
       </div>

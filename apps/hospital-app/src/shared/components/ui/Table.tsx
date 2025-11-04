@@ -346,13 +346,16 @@ const Table = <TData,>({
 								</td>
 							</tr>
 						) : (
-							table.getRowModel().rows.map((row, index, array) => (
+							table.getRowModel().rows.map((row, index, array) => {
+								const isSelected = enableSelection && selectedIds.has(getRowId(row.original));
+								return (
 								<tr
 									key={row.id}
 									onClick={(e) => handleRowClick(row, e)}
 									className={cn(
 										'border-b-[0.5px] border-stroke-input first:border-t-0 last:border-b-0 transition-colors',
-										(onRowClick || enableSelection) && 'cursor-pointer hover:bg-bg-gray',
+										(onRowClick || enableSelection) && !isSelected && 'cursor-pointer hover:bg-[#F0F0F0]',
+										(onRowClick || enableSelection) && isSelected && 'cursor-pointer',
 										getRowClassNameWithSelection(row),
 										index === array.length - 1 &&
 											'[&>td:first-child]:rounded-bl-[10px] [&>td:last-child]:rounded-br-[10px]',
@@ -386,7 +389,8 @@ const Table = <TData,>({
 										);
 									})}
 								</tr>
-							))
+								);
+							})
 						)}
 					</tbody>
 				</table>
