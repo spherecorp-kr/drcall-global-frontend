@@ -48,3 +48,16 @@ export interface CancelledTableColumnProps {
 	doctorName: string; // 의사
 	patientName: string; // 환자명
 }
+
+export interface DoctorSchedule {
+	displayTime: string;
+	time: string;
+}
+
+// 과거 진료 기록 리스트 컬럼 속성
+export interface TreatmentHistoryTableColumnProps {
+	completedDatetime: string; // 진료 완료 일시
+	doctorName: string; // 의사
+	symptom: string; // 증상
+	appointmentSequence: number;
+}

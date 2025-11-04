@@ -267,7 +267,7 @@ const Table = <TData,>({
 							</tr>
 						)}
 						{table.getHeaderGroups().map((headerGroup) => (
-							<tr key={headerGroup.id} className="bg-bg-white">
+							<tr key={headerGroup.id} className="bg-white">
 								{headerGroup.headers.map((header) => {
 									const canSort = header.column.getCanSort();
 									const meta = header.column.columnDef.meta as
@@ -353,7 +353,7 @@ const Table = <TData,>({
 									key={row.id}
 									onClick={(e) => handleRowClick(row, e)}
 									className={cn(
-										'border-b-[0.5px] border-stroke-input first:border-t-0 last:border-b-0 transition-colors',
+										'border-b-[0.5px] border-stroke-input first:border-t-0 last:border-b-0 transition-colors tr',
 										(onRowClick || enableSelection) && !isSelected && 'cursor-pointer hover:bg-[#F0F0F0]',
 										(onRowClick || enableSelection) && isSelected && 'cursor-pointer',
 										getRowClassNameWithSelection(row),
@@ -363,7 +363,7 @@ const Table = <TData,>({
 								>
 									{row.getVisibleCells().map((cell) => {
 										const meta = cell.column.columnDef.meta as
-											| { align?: 'left' | 'center' | 'right'; truncate?: boolean }
+											| { align?: 'left' | 'center' | 'right'; height?: string; truncate?: boolean }
 											| undefined;
 										return (
 											<td key={cell.id} className="h-[72px]">
@@ -378,7 +378,7 @@ const Table = <TData,>({
 														meta?.truncate && 'overflow-hidden',
 													)}
 												>
-													<div className={cn(meta?.truncate && 'truncate')}>
+													<div className={cn(meta?.truncate && 'truncate', meta?.height && `h-[${meta?.height}]`)}>
 														{flexRender(
 															cell.column.columnDef.cell,
 															cell.getContext(),

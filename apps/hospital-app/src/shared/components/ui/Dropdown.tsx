@@ -32,6 +32,7 @@ const Dropdown = ({
 	className,
 	menuClassName,
 	onChange,
+	optionClassName = '',
 	options,
 	placeholder = '선택',
 	value,
@@ -106,7 +107,7 @@ const Dropdown = ({
 									className={cn(
 										'flex items-center justify-end gap-0.5 px-5 h-[70px]',
 										'text-text-100 text-16 font-normal font-pretendard leading-normal',
-										'transition-colors whitespace-nowrap',
+										'transition-colors whitespace-nowrap', optionClassName,
 										isSelected
 											? 'bg-text-10'
 											: 'hover:bg-bg-blue cursor-pointer',
@@ -137,7 +138,7 @@ const Dropdown = ({
 				className={cn(
 					'relative h-10 w-full px-4',
 					'flex items-center justify-between gap-2',
-					'active:bg-text-10 bg-bg-white hover:bg-bg-gray rounded-lg',
+					'active:bg-text-10 bg-bg-white hover:bg-bg-gray rounded',
 					'outline outline-1 -outline-offset-1',
 					'transition-colors',
 					isOpen
@@ -166,7 +167,7 @@ const Dropdown = ({
 			{isOpen && (
 				<div
 					className={cn(
-						'absolute bg-white left-0 overflow-hidden rounded-lg p-2 outline outline-1 -outline-offset-1 outline-stroke-input right-0 z-[51]',
+						'absolute bg-white left-0 overflow-hidden outline outline-1 -outline-offset-1 outline-stroke-input p-2 right-0 rounded z-[51]',
 						menuClassName,
 					)}
 					style={{ top: 'calc(100% + 6px)' }}
@@ -179,11 +180,11 @@ const Dropdown = ({
 								type="button"
 								onClick={() => handleSelect(option.value)}
 								className={cn(
-									'w-full h-8 px-3',
-									'flex items-center gap-2',
-									'text-14 font-normal font-pretendard text-text-100',
-									'rounded transition-colors',
-									isSelected ? 'bg-bg-blue' : 'bg-bg-white hover:bg-bg-gray',
+									'flex font-normal',
+									'gap-2 items-center h-8 px-3 rounded',
+									'text-14 text-text-100',
+									'transition-colors w-full', optionClassName,
+									isSelected ? 'bg-bg-blue' : 'bg-white hover:bg-bg-gray',
 								)}
 							>
 								{option.label}

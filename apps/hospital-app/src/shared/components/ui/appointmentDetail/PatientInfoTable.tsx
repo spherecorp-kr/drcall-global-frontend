@@ -1,3 +1,5 @@
+import { Button } from '@/shared/components/ui';
+
 const TH_CLASS: string = 'font-normal leading-normal min-w-[12.5rem] text-base text-text-70';
 const TD_CLASS: string = 'font-normal leading-normal text-base text-text-100';
 const TEXTAREA_CLASS: string = 'border border-stroke-input flex-1 font-normal leading-normal px-4 py-2.5 resize-none rounded text-base text-text-100';
@@ -9,7 +11,16 @@ const Risk = () => <span className={`${BADGE_CLASS} bg-badge-6 text-system-error
 const Sdn = () => <span className={`${BADGE_CLASS} bg-badge-2 text-system-caution`}>빠른 진료</span>;
 const Vip = () => <span className={`${BADGE_CLASS} bg-badge-5 text-primary-70`}>VIP</span>
 
-// 성별 아이콘
+// 남자 아이콘
+const Male = () => (
+	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+		<path d="M6.83464 14.3333C9.68811 14.3333 12.0013 12.0201 12.0013 9.16667C12.0013 6.3132 9.68811 4 6.83464 4C3.98116 4 1.66797 6.3132 1.66797 9.16667C1.66797 12.0201 3.98116 14.3333 6.83464 14.3333Z" stroke="#3278FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+		<path d="M14.3346 1.66797L10.668 5.33464" stroke="#3278FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+		<path d="M10 1.66797H14.3333V6.0013" stroke="#3278FF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+	</svg>
+)
+
+// 여자 아이콘
 const Female = () => (
 	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
 		<path d="M8.0026 10.6654C10.5799 10.6654 12.6693 8.57603 12.6693 5.9987C12.6693 3.42137 10.5799 1.33203 8.0026 1.33203C5.42528 1.33203 3.33594 3.42137 3.33594 5.9987C3.33594 8.57603 5.42528 10.6654 8.0026 10.6654Z" stroke="#FF5977" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -22,15 +33,18 @@ const PatientInfoTable = () => {
 	return (
 		<div className="bg-white border border-stroke-input flex flex-col p-5 rounded-[0.625rem]">
 			<div className="flex flex-col gap-2.5">
-				<div className='flex gap-2 items-center justify-start'>
-					<Aptmt />
-					<Sdn />
-					<Risk />
-					<Vip />
+				<div className='flex items-center justify-between'>
+					<div className='flex gap-2 items-center justify-start'>
+						<Aptmt />
+						<Sdn />
+						<Risk />
+						<Vip />
+					</div>
+					<Button className='rounded-sm text-text-70' variant='ghost'>환자정보 수정</Button>
 				</div>
 				<div className='flex gap-2 items-center justify-start'>
 					<h3 className='font-semibold leading-normal text-[1.125rem] text-text-100'>환자 이름</h3>
-					<p className='flex font-normal items-center leading-normal text-sm text-text-40'>(14.05.1994 / <Female />)</p>
+					<p className='flex font-normal items-center leading-normal text-sm text-text-40'>(14.05.1994 / <Male /><Female />)</p>
 				</div>
 			</div>
 			<div className="flex gap-5 items-start self-stretch">

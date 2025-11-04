@@ -4,6 +4,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { getMenuByRole } from '@/shared/config/menuConfig';
 import { SideNavigation, TopNavigation } from '@/shared/components/layout';
 import { ChatFloatingButton, ChatWindow } from '@/shared/components/ui';
+import { Dialog } from '@/shared/components/ui/dialog';
+import { useDialogProps } from '@/shared/store/dialogStore';
 
 interface MainLayoutProps {
 	logo: ReactNode;
@@ -28,8 +30,12 @@ const MainLayout = ({
 	userName,
 	userRole,
 }: MainLayoutProps) => {
-	const { isSideNavExpanded, toggleSideNav } = useLayoutStore();
 	const location = useLocation();
+
+	const { isSideNavExpanded, toggleSideNav } = useLayoutStore();
+
+	const dialogProps = useDialogProps();
+
 	const [isChatOpen, setIsChatOpen] = useState(false);
 	const [buttonPosition, setButtonPosition] = useState({ x: 32, y: 32 });
 
@@ -85,6 +91,8 @@ const MainLayout = ({
 				onClose={() => setIsChatOpen(false)}
 				buttonPosition={buttonPosition}
 			/>
+
+			<Dialog {...dialogProps} />
 		</div>
 	);
 };

@@ -1,10 +1,10 @@
-import { forwardRef, type InputHTMLAttributes } from 'react';
+import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 import { cn } from '@/shared/utils/cn';
 import sampleImg from '@/assets/react.svg';
 
 interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'> {
 	hasImage?: boolean;
-	label?: string;
+	label?: string | ReactNode;
 	wrapperClassName?: string;
 }
 
