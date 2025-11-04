@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Button } from '@/shared/components/ui';
+import { Button, EmptyState, Pagination } from '@/shared/components/ui';
 import { SearchInput } from '@/shared/components/ui/SearchInput';
 import { DoctorManagementTable } from '@/shared/components/ui/DoctorManagementTable';
-import Pagination from '@/shared/components/ui/Pagination';
-import EmptyState from '@/shared/components/ui/EmptyState';
 import { useDoctorManagement } from '@/shared/hooks/useDoctorManagement';
 
 export function Doctor() {

@@ -17,10 +17,6 @@ const swipeConfidenceThreshold = 10000;
 const swipePower = (offset: number, velocity: number) => Math.abs(offset) * velocity;
 
 const slideVariants = {
-	enter: (direction: number) => ({
-		x: direction > 0 ? 1000 : -1000,
-		opacity: 0
-	}),
 	center: {
 		zIndex: 1,
 		x: 0,
