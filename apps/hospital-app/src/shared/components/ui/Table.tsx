@@ -247,8 +247,7 @@ const Table = <TData,>({
 				className={cn(
 					'w-full flex-1',
 					disableScroll ? 'overflow-hidden' : (disableHorizontalScroll ? 'overflow-x-hidden' : 'overflow-x-auto'),
-					stickyHeader ? '' : 'pt-4',
-					'px-3 pb-3 sm:px-4 sm:pb-4 md:px-5 md:pb-5',
+					'px-5 py-4',
 				)}
 			>
 				<table className="table-fixed w-full h-auto" style={{ minWidth }}>
@@ -353,7 +352,7 @@ const Table = <TData,>({
 									onClick={(e) => handleRowClick(row, e)}
 									className={cn(
 										'border-b-[0.5px] border-stroke-input first:border-t-0 last:border-b-0 transition-colors',
-										(onRowClick || enableSelection) && 'cursor-pointer',
+										(onRowClick || enableSelection) && 'cursor-pointer hover:bg-bg-gray',
 										getRowClassNameWithSelection(row),
 										index === array.length - 1 &&
 											'[&>td:first-child]:rounded-bl-[10px] [&>td:last-child]:rounded-br-[10px]',

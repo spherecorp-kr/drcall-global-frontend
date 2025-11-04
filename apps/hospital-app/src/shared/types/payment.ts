@@ -10,6 +10,7 @@ export interface PaymentStats {
 export interface PaymentHistoryItem {
 	paymentNumber: string;
 	appointmentNumber: string;
+	paymentRequestDatetime: string;
 	paymentDatetime: string;
 	paymentStatus: 'completed' | 'pending';
 	paymentMethod: 'QR' | 'card' | 'bank_transfer';
