@@ -239,7 +239,7 @@ export default function PhrDetail() {
             </div>
 
             {/* Form Content */}
-            <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', maxHeight: '70vh', overflowY: 'auto' }}>
+            <div style={{ maxHeight: '70vh', overflowY: 'auto' }}>
               {renderForm()}
             </div>
           </div>
