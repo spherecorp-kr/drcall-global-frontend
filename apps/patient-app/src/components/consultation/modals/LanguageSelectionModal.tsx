@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import BottomSheetModal from '@ui/modals/BottomSheetModal';
+import { useTranslation } from 'react-i18next';
 
 interface LanguageSelectionModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export default function LanguageSelectionModal({
   currentLanguage
 }: LanguageSelectionModalProps) {
   const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage);
+  const { t } = useTranslation();
 
   const handleConfirm = () => {
     onConfirm(selectedLanguage);
@@ -35,8 +37,8 @@ export default function LanguageSelectionModal({
     <BottomSheetModal
       isOpen={isOpen}
       onClose={onClose}
-      title="자막 언어"
-      confirmText="확인"
+      title={t('common.subtitleLanguage')}
+      confirmText={t('common.confirm')}
       onConfirm={handleConfirm}
     >
       <div style={{ width: '100%', paddingLeft: '20px', paddingRight: '20px' }}>
