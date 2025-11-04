@@ -2,7 +2,14 @@ import { useState } from 'react';
 import { PaymentStatCard } from '@/shared/components/ui/PaymentStatCard';
 import { PaymentSearch } from '@/shared/components/ui/PaymentSearch';
 import { PaymentHistoryTable } from '@/shared/components/ui/PaymentHistoryTable';
-import { mockPaymentStats, mockPaymentHistory } from '@/mocks/paymentData';
+import { SettlementTable } from '@/shared/components/ui/SettlementTable';
+import {
+	mockPaymentStats,
+	mockPaymentHistory,
+	mockSettlementStats,
+	mockSettlementHistory,
+	mockDeliveryFeeHistory,
+} from '@/mocks/paymentData';
 import { type PaymentTab } from '@/shared/types/payment';
 import InvoiceIcon from '@/shared/assets/icons/ic_invoice.svg?react';
 import CoinsIcon from '@/shared/assets/icons/Coins.svg?react';
@@ -72,10 +79,58 @@ export function Payment() {
         );
       case 'settlement':
         return (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-text-100 text-24 font-semibold font-pretendard">
-              정산 처리 탭 (준비 중)
+          <div className="flex flex-col gap-5">
+            {/* Info Banner */}
+            <div className="flex items-center gap-2 text-primary-60">
+              <img src={ValidationInfoIcon} alt="info" className="w-3.5 h-3.5 flex-shrink-0" />
+              <div className="text-14 font-normal font-pretendard">
+                <span className="font-semibold">정산 권한은 수수료 처리 및 공제(Net) 기준으로 산정됩니다.</span>
+              </div>
             </div>
+
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-4">
+              <div className="rounded-[10px] border border-stroke-input bg-bg-white px-7 py-5 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
+                <PaymentStatCard
+                  title="정산 예정 금액"
+                  icon={<InvoiceIcon />}
+                  amount={`${mockSettlementStats.expectedAmount.toLocaleString()} THB`}
+                  date={mockSettlementStats.asOfDate}
+                />
+              </div>
+              <div className="rounded-[10px] border border-stroke-input bg-bg-white px-7 py-5 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
+                <PaymentStatCard
+                  title="정산 완료 금액"
+                  icon={<CoinsIcon />}
+                  amount={`${mockSettlementStats.completedAmount.toLocaleString()} THB`}
+                  date={mockSettlementStats.asOfDate}
+                />
+              </div>
+              <div className="rounded-[10px] border border-stroke-input bg-bg-white px-7 py-5 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
+                <PaymentStatCard
+                  title="배송 이용 금액 합계"
+                  icon={<PayWaitingIcon />}
+                  amount={`${mockSettlementStats.deliveryUsageAmount.toLocaleString()} THB`}
+                  date={mockSettlementStats.asOfDate}
+                />
+              </div>
+              <div className="rounded-[10px] border border-stroke-input bg-bg-white px-7 py-5 shadow-[0px_4px_30px_rgba(0,0,0,0.04)]">
+                <PaymentStatCard
+                  title="배송료 지급 완료 금액"
+                  icon={<CoinsIcon />}
+                  amount={`${mockSettlementStats.deliveryFeeCompletedAmount.toLocaleString()} THB`}
+                  date={mockSettlementStats.asOfDate}
+                />
+              </div>
+            </div>
+
+            {/* Settlement Table with Internal Tabs */}
+            <SettlementTable
+              settlementData={mockSettlementHistory}
+              deliveryData={mockDeliveryFeeHistory}
+              settlementCount={124}
+              deliveryCount={111}
+            />
           </div>
         );
       case 'report':

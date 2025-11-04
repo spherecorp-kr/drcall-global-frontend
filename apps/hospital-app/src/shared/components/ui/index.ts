@@ -12,3 +12,4 @@ export { Radio } from './Radio';
 export { Select } from './Select';
 export { default as SearchIcon } from './SearchIcon';
 export { default as Table } from './Table';
+export { Tooltip } from './Tooltip';

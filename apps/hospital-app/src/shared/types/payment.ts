@@ -20,3 +20,31 @@ export interface PaymentHistoryItem {
 	serviceFee: number;
 	deliveryFee: number;
 }
+
+// Settlement Types
+export type SettlementStatus = 'completed' | 'scheduled' | 'pending' | 'confirmed' | 'onHold';
+
+export interface SettlementStats {
+	expectedAmount: number;
+	completedAmount: number;
+	deliveryUsageAmount: number;
+	deliveryFeeCompletedAmount: number;
+	asOfDate: string;
+}
+
+export interface SettlementHistoryItem {
+	settlementId: string;
+	settlementPeriod: string;
+	expectedAmount: number;
+	completedAmount: number;
+	status: SettlementStatus;
+	completedDatetime?: string;
+}
+
+export interface DeliveryFeeItem {
+	deliveryId: string;
+	settlementPeriod: string;
+	deliveryUsageAmount: number;
+	status: SettlementStatus;
+	paymentCompletedDate?: string;
+}

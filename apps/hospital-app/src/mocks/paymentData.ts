@@ -1,4 +1,4 @@
-import type { PaymentStats, PaymentHistoryItem } from '@/shared/types/payment';
+import type { PaymentStats, PaymentHistoryItem, SettlementStats, SettlementHistoryItem, DeliveryFeeItem, SettlementStatus } from '@/shared/types/payment';
 
 export const mockPaymentStats: PaymentStats = {
 	totalBilled: 1234567,
@@ -28,5 +28,44 @@ export const mockPaymentHistory: PaymentHistoryItem[] = Array.from({ length: 480
 		prescriptionFee,
 		serviceFee,
 		deliveryFee,
+	};
+});
+
+export const mockSettlementStats: SettlementStats = {
+	expectedAmount: 52000000,
+	completedAmount: 40000000,
+	deliveryUsageAmount: 32000000,
+	deliveryFeeCompletedAmount: 12000000,
+	asOfDate: '2025.10.28',
+};
+
+const settlementStatuses: SettlementStatus[] = ['completed', 'scheduled', 'onHold', 'confirmed'];
+
+export const mockSettlementHistory: SettlementHistoryItem[] = Array.from({ length: 124 }, (_, i) => {
+	const status = settlementStatuses[Math.floor(Math.random() * settlementStatuses.length)];
+	const hasCompletedDate = status === 'completed' || status === 'confirmed';
+
+	return {
+		settlementId: `20250905-${String(325 + i).padStart(3, '0')}`,
+		settlementPeriod: '30/08/2025~ 04/082025',
+		expectedAmount: Math.floor(Math.random() * 40000) + 2000,
+		completedAmount: Math.floor(Math.random() * 5000) + 800,
+		status,
+		completedDatetime: hasCompletedDate ? new Date(2025, 8, 30, 16, 44, 51).toISOString() : undefined,
+	};
+});
+
+const deliveryStatuses: SettlementStatus[] = ['completed', 'scheduled'];
+
+export const mockDeliveryFeeHistory: DeliveryFeeItem[] = Array.from({ length: 111 }, (_, i) => {
+	const status = deliveryStatuses[Math.floor(Math.random() * deliveryStatuses.length)];
+	const hasPaymentDate = status === 'completed';
+
+	return {
+		deliveryId: `20250905-${String(325 + i).padStart(3, '0')}`,
+		settlementPeriod: '30/08/2025~ 04/082025',
+		deliveryUsageAmount: Math.floor(Math.random() * 5000) + 800,
+		status,
+		paymentCompletedDate: hasPaymentDate ? new Date(2023, 4, 16, 16, 27, 0).toISOString() : undefined,
 	};
 });
