@@ -37,6 +37,7 @@ const Dropdown = ({
 	placeholder = '선택',
 	value,
 	variant = 'default',
+	error = false,
 }: DropdownProps) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -141,11 +142,13 @@ const Dropdown = ({
 					'active:bg-text-10 bg-bg-white hover:bg-bg-gray rounded',
 					'outline outline-1 -outline-offset-1',
 					'transition-colors',
-					isOpen
-						? 'outline-primary-70'
-						: selectedOption && selectedOption.value !== 'all'
+					error
+						? 'outline-system-error'
+						: isOpen
 							? 'outline-primary-70'
-							: 'outline-stroke-input hover:outline-text-40',
+							: selectedOption && selectedOption.value !== 'all'
+								? 'outline-primary-70'
+								: 'outline-stroke-input hover:outline-text-40',
 				)}
 			>
 				<span

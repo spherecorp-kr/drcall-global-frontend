@@ -17,8 +17,8 @@ interface SelectProps extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'siz
 
 const sizeStyles: Record<SelectSize, { wrapper: string; select: string; radius: string }> = {
 	small: {
-		wrapper: 'h-8',
-		select: 'pl-4 pr-2 text-14',
+		wrapper: 'h-8 px-4',
+		select: 'pr-2 text-14',
 		radius: 'rounded-lg',
 	},
 	medium: {

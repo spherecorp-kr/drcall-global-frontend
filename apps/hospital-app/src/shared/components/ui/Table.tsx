@@ -366,19 +366,30 @@ const Table = <TData,>({
 											| { align?: 'left' | 'center' | 'right'; height?: string; truncate?: boolean }
 											| undefined;
 										return (
-											<td key={cell.id} className="h-[72px]">
+											<td
+												key={cell.id}
+												className="h-[72px] overflow-hidden"
+												style={{
+													width: enableColumnResizing
+														? cell.column.getSize()
+														: cell.column.getSize() !== 150
+															? cell.column.getSize()
+															: undefined,
+													minWidth: cell.column.columnDef.minSize,
+													maxWidth: cell.column.columnDef.maxSize,
+												}}
+											>
 												<div
 													className={cn(
-														'flex items-center h-full px-2.5',
+														'flex items-center h-full px-2.5 min-w-0 overflow-hidden',
 														meta?.align === 'center'
 															? 'justify-center'
 															: meta?.align === 'right'
 																? 'justify-end'
 																: 'justify-start',
-														meta?.truncate && 'overflow-hidden',
 													)}
 												>
-													<div className={cn(meta?.truncate && 'truncate', meta?.height && `h-[${meta?.height}]`)}>
+													<div className={cn('min-w-0 overflow-hidden', meta?.truncate && 'truncate', meta?.height && `h-[${meta?.height}]`)}>
 														{flexRender(
 															cell.column.columnDef.cell,
 															cell.getContext(),
