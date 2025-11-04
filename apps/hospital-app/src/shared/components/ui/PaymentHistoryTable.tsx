@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
 import Table from './Table';
-import { Button } from './Button';
+import Button from './Button';
 import Pagination from './Pagination';
 import { Section } from './Section';
 import { type PaymentHistoryItem } from '@/shared/types/payment';
@@ -172,7 +172,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
       isExpanded={isExpanded}
       contentClassName="p-0"
       actions={
-        <Button variant="outline" size="medium" iconPosition="left" icon={<DownloadIcon />}>
+        <Button variant="outline" size="default" iconPosition="left" icon={<DownloadIcon />}>
           엑셀 다운로드
         </Button>
       }

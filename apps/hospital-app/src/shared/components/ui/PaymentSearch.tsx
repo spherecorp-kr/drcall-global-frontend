@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SegmentedControl } from './SegmentedControl';
 import { SearchInput } from './SearchInput';
 import Dropdown from './Dropdown';
-import { Button } from './Button';
+import Button from './Button';
 import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';
 import InfoIcon from '@/shared/assets/icons/btn_circle_help.svg?react';
 import RefreshIcon from '@/shared/assets/icons/ic_ reset.svg?react';
@@ -17,7 +17,7 @@ interface PaymentSearchProps {
 }
 
 export function PaymentSearch({ onSearch }: PaymentSearchProps) {
-  const [period, setPeriod] = useState<string | null>('today');
+  const [period, setPeriod] = useState<string>('today');
   const [dateFrom, setDateFrom] = useState('2025.10.28');
   const [dateTo, setDateTo] = useState('2025.10.28');
   const [keyword, setKeyword] = useState('');
@@ -167,7 +167,7 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
             </div>
             <span className="text-text-40 text-14 font-normal font-pretendard">초기화</span>
           </button>
-          <Button variant="primary" size="medium" onClick={handleSearch}>
+          <Button variant="primary" size="default" onClick={handleSearch}>
             검색
           </Button>
         </div>

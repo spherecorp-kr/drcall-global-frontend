@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { Button } from '@/shared/components/ui/Button';
+import Button from '@/shared/components/ui/Button';
 import { useState, useRef } from 'react';
 import { cn } from '@/shared/utils/cn';
 import type { DayOfWeek, TimeSlotDto, AvailableScheduleDto } from '@/shared/types/doctor';
@@ -410,8 +410,15 @@ export function DoctorDetail() {
 						</h2>
 						<div className="bg-bg-white rounded-[10px] border border-stroke-input p-5">
 							<div className="flex-1 text-16 text-text-100 break-words whitespace-pre-line">
-								{WEEKDAYS.filter((day) => doctor.availableSchedule[day]?.length > 0)
-									.map((day) => `${DAY_MAP[day]} : ${formatAvailableTime(doctor.availableSchedule[day])}`)
+								{WEEKDAYS.filter((day) => {
+										const slots = doctor.availableSchedule[day];
+										return slots && slots.length > 0;
+									})
+									.map((day) => {
+										const slots = doctor.availableSchedule[day];
+										if (!slots) return '';
+										return `${DAY_MAP[day]} : ${formatAvailableTime(slots)}`;
+									})
 									.join('\n')}
 							</div>
 						</div>
