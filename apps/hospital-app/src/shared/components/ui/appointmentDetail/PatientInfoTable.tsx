@@ -1,3 +1,5 @@
+import { Button } from '@/shared/components/ui';
+
 const TH_CLASS: string = 'font-normal leading-normal min-w-[12.5rem] text-base text-text-70';
 const TD_CLASS: string = 'font-normal leading-normal text-base text-text-100';
 const TEXTAREA_CLASS: string = 'border border-stroke-input flex-1 font-normal leading-normal px-4 py-2.5 resize-none rounded text-base text-text-100';
@@ -31,11 +33,14 @@ const PatientInfoTable = () => {
 	return (
 		<div className="bg-white border border-stroke-input flex flex-col p-5 rounded-[0.625rem]">
 			<div className="flex flex-col gap-2.5">
-				<div className='flex gap-2 items-center justify-start'>
-					<Aptmt />
-					<Sdn />
-					<Risk />
-					<Vip />
+				<div className='flex items-center justify-between'>
+					<div className='flex gap-2 items-center justify-start'>
+						<Aptmt />
+						<Sdn />
+						<Risk />
+						<Vip />
+					</div>
+					<Button className='rounded-sm text-text-70' variant='ghost'>환자정보 수정</Button>
 				</div>
 				<div className='flex gap-2 items-center justify-start'>
 					<h3 className='font-semibold leading-normal text-[1.125rem] text-text-100'>환자 이름</h3>

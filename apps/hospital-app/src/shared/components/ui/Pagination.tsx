@@ -4,6 +4,7 @@ const AVAILABLE_STROKE: string = '#1f1f1f';
 const DISABLED_STROKE: string = '#e0e0e0';
 
 interface PaginationProps {
+	className?: string;
 	currentPage: number;
 	totalPages: number;
 	onPageChange: (page: number) => void;
@@ -11,6 +12,7 @@ interface PaginationProps {
 }
 
 const Pagination = ({
+	className = '',
 	currentPage,
 	totalPages,
 	onPageChange,
@@ -41,7 +43,7 @@ const Pagination = ({
 	const visiblePages = getVisiblePages();
 
 	return (
-		<div className="flex gap-2 h-9 items-center justify-center">
+		<div className={cn('flex gap-2 h-9 items-center justify-center', className)}>
 			{/* 처음으로 */}
 			<button
 				className={cn(

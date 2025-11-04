@@ -23,6 +23,7 @@ export const useDialogProps = (): DialogContentProps => {
 	const dialogClass = useDialogStore(state => state.dialogClass);
 	const dialogContents = useDialogStore(state => state.dialogContents);
 	const dialogId = useDialogStore(state => state.dialogId);
+	const dialogIdForClose = useDialogStore(state => state.dialogIdForClose);
 	const dialogTitle = useDialogStore(state => state.dialogTitle);
 
 	return {
@@ -30,6 +31,7 @@ export const useDialogProps = (): DialogContentProps => {
 		dialogClass,
 		dialogContents,
 		dialogId,
+		dialogIdForClose,
 		dialogTitle
 	}
 }
