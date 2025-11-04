@@ -79,7 +79,6 @@ export function SalesBarChart({ data, infoText }: SalesBarChartProps) {
 					ref={scrollContainerRef}
 					onScroll={checkScroll}
 					className="overflow-x-auto"
-					style={{ scrollbarHeight: 8 }}
 				>
 					<div style={{ minWidth: data.length > 7 ? `${data.length * 100}px` : '100%' }}>
 						<ResponsiveContainer width="100%" height={400}>
@@ -99,13 +98,13 @@ export function SalesBarChart({ data, infoText }: SalesBarChartProps) {
 								/>
 								<Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(0, 160, 210, 0.1)' }} />
 								<Bar dataKey="amount" fill="#4DBDE0" radius={[4, 4, 0, 0]} maxBarSize={60}>
-									{data.map((entry, index) => (
+									{data.map((_entry, index) => (
 										<Cell key={`cell-${index}`} fill="#4DBDE0" />
 									))}
 									<LabelList
 										dataKey="amount"
 										position="top"
-										formatter={(value: number) => value.toLocaleString()}
+										formatter={(value) => (typeof value === 'number' ? value.toLocaleString() : '')}
 										style={{
 											fill: '#047EA5',
 											fontSize: 14,
