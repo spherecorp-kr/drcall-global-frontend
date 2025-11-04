@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/shared/components/ui';
+import { Button, EmptyState, Pagination } from '@/shared/components/ui';
 import { SearchInput } from '@/shared/components/ui/SearchInput';
 import { DoctorManagementTable } from '@/shared/components/ui/DoctorManagementTable';
-import Pagination from '@/shared/components/ui/Pagination';
-import EmptyState from '@/shared/components/ui/EmptyState';
 import { DoctorRegistrationModal, type DoctorFormData } from '@/shared/components/ui/DoctorRegistrationModal';
 import { useDoctorManagement } from '@/shared/hooks/useDoctorManagement';
 

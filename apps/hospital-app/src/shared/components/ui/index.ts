@@ -6,6 +6,7 @@ export { Checkbox } from './Checkbox';
 export { default as Dropdown } from './Dropdown';
 export { default as DropdownCheckbox } from './DropdownCheckbox';
 export { default as EmptyState } from './EmptyState';
+export { default as ImageViewer } from './ImageViewer';
 export { Input } from './Input';
 export { default as Pagination } from './Pagination';
 export { Radio } from './Radio';

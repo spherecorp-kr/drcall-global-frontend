@@ -1,5 +1,7 @@
+import type { ReactNode } from 'react';
+
 export interface DropdownOption {
-	label: string;
+	label: string | ReactNode;
 	value: string;
 }
 
@@ -7,6 +9,7 @@ export interface DropdownProps {
 	className?: string;
 	menuClassName?: string;
 	onChange?: (value: string) => void;
+	optionClassName?: string;
 	options: DropdownOption[];
 	placeholder?: string;
 	value?: string;
