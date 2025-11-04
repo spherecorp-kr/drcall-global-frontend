@@ -41,7 +41,7 @@ export default {
 				},
 				system: {
 					error: '#FC0606',
-					successful: '#61CC56',
+					successful: '#51CC56',
 					successful2: '#11AC51',
 					caution: '#FF5F06',
 				},

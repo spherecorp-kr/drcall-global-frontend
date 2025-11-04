@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/shared/components/ui/Button';
+import { Button } from '@/shared/components/ui';
 import { SearchInput } from '@/shared/components/ui/SearchInput';
 import { DoctorManagementTable } from '@/shared/components/ui/DoctorManagementTable';
 import Pagination from '@/shared/components/ui/Pagination';

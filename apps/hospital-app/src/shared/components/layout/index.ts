@@ -1,3 +1,4 @@
+export { default as DetailPageLayout } from './DetailPageLayout';
 export { default as GridContent } from './GridContent';
 export { default as MainLayout } from './MainLayout';
 export { default as SideNavigation } from './SideNavigation';

@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { MainLayout } from '@/shared/components/layout';
 import TextLogo from '@/assets/logo_drcall.svg';
 import {
+	AppointmentDetailPage,
 	AppointmentPage,
 	ConsultationPage,
 	DashboardPage,
@@ -14,6 +15,13 @@ import {
 	PatientPage,
 	PaymentPage,
 } from '@/pages';
+
+// 라우트 설정 정의 (확장 시 여기에 추가)
+const ROUTE_CONFIGS = [
+	{ pattern: /^\/appointment\/\d+$/, showBackButton: true }, // 예약 상세
+	{ pattern: /^\/patient\/\d+$/, showBackButton: true }, // 환자 상세
+	{ pattern: /^\/doctor\/\d+$/,  showBackButton: true }, // 의사 상세
+] as const;
 
 function AppContent() {
 	const navigate = useNavigate();
@@ -36,20 +44,22 @@ function AppContent() {
 		return t('menu.dashboard');
 	}, [location.pathname, t]);
 
-	// 뒤로가기 버튼 표시 여부
-	const showBackButton = useMemo(() => {
-		const path: string = location.pathname;
-		return path.match(/^\/doctor\/[^/]+$/) !== null;
+	// 현재 경로에 대한 설정 찾기
+	const currentRouteConfig = useMemo(() => {
+		return ROUTE_CONFIGS.find(config => config.pattern.test(location.pathname));
 	}, [location.pathname]);
 
-	// 뒤로가기 핸들러
-	const handleBack = useCallback(() => {
-		navigate('/doctor');
-	}, [navigate]);
+	// 현재 경로가 뒤로가기 버튼이 필요한지 확인
+	const shouldShowBackButton: boolean = currentRouteConfig?.showBackButton ?? false;
 
 	// 메뉴 클릭 핸들러
 	const handleMenuClick = useCallback((menuId: string) => {
 		navigate(`/${menuId}`);
+	}, [navigate]);
+
+	// 뒤로가기 핸들러
+	const handleBack = useCallback(() => {
+		navigate(-1);
 	}, [navigate]);
 
 	return (
@@ -63,7 +73,7 @@ function AppContent() {
 						onLogout={() => console.log('Logout clicked')}
 						onMenuClick={handleMenuClick}
 						pageTitle={pageTitle}
-						showBackButton={showBackButton}
+						showBackButton={shouldShowBackButton}
 						userName="홍길동"
 						userRole="coordinator"
 					/>
@@ -71,6 +81,7 @@ function AppContent() {
 			>
 				<Route index element={<Navigate to="/dashboard" replace />} />
 				<Route path="dashboard" element={<DashboardPage />} />
+				<Route path="appointment/:appointmentSequence" element={<AppointmentDetailPage />} />
 				<Route path="appointment" element={<AppointmentPage />} />
 				<Route path="payment" element={<PaymentPage />} />
 				<Route path="patient" element={<PatientPage />} />

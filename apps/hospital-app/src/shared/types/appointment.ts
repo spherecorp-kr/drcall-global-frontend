@@ -10,6 +10,7 @@ export interface StatusTabProps {
 
 // 예약 대기 리스트 컬럼 속성
 export interface WaitingTableColumnProps {
+	appointmentSequence: number;
 	appointmentType: AppointmentType; // 예약 유형
 	appointmentDatetime?: string; // 진료 희망 일시
 	patientName: string; // 환자명
