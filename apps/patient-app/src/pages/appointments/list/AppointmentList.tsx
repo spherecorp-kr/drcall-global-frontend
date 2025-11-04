@@ -262,7 +262,7 @@ export default function MedicalHistory() {
             }}
           >
             <span>{currentSortLabel}</span>
-            <img src="/assets/icons/chevron-down.svg" alt="" style={{ width: '1.5rem', height: '1.5rem' }} />
+            <img src="/assets/icons/btn_opening.svg" alt="" style={{ width: '1.5rem', height: '1.5rem' }} />
           </button>
         </div>
 
