@@ -238,81 +238,78 @@ export function DoctorDetail() {
 
 							{/* 시간표 그리드 */}
 							<div className="overflow-x-auto">
-								<div className="relative">
-									{/* 헤더 */}
-									<div className="flex items-center">
-										<div className="w-[60px] h-6 flex items-center justify-center border-b border-stroke-input" />
-										{WEEKDAYS.map((day) => (
-											<div
-												key={day}
-												className={cn(
-													'flex-1 h-6 flex items-center justify-center text-14 border-b border-stroke-input',
-													day === 'saturday' && 'text-[#3076DF]',
-													day === 'sunday' && 'text-[#FC0606]',
-													day !== 'saturday' && day !== 'sunday' && 'text-text-100',
-												)}
-											>
-												{DAY_MAP[day]}
-											</div>
-										))}
-									</div>
+								<div className="grid grid-cols-[60px_repeat(7,1fr)]">
+									{/* 헤더 - 빈 셀 */}
+									<div className="h-6 border-b border-stroke-input" />
+
+									{/* 헤더 - 요일 */}
+									{WEEKDAYS.map((day) => (
+										<div
+											key={day}
+											className={cn(
+												'h-6 flex items-center justify-center text-14 border-b border-stroke-input',
+												day === 'saturday' && 'text-[#3076DF]',
+												day === 'sunday' && 'text-[#FC0606]',
+												day !== 'saturday' && day !== 'sunday' && 'text-text-100',
+											)}
+										>
+											{DAY_MAP[day]}
+										</div>
+									))}
 
 									{/* 시간 행들 - 30분 단위 */}
 									{HOURS.map((hour) => (
 										<>
-											{/* 정시 (00분) */}
-											<div key={`${hour}-00`} className="flex items-center">
-												<div className="w-[60px] px-3 py-2.5 flex items-center justify-center text-14 text-text-100 border-b border-stroke-input">
-													{hour.toString().padStart(2, '0')}:00
-												</div>
-												{WEEKDAYS.map((day) => {
-													const slots = doctor.availableSchedule[day] || [];
-													const currentMinutes = hour * 60;
-													const nextHalfMinutes = hour * 60 + 30;
-
-													const isAvailable = slots.some((slot: TimeSlotDto) => {
-														const startMinutes = timeToMinutes(slot.startTime);
-														const endMinutes = timeToMinutes(slot.endTime);
-														return startMinutes < nextHalfMinutes && endMinutes > currentMinutes;
-													});
-
-													return (
-														<div
-															key={day}
-															className={cn(
-																'flex-1 px-3 py-2.5 border-l border-t border-stroke-input',
-																isAvailable && 'bg-[#80D0E9]',
-															)}
-														/>
-													);
-												})}
+											{/* 시간 셀 (2개 row 병합) */}
+											<div className="row-span-2 px-3 py-2.5 flex items-center justify-center text-14 text-text-100 border-b border-stroke-input">
+												{hour.toString().padStart(2, '0')}:00
 											</div>
 
-											{/* 30분 */}
-											<div key={`${hour}-30`} className="flex items-center">
-												<div className="w-[60px] px-3 py-2.5 flex items-center justify-center text-14 text-text-100 border-b border-stroke-input" />
-												{WEEKDAYS.map((day) => {
-													const slots = doctor.availableSchedule[day] || [];
-													const currentMinutes = hour * 60 + 30;
-													const nextHourMinutes = (hour + 1) * 60;
+											{/* 00분~30분 셀들 */}
+											{WEEKDAYS.map((day) => {
+												const slots = doctor.availableSchedule[day] || [];
+												const currentMinutes = hour * 60;
+												const nextHalfMinutes = hour * 60 + 30;
 
-													const isAvailable = slots.some((slot: TimeSlotDto) => {
-														const startMinutes = timeToMinutes(slot.startTime);
-														const endMinutes = timeToMinutes(slot.endTime);
-														return startMinutes < nextHourMinutes && endMinutes > currentMinutes;
-													});
+												const isAvailable = slots.some((slot: TimeSlotDto) => {
+													const startMinutes = timeToMinutes(slot.startTime);
+													const endMinutes = timeToMinutes(slot.endTime);
+													return startMinutes < nextHalfMinutes && endMinutes > currentMinutes;
+												});
 
-													return (
-														<div
-															key={day}
-															className={cn(
-																'flex-1 px-3 py-2.5 border-l border-t border-stroke-input',
-																isAvailable && 'bg-[#80D0E9]',
-															)}
-														/>
-													);
-												})}
-											</div>
+												return (
+													<div
+														key={`${day}-${hour}-00`}
+														className={cn(
+															'px-3 py-2.5 border-l border-t border-stroke-input',
+															isAvailable && 'bg-[#80D0E9]',
+														)}
+													/>
+												);
+											})}
+
+											{/* 30분~60분 셀들 */}
+											{WEEKDAYS.map((day) => {
+												const slots = doctor.availableSchedule[day] || [];
+												const currentMinutes = hour * 60 + 30;
+												const nextHourMinutes = (hour + 1) * 60;
+
+												const isAvailable = slots.some((slot: TimeSlotDto) => {
+													const startMinutes = timeToMinutes(slot.startTime);
+													const endMinutes = timeToMinutes(slot.endTime);
+													return startMinutes < nextHourMinutes && endMinutes > currentMinutes;
+												});
+
+												return (
+													<div
+														key={`${day}-${hour}-30`}
+														className={cn(
+															'px-3 py-2.5 border-l border-t border-stroke-input',
+															isAvailable && 'bg-[#80D0E9]',
+														)}
+													/>
+												);
+											})}
 										</>
 									))}
 								</div>
