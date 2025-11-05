@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Button, EmptyState, Pagination } from '@/shared/components/ui';
-import { SearchInput } from '@/shared/components/ui/SearchInput';
+import { Button, EmptyState, Pagination, SearchInput } from '@/shared/components/ui';
 import { PatientManagementTable } from '@/shared/components/ui/PatientManagementTable';
 import { usePatientManagement } from '@/shared/hooks/usePatientManagement';
 import RegisterIcon from '@/shared/assets/icons/ic_register.svg?react';
