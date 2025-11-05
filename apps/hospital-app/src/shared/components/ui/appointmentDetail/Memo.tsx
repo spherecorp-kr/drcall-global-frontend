@@ -26,15 +26,15 @@ const Memo = ({
 	return (
 		<div className="flex flex-1 flex-col gap-2.5 items-start self-stretch">
 			<h2 className="font-semibold leading-normal text-text-100 text-xl">메모</h2>
-			<div className="flex h-full relative w-full">
+			<div className="bg-white border border-stroke-input flex flex-1 flex-col gap-2.5 p-5 rounded-[0.625rem] w-full">
 				<textarea
-					className="bg-white border border-stroke-input flex-1 font-normal leading-normal p-5 placeholder:text-text-30 resize-none rounded-[0.625rem] text-base text-text-100"
+					className="flex-1 outline-0 resize-none w-full"
 					maxLength={maxLength}
 					onChange={handleChange}
 					placeholder={placeholder}
 					value={value}
 				/>
-				<div className='absolute bottom-5 right-5'>
+				<div className='flex items-center justify-end'>
 					<Button className="h-10 rounded-sm" onClick={onSave} type="button">저장</Button>
 				</div>
 			</div>

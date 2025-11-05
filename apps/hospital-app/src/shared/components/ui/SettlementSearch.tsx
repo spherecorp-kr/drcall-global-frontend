@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { SegmentedControl } from './SegmentedControl';
-import { SearchInput } from './SearchInput';
-import Dropdown from './Dropdown';
-import Button from './Button';
+import { Button, Dropdown, SearchInput } from '@/shared/components/ui';
 import { Tooltip } from './Tooltip';
 import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';
 import helpIcon from '@/shared/assets/icons/btn_circle_help.svg';

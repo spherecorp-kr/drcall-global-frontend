@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Modal } from './Modal';
-import { Input } from './Input';
-import { Textarea } from './Textarea';
+import { Input, Textarea } from '@/shared/components/ui';
 import { cn } from '@/shared/utils/cn';
 import ValidationInfoIcon from '@/shared/assets/icons/ic_validation_info.svg';
 import BlankProfileImage from '@/shared/assets/icons/img_blank_profile.svg';
@@ -214,6 +213,7 @@ export function DoctorRegistrationModal({
 								setFormData({ ...formData, introduction: e.target.value })
 							}
 							maxLength={50}
+							wrapperClassName='gap-2.5'
 						/>
 					</div>
 
@@ -229,6 +229,7 @@ export function DoctorRegistrationModal({
 								setFormData({ ...formData, careerEducation: e.target.value })
 							}
 							maxLength={50}
+							wrapperClassName='gap-2.5'
 						/>
 					</div>
 				</div>

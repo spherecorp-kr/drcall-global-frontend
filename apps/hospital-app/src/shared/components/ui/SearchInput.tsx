@@ -3,13 +3,13 @@ import searchIcon from '@/shared/assets/icons/ic_search.svg';
 import closeCircleIcon from '@/shared/assets/icons/ic_close_circle.svg';
 
 interface SearchInputProps {
-	value: string;
+	className?: string;
 	onChange: (value: string) => void;
 	placeholder: string;
-	className?: string;
+	value: string;
 }
 
-export function SearchInput({ value, onChange, placeholder, className }: SearchInputProps) {
+const SearchInput = ({ className, onChange, placeholder, value }: SearchInputProps) => {
 	const handleClear = () => {
 		onChange('');
 	};
@@ -41,3 +41,5 @@ export function SearchInput({ value, onChange, placeholder, className }: SearchI
 		</div>
 	);
 }
+
+export default SearchInput;

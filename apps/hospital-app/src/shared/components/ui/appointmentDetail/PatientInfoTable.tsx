@@ -1,9 +1,18 @@
 import { Button } from '@/shared/components/ui';
+import type { AppointmentStatus } from '@/shared/types/appointment';
+import { useDialog } from '@/shared/hooks/useDialog';
+import { useCallback } from 'react';
+import { SingleDialogBottomButton } from '@/shared/components/ui/dialog';
+import { EditPatientInfoForm } from '@/shared/components/ui/appointmentDetail/index.ts';
 
 const TH_CLASS: string = 'font-normal leading-normal min-w-[12.5rem] text-base text-text-70';
 const TD_CLASS: string = 'font-normal leading-normal text-base text-text-100';
 const TEXTAREA_CLASS: string = 'border border-stroke-input flex-1 font-normal leading-normal px-4 py-2.5 resize-none rounded text-base text-text-100';
 const BADGE_CLASS: string = 'font-semibold h-5 px-2.5 rounded-xl text-[0.8125rem]';
+
+interface PatientInfoTableProps {
+	appointmentStatus: AppointmentStatus;
+}
 
 // 뱃지
 const Aptmt = () => <span className={`${BADGE_CLASS} bg-badge-7 text-system-successful`}>일반 진료</span>;
@@ -29,7 +38,22 @@ const Female = () => (
 	</svg>
 );
 
-const PatientInfoTable = () => {
+const PatientInfoTable = ({
+	appointmentStatus,
+}: PatientInfoTableProps) => {
+	const { openDialog } = useDialog();
+
+	const openEditPatientInfoDialog = useCallback(() => {
+		openDialog({
+			dialogButtons: <SingleDialogBottomButton onClick={() => {}} text='저장' />,
+			dialogClass: 'w-[36.25rem]',
+			dialogContents: <EditPatientInfoForm />,
+			dialogId: 'editPatientInfoDialog',
+			dialogIdForClose: 'editPatientInfoDialog',
+			dialogTitle: '환자정보 수정'
+		});
+	}, [openDialog]);
+
 	return (
 		<div className="bg-white border border-stroke-input flex flex-col p-5 rounded-[0.625rem]">
 			<div className="flex flex-col gap-2.5">
@@ -40,7 +64,12 @@ const PatientInfoTable = () => {
 						<Risk />
 						<Vip />
 					</div>
-					<Button className='rounded-sm text-text-70' variant='ghost'>환자정보 수정</Button>
+					{appointmentStatus === 'waiting' && (
+						<Button
+							className='rounded-sm text-text-70'
+							onClick={openEditPatientInfoDialog}
+							variant='ghost'>환자정보 수정</Button>
+					)}
 				</div>
 				<div className='flex gap-2 items-center justify-start'>
 					<h3 className='font-semibold leading-normal text-[1.125rem] text-text-100'>환자 이름</h3>

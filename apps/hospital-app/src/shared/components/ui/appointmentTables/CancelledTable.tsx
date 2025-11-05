@@ -71,15 +71,17 @@ const CancelledTable = () => {
 		},
 		{
 			accessorKey: 'doctorName',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '의사'
+			header: '의사',
+			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'patientName',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '환자명'
+			header: '환자명',
+			meta: { truncate: true }
 		}
 	], [t]);
 

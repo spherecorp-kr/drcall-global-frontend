@@ -36,15 +36,17 @@ const TreatmentHistory = () => {
 		},
 		{
 			accessorKey: 'doctorName',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
 			header: '담당 의사',
+			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'symptom',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
 			header: '증상',
+			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'appointmentSequence',

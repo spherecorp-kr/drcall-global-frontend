@@ -4,12 +4,9 @@ import { cn } from '@/shared/utils/cn';
 import { useDialog } from '@/shared/hooks/useDialog';
 import icClose from '@/shared/assets/icons/ic_close.svg';
 
-interface UntitledProps {
+interface TitledProps {
 	dialogButtons?: JSX.Element;
-	dialogContents: JSX.Element | string;
-}
-
-interface TitledProps extends UntitledProps {
+	dialogContents?: JSX.Element;
 	dialogIdForClose?: string;
 	title: string;
 }
@@ -33,19 +30,6 @@ const Titled = ({ dialogButtons, dialogContents, dialogIdForClose, title }: Titl
 	);
 }
 
-const Untitled = ({ dialogButtons, dialogContents }: UntitledProps) => {
-	return (
-		<>
-			<div>
-				<h1>{dialogContents}</h1>
-			</div>
-			{dialogButtons && (
-				<div>{dialogButtons}</div>
-			)}
-		</>
-	);
-}
-
 const Dialog: React.FC<DialogContentProps> = ({ dialogClass, dialogId, dialogTitle, ...props }) => {
 	return (
 		<dialog id={dialogId} className={cn('bg-white outline-none rounded-[0.625rem] shadow-dialog', dialogClass)}>
@@ -58,10 +42,10 @@ const Dialog: React.FC<DialogContentProps> = ({ dialogClass, dialogId, dialogTit
 						title={dialogTitle}
 					/>
 				) : (
-					<Untitled
-						dialogButtons={props.dialogButtons}
-						dialogContents={props.dialogContents}
-					/>
+					<>
+						{props.dialogContents}
+						{props.dialogButtons}
+					</>
 				)
 			}
 		</dialog>

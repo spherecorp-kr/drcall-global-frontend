@@ -7,8 +7,12 @@ interface DialogState extends DialogProps {
 }
 
 const initialDialog: DialogProps = {
-	dialogContents: '',
+	dialogButtons: undefined,
+	dialogClass: undefined,
+	dialogContents: undefined,
 	dialogId: 'empty',
+	dialogIdForClose: undefined,
+	dialogTitle: undefined,
 	isOpen: false
 };
 

@@ -29,6 +29,7 @@ const VerticalDivider = () => (
 );
 
 const Dropdown = ({
+	buttonClassName,
 	className,
 	menuClassName,
 	onChange,
@@ -146,12 +147,13 @@ const Dropdown = ({
 						: selectedOption && selectedOption.value !== 'all'
 							? 'outline-primary-70'
 							: 'outline-stroke-input hover:outline-text-40',
+					buttonClassName
 				)}
 			>
 				<span
 					className={cn(
 						'text-14 font-normal font-pretendard',
-						selectedOption ? 'text-text-100' : 'text-text-30',
+						selectedOption ? 'text-text-100' : 'text-text-70',
 					)}
 				>
 					{displayText}
