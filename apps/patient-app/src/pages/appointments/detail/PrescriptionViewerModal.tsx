@@ -107,10 +107,11 @@ export default function PrescriptionViewerModal({
           </div>
           )}
 
-          <Worker workerUrl='/pdf.worker.min.mjs'>
+          <Worker workerUrl='/pdf.worker.min.js'>
             <Viewer
               fileUrl={encodeURI(fileUrl)}
               theme="light"
+              characterMap={{ url: '/cmaps/', isCompressed: true }}
               onDocumentLoad={(e) => setNumPages(e.doc.numPages)}
               onPageChange={(e) => setCurrentPage(e.currentPage)}
             />
