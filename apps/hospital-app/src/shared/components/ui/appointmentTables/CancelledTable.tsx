@@ -95,7 +95,7 @@ const CancelledTable = () => {
 				enableSelection
 				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
 			/>
-			<Pagination currentPage={0} totalPages={1} onPageChange={() => {}} />
+			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
 		</div>
 	);
 };

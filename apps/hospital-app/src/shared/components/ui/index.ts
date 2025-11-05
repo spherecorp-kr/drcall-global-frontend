@@ -9,6 +9,7 @@ export { default as EmptyState } from './EmptyState';
 export { default as ImageViewer } from './ImageViewer';
 export { Input } from './Input';
 export { default as Pagination } from './Pagination';
+export { PatientForm } from './PatientForm';
 export { PatientManagementTable } from './PatientManagementTable';
 export { Radio } from './Radio';
 export { Select } from './Select';

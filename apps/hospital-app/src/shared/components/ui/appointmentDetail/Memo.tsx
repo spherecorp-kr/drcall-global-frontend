@@ -14,7 +14,7 @@ const Memo = ({
 	maxLength = 500,
 	onChange,
 	onSave,
-	placeholder
+	placeholder = '의료진 또는 코디네이터가 숙지해야 할 특이 사항이 있다면 적어주세요.'
 }: Props) => {
 	const [value, setValue] = useState(initialValue);
 
@@ -26,16 +26,22 @@ const Memo = ({
 	return (
 		<div className="flex flex-1 flex-col gap-2.5 items-start self-stretch">
 			<h2 className="font-semibold leading-normal text-text-100 text-xl">메모</h2>
-			<div className="flex h-full relative w-full">
+			<div className="w-full h-full p-5 bg-white rounded-[10px] border border-stroke-input flex items-start gap-2.5 relative">
 				<textarea
-					className="bg-white border border-stroke-input flex-1 font-normal leading-normal p-5 placeholder:text-text-30 resize-none rounded-[0.625rem] text-base text-text-100"
+					className="flex-1 self-stretch text-text-100 text-base font-normal resize-none border-none outline-none bg-transparent placeholder:text-text-30 pr-20 pb-12"
 					maxLength={maxLength}
 					onChange={handleChange}
 					placeholder={placeholder}
 					value={value}
 				/>
-				<div className='absolute bottom-5 right-5'>
-					<Button className="h-10 rounded-sm" onClick={onSave} type="button">저장</Button>
+				<div className="absolute bottom-5 right-5">
+					<Button
+						className="h-10 px-5 bg-primary-70 rounded"
+						onClick={onSave}
+						type="button"
+					>
+						<div className="text-center flex justify-center flex-col text-white text-base font-medium">저장</div>
+					</Button>
 				</div>
 			</div>
 		</div>

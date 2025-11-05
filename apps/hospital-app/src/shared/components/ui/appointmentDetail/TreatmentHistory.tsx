@@ -72,7 +72,7 @@ const TreatmentHistory = () => {
 					enableSelection
 					getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
 				/>
-				<Pagination className='mb-4' currentPage={0} totalPages={1} onPageChange={() => {}} />
+				<Pagination className='mb-4' currentPage={1} totalPages={1} onPageChange={() => {}} />
 			</div>
 		</div>
 	);

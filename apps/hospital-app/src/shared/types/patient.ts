@@ -68,6 +68,12 @@ export interface PatientManagement {
 	lastVisitDateDisplay: string; // 'DD/MM/YYYY' format or '-'
 	createdAt: Date;
 	updatedAt: Date;
+	// 상세 정보 (선택적)
+	thaiId?: string;
+	address?: string;
+	height?: number;
+	weight?: number;
+	bloodType?: string;
 }
 
 export interface PatientManagementFilterState {
@@ -78,8 +84,8 @@ export interface PatientManagementFilterState {
 // ===== Helper Types =====
 
 export const GENDER_MAP: Record<Gender, string> = {
-	male: '남성',
-	female: '여성',
+	male: '남자',
+	female: '여자',
 };
 
 export const PATIENT_GRADE_MAP: Record<PatientGrade, string> = {

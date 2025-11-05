@@ -24,12 +24,11 @@ export function Patient() {
 	};
 
 	const handlePatientClick = (patient: { id: string }) => {
-		// TODO: 환자 상세 페이지 이동 또는 모달 열기
-		console.log('환자 클릭:', patient);
+		navigate(`/patient/${patient.id}`);
 	};
 
 	const handlePatientRegister = () => {
-		navigate('/patient/register');
+		navigate('/patient/new');
 	};
 
 	return (

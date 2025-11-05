@@ -65,7 +65,7 @@ const generatePatientData = (count: number): PatientManagement[] => {
 		}
 
 		const patient: PatientManagement = {
-			id: `patient-${i + 1}`,
+			id: `${i + 1}`,
 			name: names[i % names.length],
 			gender,
 			genderDisplay: GENDER_MAP[gender],
