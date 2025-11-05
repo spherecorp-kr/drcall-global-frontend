@@ -230,6 +230,7 @@
     "prescriptionWaitingMessage": "아직 처방전이 도착하지 않았습니다.\n조금만 기다려 주세요.",
     "prescriptionComplete": "완료",
     "viewPrescription": "처방전 보기",
+    "download": "다운로드",
     "makePayment": "결제하기",
     "viewDetail": "상세보기",
     "cancelledBy": "취소자",
