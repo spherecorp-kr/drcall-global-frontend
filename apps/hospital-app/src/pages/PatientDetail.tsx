@@ -315,7 +315,7 @@ const PatientDetailPage = () => {
 		if (patient) {
 			setFormData({
 				name: patient.name,
-				gender: patient.gender === '남자' ? 'male' : 'female',
+				gender: patient.gender,
 				thaiId: patient.thaiId || '',
 				phoneNumber: patient.phoneNumber,
 				postalCode: '',
@@ -326,7 +326,7 @@ const PatientDetailPage = () => {
 				bloodType: patient.bloodType || '',
 				drinkingHabit: '',
 				smokingHabit: '',
-				birthDate: patient.birthDate,
+				birthDate: patient.birthDateDisplay,
 				patientGrade: patient.grade,
 				currentMedications: '',
 				personalHistory: '',
@@ -451,8 +451,8 @@ const PatientDetailPage = () => {
 		setMemo(newMemo);
 	};
 
-	const handleMemoSave = (savedMemo: string) => {
-		console.log('Memo saved:', savedMemo);
+	const handleMemoSave = () => {
+		console.log('Memo saved:', memo);
 	};
 
 	const paginatedTreatmentHistory = mockTreatmentHistory.slice(
@@ -605,7 +605,7 @@ const PatientDetailPage = () => {
 
 					{/* Memo and Health Info Row */}
 					<div className="flex gap-4 items-center self-stretch">
-						<Memo value={memo} onChange={handleMemoChange} onSave={handleMemoSave} />
+						<Memo initialValue={memo} onChange={handleMemoChange} onSave={handleMemoSave} />
 						<PatientHealthInfo
 							height="172"
 							weight="61.2"
@@ -621,12 +621,10 @@ const PatientDetailPage = () => {
 						<Table
 							data={mockAppointments}
 							columns={appointmentColumns}
-							enableSorting={false}
-							enablePagination={false}
-						enableSelection={true}
-						selectedIds={selectedAppointmentIds}
-						onSelectionChange={setSelectedAppointmentIds}
-						onRowClick={(row) => handleAppointmentRowClick(row.original)}
+							enableSelection={true}
+							selectedIds={selectedAppointmentIds}
+							onSelectionChange={setSelectedAppointmentIds}
+							onRowClick={(row) => handleAppointmentRowClick(row.original)}
 						/>
 					</Section>
 
@@ -637,8 +635,6 @@ const PatientDetailPage = () => {
 								<Table
 									data={paginatedTreatmentHistory}
 									columns={treatmentColumns}
-									enableSorting={false}
-									enablePagination={false}
 									enableSelection={true}
 									selectedIds={selectedTreatmentIds}
 									onSelectionChange={setSelectedTreatmentIds}
