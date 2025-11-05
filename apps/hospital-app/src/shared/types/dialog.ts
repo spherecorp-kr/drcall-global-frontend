@@ -5,7 +5,7 @@ export interface DialogContentProps {
 	dialogIdForClose?: string;
 	dialogClass?: string;
 	dialogTitle?: string;
-	dialogContents: JSX.Element | string;
+	dialogContents?: JSX.Element;
 	dialogButtons?: JSX.Element;
 }
 

@@ -62,15 +62,17 @@ const ConfirmedTable = () => {
 		},
 		{
 			accessorKey: 'doctorName',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
 			header: '의사',
+			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'patientName',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
 			header: '환자명',
+			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'patientLevel',
@@ -88,9 +90,10 @@ const ConfirmedTable = () => {
 		},
 		{
 			accessorKey: 'symptom',
-			cell: ({ getValue }) => <span className={`${cellSpanClass} block min-w-0 truncate`}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
 			header: '증상',
+			meta: { truncate: true }
 		},
 	], []);
 

@@ -2,16 +2,16 @@ import { forwardRef, type TextareaHTMLAttributes } from 'react';
 import { cn } from '@/shared/utils/cn';
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-	label?: string;
 	error?: string;
-	required?: boolean;
+	label?: string;
 	maxLength?: number;
+	required?: boolean;
+	wrapperClassName?: string;
 }
 
-export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-	({ label, error, required, className, maxLength, ...props }, ref) => {
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, error, label, maxLength, required, wrapperClassName = '', ...props }, ref) => {
 		return (
-			<div className="flex flex-col gap-2.5">
+			<div className={cn('flex flex-col', wrapperClassName)}>
 				{label && (
 					<label className="text-16 text-text-50">
 						{label}
@@ -22,7 +22,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 					<textarea
 						ref={ref}
 						className={cn(
-							'w-full min-h-[80px] px-4 py-2.5 bg-bg-white rounded-lg outline outline-1 outline-stroke-input',
+							'w-full min-h-[80px] px-4 py-2.5 bg-white rounded-lg outline outline-1 outline-stroke-input',
 							'text-16 font-pretendard text-text-100 placeholder:text-text-30',
 							'resize-none',
 							'focus:outline-2 focus:outline-primary-70',
@@ -40,3 +40,5 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 );
 
 Textarea.displayName = 'Textarea';
+
+export default Textarea;

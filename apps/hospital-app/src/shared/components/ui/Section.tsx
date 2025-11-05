@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { cn } from '@/shared/utils/cn';
 import { SectionTitle } from './SectionTitle';
-import { SearchInput } from './SearchInput';
+import { SearchInput } from '@/shared/components/ui';
 
 interface SectionProps {
 	title: string | ReactNode;

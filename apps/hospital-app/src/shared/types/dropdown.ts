@@ -6,6 +6,7 @@ export interface DropdownOption {
 }
 
 export interface DropdownProps {
+	buttonClassName?: string;
 	className?: string;
 	menuClassName?: string;
 	onChange?: (value: string) => void;

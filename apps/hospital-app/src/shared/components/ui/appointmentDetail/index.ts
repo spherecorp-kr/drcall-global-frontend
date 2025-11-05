@@ -8,3 +8,5 @@ export { default as PatientHealthInfo } from './PatientHealthInfo';
 export { default as PatientInfoTable } from './PatientInfoTable';
 export { default as TreatmentInfo } from './TreatmentInfo';
 export { default as TreatmentHistory } from './TreatmentHistory';
+
+export { default as EditPatientInfoForm } from './waiting/EditPatientInfoForm';
