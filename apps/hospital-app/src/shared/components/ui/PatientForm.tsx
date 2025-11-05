@@ -1,4 +1,4 @@
-import { Button, Dropdown, Input, Radio } from '@/shared/components/ui';
+import { Dropdown, Input, Radio } from '@/shared/components/ui';
 import { SegmentedControl } from '@/shared/components/ui/SegmentedControl';
 import icSearch from '@/shared/assets/icons/ic_search.svg';
 import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';

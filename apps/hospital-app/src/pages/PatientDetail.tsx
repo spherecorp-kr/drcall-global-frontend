@@ -248,7 +248,7 @@ const PatientDetailPage = () => {
 	], [closeDialog, canMakeAppointment, selectedDoctor, selectedDate, selectedTime]);
 
 	// Mock doctor options
-	const doctorOptions = [
+	const doctorOptions = useMemo(() => [
 		{
 			label: (
 				<div className='flex flex-col items-start justify-center'>
@@ -267,7 +267,7 @@ const PatientDetailPage = () => {
 			),
 			value: '2'
 		}
-	];
+	], []);
 
 	// 예약 다이얼로그 콘텐츠
 	const appointmentDialogContent = useMemo(() => (
@@ -292,7 +292,7 @@ const PatientDetailPage = () => {
 				<DateAndTimePicker onDateTimeChange={handleDateTimeChange} />
 			</div>
 		</div>
-	), [selectedDoctor, handleDoctorChange, handleDateTimeChange]);
+	), [selectedDoctor, handleDoctorChange, handleDateTimeChange, doctorOptions]);
 
 	// 예약 다이얼로그 열기
 	const handleAppointmentClick = useCallback(() => {
