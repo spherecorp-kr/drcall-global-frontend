@@ -7,19 +7,20 @@ import icClose from '@/shared/assets/icons/ic_close.svg';
 interface TitledProps {
 	dialogButtons?: JSX.Element;
 	dialogContents?: JSX.Element;
-	dialogIdForClose?: string;
+	dialogId: string;
+	hasCloseButton: boolean;
 	title: string;
 }
 
-const Titled = ({ dialogButtons, dialogContents, dialogIdForClose, title }: TitledProps) => {
+const Titled = ({ dialogButtons, dialogContents, dialogId, hasCloseButton, title }: TitledProps) => {
 	const { closeDialog } = useDialog();
 
 	return (
 		<>
 			<div className="pt-5 px-5 relative">
 				<h1 className="font-semibold text-center text-text-100 text-xl">{title}</h1>
-				{dialogIdForClose && (
-					<button className='absolute h-7 right-[1.4375rem] top-5 w-7' onClick={() => closeDialog(dialogIdForClose)}>
+				{hasCloseButton && (
+					<button className='absolute h-7 right-[1.4375rem] top-5 w-7' onClick={() => closeDialog(dialogId)}>
 						<img alt='close' src={icClose} />
 					</button>
 				)}
@@ -30,7 +31,7 @@ const Titled = ({ dialogButtons, dialogContents, dialogIdForClose, title }: Titl
 	);
 }
 
-const Dialog: React.FC<DialogContentProps> = ({ dialogClass, dialogId, dialogTitle, ...props }) => {
+const Dialog: React.FC<DialogContentProps> = ({ dialogClass, dialogId, dialogTitle, hasCloseButton = false, ...props }) => {
 	return (
 		<dialog id={dialogId} className={cn('bg-white outline-none rounded-[0.625rem] shadow-dialog', dialogClass)}>
 			{dialogTitle
@@ -38,7 +39,8 @@ const Dialog: React.FC<DialogContentProps> = ({ dialogClass, dialogId, dialogTit
 					<Titled
 						dialogButtons={props.dialogButtons}
 						dialogContents={props.dialogContents}
-						dialogIdForClose={props.dialogIdForClose}
+						dialogId={dialogId}
+						hasCloseButton={hasCloseButton}
 						title={dialogTitle}
 					/>
 				) : (

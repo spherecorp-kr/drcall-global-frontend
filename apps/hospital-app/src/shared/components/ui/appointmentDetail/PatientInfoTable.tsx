@@ -44,8 +44,8 @@ const PatientInfoTable = () => {
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <EditPatientInfoForm />,
 			dialogId: 'editPatientInfoDialog',
-			dialogIdForClose: 'editPatientInfoDialog',
-			dialogTitle: '환자정보 수정'
+			dialogTitle: '환자정보 수정',
+			hasCloseButton: true
 		});
 	}, [openDialog]);
 

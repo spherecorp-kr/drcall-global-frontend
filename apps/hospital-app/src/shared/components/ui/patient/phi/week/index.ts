@@ -1,0 +1,1 @@
+export { default as WeeklyWeight } from './Weight';

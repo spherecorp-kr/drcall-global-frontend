@@ -136,8 +136,8 @@ const TreatmentInfo = () => {
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <ImageViewer images={['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']} initialIndex={imageIndex} />,
 			dialogId: 'symptomImageDialog',
-			dialogIdForClose: 'symptomImageDialog',
-			dialogTitle: '증상 이미지'
+			dialogTitle: '증상 이미지',
+			hasCloseButton: true
 		});
 	}, [openDialog]);
 
