@@ -13,13 +13,17 @@ import {
 	HospitalPage,
 	MyInfoPage,
 	PatientPage,
+	PatientDetailPage,
+	PatientRegistrationPage,
 	PaymentPage,
 } from '@/pages';
 
 // 라우트 설정 정의 (확장 시 여기에 추가)
 const ROUTE_CONFIGS = [
 	{ pattern: /^\/appointment\/\d+$/, showBackButton: true }, // 예약 상세
+	{ pattern: /^\/patient\/new$/, showBackButton: true }, // 환자 등록
 	{ pattern: /^\/patient\/\d+$/, showBackButton: true }, // 환자 상세
+	{ pattern: /^\/doctor\/new$/,  showBackButton: true }, // 의사 등록
 	{ pattern: /^\/doctor\/\d+$/,  showBackButton: true }, // 의사 상세
 ] as const;
 
@@ -35,10 +39,13 @@ function AppContent() {
 		if (path.includes('appointment')) return t('menu.appointment');
 		if (path.includes('consultation')) return t('menu.consultation');
 		if (path.includes('dashboard')) return t('menu.dashboard');
-		if (path.match(/^\/doctor\/[^/]+$/)) return '의사 계정 상세';
+		if (path === '/doctor/new') return '의사 등록';
+		if (path.match(/^\/doctor\/\d+$/)) return '의사 계정 상세';
 		if (path.includes('doctor')) return t('menu.doctor');
 		if (path.includes('hospital')) return t('menu.hospital');
 		if (path.includes('myinfo')) return t('menu.myinfo');
+		if (path === '/patient/new') return '환자 등록';
+		if (path.match(/^\/patient\/\d+$/)) return '환자 상세';
 		if (path.includes('patient')) return t('menu.patient');
 		if (path.includes('payment')) return t('menu.payment');
 		return t('menu.dashboard');
@@ -84,7 +91,11 @@ function AppContent() {
 				<Route path="appointment/:appointmentSequence" element={<AppointmentDetailPage />} />
 				<Route path="appointment" element={<AppointmentPage />} />
 				<Route path="payment" element={<PaymentPage />} />
-				<Route path="patient" element={<PatientPage />} />
+				<Route path="patient">
+					<Route index element={<PatientPage />} />
+					<Route path="new" element={<PatientRegistrationPage />} />
+					<Route path=":id" element={<PatientDetailPage />} />
+				</Route>
 				<Route path="doctor" element={<DoctorPage />} />
 				<Route path="doctor/:id" element={<DoctorDetailPage />} />
 				<Route path="hospital" element={<HospitalPage />} />

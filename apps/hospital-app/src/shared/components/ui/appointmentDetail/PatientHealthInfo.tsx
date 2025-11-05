@@ -10,73 +10,89 @@ const MoreIcon = () => (
 	</svg>
 );
 
-const PatientHealthInfo = () => {
+interface Props {
+	height?: string;
+	weight?: string;
+	bmi?: string;
+	bloodPressure?: string;
+	bloodSugar?: string;
+	temperature?: string;
+}
+
+const PatientHealthInfo = ({ height, weight, bmi, bloodPressure, bloodSugar, temperature }: Props) => {
 	return (
 		<div className="flex flex-1 flex-col gap-2.5 items-start self-stretch">
 			<h2 className="font-semibold leading-normal text-text-100 text-xl">환자 건강정보</h2>
-			<div className="bg-white border border-stroke-input flex flex-col gap-2 h-full items-start justify-between p-5 rounded-[0.625rem] w-full">
+			<div className="w-full h-full p-5 bg-white rounded-[10px] border border-stroke-input flex flex-col items-start gap-2">
 				{/* 키/몸무게/BMI */}
-				<div className='flex gap-2.5 items-start self-stretch'>
-					<div className='flex gap-2 items-center w-[12.5rem]'>
+				<div className="self-stretch flex items-start gap-2.5">
+					<div className="w-[200px] flex items-center gap-2">
 						<img alt='weight' className='h-6 w-6' src={icWeight} />
-						<p className='leading-normal text-base text-text-70'>키/몸무게/BMI</p>
+						<div className="flex-1 text-text-70 text-base font-normal">키/몸무게/BMI</div>
 					</div>
-					<div className='flex flex-1 gap-2.5 items-start'>
-						<div className='flex flex-1 flex-col gap-1'>
-							<span className='font-normal leading-5 text-base text-text-100'><b>123</b> cm / <b>12.3</b> kg / <b>12.34</b> BMI</span>
-							<span className='font-normal leading-5 text-sm text-text-70'>22/06/2023 15:12:14</span>
+					<div className="flex-1 flex items-start gap-2.5">
+						<div className="flex-1 flex flex-col items-start gap-1">
+							<div className="text-text-100 text-base font-normal">
+								<span className="font-bold">{height} </span>cm / <span className="font-bold">{weight} </span>kg / <span className="font-bold">{bmi} </span>BMI
+							</div>
+							<div className="text-text-70 text-sm font-normal">22/06/2023 15:12:14</div>
 						</div>
-						<Button className='h-7 px-3 rounded-sm' variant='ghost'>
-							<span className='font-normal leading-normal text-sm text-text-100'>자세히 보기</span>
-							<MoreIcon />
+						<Button size="small" variant="ghost" icon={<MoreIcon />} iconPosition="right">
+							자세히 보기
 						</Button>
 					</div>
 				</div>
 				{/* 혈압 */}
-				<div className='flex gap-2.5 items-center self-stretch'>
-					<div className='flex gap-2 items-center w-[12.5rem]'>
+				<div className="self-stretch flex items-start gap-2.5">
+					<div className="w-[200px] flex items-center gap-2">
 						<img alt='heart' className='h-6 w-6' src={icHeart} />
-						<p className='leading-normal text-base text-text-70'>혈압</p>
+						<div className="flex-1 text-text-70 text-base font-normal">혈압</div>
 					</div>
-					<div className='flex flex-1 gap-2.5 items-center'>
-						<span className='flex-1 leading-normal text-base text-text-30'>등록된 정보가 없습니다.</span>
-						<Button className='h-7 px-3 rounded-sm' variant='ghost'>
-							<span className='font-normal leading-normal text-sm text-text-100'>자세히 보기</span>
-							<MoreIcon />
+					<div className="flex-1 flex items-start gap-2.5">
+						<div className="flex-1 flex flex-col items-start gap-1">
+							<div className="text-text-100 text-base font-normal">
+								<span className="font-bold">{bloodPressure} </span>mmHg / <span className="font-bold">80 </span>BPM
+							</div>
+							<div className="text-text-70 text-sm font-normal">22/06/2023 15:12:14</div>
+						</div>
+						<Button size="small" variant="ghost" icon={<MoreIcon />} iconPosition="right">
+							자세히 보기
 						</Button>
 					</div>
 				</div>
 				{/* 혈당 */}
-				<div className='flex gap-2.5 items-start self-stretch'>
-					<div className='flex gap-2 items-center w-[12.5rem]'>
+				<div className="self-stretch flex items-start gap-2.5">
+					<div className="w-[200px] flex items-center gap-2">
 						<img alt='droplet' className='h-6 w-6' src={icDroplet} />
-						<p className='leading-normal text-base text-text-70'>혈당</p>
+						<div className="flex-1 text-text-70 text-base font-normal">혈당</div>
 					</div>
-					<div className='flex flex-1 gap-2.5 items-start'>
-						<div className='flex flex-1 flex-col gap-1'>
-							<span className='font-normal leading-5 text-base text-text-100'>Before Breakfast : <b>107</b> mg/dL</span>
-							<span className='font-normal leading-5 text-sm text-text-70'>22/06/2023 15:12:14</span>
+					<div className="flex-1 flex items-start gap-2.5">
+						<div className="flex-1 flex flex-col items-start gap-1">
+							<div className="text-text-100 text-base font-normal">
+								Before Breakfast : <span className="font-bold">{bloodSugar} </span>mg/dl
+							</div>
+							<div className="text-text-70 text-sm font-normal">22/06/2023 15:12:14</div>
 						</div>
-						<Button className='h-7 px-3 rounded-sm' variant='ghost'>
-							<span className='font-normal leading-normal text-sm text-text-100'>자세히 보기</span>
-							<MoreIcon />
+						<Button size="small" variant="ghost" icon={<MoreIcon />} iconPosition="right">
+							자세히 보기
 						</Button>
 					</div>
 				</div>
 				{/* 체온 */}
-				<div className='flex gap-2.5 items-start self-stretch'>
-					<div className='flex gap-2 items-center w-[12.5rem]'>
-						<img alt='tempreature' className='h-6 w-6' src={icTemperature} />
-						<p className='leading-normal text-base text-text-70'>체온</p>
+				<div className="self-stretch flex items-start gap-2.5">
+					<div className="w-[200px] flex items-center gap-2">
+						<img alt='temperature' className='h-6 w-6' src={icTemperature} />
+						<div className="flex-1 text-text-70 text-base font-normal">체온</div>
 					</div>
-					<div className='flex flex-1 gap-2.5 items-start'>
-						<div className='flex flex-1 flex-col gap-1'>
-							<span className='font-normal leading-5 text-base text-text-100'><b>36.9</b> &#x2103;</span>
-							<span className='font-normal leading-5 text-sm text-text-70'>22/06/2023 15:12:14</span>
+					<div className="flex-1 flex items-start gap-2.5">
+						<div className="flex-1 flex flex-col items-start gap-1">
+							<div className="text-text-100 text-base font-normal">
+								<span className="font-bold">{temperature} </span>℃
+							</div>
+							<div className="text-text-70 text-sm font-normal">22/06/2023 15:12:14</div>
 						</div>
-						<Button className='h-7 px-3 rounded-sm' variant='ghost'>
-							<span className='font-normal leading-normal text-sm text-text-100'>자세히 보기</span>
-							<MoreIcon />
+						<Button size="small" variant="ghost" icon={<MoreIcon />} iconPosition="right">
+							자세히 보기
 						</Button>
 					</div>
 				</div>

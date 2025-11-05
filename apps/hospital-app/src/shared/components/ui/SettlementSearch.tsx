@@ -138,7 +138,7 @@ export function SettlementSearch({ statusOptions: customStatusOptions }: Settlem
 					<SearchInput
 						value={keyword}
 						onChange={setKeyword}
-						placeholder="정산번호 또는 배송번호로 검색해 주세요"
+						placeholder="예약번호 또는 결제번호를 입력해 주세요."
 						className="w-[464px]"
 					/>
 					<Dropdown

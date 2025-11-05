@@ -14,7 +14,7 @@ const Memo = ({
 	maxLength = 500,
 	onChange,
 	onSave,
-	placeholder
+	placeholder = '의료진 또는 코디네이터가 숙지해야 할 특이 사항이 있다면 적어주세요.'
 }: Props) => {
 	const [value, setValue] = useState(initialValue);
 

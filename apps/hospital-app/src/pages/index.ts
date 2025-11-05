@@ -7,4 +7,6 @@ export { default as DoctorDetailPage } from './DoctorDetail';
 export { default as HospitalPage } from './Hospital';
 export { default as MyInfoPage } from './MyInfo';
 export { default as PatientPage } from './Patient';
+export { default as PatientDetailPage } from './PatientDetail';
+export { default as PatientRegistrationPage } from './PatientRegistration';
 export { default as PaymentPage } from './Payment';

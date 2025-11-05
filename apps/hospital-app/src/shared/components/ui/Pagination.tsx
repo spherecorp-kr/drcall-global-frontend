@@ -18,14 +18,14 @@ const Pagination = ({
 	onPageChange,
 	maxVisiblePages = 10
 }: PaginationProps) => {
-	const isFirstPage = currentPage === 0;
-	const isLastPage = currentPage === totalPages - 1;
+	const isFirstPage = currentPage === 1;
+	const isLastPage = currentPage === totalPages;
 
-	// 현재 페이지가 속한 블록 계산 (0-based)
-	const currentBlock = Math.floor(currentPage / maxVisiblePages);
+	// 현재 페이지가 속한 블록 계산 (1-based)
+	const currentBlock = Math.floor((currentPage - 1) / maxVisiblePages);
 
 	const handlePageChange = (page: number) => {
-		if (page >= 0 && page < totalPages) {
+		if (page >= 1 && page <= totalPages) {
 			onPageChange(page);
 		}
 	};
@@ -33,8 +33,8 @@ const Pagination = ({
 	// 현재 블록의 페이지들 계산
 	const getVisiblePages = () => {
 		const pages: number[] = [];
-		const start = currentBlock * maxVisiblePages;
-		const end = Math.min(start + maxVisiblePages, totalPages);
+		const start = currentBlock * maxVisiblePages + 1;
+		const end = Math.min(start + maxVisiblePages, totalPages + 1);
 
 		for (let i = start; i < end; i++) {
 			pages.push(i);
@@ -47,18 +47,18 @@ const Pagination = ({
 
 	// 이전/다음 10페이지로 이동
 	const handlePrevBlock = () => {
-		const prevPage = Math.max(0, currentPage - maxVisiblePages);
+		const prevPage = Math.max(1, currentPage - maxVisiblePages);
 		handlePageChange(prevPage);
 	};
 
 	const handleNextBlock = () => {
-		const nextPage = Math.min(currentPage + maxVisiblePages, totalPages - 1);
+		const nextPage = Math.min(currentPage + maxVisiblePages, totalPages);
 		handlePageChange(nextPage);
 	};
 
 	// < > 버튼 disabled 조건
-	const isPrevBlockDisabled = currentPage < maxVisiblePages;
-	const isNextBlockDisabled = currentPage + maxVisiblePages >= totalPages;
+	const isPrevBlockDisabled = currentPage <= maxVisiblePages;
+	const isNextBlockDisabled = currentPage + maxVisiblePages > totalPages;
 
 	return (
 		<div className={cn('flex gap-2 h-9 items-center justify-center', className)}>
@@ -69,7 +69,7 @@ const Pagination = ({
 					isFirstPage ? 'cursor-not-allowed' : 'cursor-pointer',
 				)}
 				disabled={isFirstPage}
-				onClick={() => handlePageChange(0)}
+				onClick={() => handlePageChange(1)}
 			>
 				<svg
 					fill="none"
@@ -120,18 +120,18 @@ const Pagination = ({
 				</svg>
 			</button>
 			{/* 페이지 번호 버튼들 */}
-			{visiblePages.map((pageIndex) => (
+			{visiblePages.map((pageNumber) => (
 				<button
-					key={pageIndex}
+					key={pageNumber}
 					className={cn(
 						'border cursor-pointer font-normal h-9 leading-normal rounded-sm text-sm w-9',
-						currentPage === pageIndex
+						currentPage === pageNumber
 							? 'bg-primary-70 border-primary-70 text-white'
 							: 'bg-white border-[#e0e0e0] text-text-100',
 					)}
-					onClick={() => handlePageChange(pageIndex)}
+					onClick={() => handlePageChange(pageNumber)}
 				>
-					{pageIndex + 1}
+					{pageNumber}
 				</button>
 			))}
 			{/* 다음 10페이지 */}
@@ -166,7 +166,7 @@ const Pagination = ({
 					isLastPage ? 'cursor-not-allowed' : 'cursor-pointer',
 				)}
 				disabled={isLastPage}
-				onClick={() => handlePageChange(totalPages - 1)}
+				onClick={() => handlePageChange(totalPages)}
 			>
 				<svg
 					height="36"

@@ -171,7 +171,7 @@ const WaitingTable = () => {
 				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
 				onRowClick={navigateToDetails}
 			/>
-			<Pagination currentPage={0} totalPages={1} onPageChange={() => {}} />
+			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
 		</div>
 	);
 };

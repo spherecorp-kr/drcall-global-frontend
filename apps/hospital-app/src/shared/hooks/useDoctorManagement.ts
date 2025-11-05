@@ -27,7 +27,7 @@ export function useDoctorManagement(initialPageSize = 10): UseDoctorManagementRe
 	const [error, setError] = useState<Error | null>(null);
 	const [totalElements, setTotalElements] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
-	const [currentPage, setCurrentPage] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(initialPageSize);
 	const [filters, setFilters] = useState<DoctorManagementFilterState>({
 		searchQuery: '',
@@ -40,7 +40,7 @@ export function useDoctorManagement(initialPageSize = 10): UseDoctorManagementRe
 			setError(null);
 
 			const params: GetDoctorsRequest = {
-				page: currentPage,
+				page: currentPage - 1,
 				size: pageSize,
 				searchQuery: filters.searchQuery || undefined,
 				isRegisteredOnly: filters.isRegisteredOnly || undefined,

@@ -15,4 +15,5 @@ export interface DropdownProps {
 	placeholder?: string;
 	value?: string;
 	variant?: 'default' | 'navigation';
+	error?: boolean;
 }

@@ -25,7 +25,7 @@ const paymentMethodLabels: Record<string, string> = {
 };
 
 export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: PaymentHistoryTableProps) {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
   const itemsPerPage = 10;
   const totalPages = Math.ceil(total / itemsPerPage);
@@ -43,7 +43,7 @@ export function PaymentHistoryTable({ data, total, onExpand, isExpanded }: Payme
   };
 
   const currentPageData = useMemo(() => {
-    const startIndex = currentPage * itemsPerPage;
+    const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex);
   }, [data, currentPage, itemsPerPage]);
