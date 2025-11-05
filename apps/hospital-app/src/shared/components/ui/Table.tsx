@@ -247,7 +247,7 @@ const Table = <TData,>({
 				className={cn(
 					'w-full flex-1',
 					disableScroll ? 'overflow-hidden' : (disableHorizontalScroll ? 'overflow-x-hidden' : 'overflow-x-auto'),
-					'px-5 py-4',
+					'px-5 pt-4 pb-4',
 				)}
 			>
 				<table className="table-fixed w-full h-auto" style={{ minWidth }}>
@@ -348,6 +348,7 @@ const Table = <TData,>({
 						) : (
 							table.getRowModel().rows.map((row, index, array) => {
 								const isSelected = enableSelection && selectedIds.has(getRowId(row.original));
+								const isEven = index % 2 === 0;
 								return (
 								<tr
 									key={row.id}
@@ -356,6 +357,8 @@ const Table = <TData,>({
 										'border-b-[0.5px] border-stroke-input first:border-t-0 last:border-b-0 transition-colors tr',
 										(onRowClick || enableSelection) && !isSelected && 'cursor-pointer hover:bg-[#F0F0F0]',
 										(onRowClick || enableSelection) && isSelected && 'cursor-pointer',
+										!isSelected && isEven && 'bg-bg-white',
+									!isSelected && !isEven && 'bg-bg-gray',
 										getRowClassNameWithSelection(row),
 										index === array.length - 1 &&
 											'[&>td:first-child]:rounded-bl-[10px] [&>td:last-child]:rounded-br-[10px]',
@@ -368,7 +371,7 @@ const Table = <TData,>({
 										return (
 											<td
 												key={cell.id}
-												className="h-[72px] overflow-hidden"
+												className="h-[72px] overflow-hidden px-2.5"
 												style={{
 													width: enableColumnResizing
 														? cell.column.getSize()
@@ -381,7 +384,7 @@ const Table = <TData,>({
 											>
 												<div
 													className={cn(
-														'flex items-center h-full px-2.5 min-w-0 overflow-hidden',
+														'flex items-center h-full min-w-0 overflow-hidden',
 														meta?.align === 'center'
 															? 'justify-center'
 															: meta?.align === 'right'

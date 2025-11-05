@@ -26,7 +26,7 @@ export function usePatientManagement(initialPageSize = 10): UsePatientManagement
 	const [error, setError] = useState<Error | null>(null);
 	const [totalElements, setTotalElements] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
-	const [currentPage, setCurrentPage] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(initialPageSize);
 	const [filters, setFilters] = useState<PatientManagementFilterState>({
 		searchQuery: '',
@@ -62,7 +62,7 @@ export function usePatientManagement(initialPageSize = 10): UsePatientManagement
 			// Calculate pagination
 			const total = filteredPatients.length;
 			const pages = Math.ceil(total / pageSize);
-			const start = currentPage * pageSize;
+			const start = (currentPage - 1) * pageSize;
 			const end = start + pageSize;
 			const paginatedPatients = filteredPatients.slice(start, end);
 
