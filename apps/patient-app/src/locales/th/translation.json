@@ -222,6 +222,7 @@
     "prescriptionWaitingMessage": "ใบสั่งยายังไม่มาถึง\nกรุณารอสักครู่",
     "prescriptionComplete": "เสร็จสิ้น",
     "viewPrescription": "ดูใบสั่งยา",
+    "download": "ดาวน์โหลด",
     "makePayment": "ชำระเงิน",
     "viewDetail": "ดูรายละเอียด",
     "cancelledBy": "ยกเลิกโดย",

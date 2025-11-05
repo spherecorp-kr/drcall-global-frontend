@@ -222,6 +222,7 @@
     "prescriptionWaitingMessage": "Prescription has not arrived yet.\nPlease wait a moment.",
     "prescriptionComplete": "Complete",
     "viewPrescription": "View Prescription",
+    "download": "Download",
     "makePayment": "Make Payment",
     "viewDetail": "View Detail",
     "cancelledBy": "Cancelled By",
