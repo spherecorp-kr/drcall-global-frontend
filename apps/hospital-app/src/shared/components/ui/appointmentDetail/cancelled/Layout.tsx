@@ -9,7 +9,7 @@ import {
 const Layout = () => {
 	return (
 		<>
-			<PatientInfoTable appointmentStatus='cancelled' />
+			<PatientInfoTable />
 			<TreatmentInfo />
 			<div className='flex gap-4 items-center self-stretch'>
 				<Memo />
