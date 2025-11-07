@@ -158,6 +158,7 @@
     "serviceFee": "Service Fee",
     "deliveryFee": "Delivery Fee",
     "prescriptionFee": "Prescription Fee",
+    "prescription": "Prescription",
     "paymentMethodQr": "QR Payment",
     "paymentMethodCard": "Credit/Debit Card",
     "paymentMethodEasy": "Easy Payment",
