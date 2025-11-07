@@ -1,37 +1,40 @@
-import type {
-	VisiblePHRDetails,
-	WeeklyWeightPhrInfo,
-	WeeklyWeightPhrItem,
-} from '@/shared/types/phr';
 import { useCallback, useEffect, useState } from 'react';
-import { NoPhrData, WeeklyTitle } from '@/shared/components/ui/patient/phi/components';
+import { useTranslation } from 'react-i18next';
+import type { MonthlyTempPhrInfo, MonthlyTempPhrItem, VisiblePHRDetails } from '@/shared/types/phr';
+import { MonthlyTitle, NoPhrData } from '@/shared/components/ui/patient/phr/components';
 
 interface Props {
-	items: WeeklyWeightPhrItem[];
+	items: MonthlyTempPhrItem[];
 }
 
 interface DetailProps {
-	infos: WeeklyWeightPhrInfo[];
+	infos: MonthlyTempPhrInfo[];
 	isVisible: boolean;
 }
 
 const Detail = ({ infos, isVisible }: DetailProps) => {
+	const { t } = useTranslation();
+
 	return (
 		<div className={isVisible ? 'bg-bg-gray flex flex-col gap-5 p-5 rounded-[1.25rem]' : 'hidden'}>
-			{infos.map(({ bmi = 0, height = 0, time, weight = 0 }, i) => (
-				<div className="flex items-center justify-between" key={`week-weight-detail-${i}`}>
-					<p className='text-text-100'>
-						<span className='font-semibold'>{height}</span>&nbsp;cm&nbsp;<span className='font-semibold'>{weight}</span>&nbsp;kg&nbsp;<span className='font-semibold'>{bmi}</span>&nbsp;BMI
+			{infos.map(({ day, temperature = 0 }, i) => (
+				<div className="flex items-center justify-between" key={`month-temp-detail-${i}`}>
+					<p className='flex gap-1 items-center justify-start text-text-100'>
+						<span className='font-semibold'>{temperature}</span>
+						<span>&deg;C</span>
 					</p>
-					<p className="text-right text-text-60">{time}</p>
+					<p className="text-right text-text-60">{t(`phr.lbl.av${day}`)}</p>
 				</div>
 			))}
 		</div>
 	);
 }
 
-const Weight = ({ items }: Props) => {
+const Temperature = ({ items }: Props) => {
+	const { t } = useTranslation();
+
 	const [visibleDetails, setVisibleDetails] = useState<VisiblePHRDetails>({});
+
 	// 초기 상태 설정
 	useEffect(() => {
 		const initialState = items.reduce((acc, _, index) => {
@@ -52,23 +55,25 @@ const Weight = ({ items }: Props) => {
 		<div className='border border-stroke-input rounded-[1.25rem]'>
 			{Array.isArray(items) &&
 				items
-					.filter(item => new Date() >= new Date(item.date))
+					.filter(item => new Date >= new Date(item.startDate))
 					.map((item, i) => (
 						<div
-							key={`week-weight-${i}`}
-							className={`${i !== 0 ? 'border-t border-stroke-input' : ''} cursor-pointer flex flex-col gap-5 p-5 w-full`}
+							key={`month-weight-${i}`}
+							className={`${i !== 0 ? 'border-t border-stroke-input' : ''} ${visibleDetails[i] ? 'pb-5' : ''} cursor-pointer flex flex-col gap-3 px-5 w-full`}
 							onClick={() => toggleVisibility(i)}>
-							<WeeklyTitle
+							<MonthlyTitle
+								endDate={item.endDate}
 								isVisible={visibleDetails[i]}
-								itemDate={item.date}
-								todayText={'오늘'} />
+								startDate={item.startDate}
+								weekOfMonth={item.weekOfMonth}
+							/>
 							{item.infos
 								? <Detail
 									infos={item.infos}
 									isVisible={visibleDetails[i]} />
 								: <NoPhrData
 									isVisible={visibleDetails[i]}
-									text={'체중 및 BMI 기록이 없습니다.'} />
+									text={t('phr.nodata.bt')} />
 							}
 						</div>
 					))
@@ -77,4 +82,4 @@ const Weight = ({ items }: Props) => {
 	);
 };
 
-export default Weight;
+export default Temperature;

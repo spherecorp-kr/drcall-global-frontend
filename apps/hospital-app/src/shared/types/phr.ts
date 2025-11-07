@@ -1,6 +1,11 @@
 export type PhrType = 'pressure' | 'sugar' | 'temp' | 'weight';
 
-export interface GraphLabelProps {
+export interface PhrContentsProps {
+	patientkey: number;
+	phrType: PhrType;
+}
+
+export interface ChartLabelProps {
 	x: number;
 	y: number;
 	value: string;
@@ -33,7 +38,7 @@ export interface BloodSugarPhr {
 		점심 식후
 		저녁 식전
 		저녁 식후
-		취침전
+		취침 전
 	*/
 	measurementType: 'mnbm' | 'mnam' | 'lcbm' | 'lcam' | 'dnbm' | 'dnam' | 'bb';
 	glucose: number;

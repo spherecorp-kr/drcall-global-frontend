@@ -15,3 +15,9 @@ export const formatDDMMYYYY = (date: Date): string => {
 export const formatDDMMYYYYHHMMSS = (date: Date): string => {
 	return `${formatDDMMYYYY(date)} ${doubleDigit(date.getHours())}:${doubleDigit(date.getMinutes())}:${doubleDigit(date.getSeconds())}`;
 };
+
+// yyyy-MM-dd 형식의 날짜를 dd/mm 형식으로 포맷
+export const formatDDMM = (dateString: string) => {
+	const date = new Date(dateString);
+	return doubleDigit(date.getDate()) + '/' + doubleDigit(date.getMonth() + 1);
+};

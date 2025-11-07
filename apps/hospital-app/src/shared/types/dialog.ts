@@ -1,6 +1,7 @@
 import type { JSX, ReactNode } from 'react';
 
 export interface DialogContentProps {
+	closeAction?: () => void;
 	dialogId: string;
 	dialogClass?: string;
 	dialogTitle?: string;
