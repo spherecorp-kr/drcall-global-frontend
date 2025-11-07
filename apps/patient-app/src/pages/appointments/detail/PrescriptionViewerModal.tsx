@@ -242,6 +242,7 @@ export default function PrescriptionViewerModal({
               onDocumentLoad={(e) => setNumPages(e.doc.numPages)}
               onPageChange={(e) => setCurrentPage(e.currentPage)}
               plugins={[pinchZoomPlugin.plugin]}
+              defaultScale={SpecialZoomLevel.PageWidth}
             />
           </Worker>
         </div>
