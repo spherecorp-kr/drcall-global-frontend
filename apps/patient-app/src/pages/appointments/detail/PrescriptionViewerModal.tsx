@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Worker, Viewer } from '@react-pdf-viewer/core';
+import { Worker, Viewer, type Plugin, type ViewerState, SpecialZoomLevel } from '@react-pdf-viewer/core';
 import MainLayout from '@layouts/MainLayout';
 import BottomButtonLayout from '@layouts/BottomButtonLayout';
 import Button from '@ui/buttons/Button';
@@ -28,6 +28,39 @@ export default function PrescriptionViewerModal({
   const [numPages, setNumPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
 
+  // 현재 배율을 추적하기 위한 상태 (플러그인에서 읽고/업데이트)
+  const [currentScale, setCurrentScale] = useState<number>(1);
+
+  // 커스텀 플러그인: 뷰어의 zoom 함수와 viewerState 접근자를 획득
+  // - zoomTo: 배율을 외부에서 설정하기 위한 함수
+  // - getScale: 현재 배율 조회용
+  const pinchZoomPlugin = useMemo(() => {
+    let zoomFn: ((scale: number | SpecialZoomLevel) => void) | null = null; // zoom 함수
+    let getViewerState: (() => ViewerState) | null = null; // viewerState 접근자
+
+    const plugin: Plugin = {
+      install(pluginFns) { // 플러그인 설치 시 호출되는 함수
+        zoomFn = pluginFns.zoom;
+        getViewerState = pluginFns.getViewerState;
+      },
+      onViewerStateChange(nextState) {
+        // 내부 배율 변경에 동기화
+        setCurrentScale(nextState.scale); // 현재 배율 업데이트
+        return nextState; // 변경된 viewerState 반환
+      }
+    };
+
+    return {
+      plugin,
+      zoomTo: (scale: number | SpecialZoomLevel) => { // 배율 설정 함수
+        if (zoomFn) zoomFn(scale);
+      },
+      getScale: (): number => { // 현재 배율 조회 함수
+        if (getViewerState) return getViewerState().scale;
+        return currentScale;
+      }
+    };
+  }, [currentScale]);
   // 모달 오픈 동안 배경(문서) 스크롤 완전 차단 및 체이닝 방지
   useEffect(() => {
     if (!isOpen) return;
@@ -114,6 +147,7 @@ export default function PrescriptionViewerModal({
               characterMap={{ url: '/cmaps/', isCompressed: true }}
               onDocumentLoad={(e) => setNumPages(e.doc.numPages)}
               onPageChange={(e) => setCurrentPage(e.currentPage)}
+              plugins={[pinchZoomPlugin.plugin]}
             />
           </Worker>
         </div>
