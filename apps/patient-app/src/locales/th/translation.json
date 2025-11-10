@@ -158,6 +158,7 @@
     "serviceFee": "ค่าธรรมเนียม",
     "deliveryFee": "ค่าจัดส่ง",
     "prescriptionFee": "ค่าใบสั่งยา",
+    "prescription": "ใบสั่งยา",
     "paymentMethodQr": "ชำระเงินด้วย QR",
     "paymentMethodCard": "บัตรเครดิต/เดบิต",
     "paymentMethodEasy": "ชำระเงินง่าย",

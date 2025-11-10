@@ -166,6 +166,7 @@
     "serviceFee": "수수료",
     "deliveryFee": "배송비",
     "prescriptionFee": "처방전 발급비",
+    "prescription": "처방전",
     "paymentMethodQr": "QR 결제",
     "paymentMethodCard": "신용/체크 카드",
     "paymentMethodEasy": "간편 결제",
