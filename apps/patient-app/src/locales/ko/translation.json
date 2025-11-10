@@ -79,7 +79,8 @@
     "enterPhoneToChange": "변경할 휴대폰 번호를 입력해 주세요.",
     "enterVerificationCode": "인증번호를 입력해 주세요.",
     "verificationCodeSent": "입력하신 번호로 전송된 인증번호를 입력해 주세요.",
-    "selectCountry": "국가 선택"
+    "selectCountry": "국가 선택",
+    "terms": "이용약관"
   },
   "appointment": {
     "title": "예약",

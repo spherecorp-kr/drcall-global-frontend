@@ -71,7 +71,8 @@
     "enterPhoneToChange": "ใส่เบอร์โทรศัพท์ที่ต้องการเปลี่ยน",
     "enterVerificationCode": "กรุณาใส่รหัสยืนยัน",
     "verificationCodeSent": "กรุณาใส่รหัสยืนยันที่ส่งไปยังเบอร์ของคุณ",
-    "selectCountry": "เลือกประเทศ"
+    "selectCountry": "เลือกประเทศ",
+    "terms": "เงื่อนไขการใช้งาน"
   },
   "appointment": {
     "title": "การนัดหมาย",

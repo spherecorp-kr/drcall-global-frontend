@@ -36,7 +36,7 @@ export default function TermsAgreement({
         fontSize: '1.125rem',
         fontWeight: '600'
       }}>
-        {t('appointment.termsAgreement')}
+        {t('auth.terms')}
       </div>
 
       {/* All Agree */}

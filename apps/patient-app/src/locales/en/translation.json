@@ -71,7 +71,8 @@
     "enterPhoneToChange": "Enter phone number to change",
     "enterVerificationCode": "Please enter verification code",
     "verificationCodeSent": "Please enter the verification code sent to your number",
-    "selectCountry": "Select Country"
+    "selectCountry": "Select Country",
+    "terms": "Terms of Use"
   },
   "appointment": {
     "title": "Appointments",
