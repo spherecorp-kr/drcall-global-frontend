@@ -149,7 +149,7 @@ const TreatmentInfo = () => {
 
 	return (
 		<div className="flex flex-col gap-2.5">
-			<h2 className="font-semibold leading-normal text-text-100 text-xl">진료 정보</h2>
+			<h2 className="font-semibold leading-[normal] text-text-100 text-xl">진료 정보</h2>
 			<div className="bg-white border border-stroke-input p-5 rounded-[0.625rem]">
 				<div className="flex gap-5 items-start self-stretch">
 					<div className="flex flex-1 flex-col gap-4 items-start">

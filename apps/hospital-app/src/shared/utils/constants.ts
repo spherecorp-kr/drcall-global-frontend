@@ -16,3 +16,6 @@ export const LINE_CHART_MARGIN = {
 };
 
 export const YAXIS_TICK = { fill: '#acacac', textAnchor: 'end' };
+
+// 일주일치 밀리세컨드
+export const MILLI_SEC_PER_WEEK = 1000 * 60 * 60 * 24 * 7;

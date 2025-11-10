@@ -49,11 +49,11 @@ const DateAndTimePicker = ({
 		<div className='flex flex-col gap-5 w-full'>
 			{appointmentType === 'aptmt' && (
 				<div className='bg-bg-disabled p-5'>
-					<p className='font-medium leading-normal text-base text-text-100'>환자가 예약한 정보 :</p>
+					<p className='font-medium leading-[normal] text-base text-text-100'>환자가 예약한 정보 :</p>
 					<ul>
-						<li className='font-normal leading-normal text-base text-text-50'>&middot;&nbsp;의사 : Dr.Wittaya Wanpen</li>
-						<li className='font-normal leading-normal text-base text-text-50'>&middot;&nbsp;진료 날짜 : 23/11/2025</li>
-						<li className='font-normal leading-normal text-base text-text-50'>&middot;&nbsp;진료 시간 : 11:00~12:00</li>
+						<li className='font-normal leading-[normal] text-base text-text-50'>&middot;&nbsp;의사 : Dr.Wittaya Wanpen</li>
+						<li className='font-normal leading-[normal] text-base text-text-50'>&middot;&nbsp;진료 날짜 : 23/11/2025</li>
+						<li className='font-normal leading-[normal] text-base text-text-50'>&middot;&nbsp;진료 시간 : 11:00~12:00</li>
 					</ul>
 				</div>
 			)}
