@@ -1,19 +1,24 @@
-import { type ChangeEvent, useCallback, useMemo, useState } from 'react';
+import { type ChangeEvent, useCallback, useMemo } from 'react';
 import { Dropdown, DropdownCheckbox, Input, SearchIcon } from '@/shared/components/ui';
 import type { DropdownOption } from '@/shared/types/dropdown';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/shared/utils/cn';
-
-type ViewMode = 'list' | 'calendar';
+import { useConfirmedAppointmentStore } from '@/shared/store/confirmedAppointmentStore';
 
 const SearchConfirmed = () => {
 	const { t } = useTranslation();
-	const [keyword, setKeyword] = useState<string>('');
-	const [viewMode, setViewMode] = useState<ViewMode>('list');
-
-	// 각 Select의 상태 관리
-	const [grade, setGrade] = useState<string>('all');
-	const [sort, setSort] = useState<string>('0');
+	
+	// Store에서 상태와 액션들 가져오기
+	const {
+		viewMode,
+		keyword,
+		grade,
+		sort,
+		setViewMode,
+		setKeyword,
+		setGrade,
+		setSort
+	} = useConfirmedAppointmentStore();
 
 	const gradeOptions: DropdownOption[] = useMemo(() => [
 		{ label: '전체 등급', value: 'all' },
@@ -30,18 +35,18 @@ const SearchConfirmed = () => {
 		setGrade(value);
 		console.log('등급 변경:', value);
 		// 여기에 추가 로직 작성
-	}, []);
+	}, [setGrade]);
 
 	const handleSortChange = useCallback((value: string) => {
 		setSort(value);
 		console.log('정렬 변경:', value);
 		// 여기에 추가 로직 작성
-	}, []);
+	}, [setSort]);
 
 	// 검색어 변경 핸들러
 	const handleKeywordChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
 		setKeyword(e.target.value);
-	}, []);
+	}, [setKeyword]);
 
 	return (
 		<div className="flex items-center justify-between">
@@ -74,11 +79,11 @@ const SearchConfirmed = () => {
 				/>
 			</div>
 			<div className="flex gap-2.5 items-center">
-				<div className="border border-stroke-segmented flex items-center justify-center h-10 rounded-[5px]">
+				<div className="bg-white border border-stroke-input flex gap-px h-10 p-px rounded">
 					<button
 						className={cn(
-							'h-full px-3 py-0.5 rounded-l-[5px]',
-							viewMode === 'list' ? 'bg-primary-70' : 'bg-white',
+							'flex h-full items-center justify-center rounded-[0.4375rem] w-11',
+							viewMode === 'list' ? 'bg-tap-1' : 'bg-white',
 						)}
 						onClick={() => setViewMode('list')}
 					>
@@ -110,11 +115,10 @@ const SearchConfirmed = () => {
 							/>
 						</svg>
 					</button>
-					<div className="bg-stroke-segmented h-full w-px">{/* 구분선 */}</div>
 					<button
 						className={cn(
-							'h-full px-3 py-0.5 rounded-r-[5px]',
-							viewMode === 'calendar' ? 'bg-primary-70' : 'bg-white',
+							'flex h-full items-center justify-center rounded-[0.4375rem] w-11',
+							viewMode === 'calendar' ? 'bg-tap-1' : 'bg-white',
 						)}
 						onClick={() => setViewMode('calendar')}
 					>
@@ -137,12 +141,12 @@ const SearchConfirmed = () => {
 				</div>
 				<Input
 					className="px-0"
-					icon={<SearchIcon className="cursor-pointer h-7 mr-3 w-7" />}
+					icon={<SearchIcon className="cursor-pointer h-7 w-7" />}
 					onChange={handleKeywordChange}
 					placeholder="예약 번호, 환자명을 입력해주세요."
 					type="text"
 					value={keyword}
-					wrapperClassName="w-[36.125rem]"
+					wrapperClassName="rounded w-[36.125rem]"
 				/>
 			</div>
 		</div>

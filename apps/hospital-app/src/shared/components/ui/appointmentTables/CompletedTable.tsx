@@ -77,7 +77,7 @@ const sampleData: CompletedTableColumnProps[] = [
 	},
 ];
 
-const cellSpanClass: string = 'font-normal leading-normal text-base text-text-100';
+const cellSpanClass: string = 'font-normal leading-[normal] text-base text-text-100';
 
 const ColGroup = () => (
 	<colgroup>
