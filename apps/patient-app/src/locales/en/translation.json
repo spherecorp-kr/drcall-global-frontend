@@ -54,6 +54,7 @@
     "enterName": "Please enter your name",
     "birthdate": "Date of Birth",
     "selectBirthdate": "Please select your date of birth",
+    "birthdatePlaceholder": "DD/MM/YYYY",
     "thaiId": "Thai ID Number",
     "enterThaiId": "Please enter Thai ID Number",
     "gender": "Gender",

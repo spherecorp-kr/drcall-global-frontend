@@ -264,7 +264,7 @@ export default function ServiceRegistration() {
                 setErrors(prev => ({ ...prev, name: e.target.value ? '' : t('auth.enterName') }));
               }
             }}
-            placeholder=""
+            placeholder={t('auth.enterName')}
             error={showErrors ? errors.name : ''}
           />
 
@@ -279,7 +279,7 @@ export default function ServiceRegistration() {
               type="text"
               value={birthdate}
               onChange={(e) => setBirthdate(e.target.value)}
-              placeholder=""
+              placeholder={t('auth.birthdatePlaceholder')}
               readOnly
               rightElement={
                 <img src="/src/assets/icons/phr/calendar_today.svg" alt="Calendar"  width={24} height={24} />
@@ -297,7 +297,7 @@ export default function ServiceRegistration() {
             type="text"
             value={thaiId}
             onChange={(e) => setThaiId(e.target.value)}
-            placeholder=""
+            placeholder={t('auth.enterThaiId')}
           />
 
           {/* Gender */}
@@ -332,7 +332,7 @@ export default function ServiceRegistration() {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder=""
+            placeholder={t('auth.enterPhone')}
             readOnly
             disabled
           />

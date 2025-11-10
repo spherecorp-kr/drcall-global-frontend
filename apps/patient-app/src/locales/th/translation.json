@@ -54,6 +54,7 @@
     "enterName": "กรุณากรอกชื่อ",
     "birthdate": "วันเกิด",
     "selectBirthdate": "กรุณาเลือกวันเกิด",
+    "birthdatePlaceholder": "DD/MM/YYYY",
     "thaiId": "Thai ID Number",
     "enterThaiId": "กรุณากรอก Thai ID Number",
     "gender": "เพศ",

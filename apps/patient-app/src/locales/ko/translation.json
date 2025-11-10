@@ -54,6 +54,7 @@
     "enterName": "이름을 입력해주세요",
     "birthdate": "생년월일",
     "selectBirthdate": "생년월일을 선택해주세요",
+    "birthdatePlaceholder": "DD/MM/YYYY",
     "thaiId": "Thai ID Number",
     "enterThaiId": "Thai ID Number를 입력해주세요",
     "gender": "성별",
