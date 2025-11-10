@@ -49,6 +49,7 @@
     "verificationSuccess": "Verification completed",
     "verificationFailed": "Verification failed",
     "serviceRegistration": "Service Registration",
+    "userRegistration": "User Registration",
     "name": "Name",
     "enterName": "Please enter your name",
     "birthdate": "Date of Birth",

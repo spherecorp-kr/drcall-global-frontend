@@ -244,7 +244,7 @@ export default function ServiceRegistration() {
 
         {/* Form Title */}
         <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', marginBottom: '2.5rem' }}>
-          {t('auth.serviceRegistration')}
+          {t('auth.userRegistration')}
         </h2>
 
         {/* Form Fields */}

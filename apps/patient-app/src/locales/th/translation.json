@@ -49,6 +49,7 @@
     "verificationSuccess": "ยืนยันสำเร็จ",
     "verificationFailed": "การยืนยันล้มเหลว",
     "serviceRegistration": "ลงทะเบียนบริการ",
+    "userRegistration": "การลงทะเบียนผู้ใช้",
     "name": "ชื่อ",
     "enterName": "กรุณากรอกชื่อ",
     "birthdate": "วันเกิด",
