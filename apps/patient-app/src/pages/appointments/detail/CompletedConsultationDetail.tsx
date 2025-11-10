@@ -142,7 +142,7 @@ const handleDownloadPrescription = () => {
         <PrescriptionViewerModal
           isOpen={isPrescriptionOpen}
           title={t('appointment.prescription') || 'Prescription'}
-          fileUrl={'/prescription_1.pdf'}
+          fileUrl={'/prescription_2.pdf'}
           onClose={handleClosePrescription}
           onDownload={handleDownloadPrescription}
         />
