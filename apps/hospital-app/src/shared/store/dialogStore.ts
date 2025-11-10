@@ -11,8 +11,8 @@ const initialDialog: DialogProps = {
 	dialogClass: undefined,
 	dialogContents: undefined,
 	dialogId: 'empty',
-	dialogIdForClose: undefined,
 	dialogTitle: undefined,
+	hasCloseButton: undefined,
 	isOpen: false
 };
 
@@ -27,15 +27,15 @@ export const useDialogProps = (): DialogContentProps => {
 	const dialogClass = useDialogStore(state => state.dialogClass);
 	const dialogContents = useDialogStore(state => state.dialogContents);
 	const dialogId = useDialogStore(state => state.dialogId);
-	const dialogIdForClose = useDialogStore(state => state.dialogIdForClose);
 	const dialogTitle = useDialogStore(state => state.dialogTitle);
+	const hasCloseButton = useDialogStore(state => state.hasCloseButton);
 
 	return {
 		dialogButtons,
 		dialogClass,
 		dialogContents,
 		dialogId,
-		dialogIdForClose,
-		dialogTitle
+		dialogTitle,
+		hasCloseButton,
 	}
 }

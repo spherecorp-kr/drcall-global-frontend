@@ -1,18 +1,14 @@
-import { Button } from '@/shared/components/ui';
-import type { AppointmentStatus } from '@/shared/types/appointment';
-import { useDialog } from '@/shared/hooks/useDialog';
 import { useCallback } from 'react';
+import { Button } from '@/shared/components/ui';
+import { useDialog } from '@/shared/hooks/useDialog';
 import { SingleDialogBottomButton } from '@/shared/components/ui/dialog';
-import { EditPatientInfoForm } from '@/shared/components/ui/appointmentDetail/index.ts';
+import { EditPatientInfoForm } from '@/shared/components/ui/appointmentDetail';
+import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
 
 const TH_CLASS: string = 'font-normal leading-normal min-w-[12.5rem] text-base text-text-70';
 const TD_CLASS: string = 'font-normal leading-normal text-base text-text-100';
 const TEXTAREA_CLASS: string = 'border border-stroke-input flex-1 font-normal leading-normal px-4 py-2.5 resize-none rounded text-base text-text-100';
 const BADGE_CLASS: string = 'font-semibold h-5 px-2.5 rounded-xl text-[0.8125rem]';
-
-interface PatientInfoTableProps {
-	appointmentStatus: AppointmentStatus;
-}
 
 // 뱃지
 const Aptmt = () => <span className={`${BADGE_CLASS} bg-badge-7 text-system-successful`}>일반 진료</span>;
@@ -38,10 +34,9 @@ const Female = () => (
 	</svg>
 );
 
-const PatientInfoTable = ({
-	appointmentStatus,
-}: PatientInfoTableProps) => {
+const PatientInfoTable = () => {
 	const { openDialog } = useDialog();
+	const { appointmentTab } = useAppointmentTabStore();
 
 	const openEditPatientInfoDialog = useCallback(() => {
 		openDialog({
@@ -49,8 +44,8 @@ const PatientInfoTable = ({
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <EditPatientInfoForm />,
 			dialogId: 'editPatientInfoDialog',
-			dialogIdForClose: 'editPatientInfoDialog',
-			dialogTitle: '환자정보 수정'
+			dialogTitle: '환자정보 수정',
+			hasCloseButton: true
 		});
 	}, [openDialog]);
 
@@ -64,7 +59,7 @@ const PatientInfoTable = ({
 						<Risk />
 						<Vip />
 					</div>
-					{appointmentStatus === 'waiting' && (
+					{appointmentTab === 'waiting' && (
 						<Button
 							className='rounded-sm text-text-70'
 							onClick={openEditPatientInfoDialog}

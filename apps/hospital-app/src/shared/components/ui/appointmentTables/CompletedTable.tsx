@@ -1,11 +1,13 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
-import { useMemo } from 'react';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useCallback, useMemo } from 'react';
+import type { ColumnDef, Row } from '@tanstack/react-table';
 import type { CompletedTableColumnProps } from '@/shared/types/appointment';
+import { useNavigate } from 'react-router-dom';
 
 const sampleData: CompletedTableColumnProps[] = [
 	{
-		appointmentNumber: '20251030-001',
+		appointmentSequence: 7,
+		appointmentNumber: '20251030-007',
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
 		patientName: '환자1',
@@ -14,7 +16,8 @@ const sampleData: CompletedTableColumnProps[] = [
 		deliveryStatus: '조제중'
 	},
 	{
-		appointmentNumber: '20251030-002',
+		appointmentSequence: 6,
+		appointmentNumber: '20251030-006',
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
 		patientName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
@@ -23,7 +26,8 @@ const sampleData: CompletedTableColumnProps[] = [
 		deliveryStatus: '배송중'
 	},
 	{
-		appointmentNumber: '20251030-003',
+		appointmentSequence: 5,
+		appointmentNumber: '20251030-005',
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
 		patientName: '환자1',
@@ -32,6 +36,7 @@ const sampleData: CompletedTableColumnProps[] = [
 		deliveryStatus: '조제 완료'
 	},
 	{
+		appointmentSequence: 4,
 		appointmentNumber: '20251030-004',
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
@@ -41,7 +46,8 @@ const sampleData: CompletedTableColumnProps[] = [
 		deliveryStatus: '조제 완료'
 	},
 	{
-		appointmentNumber: '20251030-005',
+		appointmentSequence: 3,
+		appointmentNumber: '20251030-003',
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
 		patientName: '환자1',
@@ -50,7 +56,8 @@ const sampleData: CompletedTableColumnProps[] = [
 		deliveryStatus: '수령 완료'
 	},
 	{
-		appointmentNumber: '20251030-006',
+		appointmentSequence: 2,
+		appointmentNumber: '20251030-002',
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
 		patientName: '환자1',
@@ -59,7 +66,8 @@ const sampleData: CompletedTableColumnProps[] = [
 		deliveryStatus: '배송중'
 	},
 	{
-		appointmentNumber: '20251030-006',
+		appointmentSequence: 1,
+		appointmentNumber: '20251030-001',
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
 		patientName: '환자1',
@@ -84,6 +92,8 @@ const ColGroup = () => (
 );
 
 const CompletedTable = () => {
+	const navigate = useNavigate();
+
 	const columns = useMemo<ColumnDef<CompletedTableColumnProps>[]>(() => [
 		{
 			accessorKey: 'appointmentNumber',
@@ -136,6 +146,11 @@ const CompletedTable = () => {
 		},
 	], []);
 
+	// 상세 페이지로 이동
+	const navigateToDetails = useCallback((row: Row<CompletedTableColumnProps>) => {
+		navigate(`/appointment/${row.original.appointmentSequence}`);
+	}, [navigate]);
+
 	return (
 		<div className="bg-white border border-[#e0e0e0] flex flex-col gap-2.5 h-full rounded-[0.625rem]">
 			<Table
@@ -146,7 +161,8 @@ const CompletedTable = () => {
 				disableHorizontalScroll
 				emptyState={<EmptyState message="진료 완료 목록이 없습니다." />}
 				enableSelection
-				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-white' : 'bg-bg-gray'}
+				onRowClick={navigateToDetails}
 			/>
 			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
 		</div>

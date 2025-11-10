@@ -1,6 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { AppointmentStatusTab } from '@/shared/components/ui';
-import type { AppointmentStatus } from '@/shared/types/appointment';
 import {
 	SearchCancelled,
 	SearchCompleted,
@@ -13,13 +12,14 @@ import {
 	ConfirmedTable,
 	WaitingTable
 } from '@/shared/components/ui/appointmentTables';
+import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore';
 
 const Appointment = () => {
-	const [status, setStatus] = useState<AppointmentStatus>('waiting');
+	const { appointmentTab } = useAppointmentTabStore();
 
 	// 상태별 UI 렌더링 함수
 	const renderStatusContent = useCallback(() => {
-		switch (status) {
+		switch (appointmentTab) {
 			case 'waiting':
 				return (
 					<>
@@ -51,12 +51,12 @@ const Appointment = () => {
 			default:
 				return null;
 		}
-	}, [status]);
+	}, [appointmentTab]);
 
 	return (
 		<div className="flex flex-col h-full overflow-hidden">
 			<div className="bg-white border-b border-b-[#e0e0e0] flex flex-col h-20 items-start justify-end px-5 shrink-0">
-				<AppointmentStatusTab handleClick={setStatus} status={status} />
+				<AppointmentStatusTab />
 			</div>
 			<div className="bg-bg-gray flex flex-1 flex-col gap-5 p-5">{renderStatusContent()}</div>
 		</div>

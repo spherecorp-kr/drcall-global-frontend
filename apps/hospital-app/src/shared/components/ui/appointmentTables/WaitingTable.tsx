@@ -168,7 +168,7 @@ const WaitingTable = () => {
 				disableHorizontalScroll
 				emptyState={<EmptyState message="예약 대기 목록이 없습니다." />}
 				enableSelection
-				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-white' : 'bg-bg-gray'}
 				onRowClick={navigateToDetails}
 			/>
 			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
