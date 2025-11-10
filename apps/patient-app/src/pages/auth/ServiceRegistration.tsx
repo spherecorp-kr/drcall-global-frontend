@@ -206,7 +206,7 @@ export default function ServiceRegistration() {
           marginLeft: '-1.25rem',
           marginRight: '-1.25rem',
           marginTop: '-1.25rem',
-          marginBottom: '2.5rem',
+          marginBottom: '1.25rem',
           paddingLeft: '1.25rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
@@ -243,7 +243,7 @@ export default function ServiceRegistration() {
         </div>
 
         {/* Form Title */}
-        <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', marginBottom: '2.5rem' }}>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', marginBottom: '1.25rem' }}>
           {t('auth.userRegistration')}
         </h2>
 
