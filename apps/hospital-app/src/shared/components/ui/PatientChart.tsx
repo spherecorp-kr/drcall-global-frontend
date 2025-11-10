@@ -9,9 +9,9 @@ import {
 	Tooltip,
 } from 'recharts';
 import { Section } from './Section';
-import { SegmentedControl } from './SegmentedControl';
 import { useLayoutStore } from '@/shared/store/layoutStore';
 import { useTranslation } from 'react-i18next';
+import { SegmentedControl } from '@/shared/components/ui';
 
 interface PatientChartProps {
 	className?: string;

@@ -3,11 +3,6 @@ export type AppointmentType = 'aptmt' | 'sdn'; // 예약 유형
 export type PatientLevel = 'VIP' | 'Risk'; // 환자 등급
 export type Canceler = 'HOSPITAL' | 'PATIENT' | 'SYSTEM';
 
-export interface StatusTabProps {
-	handleClick: (value: AppointmentStatus) => void;
-	status: AppointmentStatus;
-}
-
 // 예약 대기 리스트 컬럼 속성
 export interface WaitingTableColumnProps {
 	appointmentSequence: number;
@@ -21,6 +16,7 @@ export interface WaitingTableColumnProps {
 
 // 예약 확정 리스트 컬럼 속성
 export interface ConfirmedTableColumnProps {
+	appointmentSequence: number;
 	appointmentNumber: string; // 예약 번호
 	appointmentDatetime: string; // 진료 희망 일시
 	doctorName: string; // 의사
@@ -31,6 +27,7 @@ export interface ConfirmedTableColumnProps {
 
 // 진료 완료 리스트 컬럼 속성
 export interface CompletedTableColumnProps {
+	appointmentSequence: number;
 	appointmentNumber: string; // 예약 번호
 	completedDatetime: string; // 진료 완료 일시
 	doctorName: string; // 의사
@@ -42,6 +39,7 @@ export interface CompletedTableColumnProps {
 
 // 예약 취소 리스트 컬럼 속성
 export interface CancelledTableColumnProps {
+	appointmentSequence: number;
 	appointmentNumber: string; // 예약 번호
 	cancelledDatetime: string; // 예약 취소 일시
 	canceler: Canceler; // 취소자

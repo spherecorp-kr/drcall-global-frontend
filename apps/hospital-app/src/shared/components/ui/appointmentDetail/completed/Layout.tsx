@@ -11,7 +11,7 @@ const Layout = () => {
 	return (
 		<>
 			<TopButtons />
-			<PatientInfoTable appointmentStatus='completed' />
+			<PatientInfoTable />
 			<TreatmentInfo />
 			<div className='flex gap-4 items-center self-stretch'>
 				<Memo />

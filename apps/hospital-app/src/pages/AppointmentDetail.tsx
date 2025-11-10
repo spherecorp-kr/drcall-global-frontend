@@ -1,22 +1,22 @@
+import { useCallback, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { DetailPageLayout } from '@/shared/components/layout';
-import { useCallback, useEffect, useState } from 'react';
-import type { AppointmentStatus } from '@/shared/types/appointment';
 import {
 	CancelledDetailLayout,
 	CompletedDetailLayout,
 	ConfirmedDetailLayout,
 	WaitingDetailLayout,
 } from '@/shared/components/ui/appointmentDetail';
+import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
 
 const AppointmentDetail = () => {
 	const { appointmentSequence } = useParams<{ appointmentSequence: string }>();
 
-	const [status, setStatus] = useState<AppointmentStatus>('waiting');
+	const { appointmentTab } = useAppointmentTabStore();
 
 	// 상태별 UI 렌더링 함수
 	const renderStatusContent = useCallback(() => {
-		switch (status) {
+		switch (appointmentTab) {
 			case 'waiting':
 				return <WaitingDetailLayout />;
 			case 'confirmed':
@@ -26,16 +26,12 @@ const AppointmentDetail = () => {
 			case 'cancelled':
 				return <CancelledDetailLayout />;
 		}
-	}, [status]);
+	}, [appointmentTab]);
 
-	// TODO FIXME 아래 2개 useEffect 삭제
+	// TODO FIXME 아래 useEffect 삭제
 	useEffect(() => {
 		console.log(`appointmentSequence: ${appointmentSequence}`);
 	}, [appointmentSequence]);
-
-	useEffect(() => {
-		setStatus('waiting');
-	}, []);
 
 	return (
 		<div className="flex flex-col h-full overflow-y-auto p-5">
