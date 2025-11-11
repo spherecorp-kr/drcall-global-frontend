@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface CalendarModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface CalendarModalProps {
 }
 
 export default function CalendarModal({ isOpen, onClose, selectedDate, onSelectDate, minDate, maxDate }: CalendarModalProps) {
+  const { t } = useTranslation();
   const [currentMonth, setCurrentMonth] = useState(new Date(selectedDate));
 
   const getDaysInMonth = (date: Date) => {
@@ -118,7 +120,15 @@ export default function CalendarModal({ isOpen, onClose, selectedDate, onSelectD
   }, [daysInMonth, startingDayOfWeek]);
 
   const monthNames = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = [
+    t('calendar.week.sun'), 
+    t('calendar.week.mon'), 
+    t('calendar.week.tue'), 
+    t('calendar.week.wed'), 
+    t('calendar.week.thu'), 
+    t('calendar.week.fri'), 
+    t('calendar.week.sat')
+  ];
 
   if (!isOpen) return null;
 
