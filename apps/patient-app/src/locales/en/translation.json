@@ -285,6 +285,17 @@
       "profileEdit": "Name, date of birth, gender, and phone number can be changed in 'My Page > Edit Profile'."
     }
   },
+	"calendar": {
+		"week": {
+			"mon": "Mon",
+			"tue": "Tue",
+			"wed": "Wed",
+			"thu": "Thu",
+			"fri": "Fri",
+			"sat": "Sat",
+			"sun": "Sun"
+		}
+	},
   "chat": {
     "title": "Chat",
     "chatList": "Chat List",
