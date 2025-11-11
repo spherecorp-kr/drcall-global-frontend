@@ -84,7 +84,7 @@ export default function ImageViewerModal({
         <div
           style={{
             position: 'relative',
-            backgroundColor: 'white',
+            background: 'transparent',
             height: 'calc(100vh - 5.625rem)', // 헤더 영역 제외
             overflow: 'hidden',
             display: 'flex',
