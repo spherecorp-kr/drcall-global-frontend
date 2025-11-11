@@ -54,10 +54,11 @@ export default function ImageViewerModal({
       }}
     >
       <MainLayout
-        headerBackground='white'
         title=""
         onClose={onClose}
         fullWidth
+        style={{ background: 'transparent' }}
+        headerStyle={{ background: 'transparent' }}
       >
         {/* 상단 인디케이터 */}
         {images.length > 0 && (
