@@ -65,14 +65,12 @@ export default function ImageViewerModal({
           <div
             style={{
               position: 'absolute',
-              top: 20,
+              top: 35,
               left: '50%',
               transform: 'translateX(-50%)',
-              padding: '5px 24px',
-              borderRadius: 100,
-              background: 'rgba(0,0,0,0.5)',
-              color: '#fff',
+              color: '#FFFFFF',
               fontSize: 18,
+              fontWeight: 600,
               zIndex: 2,
               pointerEvents: 'none'
             }}
