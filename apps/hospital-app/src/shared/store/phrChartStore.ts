@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { MILLI_SEC_PER_WEEK } from '@/shared/utils/constants';
 
 interface PhrChart {
 	searchDate: Date;
@@ -11,9 +12,6 @@ interface PhrChartState extends PhrChart {
 	goPrevWeek: () => void;
 	resetPhrChartStore: () => void;
 }
-
-// 일주일치 밀리세컨드
-const MILLI_SEC_PER_WEEK = 1000 * 60 * 60 * 24 * 7;
 
 export const usePhrChartStore = create<PhrChartState>((set) => ({
 	searchDate: new Date(),
