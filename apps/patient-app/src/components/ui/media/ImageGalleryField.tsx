@@ -162,8 +162,8 @@ export default function ImageGalleryField({
                   }}
                   style={{
                     position: 'absolute',
-                    top: '-0.375rem',
-                    right: '-0.375rem',
+                    top: '0.375rem',
+                    right: '0.375rem',
                     width: '1.25rem',
                     height: '1.25rem',
                     padding: 0,
@@ -379,8 +379,8 @@ export default function ImageGalleryField({
                   }}
                   style={{
                     position: 'absolute',
-                    top: '-0.375rem',
-                    right: '-0.375rem',
+                    top: '0.375rem',
+                    right: '0.375rem',
                     width: '1.25rem',
                     height: '1.25rem',
                     padding: 0,
