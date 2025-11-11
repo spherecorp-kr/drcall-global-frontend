@@ -319,6 +319,8 @@
     "phoneChange": "เปลี่ยนเบอร์โทรศัพท์",
     "phoneChanged": "เปลี่ยนเบอร์โทรศัพท์แล้ว",
     "confirmEdit": "คุณต้องการบันทึกการเปลี่ยนแปลงหรือไม่?",
+    "verificationCodeSentToSMS": "รหัสยืนยันจะถูกส่งไปยังหมายเลขของคุณผ่านทาง SMS",
+    "verificationCode4Digits": "รหัสยืนยัน (4 หลัก)",
     "delivery": "จัดการที่อยู่จัดส่ง",
     "deliveryDescription": "ตรวจสอบและเปลี่ยนที่อยู่จัดส่ง",
     "deliveryManagement": "การจัดการจัดส่ง",

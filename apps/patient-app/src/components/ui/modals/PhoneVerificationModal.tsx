@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import InputField from '@ui/inputs/InputField';
 import Button from '@ui/buttons/Button';
+import { useTranslation } from 'react-i18next';
 
 type VerificationStep = 'phone' | 'code';
 
@@ -17,6 +18,7 @@ export default function PhoneVerificationModal({
   onVerified,
   initialPhone = '',
 }: PhoneVerificationModalProps) {
+  const { t } = useTranslation();
   const [step, setStep] = useState<VerificationStep>('phone');
   const [phoneNumber, setPhoneNumber] = useState(initialPhone);
   const [verificationCode, setVerificationCode] = useState('');
@@ -51,7 +53,7 @@ export default function PhoneVerificationModal({
 
   const handlePhoneSubmit = async () => {
     if (phoneNumber.length < 10) {
-      setError('휴대폰 번호를 확인해 주세요.');
+      setError(t('auth.verifyPhoneNumber'));
       return;
     }
     setError('');
@@ -62,7 +64,7 @@ export default function PhoneVerificationModal({
 
   const handleCodeSubmit = async () => {
     if (verificationCode.length !== 4) {
-      setError('인증번호를 확인해 주세요.');
+      setError(t('auth.verifyCodeCheck'));
       return;
     }
     setError('');
@@ -123,7 +125,7 @@ export default function PhoneVerificationModal({
           }}
         >
           <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', margin: 0 }}>
-            휴대폰 번호 변경
+            {t('mypage.phoneChange')}
           </h3>
           <button
             onClick={onClose}
@@ -154,24 +156,24 @@ export default function PhoneVerificationModal({
               }}
             >
               {step === 'phone'
-                ? '변경할 휴대폰 번호를 입력해 주세요.'
-                : '인증번호를 입력해 주세요.'}
+                ? t('auth.enterPhoneToChange')
+                : t('auth.enterVerificationCode')}
             </h2>
             <p style={{ fontSize: '0.875rem', fontWeight: '400', color: '#8A8A8A', lineHeight: '1.6' }}>
               {step === 'phone'
-                ? 'SMS로 인증번호를 전송해 드립니다.'
-                : '입력하신 번호로 전송된 인증번호를 입력해 주세요.'}
+                ? t('mypage.verificationCodeSentToSMS')
+                : t('auth.verificationCodeSent')}
             </p>
           </div>
 
           {/* Phone Number Input */}
           <div style={{ marginBottom: step === 'code' ? '1.25rem' : '0' }}>
             <InputField
-              label="휴대폰 번호"
+              label={t('auth.phoneNumber')}
               type="tel"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="휴대폰 번호를 입력해 주세요"
+              placeholder={t('delivery.phoneNumberPlaceholder')}
               disabled={step === 'code'}
             />
           </div>
@@ -180,12 +182,12 @@ export default function PhoneVerificationModal({
           {step === 'code' && (
             <div style={{ marginBottom: '1.25rem' }}>
               <InputField
-                label="인증번호"
+                label={t('auth.verificationCode')}
                 type="text"
                 maxLength={4}
                 value={verificationCode}
                 onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
-                placeholder="인증번호 4자리"
+                placeholder={t('mypage.verificationCode4Digits')}
                 error={error}
                 rightElement={
                   <span style={{ fontSize: '0.875rem', fontWeight: '400', color: '#00A0D2', lineHeight: '1.3' }}>
@@ -203,7 +205,7 @@ export default function PhoneVerificationModal({
                 }}
               >
                 <span style={{ fontSize: '0.875rem', fontWeight: '400', color: '#8a8a8a' }}>
-                  인증번호를 받지 못하셨나요?
+                  {t('auth.didntReceiveCode')}
                 </span>
                 <button
                   onClick={handleResendCode}
@@ -218,7 +220,7 @@ export default function PhoneVerificationModal({
                     padding: 0,
                   }}
                 >
-                  재전송
+                  {t('auth.resend')}
                 </button>
               </div>
             </div>
@@ -228,11 +230,11 @@ export default function PhoneVerificationModal({
           <div style={{ marginTop: '2rem' }}>
             {step === 'phone' ? (
               <Button onClick={handlePhoneSubmit} disabled={!isPhoneValid}>
-                인증번호 전송
+                {t('auth.sendCode')}
               </Button>
             ) : (
               <Button onClick={handleCodeSubmit} disabled={!isCodeValid}>
-                확인
+                {t('common.confirm')}
               </Button>
             )}
           </div>
