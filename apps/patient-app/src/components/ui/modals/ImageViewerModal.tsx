@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import MainLayout from '@layouts/MainLayout';
+import useModalScrollLock from '@hooks/useModalScrollLock';
 
 interface ImageViewerModalProps {
   isOpen: boolean;
@@ -23,6 +24,9 @@ export default function ImageViewerModal({
   onClose
 }: ImageViewerModalProps) {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
+
+  // 모달 오픈 동안 배경 스크롤 차단
+  useModalScrollLock(isOpen);
 
   useEffect(() => {
     if (isOpen) {
