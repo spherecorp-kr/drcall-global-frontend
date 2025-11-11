@@ -319,6 +319,8 @@
     "phoneChange": "Change Phone Number",
     "phoneChanged": "Phone number has been changed.",
     "confirmEdit": "Do you want to save changes?",
+    "verificationCodeSentToSMS": "A verification code will be sent via SMS to your phone number.",
+    "verificationCode4Digits": "Verification Code (4 digits)",
     "delivery": "Delivery Address",
     "deliveryDescription": "Check and change your delivery address.",
     "deliveryManagement": "Delivery Management",

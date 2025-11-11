@@ -206,7 +206,7 @@ export default function BloodSugarForm({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
           <div style={{ paddingTop: '0.5rem', display: 'flex', flexDirection: 'column' }}>
             <label style={{ color: '#595959', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400', lineHeight: '1.225rem' }}>
-              혈당
+            {t('phr.bloodSugar')}
             </label>
             <div style={{ paddingTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
