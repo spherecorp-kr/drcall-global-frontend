@@ -111,21 +111,18 @@ export default function ImageViewerModal({
               onClick={() => setCurrentIndex((prev) => Math.max(prev - 1, 0))}
               style={{
                 position: 'absolute',
-                left: 12,
+                left: 0,
                 top: '50%',
                 transform: 'translateY(-50%)',
-                width: 44,
-                height: 44,
-                borderRadius: 22,
-                border: '1px solid #E0E0E0',
-                background: 'rgba(255,255,255,0.9)',
+                width: 52,
+                height: 52,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer'
               }}
             >
-              <img src="/assets/icons/arrow-left.svg" alt="prev" style={{ width: 24, height: 24 }} />
+              <img src="/assets/icons/btn_img_pre.svg" alt="prev" style={{ width: 52, height: 52 }} />
             </button>
           )}
 
@@ -136,21 +133,18 @@ export default function ImageViewerModal({
               onClick={() => setCurrentIndex((prev) => Math.min(prev + 1, images.length - 1))}
               style={{
                 position: 'absolute',
-                right: 12,
+                right: 0,
                 top: '50%',
                 transform: 'translateY(-50%)',
-                width: 44,
-                height: 44,
-                borderRadius: 22,
-                border: '1px solid #E0E0E0',
-                background: 'rgba(255,255,255,0.9)',
+                width: 52,
+                height: 52,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer'
               }}
             >
-              <img src="/assets/icons/arrow-right.svg" alt="next" style={{ width: 24, height: 24 }} />
+              <img src="/assets/icons/btn_img_next.svg" alt="next" style={{ width: 52, height: 52 }} />
             </button>
           )}
         </div>
