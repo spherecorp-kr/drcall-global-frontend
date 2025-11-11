@@ -47,7 +47,7 @@ export default function ImageViewerModal({
         left: 0,
         right: 0,
         bottom: 0,
-        background: '#FFFFFF',
+        background: '#595959',
         display: 'flex',
         flexDirection: 'column',
         zIndex: 1000
