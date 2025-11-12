@@ -93,6 +93,29 @@ export const useAppointmentStore = create<AppointmentState>()(
         symptomImages: state.symptomImages,
         questionnaireAnswers: state.questionnaireAnswers,
       }),
+      // Ensure Date is always restored correctly from persisted string values
+      version: 1,
+      // Always coerce persisted selectedDate back to Date on rehydration
+      merge: (persistedState: any, currentState) => {
+        const fixed = { ...(persistedState || {}) };
+        const d = fixed?.selectedDate;
+        if (d && typeof d === 'string') {
+          fixed.selectedDate = new Date(d);
+        }
+        return {
+          ...currentState,
+          ...fixed
+        };
+      },
+      // Additional safety for older persisted payloads when versioning changes
+      migrate: (persistedState: any) => {
+        if (!persistedState) return persistedState;
+        const d = persistedState.selectedDate;
+        if (d && typeof d === 'string') {
+          persistedState.selectedDate = new Date(d);
+        }
+        return persistedState;
+      },
     }
   )
 );
