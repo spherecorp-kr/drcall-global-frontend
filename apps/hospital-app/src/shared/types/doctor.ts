@@ -1,13 +1,21 @@
 // ===== DTO (Data Transfer Object) =====
 // 서버에서 받는 데이터 구조
+// ⚠️ 백엔드 doctors 테이블 + hospital_users 테이블 조합
 
 export interface DoctorManagementDto {
 	id: string;
-	name: string; // 의사명
+	name: string; // 의사명 (현지어)
 	nameEn: string; // 의사명 (영문)
-	userId: string; // 아이디
-	availableSchedule: AvailableScheduleDto; // 진료 가능 시간
-	isActive: boolean; // 계정 활성화
+	userId: string; // 아이디 (hospital_users.user_id)
+	profileImageUrl?: string; // 프로필 이미지
+	introduction?: string; // 소개 (Max 50자)
+	careerEducation?: string; // 경력 및 학력 (Max 50자)
+	specialty?: string; // 전문 분야
+	consultationFee?: number; // 상담료
+	consultationDurationMinutes?: number; // 상담 시간 (분)
+	availableForConsultation?: boolean; // 진료 가능
+	availableSchedule: AvailableScheduleDto; // 진료 가능 시간 (doctor_schedules 테이블)
+	isActive: boolean; // 계정 활성화 (hospital_users.status)
 	createdAt: string; // ISO 8601 format
 	updatedAt: string; // ISO 8601 format
 }
@@ -51,6 +59,13 @@ export interface CreateDoctorRequest {
 	nameEn: string;
 	userId: string;
 	password: string;
+	profileImageUrl?: string;
+	introduction?: string;
+	careerEducation?: string;
+	specialty?: string;
+	consultationFee?: number;
+	consultationDurationMinutes?: number;
+	availableForConsultation?: boolean;
 	availableSchedule: AvailableScheduleDto;
 	isActive: boolean;
 }
@@ -58,6 +73,13 @@ export interface CreateDoctorRequest {
 export interface UpdateDoctorRequest {
 	name?: string;
 	nameEn?: string;
+	profileImageUrl?: string;
+	introduction?: string;
+	careerEducation?: string;
+	specialty?: string;
+	consultationFee?: number;
+	consultationDurationMinutes?: number;
+	availableForConsultation?: boolean;
 	availableSchedule?: AvailableScheduleDto;
 	isActive?: boolean;
 }
@@ -70,8 +92,15 @@ export interface DoctorManagement {
 	name: string;
 	nameEn: string;
 	userId: string;
-	availableDays: string[]; // ['월', '화', '수', '목', '금', '토', '일']
-	availableTimeDisplay: string; // "월/수/금"
+	profileImageUrl?: string;
+	introduction?: string;
+	careerEducation?: string;
+	specialty?: string;
+	consultationFee?: number;
+	consultationDurationMinutes?: number;
+	availableForConsultation?: boolean;
+	availableDays: string[]; // ['월', '화', '수', '목', '금', '토', '일'] - computed
+	availableTimeDisplay: string; // "월/수/금" - computed
 	availableSchedule: AvailableScheduleDto;
 	isActive: boolean;
 	createdAt: Date;

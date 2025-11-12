@@ -1,18 +1,22 @@
 // ===== DTO (Data Transfer Object) =====
 // 서버에서 받는 데이터 구조
+// ⚠️ 백엔드 hospitals 테이블과 일치
 
 export interface HospitalDto {
 	id: string;
-	name: string; // 병원명
-	nameEn: string; // 병원명(영문)
-	webBiUrl?: string; // 웹 BI 이미지 URL
-	mobileBiUrl?: string; // 모바일 웹 앱 BI 이미지 URL
+	nameEn: string; // 병원명 (영어)
+	nameLocal: string; // 병원명 (현지어) - 백엔드는 name_local
+	email?: string; // 이메일
+	phone: string; // 전화번호
+	website?: string; // 웹사이트 URL
+	address: string; // 주소
+	addressDetail?: string; // 상세주소
+	postalCode?: string; // 우편번호
+	logoUrl?: string; // 로고 URL (웹)
+	mobileLogoUrl?: string; // 모바일 로고 URL
 	bankName?: string; // 은행명
 	accountHolder?: string; // 예금주
 	accountNumber?: string; // 계좌번호
-	websiteUrl?: string; // 병원 홈페이지
-	address: string; // 주소
-	phoneNumber: string; // 연락처
 	createdAt: string; // ISO 8601 format
 	updatedAt: string; // ISO 8601 format
 }
@@ -20,32 +24,38 @@ export interface HospitalDto {
 // ===== Request Types =====
 
 export interface UpdateHospitalRequest {
-	name?: string;
 	nameEn?: string;
-	webBiUrl?: string;
-	mobileBiUrl?: string;
+	nameLocal?: string;
+	email?: string;
+	phone?: string;
+	website?: string;
+	address?: string;
+	addressDetail?: string;
+	postalCode?: string;
+	logoUrl?: string;
+	mobileLogoUrl?: string;
 	bankName?: string;
 	accountHolder?: string;
 	accountNumber?: string;
-	websiteUrl?: string;
-	address?: string;
-	phoneNumber?: string;
 }
 
 // ===== UI State Types =====
 
 export interface Hospital {
 	id: string;
-	name: string;
 	nameEn: string;
-	webBiUrl?: string;
-	mobileBiUrl?: string;
+	nameLocal: string;
+	email?: string;
+	phone: string;
+	website?: string;
+	address: string;
+	addressDetail?: string;
+	postalCode?: string;
+	logoUrl?: string;
+	mobileLogoUrl?: string;
 	bankName?: string;
 	accountHolder?: string;
 	accountNumber?: string;
-	websiteUrl?: string;
-	address: string;
-	phoneNumber: string;
 	createdAt: Date;
 	updatedAt: Date;
 }

@@ -18,7 +18,7 @@ import type { AuthContextValue } from '@contexts/AuthContext';
  *
  *   return (
  *     <div>
- *       <p>Welcome, {user.firstName}!</p>
+ *       <p>Welcome, {user.name}!</p>
  *       <button onClick={logout}>Logout</button>
  *     </div>
  *   );
