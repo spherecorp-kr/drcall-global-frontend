@@ -117,6 +117,7 @@
     "healthInfo": "건강 정보",
     "height": "키",
     "weight": "체중",
+    "heightWeight": "키/체중/BMI",
     "bloodType": "혈액형",
     "alcohol": "음주",
     "alcoholUnit": "음주 (기준 : 200ml, 1 week)",
