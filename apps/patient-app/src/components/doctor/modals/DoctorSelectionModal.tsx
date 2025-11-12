@@ -3,6 +3,7 @@ import CalendarModal from '@ui/modals/CalendarModal';
 import BottomButtons from '@ui/layout/BottomButtons';
 import DoctorCard from '../cards/DoctorCard';
 import EmptyDoctorState from '../EmptyDoctorState';
+import useModalScrollLock from '@hooks/useModalScrollLock';
 import { useDoctorSelection } from '@hooks/useDoctorSelection';
 import { mockDoctors } from '@mocks/doctors';
 import { formatDate } from '@utils/date';
@@ -25,6 +26,9 @@ export default function DoctorSelectionModal({
   onConfirm,
   initialDate
 }: DoctorSelectionModalProps) {
+  // 모달 오픈 동안 배경 스크롤 차단
+  useModalScrollLock(isOpen);
+
   const {
     selectedDate,
     selectedDoctor,
