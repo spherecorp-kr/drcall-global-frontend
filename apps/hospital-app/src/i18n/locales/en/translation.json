@@ -192,5 +192,36 @@
 			"userType": "User Type",
 			"reset": "Reset Filters"
 		}
+	},
+	"appointment": {
+		"type": {
+			"standard": "Standard Appointment",
+			"quick": "Quick Appointment"
+		},
+		"status": {
+			"pending": "Waiting",
+			"confirmed": "Confirmed",
+			"inProgress": "In Progress",
+			"completed": "Completed",
+			"cancelled": "Cancelled",
+			"noShow": "No Show"
+		},
+		"consultationType": {
+			"videoCall": "Video Call",
+			"chat": "Chat",
+			"phone": "Phone"
+		},
+		"paymentStatus": {
+			"pending": "Pending Payment",
+			"processing": "Processing Payment",
+			"completed": "Payment Complete",
+			"failed": "Payment Failed",
+			"refunded": "Refunded"
+		},
+		"canceller": {
+			"hospital": "Hospital",
+			"patient": "Patient",
+			"system": "System"
+		}
 	}
 }

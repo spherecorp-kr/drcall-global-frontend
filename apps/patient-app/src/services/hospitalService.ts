@@ -18,6 +18,16 @@ export const hospitalService = {
   },
 
   /**
+   * Get hospital by ID
+   * TODO: Backend endpoint not available yet (/api/v1/hospitals/{id})
+   * Use getCurrentHospital() instead for current channel's hospital
+   */
+  // getHospitalById: async (id: number): Promise<Hospital> => {
+  //   const response = await apiClient.get<Hospital>(`/api/v1/hospitals/${id}`);
+  //   return response.data;
+  // },
+
+  /**
    * Get all doctors in current hospital
    * 현재 병원의 모든 의사 목록을 가져옵니다.
    */

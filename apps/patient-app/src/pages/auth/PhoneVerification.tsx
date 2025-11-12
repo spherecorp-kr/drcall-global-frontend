@@ -62,14 +62,13 @@ export default function PhoneVerification() {
     setError('');
 
     try {
-      await authService.sendOtp({
+      const result = await authService.sendOtp({
         phone: phoneNumber,
         phoneCountryCode: selectedCountry.dialCode,
-        verificationType: 'REGISTRATION',
       });
 
       setStep('code');
-      setTimeLeft(180);
+      setTimeLeft(result.expiresInSeconds);
     } catch (err) {
       const errorMsg = handleError(err, { feature: 'auth', action: 'sendOtp' });
       setError(errorMsg);
@@ -98,12 +97,15 @@ export default function PhoneVerification() {
 
       setIsVerified(true);
 
-      // 기존 환자면 로그인 완료, 신규면 프로필 등록 페이지로 이동
+      // 3가지 케이스 처리
       if (result.existingPatient) {
-        // 기존 환자 - 로그인 완료
+        // 케이스 1: 기존 환자 + 현재 채널에 구독 있음 → 로그인 완료
         navigate('/appointments');
+      } else if (result.needsSubscription) {
+        // 케이스 2: 기존 환자 but 현재 채널에 구독 없음 → 프로필 등록 (자동 채움)
+        navigate('/auth/service-registration');
       } else {
-        // 신규 환자 - 프로필 등록 필요
+        // 케이스 3: 완전 신규 환자 → 프로필 등록 (빈 폼)
         navigate('/auth/service-registration');
       }
     } catch (err) {
@@ -119,13 +121,12 @@ export default function PhoneVerification() {
     setError('');
 
     try {
-      await authService.sendOtp({
+      const result = await authService.sendOtp({
         phone: phoneNumber,
         phoneCountryCode: selectedCountry.dialCode,
-        verificationType: 'REGISTRATION',
       });
 
-      setTimeLeft(180);
+      setTimeLeft(result.expiresInSeconds);
       setVerificationCode('');
     } catch (err) {
       const errorMsg = handleError(err, { feature: 'auth', action: 'resendOtp' });

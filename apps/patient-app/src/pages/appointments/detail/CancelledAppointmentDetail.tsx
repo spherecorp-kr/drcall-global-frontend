@@ -4,7 +4,9 @@ import CancellationInfoSection from '@appointment/pending/sections/CancellationI
 import AppointmentInfoSection from '@appointment/shared/sections/AppointmentInfoSection';
 import TreatmentInfoSection from '@appointment/shared/sections/TreatmentInfoSection';
 import AppointmentDetailLayout from '@layouts/AppointmentDetailLayout';
-import { mockAppointmentsDetails, mockPatientBasicInfo, mockPatientDetailInfo } from '@mocks/appointments-list';
+import { mockPatientBasicInfo, mockPatientDetailInfo } from '@mocks/appointments-list';
+import { useAppointmentDetail } from './AppointmentDetailRouter';
+import { format } from 'date-fns';
 
 /**
  * 예약 취소 상세 페이지
@@ -16,22 +18,41 @@ export default function CancelledAppointmentDetail() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { appointment } = useAppointmentDetail();
 
   const handleBack = () => navigate(-1);
   const handleClose = () => navigate('/');
 
-  // TODO: API에서 예약 취소 상세 정보 가져오기
-  const appointmentData = mockAppointmentsDetails[id || '9'];
-
-  if (!appointmentData) {
+  if (!appointment) {
     return null;
   }
 
-  // cancellation 데이터가 없으면 기본값 사용
-  const cancellation = appointmentData.cancellation || {
-    cancelledAt: appointmentData.dateTime?.split(' ')[0] || '',
-    cancelledBy: '시스템',
-    reason: undefined
+  // Format appointment data from API
+  const formattedDateTime = appointment.scheduledAt
+    ? format(new Date(appointment.scheduledAt), 'dd/MM/yyyy HH:mm')
+    : '-';
+
+  const cancelledAt = appointment.cancelledAt
+    ? format(new Date(appointment.cancelledAt), 'dd/MM/yyyy HH:mm')
+    : '-';
+
+  const appointmentData = {
+    appointmentNumber: appointment.externalId,
+    appointmentType: appointment.appointmentType === 'QUICK' ? t('appointment.quickAppointment') : t('appointment.standardAppointment'),
+    hospital: {
+      name: appointment.hospital?.nameLocal || appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`,
+      phone: appointment.hospital?.phone || '-'
+    },
+    dateTime: formattedDateTime,
+    doctor: appointment.doctor?.name || appointment.doctor?.nameEn || `Doctor ${appointment.doctorId}`,
+    symptoms: appointment.symptoms,
+    symptomImages: appointment.symptomImages
+  };
+
+  const cancellation = {
+    cancelledAt,
+    cancelledBy: appointment.cancelledBy || 'SYSTEM',
+    reason: appointment.cancellationReason || undefined
   };
 
   return (

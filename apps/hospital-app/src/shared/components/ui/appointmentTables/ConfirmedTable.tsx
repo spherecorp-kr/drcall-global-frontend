@@ -1,41 +1,15 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
 import type { ConfirmedTableColumnProps, PatientLevel } from '@/shared/types/appointment';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ColumnDef, Row } from '@tanstack/react-table';
-import { levelBadgeMap } from '@/shared/utils/constants';
+import { levelBadgeMap } from '@/shared/utils/constants.ts';
 import { PatientBadge } from '@/shared/components/ui/Badge';
 import { useNavigate } from 'react-router-dom';
+import { appointmentService, type Appointment } from '@/services/appointmentService';
+import { AppointmentStatus } from '@/shared/constants/appointment';
+import { format } from 'date-fns';
 
-const sampleData: ConfirmedTableColumnProps[] = [
-	{
-		appointmentSequence: 3,
-		appointmentNumber: '20251030-003',
-		appointmentDatetime: '30/10/25 14:01~14:15',
-		doctorName: 'Dr.KR',
-		patientName: '환자1',
-		patientLevel: 'VIP',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum'
-	},
-	{
-		appointmentSequence: 2,
-		appointmentNumber: '20251030-002',
-		appointmentDatetime: '30/10/25 14:01~14:15',
-		doctorName: 'Dr.KR',
-		patientName: '환자2',
-		patientLevel: 'Risk',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum'
-	},
-	{
-		appointmentSequence: 1,
-		appointmentNumber: '20251030-001',
-		appointmentDatetime: '30/10/25 14:01~14:15',
-		doctorName: 'Dr.KR',
-		patientName: '환자3',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum'
-	}
-];
-
-const cellSpanClass: string = 'font-normal leading-[normal] text-base text-text-100';
+const cellSpanClass: string = 'font-normal leading-normal text-base text-text-100';
 
 const ColGroup = () => (
 	<colgroup>
@@ -48,8 +22,65 @@ const ColGroup = () => (
 	</colgroup>
 );
 
+/**
+ * Convert backend Appointment to UI ConfirmedTableColumnProps
+ */
+const transformAppointmentToConfirmed = (appointment: Appointment): ConfirmedTableColumnProps => {
+	return {
+		appointmentNumber: appointment.externalId,
+		appointmentDatetime: appointment.scheduledAt
+			? format(new Date(appointment.scheduledAt), 'dd/MM/yy HH:mm')
+			: '-',
+		doctorName: `Doctor ${appointment.doctorId}`, // TODO: Get from doctor replica
+		patientName: `Patient ${appointment.patientId}`, // TODO: Get from patient replica
+		patientLevel: undefined, // TODO: Get from patient replica
+		symptom: appointment.symptoms,
+	};
+};
+
 const ConfirmedTable = () => {
 	const navigate = useNavigate();
+	const [data, setData] = useState<ConfirmedTableColumnProps[]>([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
+	const [isLoading, setIsLoading] = useState(false);
+	const pageSize = 10;
+
+	// Fetch appointments with status CONFIRMED
+	useEffect(() => {
+		const fetchAppointments = async () => {
+			setIsLoading(true);
+			try {
+				const response = await appointmentService.getAppointments(
+					AppointmentStatus.CONFIRMED,
+					currentPage,
+					pageSize
+				);
+
+				const transformed = response.appointments.map(transformAppointmentToConfirmed);
+				setData(transformed);
+				setTotalPages(Math.ceil(response.total / pageSize));
+			} catch (error) {
+				console.error('Failed to fetch confirmed appointments:', error);
+				setData([]);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchAppointments();
+	}, [currentPage]);
+
+	const handlePageChange = (page: number) => {
+		setCurrentPage(page);
+	};
+
+	// Navigate to detail page - extract ID from externalId
+	const navigateToDetails = useCallback((row: Row<ConfirmedTableColumnProps>) => {
+		// appointmentNumber is externalId, but we need to fetch by it
+		// For now, navigate with externalId
+		navigate(`/appointment/${row.original.appointmentNumber}`);
+	}, [navigate]);
 
 	const columns = useMemo<ColumnDef<ConfirmedTableColumnProps>[]>(() => [
 		{
@@ -103,24 +134,23 @@ const ConfirmedTable = () => {
 		},
 	], []);
 
-	// 상세 페이지로 이동
-	const navigateToDetails = useCallback((row: Row<ConfirmedTableColumnProps>) => {
-		navigate(`/appointment/${row.original.appointmentSequence}`);
-	}, [navigate]);
-
 	return (
 		<div className="bg-white border border-[#e0e0e0] flex flex-col gap-2.5 h-full rounded-[0.625rem]">
 			<Table
 				className='flex-1 h-auto'
 				colgroup={<ColGroup />}
 				columns={columns}
-				data={sampleData}
-				emptyState={<EmptyState message="예약 대기 목록이 없습니다." />}
+				data={data}
+				emptyState={<EmptyState message={isLoading ? "로딩 중..." : "예약 확정 목록이 없습니다."} />}
 				enableSelection
-				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-white' : 'bg-bg-gray'}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
 				onRowClick={navigateToDetails}
 			/>
-			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
+			<Pagination
+				currentPage={currentPage}
+				totalPages={totalPages}
+				onPageChange={handlePageChange}
+			/>
 		</div>
 	);
 };

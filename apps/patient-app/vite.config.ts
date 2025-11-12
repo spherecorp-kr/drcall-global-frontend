@@ -22,4 +22,11 @@ export default defineConfig({
       '@mocks': path.resolve(__dirname, './src/mocks'),
     },
   },
+  server: {
+    host: true, // Allow external access
+    allowedHosts: [
+      'nitric-noncorporately-andrea.ngrok-free.dev',
+      '.ngrok-free.dev', // Allow all ngrok hosts
+    ],
+  },
 })

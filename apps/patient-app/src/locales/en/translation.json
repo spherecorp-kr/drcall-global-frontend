@@ -283,6 +283,30 @@
       "modifyInProcess": "You can modify/cancel appointments in 'Consultation Process'.",
       "modifyAfterConfirm": "After confirmation, modifications can only be made by calling the hospital",
       "profileEdit": "Name, date of birth, gender, and phone number can be changed in 'My Page > Edit Profile'."
+    },
+    "type": {
+      "standard": "Standard Appointment",
+      "quick": "Quick Appointment"
+    },
+    "status": {
+      "pending": "Pending Confirmation",
+      "confirmed": "Confirmed",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "noShow": "No Show"
+    },
+    "consultationType": {
+      "videoCall": "Video Call",
+      "chat": "Chat",
+      "phone": "Phone"
+    },
+    "paymentStatus": {
+      "pending": "Pending Payment",
+      "processing": "Processing Payment",
+      "completed": "Payment Complete",
+      "failed": "Payment Failed",
+      "refunded": "Refunded"
     }
   },
 	"calendar": {

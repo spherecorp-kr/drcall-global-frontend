@@ -6,7 +6,7 @@ import TimePickerModal from '@ui/modals/TimePickerModal';
 
 interface TemperatureFormData {
   recordedAt: string;
-  value: string;
+  temperature: string; // Changed from 'value' to match backend
 }
 
 interface TemperatureFormProps {
@@ -52,7 +52,7 @@ export default function TemperatureForm({
 
     onSubmit({
       recordedAt: recordedDate.toISOString(),
-      value,
+      temperature: value, // Changed field name to match backend
     });
   };
 

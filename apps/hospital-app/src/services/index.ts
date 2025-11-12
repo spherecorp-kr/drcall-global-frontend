@@ -37,6 +37,8 @@ export function getChatService() {
 // Export individual services for direct import if needed
 export { chatService };
 export { mockChatService } from './chatService.mock';
+export { appointmentService } from './appointmentService';
+export { doctorService } from './doctorService';
 
 export type {
 	ChatChannel,
@@ -51,3 +53,13 @@ export type {
 	ChannelCustomType,
 	ChannelStatus,
 } from './chatService';
+
+export type {
+	Appointment,
+	AppointmentListResponse,
+	ConfirmAppointmentRequest,
+	CancelAppointmentRequest,
+	UpdateAppointmentRequest,
+	StartAppointmentRequest,
+	CompleteAppointmentRequest,
+} from './appointmentService';

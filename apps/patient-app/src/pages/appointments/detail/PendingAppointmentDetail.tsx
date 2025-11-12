@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import BottomButtons from '@ui/layout/BottomButtons';
@@ -6,21 +6,20 @@ import ConfirmModal from '@ui/modals/ConfirmModal';
 import AppointmentInfoSection from '@appointment/shared/sections/AppointmentInfoSection';
 import TreatmentInfoSection from '@appointment/shared/sections/TreatmentInfoSection';
 import AppointmentDetailLayout from '@layouts/AppointmentDetailLayout';
-import {
-  mockAppointmentsDetails,
-  mockPatientBasicInfo,
-  mockPatientDetailInfo
-} from '@mocks/appointments-list';
+import { mockPatientBasicInfo, mockPatientDetailInfo } from '@mocks/appointments-list';
 import { useAppointmentStore } from '@store/appointmentStore';
+import { useAppointmentDetail } from './AppointmentDetailRouter';
+import { appointmentService } from '@/services/appointmentService';
+import { format } from 'date-fns';
 
 export default function PendingAppointmentDetail() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { appointment, refreshAppointment } = useAppointmentDetail();
   const setSelectedListTab = useAppointmentStore((state) => state.setSelectedListTab);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-
-  const appointmentData = mockAppointmentsDetails[id || '1'];
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const handleBack = () => navigate(-1);
   const handleClose = () => navigate('/');
@@ -29,26 +28,48 @@ export default function PendingAppointmentDetail() {
     setIsCancelModalOpen(true);
   };
 
-  const handleCancelConfirm = () => {
-    console.log('예약 취소 확인');
-    setIsCancelModalOpen(false);
-    setSelectedListTab('cancelled');
-    navigate('/appointments');
+  const handleCancelConfirm = async () => {
+    if (!appointment || isCancelling) return;
+
+    setIsCancelling(true);
+    try {
+      await appointmentService.cancelAppointment(appointment.id.toString(), 'Cancelled by patient');
+      setIsCancelModalOpen(false);
+      setSelectedListTab('cancelled');
+      navigate('/appointments');
+    } catch (error) {
+      console.error('Failed to cancel appointment:', error);
+      alert('Failed to cancel appointment');
+    } finally {
+      setIsCancelling(false);
+    }
   };
 
   const handleCancelModalClose = () => {
     setIsCancelModalOpen(false);
   };
 
-  useEffect(() => {
-    if (!appointmentData) {
-      navigate('/error/404', { replace: true });
-    }
-  }, [appointmentData, navigate]);
-
-  if (!appointmentData) {
+  if (!appointment) {
     return null;
   }
+
+  // Format appointment data for display
+  const formattedDateTime = appointment.scheduledAt
+    ? format(new Date(appointment.scheduledAt), 'dd/MM/yyyy HH:mm')
+    : '-';
+
+  const appointmentData = {
+    appointmentNumber: appointment.externalId,
+    appointmentType: appointment.appointmentType === 'QUICK' ? t('appointment.quickAppointment') : t('appointment.standardAppointment'),
+    hospital: {
+      name: appointment.hospital?.nameLocal || appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`,
+      phone: appointment.hospital?.phone || '-'
+    },
+    dateTime: formattedDateTime,
+    doctor: appointment.doctor?.name || appointment.doctor?.nameEn || `Doctor ${appointment.doctorId}`,
+    symptoms: appointment.symptoms,
+    symptomImages: appointment.symptomImages
+  };
 
   return (
     <>

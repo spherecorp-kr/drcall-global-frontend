@@ -56,7 +56,7 @@ export interface BloodSugarRecord extends BaseHealthRecord {
 // Temperature Record
 export interface TemperatureRecord extends BaseHealthRecord {
   type: 'temperature';
-  value: number; // °C
+  temperature: number; // °C (matches backend field name)
 }
 
 // Union type for all health records
@@ -96,7 +96,7 @@ export interface CreateBloodSugarRequest {
 
 export interface CreateTemperatureRequest {
   recordedAt: string;
-  value: number;
+  temperature: number; // Changed from 'value' to match backend
 }
 
 export type CreateHealthRecordRequest =

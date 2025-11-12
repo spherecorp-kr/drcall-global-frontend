@@ -1,33 +1,56 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
+import DeliveryAddressCard from '@appointment/shared/payment/DeliveryAddressCard';
 import ConfirmModal from '@ui/modals/ConfirmModal';
 import AlertModal from '@ui/modals/AlertModal';
 import DeliveryAddressAdd from './DeliveryAddressAdd';
-import { useDeliveryAddresses } from '@/features/delivery/useDeliveryAddresses';
-import DeliveryAddressList from '@/features/delivery/DeliveryAddressList';
+import { deliveryService } from '@/services/deliveryService';
+import type { DeliveryAddress } from '@/types/delivery';
+import { useAuthStore } from '@store/authStore';
+import { useToast } from '@hooks/useToast';
 
-/**
- * 배송지 관리 페이지
- * - 배송지 추가/수정/삭제 기능
- * - 배송지 선택 기능
- * - 배송지 최대 개수 제한 기능
- * - 배송지 선택 모달 오픈/클로즈 기능
- * - 배송지 선택 모달 오픈/클로즈 기능
- */
 export default function DeliveryManagement() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  // 공통 headless 훅: 목록/삭제/추가/수정 등 관리용 액션 제공 (선택 비활성화)
-  const { addresses, ui, actions } = useDeliveryAddresses({
-    selectionEnabled: false,
-    labels: {
-      addButtonKey: 'mypage.addDeliveryAddress',
-      deleteConfirmKey: 'mypage.confirmDeleteDeliveryAddress',
-      maxLimitKey: 'delivery.maxAddressLimit',
-      confirmKey: 'common.confirm'
-    }
-  });
+  const user = useAuthStore((state) => state.user);
+  const { showToast, ToastComponent } = useToast();
+
+  const [addresses, setAddresses] = useState<DeliveryAddress[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load delivery addresses on mount
+  useEffect(() => {
+    const loadAddresses = async () => {
+      if (!user?.patientId) {
+        showToast(t('error.notLoggedIn'), 'error');
+        navigate('/');
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const data = await deliveryService.getDeliveryAddresses(user.patientId);
+        setAddresses(data);
+      } catch (error) {
+        console.error('Failed to load delivery addresses:', error);
+        showToast(t('error.loadFailed'), 'error');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadAddresses();
+  }, [user, navigate, t, showToast]);
+
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [maxLimitAlertOpen, setMaxLimitAlertOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingAddress, setEditingAddress] = useState<DeliveryAddress | null>(null);
+
+  const MAX_ADDRESSES = 10;
 
   const handleClose = () => {
     navigate(-1);
@@ -37,17 +60,53 @@ export default function DeliveryManagement() {
     navigate('/mypage');
   };
 
-  const handleEdit = (id: string) => actions.edit(id);
+  const handleEdit = (id: string) => {
+    const addressToEdit = addresses.find(addr => addr.id === id);
+    if (addressToEdit) {
+      setEditingAddress(addressToEdit);
+      setIsAddModalOpen(true);
+    }
+  };
 
-  const handleDelete = (id: string) => actions.deleteAsk(id);
+  const handleDelete = (id: string) => {
+    setDeleteTargetId(id);
+    setDeleteConfirmOpen(true);
+  };
 
-  const handleDeleteConfirm = () => actions.deleteConfirm();
+  const handleDeleteConfirm = async () => {
+    if (!deleteTargetId || !user?.patientId) return;
 
-  const handleDeleteCancel = () => actions.deleteCancel();
+    try {
+      await deliveryService.deleteDeliveryAddress(user.patientId, deleteTargetId);
 
-  const handleAddAddress = () => actions.addOpen();
+      // Remove from local state
+      setAddresses((prev) => prev.filter((addr) => addr.id !== deleteTargetId));
 
-  const handleSaveAddress = (addressData: {
+      showToast(t('mypage.deliveryAddressDeleted'), 'success');
+      setDeleteConfirmOpen(false);
+      setDeleteTargetId(null);
+    } catch (error) {
+      console.error('Failed to delete delivery address:', error);
+      showToast(t('error.deleteFailed'), 'error');
+      setDeleteConfirmOpen(false);
+      setDeleteTargetId(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteConfirmOpen(false);
+    setDeleteTargetId(null);
+  };
+
+  const handleAddAddress = () => {
+    if (addresses.length >= MAX_ADDRESSES) {
+      setMaxLimitAlertOpen(true);
+      return;
+    }
+    setIsAddModalOpen(true);
+  };
+
+  const handleSaveAddress = async (addressData: {
     id?: string;
     title: string;
     recipientName: string;
@@ -55,9 +114,59 @@ export default function DeliveryManagement() {
     detailAddress: string;
     phoneNumber: string;
     isDefault: boolean;
-  }) => actions.save(addressData);
+  }) => {
+    if (!user?.patientId) {
+      showToast(t('error.notLoggedIn'), 'error');
+      return;
+    }
 
-  const handleCloseModal = () => actions.addClose();
+    try {
+      if (addressData.id) {
+        // 수정 모드
+        const updated = await deliveryService.updateDeliveryAddress(user.patientId, addressData.id, {
+          title: addressData.title,
+          recipientName: addressData.recipientName,
+          phoneNumber: addressData.phoneNumber,
+          address: addressData.address,
+          addressDetail: addressData.detailAddress,
+          isDefault: addressData.isDefault,
+        });
+
+        setAddresses((prev) => prev.map((addr) => (addr.id === addressData.id ? updated : addr)));
+        showToast(t('mypage.deliveryAddressUpdated'), 'success');
+      } else {
+        // 추가 모드
+        const created = await deliveryService.createDeliveryAddress(user.patientId, {
+          title: addressData.title,
+          recipientName: addressData.recipientName,
+          phoneNumber: addressData.phoneNumber,
+          address: addressData.address,
+          addressDetail: addressData.detailAddress,
+          isDefault: addressData.isDefault,
+        });
+
+        setAddresses((prev) => [created, ...prev]);
+        showToast(t('mypage.deliveryAddressAdded'), 'success');
+      }
+
+      setIsAddModalOpen(false);
+      setEditingAddress(null);
+    } catch (error: any) {
+      console.error('Failed to save delivery address:', error);
+
+      // Check for max limit error
+      if (error?.response?.data?.message?.includes('Maximum')) {
+        showToast(t('delivery.maxAddressLimit', { max: 10 }), 'warning');
+      } else {
+        showToast(t('error.saveFailed'), 'error');
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsAddModalOpen(false);
+    setEditingAddress(null);
+  };
 
   return (
     <MainLayout
@@ -103,20 +212,35 @@ export default function DeliveryManagement() {
         </div>
 
         {/* 카드 목록 */}
-        <DeliveryAddressList
-          addresses={addresses}
-          selectedId={null}
-          selectable={false}
-          onSelect={() => {}}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-          showSelectButton={false}
-        />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.625rem'
+          }}
+        >
+          {addresses.map((address) => (
+            <DeliveryAddressCard
+              key={address.id}
+              id={address.id}
+              isDefault={address.isDefault}
+              isSelected={false}
+              title={address.title}
+              recipientName={address.recipientName}
+              address={address.address}
+              phoneNumber={address.phoneNumber}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onSelect={() => {}}
+              showSelectButton={false}
+            />
+          ))}
+        </div>
       </div>
 
       {/* 배송지 삭제 확인 모달 */}
       <ConfirmModal
-        isOpen={ui.isDeleteConfirmOpen}
+        isOpen={deleteConfirmOpen}
         message={t('mypage.confirmDeleteDeliveryAddress')}
         onConfirm={handleDeleteConfirm}
         onCancel={handleDeleteCancel}
@@ -126,19 +250,22 @@ export default function DeliveryManagement() {
 
       {/* 배송지 추가 불가 알림 모달 */}
       <AlertModal
-        isOpen={ui.isMaxLimitOpen}
-        onClose={actions.maxLimitClose}
+        isOpen={maxLimitAlertOpen}
+        onClose={() => setMaxLimitAlertOpen(false)}
         message={t('delivery.maxAddressLimit', { max: 10 })}
         confirmText={t('common.confirm')}
       />
 
       {/* 배송지 추가/수정 모달 */}
       <DeliveryAddressAdd
-        isOpen={ui.isAddOpen}
+        isOpen={isAddModalOpen}
         onClose={handleCloseModal}
         onSave={handleSaveAddress}
-        editingAddress={ui.editingAddress}
+        editingAddress={editingAddress}
       />
+
+      {/* Toast */}
+      {ToastComponent}
     </MainLayout>
   );
 }

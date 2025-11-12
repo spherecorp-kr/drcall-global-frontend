@@ -1,5 +1,5 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ColumnDef, Row } from '@tanstack/react-table';
 import type {
 	AppointmentType,
@@ -9,76 +9,9 @@ import type {
 import { levelBadgeMap } from '@/shared/utils/constants';
 import { PatientBadge } from '@/shared/components/ui/Badge';
 import { useNavigate } from 'react-router-dom';
-
-// 샘플 데이터
-const sampleData: WaitingTableColumnProps[] = [
-	{
-		appointmentSequence: 9,
-		appointmentType: 'aptmt',
-		appointmentDatetime: '22/06/25 14:01~14:15',
-		patientName: '환자1',
-		patientLevel: 'VIP',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-	{
-		appointmentSequence: 8,
-		appointmentType: 'sdn',
-		patientName: '환자1',
-		patientLevel: 'VIP',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-	{
-		appointmentSequence: 6,
-		appointmentType: 'aptmt',
-		appointmentDatetime: '22/06/25 14:01~14:15',
-		patientName: '환자1',
-		patientLevel: 'Risk',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-	{
-		appointmentSequence: 5,
-		appointmentType: 'sdn',
-		patientName: '환자1',
-		patientLevel: 'Risk',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-	{
-		appointmentSequence: 4,
-		appointmentType: 'aptmt',
-		appointmentDatetime: '22/06/25 14:01~14:15',
-		patientName: '환자1',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-	{
-		appointmentSequence: 3,
-		appointmentType: 'sdn',
-		patientName: '환자1',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-	{
-		appointmentSequence: 2,
-		appointmentType: 'aptmt',
-		appointmentDatetime: '22/06/25 14:01~14:15',
-		patientName: '환자1',
-		patientLevel: 'Risk',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-	{
-		appointmentSequence: 1,
-		appointmentType: 'sdn',
-		patientName: '환자1',
-		patientLevel: 'Risk',
-		symptom: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		appointmentRequestTime: '21/06/25 09:45:18',
-	},
-];
+import { appointmentService, type Appointment } from '@/services/appointmentService';
+import { AppointmentStatus } from '@/shared/constants/appointment';
+import { format } from 'date-fns';
 
 const cellSpanClass: string = 'font-normal leading-[normal] text-base text-text-100';
 
@@ -93,8 +26,59 @@ const ColGroup = () => (
 	</colgroup>
 );
 
+/**
+ * Convert backend Appointment to UI WaitingTableColumnProps
+ */
+const transformAppointmentToWaiting = (appointment: Appointment): WaitingTableColumnProps => {
+	return {
+		appointmentSequence: appointment.id,
+		appointmentType: appointment.appointmentType === 'QUICK' ? 'sdn' : 'aptmt',
+		appointmentDatetime: appointment.scheduledAt
+			? format(new Date(appointment.scheduledAt), 'yy/MM/dd HH:mm')
+			: undefined,
+		patientName: `Patient ${appointment.patientId}`, // TODO: Get from patient replica
+		patientLevel: undefined, // TODO: Get from patient replica
+		symptom: appointment.symptoms,
+		appointmentRequestTime: format(new Date(appointment.createdAt), 'yy/MM/dd HH:mm:ss'),
+	};
+};
+
 const WaitingTable = () => {
 	const navigate = useNavigate();
+	const [data, setData] = useState<WaitingTableColumnProps[]>([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPages, setTotalPages] = useState(1);
+	const [isLoading, setIsLoading] = useState(false);
+	const pageSize = 10;
+
+	// Fetch appointments with status PENDING
+	useEffect(() => {
+		const fetchAppointments = async () => {
+			setIsLoading(true);
+			try {
+				const response = await appointmentService.getAppointments(
+					AppointmentStatus.PENDING,
+					currentPage,
+					pageSize
+				);
+
+				const transformed = response.appointments.map(transformAppointmentToWaiting);
+				setData(transformed);
+				setTotalPages(Math.ceil(response.total / pageSize));
+			} catch (error) {
+				console.error('Failed to fetch appointments:', error);
+				setData([]);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchAppointments();
+	}, [currentPage]);
+
+	const handlePageChange = (page: number) => {
+		setCurrentPage(page);
+	};
 
 	const columns = useMemo<ColumnDef<WaitingTableColumnProps>[]>(() => [
 		{
@@ -164,14 +148,18 @@ const WaitingTable = () => {
 				className="flex-1 h-auto"
 				colgroup={<ColGroup />}
 				columns={columns}
-				data={sampleData}
+				data={data}
 				disableHorizontalScroll
-				emptyState={<EmptyState message="예약 대기 목록이 없습니다." />}
+				emptyState={<EmptyState message={isLoading ? "로딩 중..." : "예약 대기 목록이 없습니다."} />}
 				enableSelection
 				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-white' : 'bg-bg-gray'}
 				onRowClick={navigateToDetails}
 			/>
-			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
+			<Pagination
+				currentPage={currentPage}
+				totalPages={totalPages}
+				onPageChange={handlePageChange}
+			/>
 		</div>
 	);
 };

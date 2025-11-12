@@ -105,7 +105,7 @@ export default function HealthRecordListItem({
         return (
           <div>
             <span style={{ color: '#1F1F1F', fontSize: '1.375rem', fontFamily: 'Pretendard', fontWeight: '600', display: 'inline-block', minWidth: '3.125rem', textAlign: 'right' }}>
-              {tempRecord.value}
+              {tempRecord.temperature}
             </span>
             <span style={{ color: '#979797', fontSize: '1rem', fontFamily: 'Pretendard', fontWeight: '400' }}>°C</span>
           </div>

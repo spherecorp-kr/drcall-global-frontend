@@ -63,18 +63,43 @@ export default function ServiceRegistration() {
     }
   }, [showAddressSearch, shouldFocusDetail]);
 
-  // Initialize phone from PhoneVerification
+  // Initialize form with existing profile data if available
   useEffect(() => {
-    // Get phone from localStorage or profile
     const tempJwt = localStorage.getItem('tempJwt');
     if (tempJwt) {
-      // Try to get profile to pre-fill phone
-      authService.getProfile().then((profile) => {
-        if (profile.phone) {
+      authService.getProfile().then((response) => {
+        const profile = response.profile;
+
+        if (profile?.id) {
+          // 기존 프로필 데이터로 자동 채우기
+          setName(profile.name || '');
+          setEmail(profile.email || '');
+          setPhone(profile.phone || '');
+
+          // 생년월일 변환 (YYYY-MM-DD → DD/MM/YYYY)
+          if (profile.dateOfBirth) {
+            const [year, month, day] = profile.dateOfBirth.split('-');
+            setBirthdate(`${day}/${month}/${year}`);
+          }
+
+          setGender(profile.gender?.toLowerCase() as Gender || null);
+          setThaiId(profile.idCardNumber || '');
+
+          // 주소 처리
+          if (profile.address) {
+            setAddress(profile.address);
+          }
+          if (profile.addressDetail) {
+            setDetailAddress(profile.addressDetail);
+          }
+
+          // 동의 항목은 다시 받아야 함 (채널별로 다를 수 있음)
+        } else if (profile?.phone) {
+          // 신규 환자 - 전화번호만 채우기
           setPhone(profile.phone);
         }
       }).catch(() => {
-        // Ignore error - user can input phone manually
+        // Ignore error - user can input manually
       });
     }
   }, []);
@@ -137,38 +162,44 @@ export default function ServiceRegistration() {
     setIsLoading(true);
 
     try {
-      // 1. Get channelUserId based on current platform
+      // 1. Get tempToken from localStorage
+      const tempToken = localStorage.getItem('tempJwt');
+      if (!tempToken) {
+        alert(t('error.sessionExpired'));
+        navigate('/auth/phone-verification');
+        return;
+      }
+
+      // 2. Get channelUserId based on current platform
       const channelInfo = await getChannelUserId();
 
-      console.log('[Registration] Channel detected:', channelInfo);
-
-      // 2. Convert birthdate from DD/MM/YYYY to YYYY-MM-DD
-      let dateOfBirth = '';
+      // 3. Convert birthdate from DD/MM/YYYY to YYYY-MM-DD
+      let birthDate = '';
       if (birthdate) {
         const parts = birthdate.split('/');
         if (parts.length === 3) {
-          dateOfBirth = `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
+          birthDate = `${parts[2]}-${parts[1]}-${parts[0]}`; // YYYY-MM-DD
         }
       }
 
-      // 3. Call completeProfile API
-      const response = await authService.completeProfile({
+      // 4. Get phoneCountryCode from phone (assume +66 for Thailand)
+      const phoneCountryCode = '+66';
+
+      // 5. Call registerProfile API
+      const response = await authService.registerProfile({
+        tempToken,
         channelUserId: channelInfo.channelUserId,
         name: name.trim(),
-        email: email || `${phone}@patient.drcall.global`, // Use temp email if not provided
-        dateOfBirth,
+        phone: phone,
+        phoneCountryCode: phoneCountryCode,
+        birthDate,
         gender: gender === 'male' ? 'MALE' : 'FEMALE',
         idCardNumber: thaiId,
-        emergencyContactName: emergencyContactName || '',
-        emergencyContactPhone: emergencyContactPhone || '',
-        address: `${address}${detailAddress ? ' ' + detailAddress : ''}`.trim(),
         marketingConsent: agreements.marketing,
         dataSharingConsent: agreements.personalInfo,
       });
 
-      console.log('[Registration] Success:', response);
-
-      // 5. Navigate to appointments page
+      // 6. Navigate to appointments page
       navigate('/appointments');
 
     } catch (error: any) {

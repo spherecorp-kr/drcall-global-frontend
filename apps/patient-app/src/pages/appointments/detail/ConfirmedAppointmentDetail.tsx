@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Button from '@ui/buttons/Button';
@@ -7,12 +7,11 @@ import AppointmentInfoSection from '@appointment/shared/sections/AppointmentInfo
 import TreatmentInfoSection from '@appointment/shared/sections/TreatmentInfoSection';
 import ConfirmModal from '@ui/modals/ConfirmModal';
 import AppointmentDetailLayout from '@layouts/AppointmentDetailLayout';
-import {
-  mockAppointmentsDetails,
-  mockPatientBasicInfo,
-  mockPatientDetailInfo
-} from '@mocks/appointments-list';
+import { mockPatientBasicInfo, mockPatientDetailInfo } from '@mocks/appointments-list';
 import { useAppointmentStore } from '@store/appointmentStore';
+import { useAppointmentDetail } from './AppointmentDetailRouter';
+import { appointmentService } from '@/services/appointmentService';
+import { format } from 'date-fns';
 
 /**
  * 예약 확정 상세 페이지
@@ -24,26 +23,22 @@ export default function ConfirmedAppointmentDetail() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { id } = useParams();
+  const { appointment, refreshAppointment } = useAppointmentDetail();
   const setSelectedListTab = useAppointmentStore((state) => state.setSelectedListTab);
-
-  const appointmentData = mockAppointmentsDetails[id || '4'];
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (!appointmentData) {
-      navigate('/error/404', { replace: true });
-    }
-  }, [appointmentData, navigate]);
+  const [isCancelling, setIsCancelling] = useState(false);
 
   const handleBack = () => navigate(-1);
   const handleClose = () => navigate('/');
 
-  if (!appointmentData) {
+  if (!appointment) {
     return null;
   }
 
-  // 예약 확정 일시 (임시 하드코딩)
-  const confirmedDateTime = '08/05/2023 15:01';
+  // Format confirmed datetime
+  const confirmedDateTime = appointment.updatedAt
+    ? format(new Date(appointment.updatedAt), 'dd/MM/yyyy HH:mm')
+    : '-';
 
   // TODO: 실제로는 현재 시간과 예약 시간을 비교해서 버튼 상태 결정
   const [buttonStatus] = useState<'before_1hour' | 'before_10min' | 'ready'>('ready');
@@ -52,11 +47,39 @@ export default function ConfirmedAppointmentDetail() {
     setIsCancelModalOpen(true);
   };
 
-  const handleCancelConfirm = () => {
-    console.log('예약 취소');
-    setIsCancelModalOpen(false);
-    setSelectedListTab('cancelled');
-    navigate('/appointments');
+  const handleCancelConfirm = async () => {
+    if (!appointment || isCancelling) return;
+
+    setIsCancelling(true);
+    try {
+      await appointmentService.cancelAppointment(appointment.id.toString(), 'Cancelled by patient');
+      setIsCancelModalOpen(false);
+      setSelectedListTab('cancelled');
+      navigate('/appointments');
+    } catch (error) {
+      console.error('Failed to cancel appointment:', error);
+      alert('Failed to cancel appointment');
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
+  // Format appointment data for display
+  const formattedDateTime = appointment.scheduledAt
+    ? format(new Date(appointment.scheduledAt), 'dd/MM/yyyy HH:mm')
+    : '-';
+
+  const appointmentData = {
+    appointmentNumber: appointment.externalId,
+    appointmentType: appointment.appointmentType === 'QUICK' ? t('appointment.quickAppointment') : t('appointment.standardAppointment'),
+    hospital: {
+      name: appointment.hospital?.nameLocal || appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`,
+      phone: appointment.hospital?.phone || '-'
+    },
+    dateTime: formattedDateTime,
+    doctor: appointment.doctor?.name || appointment.doctor?.nameEn || `Doctor ${appointment.doctorId}`,
+    symptoms: appointment.symptoms,
+    symptomImages: appointment.symptomImages
   };
 
   const handleEnterRoom = () => {

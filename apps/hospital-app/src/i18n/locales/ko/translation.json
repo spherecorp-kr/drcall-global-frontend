@@ -192,5 +192,36 @@
 			"userType": "사용자 유형",
 			"reset": "필터 초기화"
 		}
+	},
+	"appointment": {
+		"type": {
+			"standard": "일반 예약",
+			"quick": "빠른 예약"
+		},
+		"status": {
+			"pending": "대기",
+			"confirmed": "확정",
+			"inProgress": "진료 중",
+			"completed": "완료",
+			"cancelled": "취소",
+			"noShow": "노쇼"
+		},
+		"consultationType": {
+			"videoCall": "화상 통화",
+			"chat": "채팅",
+			"phone": "전화"
+		},
+		"paymentStatus": {
+			"pending": "결제 대기",
+			"processing": "결제 처리 중",
+			"completed": "결제 완료",
+			"failed": "결제 실패",
+			"refunded": "환불 완료"
+		},
+		"canceller": {
+			"hospital": "병원",
+			"patient": "환자",
+			"system": "시스템"
+		}
 	}
 }

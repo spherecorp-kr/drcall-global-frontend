@@ -56,6 +56,14 @@ apiClient.interceptors.request.use(
       // Only set if not already set (some requests set it explicitly)
       config.headers.Authorization = `Bearer ${tempJwt}`;
     }
+
+    // Add X-Line-UserId header for LINE LIFF authentication
+    // ChannelAuthenticationFilter checks this header for LIFF userId authentication
+    const liffUserId = sessionStorage.getItem('liff_user_id');
+    if (liffUserId) {
+      config.headers['X-Line-UserId'] = liffUserId;
+    }
+
     return config;
   },
   (error) => {

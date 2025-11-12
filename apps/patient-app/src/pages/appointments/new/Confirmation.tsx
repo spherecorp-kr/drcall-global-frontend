@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
@@ -11,6 +12,7 @@ import PageSection from '@ui/layout/PageSection';
 import { useAppointmentStore } from '@store/appointmentStore';
 import { formatDateTime } from '@utils/date';
 import { mockUserInfo, mockHospitalInfo } from '@mocks/appointment';
+import { appointmentService, type CreateAppointmentRequest } from '@/services/appointmentService';
 
 type AppointmentType = 'standard' | 'quick';
 
@@ -21,10 +23,16 @@ interface ConfirmationProps {
 export default function Confirmation({ appointmentType = 'standard' }: ConfirmationProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     selectedDate,
+    selectedDoctorId,
     selectedDoctorName,
     selectedTimeSlot,
+    symptoms,
+    symptomImages,
+    questionnaireAnswers,
     reset
   } = useAppointmentStore();
 
@@ -37,10 +45,54 @@ export default function Confirmation({ appointmentType = 'standard' }: Confirmat
   };
 
   const handleConfirm = async () => {
-    // TODO: API 호출하여 예약 완료
-    // await appointmentService.createAppointment({...});
-    reset();
-    navigate('/'); // 홈으로 이동
+    if (isSubmitting) return;
+
+    try {
+      setIsSubmitting(true);
+
+      // Build scheduledAt ISO string for STANDARD appointments
+      let scheduledAt: string | undefined;
+      if (appointmentType === 'standard' && selectedDate && selectedTimeSlot) {
+        const [hours, minutes] = selectedTimeSlot.split(':');
+        const dateTime = new Date(selectedDate);
+        dateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+        scheduledAt = dateTime.toISOString();
+      }
+
+      // Map appointment data to API request
+      const requestData: CreateAppointmentRequest = {
+        // TODO: Get actual patientId and hospitalId from user context
+        patientId: 1, // Hardcoded for development
+        hospitalId: 1, // Hardcoded for development
+        doctorId: selectedDoctorId ? parseInt(selectedDoctorId) : 1, // Use 1 if not selected (QUICK)
+        appointmentType: appointmentType === 'quick' ? 'QUICK' : 'STANDARD',
+        consultationType: 'VIDEO_CALL', // Default to VIDEO_CALL
+        scheduledAt,
+        symptoms,
+        symptomImages,
+        // Map questionnaire answers to flat fields
+        height: questionnaireAnswers.height || '',
+        weight: questionnaireAnswers.weight || '',
+        bloodType: questionnaireAnswers.bloodType || '',
+        alcohol: questionnaireAnswers.alcohol || '',
+        smoking: questionnaireAnswers.smoking || '',
+        medications: questionnaireAnswers.medications || '',
+        personalHistory: questionnaireAnswers.personalHistory || '',
+        familyHistory: questionnaireAnswers.familyHistory || '',
+        currency: 'THB'
+      };
+
+      await appointmentService.createAppointment(requestData);
+
+      alert(t('appointment.appointmentSuccess'));
+      reset();
+      navigate('/'); // Navigate to home
+    } catch (error) {
+      console.error('Failed to create appointment:', error);
+      alert(t('appointment.appointmentError'));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Mock data - TODO: 실제로는 API에서 사용자 정보와 병원 정보를 가져와야 함
@@ -129,8 +181,8 @@ export default function Confirmation({ appointmentType = 'standard' }: Confirmat
 
       {/* Bottom Button */}
       <BottomButtonLayout fullWidth contentClassName="">
-        <Button onClick={handleConfirm}>
-          {t('common.confirm')}
+        <Button onClick={handleConfirm} disabled={isSubmitting}>
+          {isSubmitting ? t('common.submitting') : t('common.confirm')}
         </Button>
       </BottomButtonLayout>
     </MainLayout>

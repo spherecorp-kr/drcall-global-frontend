@@ -192,5 +192,36 @@
 			"userType": "ประเภทผู้ใช้",
 			"reset": "รีเซ็ตฟิลเตอร์"
 		}
+	},
+	"appointment": {
+		"type": {
+			"standard": "การนัดหมายมาตรฐาน",
+			"quick": "การนัดหมายด่วน"
+		},
+		"status": {
+			"pending": "รอดำเนินการ",
+			"confirmed": "ยืนยันแล้ว",
+			"inProgress": "กำลังดำเนินการ",
+			"completed": "เสร็จสิ้น",
+			"cancelled": "ยกเลิกแล้ว",
+			"noShow": "ไม่มาตามนัด"
+		},
+		"consultationType": {
+			"videoCall": "วิดีโอคอล",
+			"chat": "แชท",
+			"phone": "โทรศัพท์"
+		},
+		"paymentStatus": {
+			"pending": "รอชำระเงิน",
+			"processing": "กำลังดำเนินการชำระเงิน",
+			"completed": "ชำระเงินเรียบร้อย",
+			"failed": "การชำระเงินล้มเหลว",
+			"refunded": "คืนเงินแล้ว"
+		},
+		"canceller": {
+			"hospital": "โรงพยาบาล",
+			"patient": "ผู้ป่วย",
+			"system": "ระบบ"
+		}
 	}
 }

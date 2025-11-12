@@ -18,6 +18,10 @@ import PatientDetailInfoSection from '@appointment/shared/sections/PatientDetail
 import type { PatientDetailInfo } from '@/types/appointment';
 import Button from '@ui/buttons/Button';
 import { useToast } from '@hooks/useToast';
+import { patientService } from '@/services/patientService';
+import type { Patient, Gender as PatientGender, BloodType, AlcoholConsumption, SmokingStatus } from '@/types/patient';
+import { useAuthStore } from '@store/authStore';
+import { format, parse } from 'date-fns';
 
 type Gender = 'male' | 'female' | null;
 
@@ -25,27 +29,93 @@ export default function ProfileEdit() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { showToast, ToastComponent } = useToast();
+  const user = useAuthStore((state) => state.user);
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [patient, setPatient] = useState<Patient | null>(null);
 
   // 환자 정보
-  const [name, setName] = useState('홍길동');
-  const [birthdate, setBirthdate] = useState('06/07/1997');
-  const [thaiId, setThaiId] = useState('123456578963');
-  const [gender, setGender] = useState<Gender>('male');
-  const [phone, setPhone] = useState('123456578963');
-  const [address, setAddress] = useState('13242\n서울 서초구 양재대로 **길 **');
-  const [detailAddress, setDetailAddress] = useState('3125동 324호');
+  const [name, setName] = useState('');
+  const [birthdate, setBirthdate] = useState('');
+  const [thaiId, setThaiId] = useState('');
+  const [gender, setGender] = useState<Gender>(null);
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [detailAddress, setDetailAddress] = useState('');
+  const [postalCode, setPostalCode] = useState('');
 
   // 건강 정보
   const [detailInfo, setDetailInfo] = useState<PatientDetailInfo>({
-    height: '160',
-    weight: '59',
-    bloodType: 'A',
-    alcohol: '0',
-    smoking: '0',
-    medications: '탈모 약을 3개월 째 복용 중입니다.',
-    personalHistory: '14살에 심장 수술을 받은 적이 있습니다.\n17살에는 맹장수술을 받았습니다.\n22살에는 다리가 부러져서 철심을 고정하는 수술을 받았습니다.',
-    familyHistory: '집안 대대로 심장병이 있습니다.\n가까워서 좋지 않습니다. 유전입니다.'
+    height: '',
+    weight: '',
+    bloodType: '',
+    alcohol: '',
+    smoking: '',
+    medications: '',
+    personalHistory: '',
+    familyHistory: ''
   });
+
+  // Load patient profile on mount
+  useEffect(() => {
+    const loadProfile = async () => {
+      if (!user?.patientId) {
+        showToast(t('error.notLoggedIn'), 'error');
+        navigate('/');
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const data = await patientService.getProfile(user.patientId);
+        setPatient(data);
+
+        // Populate form fields
+        setName(data.name || '');
+        setPhone(data.phone || '');
+        setThaiId(data.idCardNumber || '');
+
+        // Convert gender from backend format (MALE/FEMALE/OTHER) to frontend format (male/female)
+        if (data.gender === 'MALE') setGender('male');
+        else if (data.gender === 'FEMALE') setGender('female');
+        else setGender(null);
+
+        // Convert date from YYYY-MM-DD to dd/MM/yyyy
+        if (data.dateOfBirth) {
+          const date = parse(data.dateOfBirth, 'yyyy-MM-dd', new Date());
+          setBirthdate(format(date, 'dd/MM/yyyy'));
+        }
+
+        // Address - combine postalCode + address if both exist
+        if (data.postalCode && data.address) {
+          setAddress(`${data.postalCode}\n${data.address}`);
+        } else if (data.address) {
+          setAddress(data.address);
+        }
+        setDetailAddress(data.addressDetail || '');
+        setPostalCode(data.postalCode || '');
+
+        // Health info
+        setDetailInfo({
+          height: data.height || '',
+          weight: data.weight || '',
+          bloodType: data.bloodType || '',
+          alcohol: data.alcoholConsumption || '',
+          smoking: data.smokingStatus || '',
+          medications: data.currentMedications || '',
+          personalHistory: data.personalMedicalHistory || '',
+          familyHistory: data.familyMedicalHistory || ''
+        });
+      } catch (error) {
+        console.error('Failed to load patient profile:', error);
+        showToast(t('error.loadFailed'), 'error');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, [user, navigate, t, showToast]);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showAddressSearch, setShowAddressSearch] = useState(false);
@@ -85,21 +155,75 @@ export default function ProfileEdit() {
     setShowSubmitConfirm(true);
   };
 
-  const handleSubmitConfirm = () => {
-    // TODO: API 호출
-    console.log('Submit profile update', {
-      name,
-      birthdate,
-      thaiId,
-      gender,
-      phone,
-      address,
-      ...detailInfo
-    });
+  const handleSubmitConfirm = async () => {
+    if (!user?.patientId) {
+      showToast(t('error.notLoggedIn'), 'error');
+      return;
+    }
 
-    setShowSubmitConfirm(false);
-    navigate('/mypage');
+    try {
+      setShowSubmitConfirm(false);
+
+      // Convert date from dd/MM/yyyy to yyyy-MM-dd for backend
+      let dateOfBirth: string | undefined;
+      if (birthdate) {
+        try {
+          const date = parse(birthdate, 'dd/MM/yyyy', new Date());
+          dateOfBirth = format(date, 'yyyy-MM-dd');
+        } catch (error) {
+          console.error('Invalid date format:', error);
+          showToast(t('error.invalidDate'), 'error');
+          return;
+        }
+      }
+
+      // Convert gender from frontend format to backend format
+      let patientGender: PatientGender | undefined;
+      if (gender === 'male') patientGender = 'MALE';
+      else if (gender === 'female') patientGender = 'FEMALE';
+
+      await patientService.updateProfile(user.patientId, {
+        name,
+        phone,
+        idCardNumber: thaiId,
+        gender: patientGender,
+        dateOfBirth,
+        address: address.split('\n').slice(1).join('\n') || address, // Remove postal code from address
+        addressDetail: detailAddress,
+        postalCode,
+        height: detailInfo.height,
+        weight: detailInfo.weight,
+        bloodType: detailInfo.bloodType as BloodType,
+        alcoholConsumption: detailInfo.alcohol as AlcoholConsumption,
+        smokingStatus: detailInfo.smoking as SmokingStatus,
+        currentMedications: detailInfo.medications,
+        personalMedicalHistory: detailInfo.personalHistory,
+        familyMedicalHistory: detailInfo.familyHistory
+      });
+
+      showToast(t('mypage.profileUpdated'), 'success');
+      navigate('/mypage');
+    } catch (error) {
+      console.error('Failed to update profile:', error);
+      showToast(t('error.updateFailed'), 'error');
+    }
   };
+
+  if (isLoading) {
+    return (
+      <MainLayout
+        title={t('mypage.profile')}
+        onBack={handleBack}
+        onClose={handleClose}
+        fullWidth
+        contentClassName="p-0"
+      >
+        <PageContainer style={{ background: 'transparent', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+          <div>{t('common.loading')}</div>
+        </PageContainer>
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout
@@ -327,9 +451,10 @@ export default function ProfileEdit() {
       <AddressSearchModal
         isOpen={showAddressSearch}
         onClose={() => setShowAddressSearch(false)}
-        onSelect={({ displayAddress, postalCode }) => {
-          const combined = (postalCode ? postalCode + '\n' : '') + displayAddress;
+        onSelect={({ displayAddress, postalCode: newPostalCode }) => {
+          const combined = (newPostalCode ? newPostalCode + '\n' : '') + displayAddress;
           setAddress(combined);
+          setPostalCode(newPostalCode || '');
           setShowAddressSearch(false);
           setShouldFocusDetail(true);
         }}

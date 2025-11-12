@@ -25,6 +25,7 @@ import { formatDateTime } from '@utils/date';
 import { useAppointmentStore } from '@store/appointmentStore';
 import { useToast } from '@hooks/useToast';
 import { logError } from '@utils/errorHandler';
+import { appointmentService, type Appointment } from '@/services/appointmentService';
 
 export default function AppointmentEdit() {
   const navigate = useNavigate();
@@ -33,42 +34,59 @@ export default function AppointmentEdit() {
   const setSelectedListTab = useAppointmentStore((state) => state.setSelectedListTab);
   const { showToast, ToastComponent } = useToast();
 
-  // TODO: id를 사용해서 API에서 데이터를 가져올 예정
-  // const { data, isLoading } = useQuery(['appointment', id], () => fetchAppointmentById(id));
+  // Fetch appointment data from API
+  const [appointment, setAppointment] = useState<Appointment | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data 가져오기
-  const mockData = mockAppointmentsDetails[id || '1'];
-
-  // ID가 없거나 데이터가 없으면 404 처리
   useEffect(() => {
-    if (!mockData) {
-      navigate('/error/404', { replace: true });
-    }
-  }, [mockData, navigate]);
+    const fetchAppointment = async () => {
+      if (!id) {
+        navigate('/error/404', { replace: true });
+        return;
+      }
 
-  if (!mockData) {
+      setIsLoading(true);
+      try {
+        const data = await appointmentService.getAppointmentById(id);
+        setAppointment(data);
+      } catch (error) {
+        console.error('Failed to fetch appointment:', error);
+        navigate('/error/404', { replace: true });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAppointment();
+  }, [id, navigate]);
+
+  if (isLoading || !appointment) {
     return null;
   }
 
-  // 예약 정보 (편집 가능) - Mock data로 초기화
+  // 예약 정보 (편집 가능) - API data로 초기화
   const [appointmentData, setAppointmentData] = useState({
-    appointmentNumber: mockData.appointmentNumber,
-    appointmentType: mockData.appointmentType,
-    hospital: mockData.hospital,
-    dateTime: mockData.dateTime,
-    doctor: mockData.doctor
+    appointmentNumber: appointment.externalId,
+    appointmentType: appointment.appointmentType === 'QUICK' ? t('appointment.quickAppointment') : t('appointment.standardAppointment'),
+    hospital: {
+      name: appointment.hospital?.nameLocal || appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`,
+      nameEn: appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`,
+      phone: appointment.hospital?.phone || '-'
+    },
+    dateTime: appointment.scheduledAt ? formatDateTime(new Date(appointment.scheduledAt), '') : '',
+    doctor: appointment.doctor?.name || appointment.doctor?.nameEn || `Doctor ${appointment.doctorId}`
   });
 
   // Mock data - 환자 기본 정보 (읽기 전용)
   const patientBasicData = mockPatientBasicInfo;
 
-  // 진료 정보 (편집 가능) - Mock data로 초기화
-  const [symptoms, setSymptoms] = useState(mockData.symptoms);
+  // 진료 정보 (편집 가능) - API data로 초기화
+  const [symptoms, setSymptoms] = useState(appointment.symptoms);
   const [symptomImages, setSymptomImages] = useState<string[]>(
-    mockData.symptomImages?.slice(0, 3) || []
+    appointment.symptomImages?.slice(0, 3) || []
   );
 
-  // 환자 상세 정보 (편집 가능) - Mock data로 초기화
+  // 환자 상세 정보 (편집 가능) - Mock data로 초기화 (TODO: Get from patient replica)
   const [detailInfo, setDetailInfo] = useState<PatientDetailInfo>(mockPatientDetailInfo);
 
   // 모달 상태

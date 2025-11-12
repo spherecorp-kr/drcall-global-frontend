@@ -145,7 +145,7 @@ export default function HealthRecordCard({
             <div className="absolute left-5 top-[4.8125rem] flex items-start gap-[1.875rem]">
               <div>
                 <span className="text-[#1F1F1F] text-[1.5rem] font-semibold">
-                  {tempRecord.value}
+                  {tempRecord.temperature}
                 </span>
                 <span className="text-[#979797] text-[1rem] font-normal">°C</span>
               </div>

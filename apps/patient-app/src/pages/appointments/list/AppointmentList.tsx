@@ -9,13 +9,15 @@ import AppointmentCard, {
 import CompletedConsultationCard from '@appointment/completed/cards/CompletedConsultationCard';
 import CancelledAppointmentCard from '@appointment/cancelled/cards/CancelledAppointmentCard';
 import PaymentStatusFilterModal from '@appointment/completed/modals/PaymentStatusFilterModal';
-import { mockAppointmentsList, mockCompletedConsultations, mockAppointmentsDetails } from '@mocks/appointments-list';
 import { useAppointmentStore } from '@store/appointmentStore';
 import type { PaymentStatus } from '@/types/completed';
+import { appointmentService, type PaginatedAppointmentResponse } from '@/services/appointmentService';
+import { AppointmentStatus as BackendStatus } from '@/constants/appointment';
+import { formatDateTime } from '@utils/date';
 
 type SortType = 'newest' | 'oldest';
 
-const ITEMS_PER_PAGE = 10; // 한 번에 로드할 항목 수
+const PAGE_SIZE = 20; // 한 번에 로드할 항목 수 (백엔드와 동일)
 
 export default function MedicalHistory() {
   const navigate = useNavigate();
@@ -28,7 +30,14 @@ export default function MedicalHistory() {
   const [paymentStatusFilter, setPaymentStatusFilter] = useState<PaymentStatus | 'all'>('all');
   const [isPaymentFilterModalOpen, setIsPaymentFilterModalOpen] = useState(false);
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null);
-  const [displayedItemsCount, setDisplayedItemsCount] = useState(ITEMS_PER_PAGE);
+
+  // Infinite scroll state
+  const [appointments, setAppointments] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const observerTarget = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
@@ -40,48 +49,132 @@ export default function MedicalHistory() {
   const handleBack = () => navigate(-1);
   const handleClose = () => navigate('/');
 
-  // TODO: API에서 예약 목록 가져오기
-  // const { data: appointments } = useQuery(['appointments'], fetchAppointments);
+  // Status 매핑: UI status -> Backend status
+  const statusMap: Record<AppointmentStatus, string> = {
+    'pending': BackendStatus.PENDING,
+    'confirmed': BackendStatus.CONFIRMED,
+    'completed': BackendStatus.COMPLETED,
+    'cancelled': BackendStatus.CANCELLED
+  };
 
-  // 필터링 및 정렬 (useMemo로 메모이제이션하여 성능 최적화)
-  const filteredAndSortedAppointments = useMemo(() => {
-    return selectedTab === 'completed'
-      ? mockCompletedConsultations
-          .filter((consultation) => paymentStatusFilter === 'all' || consultation.paymentStatus === paymentStatusFilter)
-          .sort((a, b) => {
-            const dateA = new Date(a.completedAt.replace(/\//g, '-'));
-            const dateB = new Date(b.completedAt.replace(/\//g, '-'));
-            return sortOrder === 'newest' ? dateB.getTime() - dateA.getTime() : dateA.getTime() - dateB.getTime();
-          })
-      : mockAppointmentsList
-          .filter((apt) => apt.status === selectedTab)
-          .sort((a, b) => {
-            // 날짜 기준 정렬 (datetime 필드 사용)
-            const dateA = a.datetime ? new Date(a.datetime.split(' ')[0].replace(/\//g, '-')) : new Date(0);
-            const dateB = b.datetime ? new Date(b.datetime.split(' ')[0].replace(/\//g, '-')) : new Date(0);
+  // Sort order to backend sort parameter
+  const getSortParam = (sort: SortType): string => {
+    return sort === 'newest' ? 'scheduledAt,desc' : 'scheduledAt,asc';
+  };
 
-            if (sortOrder === 'newest') {
-              return dateB.getTime() - dateA.getTime(); // 최신순
-            } else {
-              return dateA.getTime() - dateB.getTime(); // 과거순
-            }
-          });
-  }, [selectedTab, sortOrder, paymentStatusFilter]);
+  /**
+   * Load appointments (initial load or reset)
+   * Resets page to 0 and replaces all data
+   */
+  const loadAppointments = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const backendStatus = statusMap[selectedTab];
+      const response = await appointmentService.getAppointments({
+        page: 0,
+        size: PAGE_SIZE,
+        status: backendStatus,
+        sort: getSortParam(sortOrder)
+      });
 
-  // 무한 스크롤을 위해 표시할 항목만 슬라이스 (useMemo로 메모이제이션)
-  const displayedAppointments = useMemo(() => {
-    return filteredAndSortedAppointments.slice(0, displayedItemsCount);
-  }, [filteredAndSortedAppointments, displayedItemsCount]);
+      setAppointments(response.content);
+      setCurrentPage(0);
+      setHasMore(!response.last);
+    } catch (error) {
+      console.error('Failed to load appointments:', error);
+      setAppointments([]);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [selectedTab, sortOrder]);
 
-  // 탭이나 정렬 변경 시 초기화
+  /**
+   * Load next page for infinite scroll
+   * Appends data to existing appointments
+   */
+  const loadNextPage = useCallback(async () => {
+    if (isLoadingMore || !hasMore) return;
+
+    setIsLoadingMore(true);
+    try {
+      const backendStatus = statusMap[selectedTab];
+      const nextPage = currentPage + 1;
+
+      const response = await appointmentService.getAppointments({
+        page: nextPage,
+        size: PAGE_SIZE,
+        status: backendStatus,
+        sort: getSortParam(sortOrder)
+      });
+
+      setAppointments((prev) => [...prev, ...response.content]);
+      setCurrentPage(nextPage);
+      setHasMore(!response.last);
+    } catch (error) {
+      console.error('Failed to load next page:', error);
+      setHasMore(false);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [selectedTab, sortOrder, currentPage, hasMore, isLoadingMore]);
+
+  // Initial load and reload on filter/sort change
   useEffect(() => {
-    setDisplayedItemsCount(ITEMS_PER_PAGE);
-  }, [selectedTab, sortOrder, paymentStatusFilter]);
+    loadAppointments();
+  }, [loadAppointments]);
 
-  // 탭 변경 시 첫 번째 카드 자동 선택 및 탭 스크롤
+  // Client-side payment filter for completed tab (TODO: move to backend)
+  const displayedAppointments = useMemo(() => {
+    if (selectedTab === 'completed' && paymentStatusFilter !== 'all') {
+      return appointments.filter((appointment) => {
+        const mappedStatus = appointment.paymentStatus === 'COMPLETED' ? 'payment_complete'
+          : appointment.paymentStatus === 'PENDING' ? 'pending_payment'
+          : 'pending_billing';
+        return mappedStatus === paymentStatusFilter;
+      });
+    }
+    return appointments;
+  }, [appointments, selectedTab, paymentStatusFilter]);
+
+  // Transform API data to Card component format
+  const transformToCardData = (appointment: any) => {
+    const formattedDateTime = appointment.scheduledAt
+      ? formatDateTime(new Date(appointment.scheduledAt), '')
+      : '-';
+
+    return {
+      id: appointment.externalId,
+      type: appointment.appointmentType === 'QUICK' ? t('appointment.quickAppointment') : t('appointment.standardAppointment'),
+      hospital: appointment.hospital?.nameLocal || appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`,
+      doctor: appointment.appointmentType === 'STANDARD'
+        ? (appointment.doctor?.name || appointment.doctor?.nameEn || `Doctor ${appointment.doctorId}`)
+        : undefined,
+      datetime: appointment.appointmentType === 'STANDARD' ? formattedDateTime : undefined,
+      status: selectedTab
+    };
+  };
+
+  // Transform API data to CompletedConsultationCard format
+  const transformToCompletedCardData = (appointment: any) => {
+    return {
+      id: appointment.externalId,
+      hospitalName: appointment.hospital?.nameLocal || `Hospital ${appointment.hospitalId}`,
+      hospitalNameEn: appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`,
+      doctorName: appointment.doctor?.name || `Doctor ${appointment.doctorId}`,
+      doctorNameEn: appointment.doctor?.nameEn || `Doctor ${appointment.doctorId}`,
+      completedAt: appointment.endedAt
+        ? formatDateTime(new Date(appointment.endedAt), '')
+        : '-',
+      paymentStatus: (appointment.paymentStatus === 'COMPLETED' ? 'payment_complete' :
+                     appointment.paymentStatus === 'PENDING' ? 'pending_payment' : 'pending_billing') as PaymentStatus
+    };
+  };
+
+  // 첫 번째 카드 자동 선택 및 탭 스크롤
   useEffect(() => {
     if (displayedAppointments.length > 0) {
-      setSelectedAppointmentId(displayedAppointments[0].id);
+      setSelectedAppointmentId(displayedAppointments[0].id || displayedAppointments[0].externalId);
     } else {
       setSelectedAppointmentId(null);
     }
@@ -91,18 +184,17 @@ export default function MedicalHistory() {
     if (selectedTabButton) {
       selectedTabButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     }
-  }, [selectedTab, sortOrder, displayedAppointments.length]);
+  }, [selectedTab, displayedAppointments.length]);
 
-  // 무한 스크롤 Intersection Observer
+  // Intersection Observer for infinite scroll
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [target] = entries;
-      if (target.isIntersecting && displayedItemsCount < filteredAndSortedAppointments.length) {
-        // 더 로드할 항목이 있으면 추가 로드
-        setDisplayedItemsCount((prev) => prev + ITEMS_PER_PAGE);
+      if (target.isIntersecting && hasMore && !isLoadingMore) {
+        loadNextPage();
       }
     },
-    [displayedItemsCount, filteredAndSortedAppointments.length]
+    [hasMore, isLoadingMore, loadNextPage]
   );
 
   useEffect(() => {
@@ -110,7 +202,8 @@ export default function MedicalHistory() {
     if (!element) return;
 
     const observer = new IntersectionObserver(handleObserver, {
-      threshold: 0.5
+      threshold: 0.5,
+      rootMargin: '100px' // Load before user reaches the bottom
     });
 
     observer.observe(element);
@@ -278,24 +371,27 @@ export default function MedicalHistory() {
           }}
         >
           {selectedTab === 'completed'
-            ? displayedAppointments.map((consultation: any) => (
+            ? displayedAppointments.map((appointment: any) => (
                 <CompletedConsultationCard
-                  key={consultation.id}
-                  data={consultation}
-                  isSelected={selectedAppointmentId === consultation.id}
-                  onClick={() => setSelectedAppointmentId(consultation.id)}
+                  key={appointment.id}
+                  data={transformToCompletedCardData(appointment)}
+                  isSelected={selectedAppointmentId === appointment.id}
+                  onClick={() => setSelectedAppointmentId(appointment.id)}
                 />
               ))
             : selectedTab === 'cancelled'
             ? displayedAppointments.map((appointment: any) => {
-                const detail = mockAppointmentsDetails[appointment.id];
+                const formattedCancelledAt = appointment.cancelledAt
+                  ? formatDateTime(new Date(appointment.cancelledAt), '')
+                  : '-';
+
                 return (
                   <CancelledAppointmentCard
                     key={appointment.id}
-                    id={appointment.id}
-                    hospital={detail?.hospital.name || appointment.hospital}
-                    cancelledAt={detail?.cancellation?.cancelledAt || ''}
-                    cancelledBy={detail?.cancellation?.cancelledBy || ''}
+                    id={appointment.externalId}
+                    hospital={appointment.hospital?.nameLocal || appointment.hospital?.nameEn || `Hospital ${appointment.hospitalId}`}
+                    cancelledAt={formattedCancelledAt}
+                    cancelledBy={appointment.cancelledBy || 'SYSTEM'}
                     isSelected={selectedAppointmentId === appointment.id}
                     onSelect={setSelectedAppointmentId}
                   />
@@ -304,23 +400,25 @@ export default function MedicalHistory() {
             : displayedAppointments.map((appointment: any) => (
                 <AppointmentCard
                   key={appointment.id}
-                  appointment={appointment}
+                  appointment={transformToCardData(appointment)}
                   isSelected={selectedAppointmentId === appointment.id}
                   onSelect={setSelectedAppointmentId}
                 />
               ))}
 
           {/* 무한 스크롤 트리거 */}
-          <div
-            ref={observerTarget}
-            style={{
-              height: '1px',
-              visibility: 'hidden'
-            }}
-          />
+          {!isLoading && hasMore && (
+            <div
+              ref={observerTarget}
+              style={{
+                height: '1px',
+                visibility: 'hidden'
+              }}
+            />
+          )}
 
-          {/* 로딩 중 표시 (선택사항) */}
-          {displayedItemsCount < filteredAndSortedAppointments.length && (
+          {/* 로딩 표시 */}
+          {isLoadingMore && (
             <div style={{
               textAlign: 'center',
               padding: '1.25rem',
@@ -328,6 +426,30 @@ export default function MedicalHistory() {
               fontSize: '0.875rem'
             }}>
               {t('common.loading')}
+            </div>
+          )}
+
+          {/* 초기 로딩 */}
+          {isLoading && appointments.length === 0 && (
+            <div style={{
+              textAlign: 'center',
+              padding: '2.5rem',
+              color: '#8A8A8A',
+              fontSize: '1rem'
+            }}>
+              {t('common.loading')}
+            </div>
+          )}
+
+          {/* 데이터 없음 */}
+          {!isLoading && appointments.length === 0 && (
+            <div style={{
+              textAlign: 'center',
+              padding: '2.5rem',
+              color: '#8A8A8A',
+              fontSize: '1rem'
+            }}>
+              {t('appointment.noAppointments')}
             </div>
           )}
         </div>
