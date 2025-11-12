@@ -143,7 +143,7 @@
     "cancelConfirm": "예약을 취소 하시겠습니까?",
     "cancelSuccess": "예약이 취소되었습니다",
     "reschedule": "예약 수정",
-    "rescheduleComplete": "예약 수정이 완료되었습니다",
+    "rescheduleComplete": "예약 수정이\n완료되었습니다.",
     "editComplete": "수정 완료",
     "pending": "예약 대기",
     "confirmed": "예약 확정",
