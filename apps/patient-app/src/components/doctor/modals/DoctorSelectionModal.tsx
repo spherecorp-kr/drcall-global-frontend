@@ -7,6 +7,7 @@ import useModalScrollLock from '@hooks/useModalScrollLock';
 import { useDoctorSelection } from '@hooks/useDoctorSelection';
 import { mockDoctors } from '@mocks/doctors';
 import { formatDate } from '@utils/date';
+import { useTranslation } from 'react-i18next';
 
 interface DoctorSelectionModalProps {
   isOpen: boolean;
@@ -28,6 +29,8 @@ export default function DoctorSelectionModal({
 }: DoctorSelectionModalProps) {
   // 모달 오픈 동안 배경 스크롤 차단
   useModalScrollLock(isOpen);
+
+  const { t } = useTranslation();
 
   const {
     selectedDate,
@@ -75,30 +78,30 @@ export default function DoctorSelectionModal({
         <div
           style={{
             height: '3.5rem',
-            background: 'white',
+            background: '#FAFAFA',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingLeft: '1.25rem',
-            paddingRight: '1.25rem',
-            borderBottom: '1px solid #E0E0E0'
+            justifyContent: 'center',
+            padding: '1.25rem'
           }}
         >
           <h1
             style={{
               fontSize: '1.125rem',
-              fontWeight: '600',
+              fontWeight: '500',
               color: '#1F1F1F',
               margin: 0
             }}
           >
-            의사·진료 일시 수정 팝업
+            {t('appointment.selectDoctorAndDateTime')}
           </h1>
           <button
             onClick={onClose}
             style={{
-              width: '2rem',
-              height: '2rem',
+              position: 'absolute',
+              right: '1.25rem',
+              width: '1.875rem',
+              height: '1.875rem',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
@@ -108,7 +111,7 @@ export default function DoctorSelectionModal({
               justifyContent: 'center'
             }}
           >
-            <img src='/assets/icons/btn-끄기.svg' alt='close_popup' width={24} height={24}/>
+            <img src='/assets/icons/btn-끄기.svg' alt='close_popup' width={30} height={30}/>
           </button>
         </div>
 
