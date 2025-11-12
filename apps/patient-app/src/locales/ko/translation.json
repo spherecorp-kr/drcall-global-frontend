@@ -262,7 +262,7 @@
     "noticeEditCancel": "예약 대기/확정 상태에서는 예약을 수정/취소 할 수 있어요.",
     "noticeCallHospital": "예약 확정 후 수정은 병원에 직접 전화 문의해주세요.",
     "noticeCancelDeadline": "예약 취소는 진료 1시간 전까지 가능해요.",
-    "editCompleteTitle": "수정 완료",
+    "editCompleteTitle": "예약 대기 수정 완료",
     "heightPlaceholder": "예)160",
     "weightPlaceholder": "예)59",
     "progressSteps": {
