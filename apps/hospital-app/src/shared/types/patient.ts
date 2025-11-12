@@ -68,12 +68,15 @@ export interface PatientManagement {
 	lastVisitDateDisplay: string; // 'DD/MM/YYYY' format or '-'
 	createdAt: Date;
 	updatedAt: Date;
-	// 상세 정보 (선택적)
+	// 상세 정보 (선택적, 백엔드 patients 테이블 필드)
 	thaiId?: string;
 	address?: string;
+	addressDetail?: string;
+	postalCode?: string;
 	height?: number;
 	weight?: number;
 	bloodType?: string;
+	allergies?: string; // 알레르기 정보 (추가됨)
 }
 
 export interface PatientManagementFilterState {

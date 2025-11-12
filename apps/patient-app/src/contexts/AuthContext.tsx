@@ -3,25 +3,32 @@ import type { ReactNode } from 'react';
 import { apiClient } from '@services/api';
 import { logError } from '@utils/errorHandler';
 
+/**
+ * Patient interface - 백엔드 patients 테이블과 일치
+ * ⚠️ 2025-11-06: firstName/lastName → name 통합, allergies/grade 추가
+ */
 export interface Patient {
   id: number;
-  channelUserId: string;
-  firstName: string;
-  lastName: string;
+  name: string; // firstName + lastName 통합
   email: string;
   phoneCountryCode: string;
   phone: string;
   dateOfBirth: string;
   gender: 'MALE' | 'FEMALE' | 'OTHER';
   idCardNumber?: string;
+  address?: string;
+  addressDetail?: string;
+  postalCode?: string;
   emergencyContactName?: string;
   emergencyContactPhone?: string;
-  address?: string;
   profileImageUrl?: string;
+  allergies?: string; // 알레르기 정보 (추가됨)
+  grade?: 'VIP' | 'RISK' | 'NORMAL'; // 환자 등급 (추가됨)
   marketingConsent: boolean;
   dataSharingConsent: boolean;
   createdAt: string;
   updatedAt: string;
+  // channelUserId는 patient_subscriptions 테이블로 관리됨
 }
 
 export interface AuthContextValue {

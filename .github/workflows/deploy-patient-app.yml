@@ -1,9 +1,10 @@
-name: Deploy Patient App
+name: 🚀 Deploy Patient App
 
 on:
   push:
     branches:
       - main
+      - staging
       - develop
     paths:
       - 'apps/patient-app/**'
@@ -11,80 +12,79 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deploy environment'
+        description: 'Target environment'
         required: true
         type: choice
         options:
           - dev
+          - staging
           - prod
 
-env:
-  PNPM_VERSION: '9.0.0'
-  NODE_VERSION: '20'
-
 jobs:
-  deploy:
+  # Determine environment from branch or input
+  determine-env:
+    name: 🎯 Determine Environment
     runs-on: ubuntu-latest
-
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
       - name: Determine environment
         id: env
         run: |
           if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "DEPLOY_ENV=${{ inputs.environment }}" >> $GITHUB_ENV
+            ENV="${{ inputs.environment }}"
           elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            echo "DEPLOY_ENV=prod" >> $GITHUB_ENV
+            ENV="prod"
+          elif [ "${{ github.ref }}" == "refs/heads/staging" ]; then
+            ENV="staging"
           else
-            echo "DEPLOY_ENV=dev" >> $GITHUB_ENV
+            ENV="dev"
           fi
 
-      - name: Build
-        env:
-          VITE_API_BASE_URL: ${{ secrets[format('PATIENT_APP_{0}_API_URL', env.DEPLOY_ENV)] }}
-          VITE_ENVIRONMENT: ${{ env.DEPLOY_ENV }}
-        run: pnpm build:patient
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+          echo "📍 Deploying to: ${ENV}"
 
-      - name: Configure AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+  deploy-dev:
+    name: 🚀 Deploy to DEV
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'dev'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: patient-app
+      build-command: build:patient
+      environment: dev
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      API_URL: ${{ secrets.PATIENT_APP_DEV_API_URL }}
+      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_DEV_CLOUDFRONT_ID }}
 
-      - name: Deploy to S3
-        working-directory: ./apps/patient-app
-        run: |
-          BUCKET="${{ env.DEPLOY_ENV }}-patient-app-frontend"
-          aws s3 sync dist/ s3://$BUCKET/ --delete \
-            --cache-control "public,max-age=31536000,immutable" \
-            --exclude "index.html"
-          aws s3 cp dist/index.html s3://$BUCKET/index.html \
-            --cache-control "no-cache"
+  deploy-staging:
+    name: 🚀 Deploy to STAGING
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'staging'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: patient-app
+      build-command: build:patient
+      environment: staging
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      API_URL: ${{ secrets.PATIENT_APP_STAGING_API_URL }}
+      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_STAGING_CLOUDFRONT_ID }}
 
-      - name: Invalidate CloudFront
-        run: |
-          DISTRIBUTION_ID="${{ secrets[format('PATIENT_APP_{0}_CLOUDFRONT_ID', env.DEPLOY_ENV)] }}"
-          aws cloudfront create-invalidation \
-            --distribution-id $DISTRIBUTION_ID \
-            --paths "/*"
-
-      - name: Summary
-        run: |
-          echo "### Deployed Patient App" >> $GITHUB_STEP_SUMMARY
-          echo "- **Environment**: ${{ env.DEPLOY_ENV }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **URL**: https://patient.${{ env.DEPLOY_ENV }}.drcall.global" >> $GITHUB_STEP_SUMMARY
+  deploy-prod:
+    name: 🚀 Deploy to PRODUCTION
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'prod'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: patient-app
+      build-command: build:patient
+      environment: prod
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      API_URL: ${{ secrets.PATIENT_APP_PROD_API_URL }}
+      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_PROD_CLOUDFRONT_ID }}

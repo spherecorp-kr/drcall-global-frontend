@@ -1,0 +1,149 @@
+name: 🔄 Reusable Frontend Deploy
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        required: true
+        type: string
+        description: 'App name (e.g., patient-app, hospital-app)'
+      build-command:
+        required: true
+        type: string
+        description: 'Build command (e.g., build:patient, build:hospital)'
+      environment:
+        required: true
+        type: string
+        description: 'Deployment environment (dev, staging, prod)'
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      API_URL:
+        required: true
+      CLOUDFRONT_ID:
+        required: true
+
+env:
+  PNPM_VERSION: '9.0.0'
+  NODE_VERSION: '20'
+  AWS_REGION: 'ap-northeast-2'
+
+jobs:
+  validate:
+    name: ✅ Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate environment
+        run: |
+          if [[ ! "${{ inputs.environment }}" =~ ^(dev|staging|prod)$ ]]; then
+            echo "❌ Invalid environment: ${{ inputs.environment }}"
+            echo "   Must be one of: dev, staging, prod"
+            exit 1
+          fi
+          echo "✅ Environment validated: ${{ inputs.environment }}"
+
+  build:
+    name: 🏗️ Build ${{ inputs.app-name }}
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        env:
+          VITE_API_BASE_URL: ${{ secrets.API_URL }}
+          VITE_ENVIRONMENT: ${{ inputs.environment }}
+        run: pnpm ${{ inputs.build-command }}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-name }}-dist
+          path: apps/${{ inputs.app-name }}/dist
+          retention-days: 1
+
+  deploy:
+    name: 🚀 Deploy to ${{ inputs.environment }}
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment }}
+      url: https://${{ inputs.app-name }}.${{ inputs.environment }}.drcall.global
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.app-name }}-dist
+          path: dist
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy to S3
+        run: |
+          # Determine bucket name based on environment and app
+          ENV="${{ inputs.environment }}"
+          APP="${{ inputs.app-name }}"
+
+          BUCKET="${ENV}-${APP}-frontend"
+
+          echo "🪣 Deploying to S3 bucket: ${BUCKET}"
+
+          # Sync all files except index.html with long cache
+          aws s3 sync dist/ s3://${BUCKET}/ --delete \
+            --cache-control "public,max-age=31536000,immutable" \
+            --exclude "index.html"
+
+          # Upload index.html with no-cache
+          aws s3 cp dist/index.html s3://${BUCKET}/index.html \
+            --cache-control "no-cache"
+
+          echo "✅ Files uploaded to S3"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          DISTRIBUTION_ID="${{ secrets.CLOUDFRONT_ID }}"
+
+          echo "🔄 Invalidating CloudFront distribution: ${DISTRIBUTION_ID}"
+
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id ${DISTRIBUTION_ID} \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+
+          echo "✅ Invalidation created: ${INVALIDATION_ID}"
+
+      - name: Deployment summary
+        run: |
+          echo "### 🎉 Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Application** | \`${{ inputs.app-name }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Environment** | \`${{ inputs.environment }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **URL** | https://${{ inputs.app-name }}.${{ inputs.environment }}.drcall.global |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Bucket** | \`${{ inputs.environment }}-${{ inputs.app-name }}-frontend\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Triggered by** | @${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
