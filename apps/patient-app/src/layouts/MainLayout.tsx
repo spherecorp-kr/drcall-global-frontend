@@ -12,6 +12,7 @@ interface MainLayoutProps {
   headerRight?: ReactNode;
   style?: CSSProperties;
   headerStyle?: CSSProperties;
+  closeBackground?: 'white' | 'clear';
 }
 
 /**
@@ -32,7 +33,8 @@ export default function MainLayout({
   contentClassName,
   headerRight,
   style,
-  headerStyle
+  headerStyle,
+  closeBackground = 'clear'
 }: MainLayoutProps) {
   const containerClassName = [
     'relative w-full min-h-screen bg-[#fafafa] flex flex-col',
@@ -123,7 +125,7 @@ export default function MainLayout({
                   alignItems: 'center',
                   justifyContent: 'center',
                   border: 'none',
-                  background: 'transparent',
+                  background: closeBackground === 'white' ? '#FFFFFF' : 'transparent',
                   cursor: 'pointer',
                   padding: 0
                 }}

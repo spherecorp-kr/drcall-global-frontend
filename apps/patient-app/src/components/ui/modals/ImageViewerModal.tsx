@@ -59,6 +59,7 @@ export default function ImageViewerModal({
         fullWidth
         style={{ background: 'transparent' }}
         headerStyle={{ background: 'transparent' }}
+        closeBackground="white"
       >
         {/* 상단 인디케이터 */}
         {images.length > 0 && (
