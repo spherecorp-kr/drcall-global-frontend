@@ -46,6 +46,26 @@ export const apiClient = axios.create({
   withCredentials: true, // Include cookies in all requests
 });
 
+/**
+ * Extract subdomain from hostname for channel identification
+ * Examples:
+ * - Production: samsung-line.dev.drcall.global → samsung-line
+ * - Development: samsung-line.localhost:3000 → samsung-line
+ */
+function getSubdomain(): string | null {
+  const hostname = window.location.hostname;
+  const parts = hostname.split('.');
+
+  if (parts.length >= 2) {
+    const subdomain = parts[0];
+    if (subdomain !== 'localhost' && !/^\d+$/.test(subdomain)) {
+      return subdomain;
+    }
+  }
+
+  return null;
+}
+
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
@@ -62,6 +82,24 @@ apiClient.interceptors.request.use(
     const liffUserId = sessionStorage.getItem('liff_user_id');
     if (liffUserId) {
       config.headers['X-Line-UserId'] = liffUserId;
+    }
+
+    // Add X-Channel-Id header for multi-tenancy
+    // Backend uses this to identify which hospital channel this request belongs to
+    const channelId = sessionStorage.getItem('channel_id');
+    if (channelId) {
+      config.headers['X-Channel-Id'] = channelId;
+    } else {
+      // If channel ID not set, try to extract subdomain and lookup channel
+      const subdomain = getSubdomain();
+      if (subdomain) {
+        // Store subdomain for debugging/logging
+        sessionStorage.setItem('channel_subdomain', subdomain);
+
+        // Note: Channel ID should be fetched from backend API on app initialization
+        // For now, we log a warning if channel ID is not set
+        console.warn('[API] X-Channel-Id not set. Subdomain:', subdomain);
+      }
     }
 
     return config;
