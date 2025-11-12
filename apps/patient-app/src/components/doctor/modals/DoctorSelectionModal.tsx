@@ -133,7 +133,7 @@ export default function DoctorSelectionModal({
             }}
           >
             <PageTitle>
-              진료를 희망하시는 날짜와 의사, 진료 시간을 선택해 주세요.
+              {t('appointment.selectDateTime')}
             </PageTitle>
           </div>
 
