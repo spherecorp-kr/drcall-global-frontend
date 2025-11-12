@@ -1,6 +1,5 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { AppointmentStatusTab } from '@/shared/components/ui';
-import type { AppointmentStatus } from '@/shared/types/appointment';
 import {
 	SearchCancelled,
 	SearchCompleted,
@@ -13,13 +12,17 @@ import {
 	ConfirmedTable,
 	WaitingTable
 } from '@/shared/components/ui/appointmentTables';
+import { ConfirmedCalendar } from '@/shared/components/ui/appointmentCalendar';
+import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore';
+import { useConfirmedAppointmentStore } from '@/shared/store/confirmedAppointmentStore';
 
 const Appointment = () => {
-	const [status, setStatus] = useState<AppointmentStatus>('waiting');
+	const { appointmentTab } = useAppointmentTabStore();
+	const { viewMode } = useConfirmedAppointmentStore();
 
 	// 상태별 UI 렌더링 함수
 	const renderStatusContent = useCallback(() => {
-		switch (status) {
+		switch (appointmentTab) {
 			case 'waiting':
 				return (
 					<>
@@ -31,7 +34,7 @@ const Appointment = () => {
 				return (
 					<>
 						<SearchConfirmed />
-						<ConfirmedTable />
+						{viewMode === 'list' ? <ConfirmedTable /> : <ConfirmedCalendar />}
 					</>
 				);
 			case 'completed':
@@ -51,14 +54,14 @@ const Appointment = () => {
 			default:
 				return null;
 		}
-	}, [status]);
+	}, [appointmentTab, viewMode]);
 
 	return (
 		<div className="flex flex-col h-full overflow-hidden">
 			<div className="bg-white border-b border-b-[#e0e0e0] flex flex-col h-20 items-start justify-end px-5 shrink-0">
-				<AppointmentStatusTab handleClick={setStatus} status={status} />
+				<AppointmentStatusTab />
 			</div>
-			<div className="bg-bg-gray flex flex-1 flex-col gap-5 p-5">{renderStatusContent()}</div>
+			<div className="bg-bg-gray flex flex-1 flex-col gap-5 overflow-y-auto p-5">{renderStatusContent()}</div>
 		</div>
 	);
 }

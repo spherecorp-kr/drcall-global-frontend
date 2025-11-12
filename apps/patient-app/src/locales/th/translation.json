@@ -49,10 +49,12 @@
     "verificationSuccess": "ยืนยันสำเร็จ",
     "verificationFailed": "การยืนยันล้มเหลว",
     "serviceRegistration": "ลงทะเบียนบริการ",
+    "userRegistration": "การลงทะเบียนผู้ใช้",
     "name": "ชื่อ",
     "enterName": "กรุณากรอกชื่อ",
     "birthdate": "วันเกิด",
     "selectBirthdate": "กรุณาเลือกวันเกิด",
+    "birthdatePlaceholder": "DD/MM/YYYY",
     "thaiId": "Thai ID Number",
     "enterThaiId": "กรุณากรอก Thai ID Number",
     "gender": "เพศ",
@@ -64,12 +66,21 @@
     "enterDetailAddress": "กรุณากรอกที่อยู่โดยละเอียด",
     "completeRegistration": "ลงทะเบียนเสร็จสมบูรณ์",
     "registrationSuccess": "ลงทะเบียนบริการเสร็จสมบูรณ์",
+    "linePrivacy": "ความยินยอมในการให้ข้อมูลส่วนบุคคลของ LINE แก่บุคคลที่สาม",
+    "serviceTerms": "เงื่อนไขการบริการ",
+    "personalInfo": "ความยินยอมในการรวบรวมและใช้ข้อมูลส่วนบุคคลและข้อมูลละเอียดอ่อน",
+    "marketing": "ความยินยอมในการรับโฆษณาและการตลาด",
+    "allAgreeTerms": "ข้อตกลงฉบับเต็ม",
+    "registrationNotice1": "คุณจะต้องลงทะเบียนเพื่อใช้บริการ Dr.Call",
+    "registrationNotice2": "คุณสามารถหยุดใช้บริการได้โดยใช้ฟังก์ชั่นบล็อกเพื่อน",
+    "agree": "ข้อตกลง",
     "verifyPhoneNumber": "กรุณาตรวจสอบเบอร์โทรศัพท์",
     "verifyCodeCheck": "กรุณาตรวจสอบรหัสยืนยัน",
     "enterPhoneToChange": "ใส่เบอร์โทรศัพท์ที่ต้องการเปลี่ยน",
     "enterVerificationCode": "กรุณาใส่รหัสยืนยัน",
     "verificationCodeSent": "กรุณาใส่รหัสยืนยันที่ส่งไปยังเบอร์ของคุณ",
-    "selectCountry": "เลือกประเทศ"
+    "selectCountry": "เลือกประเทศ",
+    "terms": "เงื่อนไขการใช้งาน"
   },
   "appointment": {
     "title": "การนัดหมาย",
@@ -158,6 +169,7 @@
     "serviceFee": "ค่าธรรมเนียม",
     "deliveryFee": "ค่าจัดส่ง",
     "prescriptionFee": "ค่าใบสั่งยา",
+    "prescription": "ใบสั่งยา",
     "paymentMethodQr": "ชำระเงินด้วย QR",
     "paymentMethodCard": "บัตรเครดิต/เดบิต",
     "paymentMethodEasy": "ชำระเงินง่าย",
@@ -222,6 +234,7 @@
     "prescriptionWaitingMessage": "ใบสั่งยายังไม่มาถึง\nกรุณารอสักครู่",
     "prescriptionComplete": "เสร็จสิ้น",
     "viewPrescription": "ดูใบสั่งยา",
+    "download": "ดาวน์โหลด",
     "makePayment": "ชำระเงิน",
     "viewDetail": "ดูรายละเอียด",
     "cancelledBy": "ยกเลิกโดย",
@@ -272,6 +285,17 @@
       "profileEdit": "ชื่อ วันเกิด เพศ และเบอร์โทรศัพท์สามารถเปลี่ยนได้ใน 'ข้อมูลของฉัน > แก้ไขข้อมูล'"
     }
   },
+	"calendar": {
+		"week": {
+			"mon": "จ",
+			"tue": "อ",
+			"wed": "พ",
+			"thu": "พฤ",
+			"fri": "ศ",
+			"sat": "ส",
+			"sun": "อา"
+		}
+	},
   "chat": {
     "title": "แชท",
     "chatList": "รายการแชท",
@@ -306,6 +330,8 @@
     "phoneChange": "เปลี่ยนเบอร์โทรศัพท์",
     "phoneChanged": "เปลี่ยนเบอร์โทรศัพท์แล้ว",
     "confirmEdit": "คุณต้องการบันทึกการเปลี่ยนแปลงหรือไม่?",
+    "verificationCodeSentToSMS": "รหัสยืนยันจะถูกส่งไปยังหมายเลขของคุณผ่านทาง SMS",
+    "verificationCode4Digits": "รหัสยืนยัน (4 หลัก)",
     "delivery": "จัดการที่อยู่จัดส่ง",
     "deliveryDescription": "ตรวจสอบและเปลี่ยนที่อยู่จัดส่ง",
     "deliveryManagement": "การจัดการจัดส่ง",

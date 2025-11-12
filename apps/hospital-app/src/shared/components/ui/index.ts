@@ -15,6 +15,7 @@ export { Radio } from './Radio';
 export { Select } from './Select';
 export { default as SearchIcon } from './SearchIcon';
 export { default as SearchInput } from './SearchInput';
+export { default as SegmentedControl } from './SegmentedControl';
 export { default as Table } from './Table';
 export { default as Textarea } from './Textarea';
 export { Tooltip } from './Tooltip';

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, CSSProperties } from 'react';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -10,6 +10,9 @@ interface MainLayoutProps {
   fullWidth?: boolean;
   contentClassName?: string;
   headerRight?: ReactNode;
+  style?: CSSProperties;
+  headerStyle?: CSSProperties;
+  closeBackground?: 'white' | 'clear';
 }
 
 /**
@@ -29,6 +32,9 @@ export default function MainLayout({
   fullWidth = false,
   contentClassName,
   headerRight,
+  style,
+  headerStyle,
+  closeBackground = 'clear'
 }: MainLayoutProps) {
   const containerClassName = [
     'relative w-full min-h-screen bg-[#fafafa] flex flex-col',
@@ -45,7 +51,7 @@ export default function MainLayout({
     .join(' ');
 
   return (
-    <div className={containerClassName}>
+    <div className={containerClassName} style={{...style}}>
       {/* Header - 60px (시스템 바 제거) */}
       {showHeader && (
         <div style={{
@@ -55,7 +61,8 @@ export default function MainLayout({
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          ...headerStyle
         }}>
           <div style={{
             width: '100%',
@@ -118,7 +125,7 @@ export default function MainLayout({
                   alignItems: 'center',
                   justifyContent: 'center',
                   border: 'none',
-                  background: 'transparent',
+                  background: closeBackground === 'white' ? '#FFFFFF' : 'transparent',
                   cursor: 'pointer',
                   padding: 0
                 }}

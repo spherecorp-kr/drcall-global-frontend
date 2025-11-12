@@ -1,11 +1,13 @@
 import { EmptyState, Pagination, Table } from '@/shared/components/ui';
 import type { CancelledTableColumnProps } from '@/shared/types/appointment';
-import { useMemo } from 'react';
-import type { ColumnDef } from '@tanstack/react-table';
+import { useCallback, useMemo } from 'react';
+import type { ColumnDef, Row } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const sampleData: CancelledTableColumnProps[] = [
 	{
+		appointmentSequence: 3,
 		appointmentNumber: '20251030-003',
 		cancelledDatetime: '30/10/25 14:15',
 		canceler: 'HOSPITAL',
@@ -13,6 +15,7 @@ const sampleData: CancelledTableColumnProps[] = [
 		patientName: '환자1'
 	},
 	{
+		appointmentSequence: 2,
 		appointmentNumber: '20251030-002',
 		cancelledDatetime: '30/10/25 14:15',
 		canceler: 'PATIENT',
@@ -20,6 +23,7 @@ const sampleData: CancelledTableColumnProps[] = [
 		patientName: '환자1'
 	},
 	{
+		appointmentSequence: 1,
 		appointmentNumber: '20251030-001',
 		cancelledDatetime: '30/10/25 14:15',
 		canceler: 'SYSTEM',
@@ -28,7 +32,7 @@ const sampleData: CancelledTableColumnProps[] = [
 	}
 ];
 
-const cellSpanClass: string = 'font-normal leading-normal text-base text-text-100';
+const cellSpanClass: string = 'font-normal leading-[normal] text-base text-text-100';
 
 const ColGroup = () => (
 	<colgroup>
@@ -41,7 +45,9 @@ const ColGroup = () => (
 );
 
 const CancelledTable = () => {
+	const navigate = useNavigate();
 	const { t } = useTranslation();
+
 	const columns = useMemo<ColumnDef<CancelledTableColumnProps>[]>(() => [
 		{
 			accessorKey: 'appointmentNumber',
@@ -85,6 +91,11 @@ const CancelledTable = () => {
 		}
 	], [t]);
 
+	// 상세 페이지로 이동
+	const navigateToDetails = useCallback((row: Row<CancelledTableColumnProps>) => {
+		navigate(`/appointment/${row.original.appointmentSequence}`);
+	}, [navigate]);
+
 	return (
 		<div className="bg-white border border-[#e0e0e0] flex flex-col gap-2.5 h-full rounded-[0.625rem]">
 			<Table
@@ -95,7 +106,8 @@ const CancelledTable = () => {
 				disableHorizontalScroll
 				emptyState={<EmptyState message="예약 취소 목록이 없습니다." />}
 				enableSelection
-				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-white' : 'bg-bg-gray'}
+				onRowClick={navigateToDetails}
 			/>
 			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />
 		</div>

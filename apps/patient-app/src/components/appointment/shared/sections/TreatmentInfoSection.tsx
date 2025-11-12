@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ImageGalleryField from '@ui/media/ImageGalleryField';
 import PrescriptionSection from '@appointment/completed/sections/treatment/PrescriptionSection';
 import DoctorAdviceSection from '@appointment/completed/sections/treatment/DoctorAdviceSection';
 import AiSummarySection from '@appointment/completed/sections/treatment/AiSummarySection';
+import ImageViewerModal from '@ui/modals/ImageViewerModal';
 
 interface TreatmentInfoSectionProps {
   background?: 'white' | 'gray';
@@ -52,6 +53,8 @@ export default function TreatmentInfoSection({
 }: TreatmentInfoSectionProps) {
   const { t } = useTranslation();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(0);
 
   // 텍스트 변경 시 높이 자동 조정
   useEffect(() => {
@@ -134,6 +137,10 @@ export default function TreatmentInfoSection({
               onImageAdd={onImageAdd}
               onImageUpload={onImageUpload}
               onImageRemove={onImageRemove}
+              onImageClick={(index) => {
+                setViewerIndex(index);
+                setViewerOpen(true);
+              }}
               maxImages={maxImages}
               readOnly={readOnly}
               showCount={!readOnly}
@@ -142,6 +149,14 @@ export default function TreatmentInfoSection({
           </div>
         </div>
       ) : null}
+
+      {/* 이미지 상세보기 모달 */}
+      <ImageViewerModal
+        isOpen={viewerOpen}
+        images={symptomImages || []}
+        initialIndex={viewerIndex}
+        onClose={() => setViewerOpen(false)}
+      />
 
       {/* 진료 완료 시 추가 항목들 */}
       {isCompleted && (

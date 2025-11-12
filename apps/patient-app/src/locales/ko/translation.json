@@ -48,11 +48,13 @@
     "codeResent": "인증번호가 재전송되었습니다",
     "verificationSuccess": "인증이 완료되었습니다",
     "verificationFailed": "인증에 실패했습니다",
-    "serviceRegistration": "서비스 등록",
+    "serviceRegistration": "서비스 이용 등록",
+    "userRegistration": "사용자 등록",
     "name": "이름",
     "enterName": "이름을 입력해주세요",
     "birthdate": "생년월일",
     "selectBirthdate": "생년월일을 선택해주세요",
+    "birthdatePlaceholder": "DD/MM/YYYY",
     "thaiId": "Thai ID Number",
     "enterThaiId": "Thai ID Number를 입력해주세요",
     "gender": "성별",
@@ -77,7 +79,8 @@
     "enterPhoneToChange": "변경할 휴대폰 번호를 입력해 주세요.",
     "enterVerificationCode": "인증번호를 입력해 주세요.",
     "verificationCodeSent": "입력하신 번호로 전송된 인증번호를 입력해 주세요.",
-    "selectCountry": "국가 선택"
+    "selectCountry": "국가 선택",
+    "terms": "이용약관"
   },
   "appointment": {
     "title": "예약",
@@ -166,6 +169,7 @@
     "serviceFee": "수수료",
     "deliveryFee": "배송비",
     "prescriptionFee": "처방전 발급비",
+    "prescription": "처방전",
     "paymentMethodQr": "QR 결제",
     "paymentMethodCard": "신용/체크 카드",
     "paymentMethodEasy": "간편 결제",
@@ -230,6 +234,7 @@
     "prescriptionWaitingMessage": "아직 처방전이 도착하지 않았습니다.\n조금만 기다려 주세요.",
     "prescriptionComplete": "완료",
     "viewPrescription": "처방전 보기",
+    "download": "다운로드",
     "makePayment": "결제하기",
     "viewDetail": "상세보기",
     "cancelledBy": "취소자",
@@ -280,6 +285,17 @@
       "profileEdit": "이름, 생년월일, 성별, 휴대폰 번호는 '마이페이지>내 정보 수정'에서 수정할 수 있습니다."
     }
   },
+	"calendar": {
+		"week": {
+			"mon": "월",
+			"tue": "화",
+			"wed": "수",
+			"thu": "목",
+			"fri": "금",
+			"sat": "토",
+			"sun": "일"
+		}
+	},
   "chat": {
     "title": "채팅",
     "chatList": "채팅 목록",
@@ -314,6 +330,8 @@
     "phoneChange": "휴대폰 번호 변경",
     "phoneChanged": "휴대폰 번호가 변경되었습니다.",
     "confirmEdit": "수정 하시겠습니까?",
+    "verificationCodeSentToSMS": "SMS로 인증번호를 전송해 드립니다.",
+    "verificationCode4Digits": "인증번호 4자리",
     "delivery": "배송지 관리",
     "deliveryDescription": "배송지를 확인하고 변경하세요.",
     "deliveryManagement": "배송지 관리",

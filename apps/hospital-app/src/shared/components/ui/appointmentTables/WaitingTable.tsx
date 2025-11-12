@@ -80,7 +80,7 @@ const sampleData: WaitingTableColumnProps[] = [
 	},
 ];
 
-const cellSpanClass: string = 'font-normal leading-normal text-base text-text-100';
+const cellSpanClass: string = 'font-normal leading-[normal] text-base text-text-100';
 
 const ColGroup = () => (
 	<colgroup>
@@ -101,7 +101,7 @@ const WaitingTable = () => {
 			accessorKey: 'appointmentType',
 			cell: ({ getValue }) => {
 				if (getValue<AppointmentType>() === 'sdn') {
-					return <span className="font-normal leading-normal text-base text-primary-70">빠른 진료</span>;
+					return <span className="font-normal leading-[normal] text-base text-primary-70">빠른 진료</span>;
 				}
 				return <span className={cellSpanClass}>일반 진료</span>;
 			},
@@ -168,7 +168,7 @@ const WaitingTable = () => {
 				disableHorizontalScroll
 				emptyState={<EmptyState message="예약 대기 목록이 없습니다." />}
 				enableSelection
-				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-bg-white' : 'bg-bg-gray'}
+				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-white' : 'bg-bg-gray'}
 				onRowClick={navigateToDetails}
 			/>
 			<Pagination currentPage={1} totalPages={1} onPageChange={() => {}} />

@@ -49,10 +49,12 @@
     "verificationSuccess": "Verification completed",
     "verificationFailed": "Verification failed",
     "serviceRegistration": "Service Registration",
+    "userRegistration": "User Registration",
     "name": "Name",
     "enterName": "Please enter your name",
     "birthdate": "Date of Birth",
     "selectBirthdate": "Please select your date of birth",
+    "birthdatePlaceholder": "DD/MM/YYYY",
     "thaiId": "Thai ID Number",
     "enterThaiId": "Please enter Thai ID Number",
     "gender": "Gender",
@@ -64,12 +66,21 @@
     "enterDetailAddress": "Please enter detail address",
     "completeRegistration": "Complete Registration",
     "registrationSuccess": "Service registration completed",
+    "linePrivacy": "LINE Privacy Policy",
+    "serviceTerms": "Service Terms",
+    "personalInfo": "Personal Information Collection and Use Agreement",
+    "marketing": "Marketing and Advertising Consent",
+    "allAgreeTerms": "All Agree",
+    "registrationNotice1": "You must register for service use to use the Dr.Call service.",
+    "registrationNotice2": "You can stop using the service by blocking friends.",
+    "agree": "Agree",
     "verifyPhoneNumber": "Please verify your phone number",
     "verifyCodeCheck": "Please verify the code",
     "enterPhoneToChange": "Enter phone number to change",
     "enterVerificationCode": "Please enter verification code",
     "verificationCodeSent": "Please enter the verification code sent to your number",
-    "selectCountry": "Select Country"
+    "selectCountry": "Select Country",
+    "terms": "Terms of Use"
   },
   "appointment": {
     "title": "Appointments",
@@ -158,6 +169,7 @@
     "serviceFee": "Service Fee",
     "deliveryFee": "Delivery Fee",
     "prescriptionFee": "Prescription Fee",
+    "prescription": "Prescription",
     "paymentMethodQr": "QR Payment",
     "paymentMethodCard": "Credit/Debit Card",
     "paymentMethodEasy": "Easy Payment",
@@ -222,6 +234,7 @@
     "prescriptionWaitingMessage": "Prescription has not arrived yet.\nPlease wait a moment.",
     "prescriptionComplete": "Complete",
     "viewPrescription": "View Prescription",
+    "download": "Download",
     "makePayment": "Make Payment",
     "viewDetail": "View Detail",
     "cancelledBy": "Cancelled By",
@@ -272,6 +285,17 @@
       "profileEdit": "Name, date of birth, gender, and phone number can be changed in 'My Page > Edit Profile'."
     }
   },
+	"calendar": {
+		"week": {
+			"mon": "Mon",
+			"tue": "Tue",
+			"wed": "Wed",
+			"thu": "Thu",
+			"fri": "Fri",
+			"sat": "Sat",
+			"sun": "Sun"
+		}
+	},
   "chat": {
     "title": "Chat",
     "chatList": "Chat List",
@@ -306,6 +330,8 @@
     "phoneChange": "Change Phone Number",
     "phoneChanged": "Phone number has been changed.",
     "confirmEdit": "Do you want to save changes?",
+    "verificationCodeSentToSMS": "A verification code will be sent via SMS to your phone number.",
+    "verificationCode4Digits": "Verification Code (4 digits)",
     "delivery": "Delivery Address",
     "deliveryDescription": "Check and change your delivery address.",
     "deliveryManagement": "Delivery Management",
