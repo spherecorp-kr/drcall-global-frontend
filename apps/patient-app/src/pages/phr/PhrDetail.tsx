@@ -225,6 +225,7 @@ export default function PhrDetail() {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
+            <div style={{ width: '1.5rem', height: '1.5rem', background: 'transparent', visibility: 'hidden' }}></div>
               <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ color: '#1F1F1F', fontSize: '1.25rem', fontFamily: 'Pretendard', fontWeight: '600' }}>
                   {typeInfo.title} {t('common.add')}

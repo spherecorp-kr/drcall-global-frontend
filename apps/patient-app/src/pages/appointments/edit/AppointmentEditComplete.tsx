@@ -84,7 +84,7 @@ export default function AppointmentEditComplete() {
               textAlign: 'center'
             }}
           >
-            {t('appointment.editComplete')}
+            {t('appointment.rescheduleComplete')}
           </h2>
         </div>
 

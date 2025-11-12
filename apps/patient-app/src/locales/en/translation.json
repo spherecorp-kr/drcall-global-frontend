@@ -118,6 +118,7 @@
     "height": "Height",
     "weight": "Weight",
     "bloodType": "Blood Type",
+    "heightWeight": "Height/Weight/BMI",
     "alcohol": "Alcohol",
     "alcoholUnit": "Alcohol (Standard: 200ml, 1 week)",
     "smoking": "Smoking",
