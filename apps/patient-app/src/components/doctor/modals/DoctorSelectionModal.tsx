@@ -128,8 +128,8 @@ export default function DoctorSelectionModal({
             style={{
               paddingLeft: '1.25rem',
               paddingRight: '1.25rem',
-              marginTop: '1.875rem',
-              marginBottom: '1.75rem'
+              marginTop: '1.25rem',
+              marginBottom: '1.25rem'
             }}
           >
             <PageTitle>
