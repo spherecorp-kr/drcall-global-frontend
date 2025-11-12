@@ -66,21 +66,31 @@ drcall-global-frontend/
 
 ## 🚢 배포
 
-### 자동 배포
+### CI/CD 파이프라인 (GitHub Actions)
 
+**Reusable Workflow**:
+- 단일 워크플로우로 Patient App과 Hospital App 관리
+- 환경별 자동 배포 지원
+
+**배포 플로우**:
 ```bash
-# DEV 배포 (patch 버전 자동 증가)
+# DEV 배포
 git push origin develop
 
-# PROD 배포 (minor 버전 자동 증가)
+# STG 배포
+git push origin staging
+
+# PROD 배포
 git push origin main
 ```
 
-**자동화 프로세스:**
-1. 버전 자동 증가
-2. GitHub Release 생성
-3. S3/CloudFront 배포
+**자동화 프로세스**:
+1. Vite 빌드 (환경변수 주입)
+2. S3 업로드
+3. CloudFront 캐시 무효화
 4. 배포 완료 (2-3분)
+
+상세 내용: [CI/CD 아키텍처](../infra/CI_CD_ARCHITECTURE.md)
 
 ### 배포 환경
 
