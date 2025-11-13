@@ -484,6 +484,7 @@
     "notFound": "Page not found",
     "forbidden": "Access denied",
     "sessionExpired": "Session expired",
+    "expiredMessage": "Expired message",
     "api": {
       "forbidden": "Access denied.",
       "notFound": "The requested resource could not be found.",
