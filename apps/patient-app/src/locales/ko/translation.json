@@ -198,6 +198,8 @@
     "paymentWithPrescription": "처방전 결제",
     "paymentNotReady": "아직 결제 정보가 입력되지 않았습니다.\n조금만 기다려 주세요.",
     "deliveryFeeWarning": "선택한 배송방식에 따라서 추가 결제금액이 발생할 수 있습니다.",
+    "paymentCompleteMessage": "결제가 완료되었습니다.",
+    "paymentCompleteSubMessage": "*의사 소견과 업로드 완료된 처방전이\n있다면 확인할 수 있습니다.",
     "hospitalAccountNumber": "병원 계좌 번호",
     "paymentConfirmDate": "결제 확인 날짜",
     "deliveryAddress": "배송지",

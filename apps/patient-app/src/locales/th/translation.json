@@ -198,6 +198,8 @@
     "paymentWithPrescription": "ชำระเงินพร้อมใบสั่งยา",
     "paymentNotReady": "ยังไม่ได้ใส่ข้อมูลการชำระเงิน\nกรุณารอสักครู่",
     "deliveryFeeWarning": "อาจมีค่าใช้จ่ายเพิ่มเติมขึ้นอยู่กับวิธีการจัดส่งที่เลือก",
+    "paymentCompleteMessage": "ชำระเงินสำเร็จ",
+    "paymentCompleteSubMessage": "*สามารถตรวจสอบความเห็นของแพทย์และใบสั่งยาที่อัพโหลดได้",
     "hospitalAccountNumber": "หมายเลขบัญชีโรงพยาบาล",
     "paymentConfirmDate": "วันที่ยืนยันการชำระเงิน",
     "deliveryAddress": "ที่อยู่จัดส่ง",

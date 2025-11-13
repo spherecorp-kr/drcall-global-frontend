@@ -198,6 +198,8 @@
     "paymentWithPrescription": "Payment with Prescription",
     "paymentNotReady": "Payment information has not been entered yet.\nPlease wait a moment.",
     "deliveryFeeWarning": "Additional payment may be incurred depending on the selected delivery method.",
+    "paymentCompleteMessage": "Payment completed successfully.",
+    "paymentCompleteSubMessage": "*A doctor's opinion and uploaded prescriptions can be verified.",
     "hospitalAccountNumber": "Hospital Account Number",
     "paymentConfirmDate": "Payment Confirmation Date",
     "deliveryAddress": "Delivery Address",
