@@ -38,6 +38,27 @@ export default function MedicationList() {
     setIsStatusModalOpen(false);
   };
 
+  // Sort Dropdown
+  type SortType = 'newest' | 'oldest';
+  const [sortOrder, setSortOrder] = useState<SortType>('newest');
+  const [tempSortOrder, setTempSortOrder] = useState<SortType>('newest');
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
+
+  const sortOptions: { key: SortType; label: string }[] = [
+    { key: 'newest', label: t('medication.sortNewest') },
+    { key: 'oldest', label: t('medication.sortOldest') }
+  ];
+
+  const handleOpenSortModal = () => {
+    setTempSortOrder(sortOrder);
+    setIsSortModalOpen(true);
+  };
+
+  const handleConfirmSort = () => {
+    setSortOrder(tempSortOrder);
+    setIsSortModalOpen(false);
+  };
+
   return (
     <MainLayout
       title={t('medication.list.title')}
@@ -49,14 +70,36 @@ export default function MedicationList() {
         paddingBottom: '1.25rem',
         minHeight: 'calc(100vh - 3.5rem)'
       }}>
-        {/* Status Dropdown (top-right) */}
+        {/* Sort + Status Dropdowns (top-right) */}
         <div style={{
           display: 'flex',
           justifyContent: 'flex-end',
           alignItems: 'center',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem'
+          paddingTop: '1.25rem',
+          gap: '1rem'
         }}>
+          {/* Sort button (left) */}
+          <button
+            onClick={handleOpenSortModal}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#1F1F1F',
+              fontSize: '1rem',
+              fontWeight: '400',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.375rem',
+              padding: 0
+            }}
+          >
+            <span>{sortOptions.find(opt => opt.key === sortOrder)?.label || t('medication.sortNewest')}</span>
+            <img src="/assets/icons/btn_opening.svg" alt="" style={{ width: '1.5rem', height: '1.5rem' }} />
+          </button>
+
+          {/* Status button (right) */}
           <button
             onClick={handleOpenStatusModal}
             style={{
@@ -79,6 +122,49 @@ export default function MedicationList() {
 
         {/* Medication List Content will be implemented in subsequent steps */}
       </div>
+      {/* Sort Modal */}
+      <BottomSheetModal
+        isOpen={isSortModalOpen}
+        onClose={() => setIsSortModalOpen(false)}
+        title={t('medication.sortFilter')}
+        onConfirm={handleConfirmSort}
+      >
+        <div style={{ width: '100%', paddingLeft: '20px', paddingRight: '20px' }}>
+          {sortOptions.map((option) => (
+            <div
+              key={option.key}
+              onClick={() => setTempSortOrder(option.key)}
+              style={{
+                padding: '16px 0',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 16,
+                  fontWeight: '700',
+                  color: '#1F1F1F'
+                }}
+              >
+                {option.label}
+              </span>
+              {tempSortOrder === option.key && (
+                <img
+                  src="/assets/icons/ic_check_v.svg"
+                  alt="selected"
+                  style={{
+                    width: 24,
+                    height: 24
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      </BottomSheetModal>
       {/* Status Filter Modal */}
       <BottomSheetModal
         isOpen={isStatusModalOpen}
