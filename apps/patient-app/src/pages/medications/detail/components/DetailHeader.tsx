@@ -29,6 +29,12 @@ export default function DetailHeader({
     international: t('medication.methodInternational'),
     pickup: t('medication.methodDirect'),
   };
+  const methodIconMap: Record<ReceiptMethod, string> = {
+    delivery: '/assets/icons/mypage-delivery.svg',
+    quick: '/assets/icons/ic_box.svg',
+    international: '/assets/icons/ic_box.svg',
+    pickup: '/assets/icons/hospital.svg',
+  };
 
   return (
     <div className={['w-full', padding ? 'px-5 pt-5' : ''].join(' ')}>
@@ -39,11 +45,7 @@ export default function DetailHeader({
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50">
-            <img
-              src="/assets/icons/ic_clipboard.svg"
-              alt=""
-              className="h-5 w-5"
-            />
+            <img src={methodIconMap[method]} alt="" className="h-5 w-5" />
           </div>
           <div className="flex flex-col">
             <div className="text-[15px] font-semibold text-gray-900">
