@@ -23,7 +23,7 @@ const Memo = ({
 
 	return (
 		<div className="flex flex-1 flex-col gap-2.5 items-start self-stretch">
-			<h2 className="font-semibold leading-normal text-text-100 text-xl">메모</h2>
+			<h2 className="font-semibold leading-[normal] text-text-100 text-xl">메모</h2>
 			<div className="bg-white border border-stroke-input flex flex-1 flex-col gap-2.5 p-5 rounded-[0.625rem] w-full">
 				<textarea
 					className="flex-1 outline-0 resize-none w-full"

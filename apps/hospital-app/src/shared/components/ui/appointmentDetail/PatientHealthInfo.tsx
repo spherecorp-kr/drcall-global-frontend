@@ -45,7 +45,7 @@ const PatientHealthInfo = ({ height, weight, bmi, bloodPressure, bloodSugar, tem
 
 	return (
 		<div className="flex flex-1 flex-col gap-2.5 items-start self-stretch">
-			<h2 className="font-semibold leading-normal text-text-100 text-xl">환자 건강정보</h2>
+			<h2 className="font-semibold leading-[normal] text-text-100 text-xl">환자 건강 정보</h2>
 			<div className="bg-white border border-stroke-input flex flex-col gap-2 h-full items-start p-5 rounded-[0.625rem] w-full">
 				{/* 키/몸무게/BMI */}
 				<div className="flex gap-2.5 items-start self-stretch">

@@ -11,7 +11,7 @@ const AppointmentStatusTab = () => {
 			>
 				<h2
 					className={cn(
-						'leading-normal text-xl',
+						'leading-[normal] text-xl',
 						appointmentTab === 'waiting'
 							? 'font-semibold text-primary-70'
 							: 'font-normal text-text-100',
@@ -27,7 +27,7 @@ const AppointmentStatusTab = () => {
 			>
 				<h2
 					className={cn(
-						'leading-normal text-xl',
+						'leading-[normal] text-xl',
 						appointmentTab === 'confirmed'
 							? 'font-semibold text-primary-70'
 							: 'font-normal text-text-100',
@@ -43,7 +43,7 @@ const AppointmentStatusTab = () => {
 			>
 				<h2
 					className={cn(
-						'leading-normal text-xl',
+						'leading-[normal] text-xl',
 						appointmentTab === 'completed'
 							? 'font-semibold text-primary-70'
 							: 'font-normal text-text-100',
@@ -59,7 +59,7 @@ const AppointmentStatusTab = () => {
 			>
 				<h2
 					className={cn(
-						'leading-normal text-xl',
+						'leading-[normal] text-xl',
 						appointmentTab === 'cancelled'
 							? 'font-semibold text-primary-70'
 							: 'font-normal text-text-100',

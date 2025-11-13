@@ -5,9 +5,9 @@ import { SingleDialogBottomButton } from '@/shared/components/ui/dialog';
 import { EditPatientInfoForm } from '@/shared/components/ui/appointmentDetail';
 import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
 
-const TH_CLASS: string = 'font-normal leading-normal min-w-[12.5rem] text-base text-text-70';
-const TD_CLASS: string = 'font-normal leading-normal text-base text-text-100';
-const TEXTAREA_CLASS: string = 'border border-stroke-input flex-1 font-normal leading-normal px-4 py-2.5 resize-none rounded text-base text-text-100';
+const TH_CLASS: string = 'font-normal leading-[normal] min-w-[12.5rem] text-base text-text-70';
+const TD_CLASS: string = 'font-normal leading-[normal] text-base text-text-100';
+const TEXTAREA_CLASS: string = 'border border-stroke-input flex-1 font-normal leading-[normal] px-4 py-2.5 resize-none rounded text-base text-text-100';
 const BADGE_CLASS: string = 'font-semibold h-5 px-2.5 rounded-xl text-[0.8125rem]';
 
 // 뱃지
@@ -44,13 +44,13 @@ const PatientInfoTable = () => {
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <EditPatientInfoForm />,
 			dialogId: 'editPatientInfoDialog',
-			dialogTitle: '환자정보 수정',
+			dialogTitle: '환자 정보 수정',
 			hasCloseButton: true
 		});
 	}, [openDialog]);
 
 	return (
-		<div className="bg-white border border-stroke-input flex flex-col p-5 rounded-[0.625rem]">
+		<div className="bg-white border border-stroke-input flex flex-col gap-5 p-5 rounded-[0.625rem]">
 			<div className="flex flex-col gap-2.5">
 				<div className='flex items-center justify-between'>
 					<div className='flex gap-2 items-center justify-start'>
@@ -59,20 +59,20 @@ const PatientInfoTable = () => {
 						<Risk />
 						<Vip />
 					</div>
-					{appointmentTab === 'waiting' && (
+					{!(appointmentTab === 'completed' || appointmentTab === 'cancelled') && (
 						<Button
-							className='rounded-sm text-text-70'
+							className='rounded-sm !text-text-70'
 							onClick={openEditPatientInfoDialog}
-							variant='ghost'>환자정보 수정</Button>
+							variant='ghost'>환자 정보 수정</Button>
 					)}
 				</div>
 				<div className='flex gap-2 items-center justify-start'>
-					<h3 className='font-semibold leading-normal text-[1.125rem] text-text-100'>환자 이름</h3>
-					<p className='flex font-normal items-center leading-normal text-sm text-text-40'>(14.05.1994 / <Male /><Female />)</p>
+					<h3 className='font-semibold leading-[normal] text-[1.125rem] text-text-100'>환자 이름</h3>
+					<p className='flex font-normal items-center leading-[normal] text-sm text-text-40'>(14.05.1994 / <Male /><Female />)</p>
 				</div>
 			</div>
 			<div className="flex gap-5 items-start self-stretch">
-				<div className="flex flex-1 flex-col gap-4 items-start">
+				<div className="flex flex-1 flex-col h-full items-start justify-between">
 					<div className="flex gap-2.5 items-center justify-start">
 						<p className={TH_CLASS}>Thai ID Number</p>
 						<p className={TD_CLASS}>0-1234-56789-01-2</p>

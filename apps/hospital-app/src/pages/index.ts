@@ -1,4 +1,5 @@
 export { default as AppointmentDetailPage } from './AppointmentDetail';
+export { default as AppointmentEditPage } from './AppointmentEdit';
 export { default as AppointmentPage } from './Appointment';
 export { default as ConsultationPage } from './Consultation';
 export { default as DashboardPage } from './Dashboard';

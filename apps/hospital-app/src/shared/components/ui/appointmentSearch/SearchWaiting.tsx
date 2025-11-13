@@ -78,7 +78,7 @@ const SearchWaiting = () => {
 			</div>
 			<Input
 				className="px-0"
-				icon={<SearchIcon className="cursor-pointer h-7 mr-3 w-7" />}
+				icon={<SearchIcon className="cursor-pointer h-7 w-7" />}
 				onChange={handleKeywordChange}
 				placeholder="환자명을 입력해주세요."
 				type="text"

@@ -143,7 +143,7 @@ const SearchConfirmed = () => {
 					className="px-0"
 					icon={<SearchIcon className="cursor-pointer h-7 w-7" />}
 					onChange={handleKeywordChange}
-					placeholder="예약 번호, 환자명을 입력해주세요."
+					placeholder="예약 번호 또는 환자명을 입력해주세요."
 					type="text"
 					value={keyword}
 					wrapperClassName="rounded w-[36.125rem]"

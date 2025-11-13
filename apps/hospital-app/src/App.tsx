@@ -16,6 +16,7 @@ import {
 	PatientDetailPage,
 	PatientRegistrationPage,
 	PaymentPage,
+	AppointmentEditPage,
 } from '@/pages';
 
 // 라우트 설정 정의 (확장 시 여기에 추가)
@@ -88,6 +89,7 @@ function AppContent() {
 			>
 				<Route index element={<Navigate to="/dashboard" replace />} />
 				<Route path="dashboard" element={<DashboardPage />} />
+				<Route path="appointment/:appointmentSequence/edit" element={<AppointmentEditPage />} />
 				<Route path="appointment/:appointmentSequence" element={<AppointmentDetailPage />} />
 				<Route path="appointment" element={<AppointmentPage />} />
 				<Route path="payment" element={<PaymentPage />} />

@@ -59,7 +59,7 @@ const TopButtons = () => {
 							/>
 						</svg>
 					}
-				>입금 확인</Button>
+				>입금 완료</Button>
 				<Button
 					variant='outline'
 					size='default'
