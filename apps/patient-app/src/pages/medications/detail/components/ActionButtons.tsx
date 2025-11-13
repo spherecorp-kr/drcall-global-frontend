@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 type ActionButtonsProps = {
   onTrackNow?: () => void;
   onOpenPrescription?: () => void;
@@ -14,6 +16,7 @@ export default function ActionButtons({
   onOpenConsultation,
   className,
 }: ActionButtonsProps) {
+  const { t } = useTranslation();
   const outlinedButtonStyle: React.CSSProperties = {
     marginTop: '0.75rem',
     width: '100%',
@@ -35,17 +38,17 @@ export default function ActionButtons({
     <div className={['flex w-full flex-col gap-3', className ?? ''].join(' ')}>
       {onTrackNow && (
         <button type="button" onClick={onTrackNow} style={outlinedButtonStyle}>
-          실시간 배송 조회
+          {t('medication.detail.actions.trackNow')}
         </button>
       )}
       {onOpenPrescription && (
         <button type="button" onClick={onOpenPrescription} style={outlinedButtonStyle}>
-          처방전 보기
+          {t('medication.detail.actions.viewPrescription')}
         </button>
       )}
       {onOpenConsultation && (
         <button type="button" onClick={onOpenConsultation} style={outlinedButtonStyle}>
-          진료 완료 상세
+          {t('medication.detail.actions.viewConsultation')}
         </button>
       )}
     </div>
