@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
 import ProgressSteps from '../../../components/ui/display/ProgressSteps';
 import DetailHeader from './components/DetailHeader';
+import DeliveryInfoSection from './components/DeliveryInfoSection';
+import OrderInfoSection from './components/OrderInfoSection';
 import { MOCKS } from './mock';
 
 /**
@@ -53,7 +55,28 @@ export default function MedicationDetail() {
           totalSteps={data.receipt.labels.length}
           labels={data.receipt.labels}
         />
-        {/* 다음 단계에서 상세 섹션들을 추가 렌더링합니다. */}
+
+        {/* 배송형 섹션 */}
+        {!isPickup && data.deliveryInfo && (
+          <div className="flex flex-col gap-5 px-5">
+            <DeliveryInfoSection
+              info={data.deliveryInfo}
+              onTrackNow={() => {
+                // UI 퍼블리싱 단계: 실제 트래킹 연동 전까지 안내
+                console.log('Track delivery clicked');
+              }}
+            />
+            <OrderInfoSection
+              info={data.orderInfo}
+              onOpenPrescription={() => {
+                console.log('Open prescription clicked');
+              }}
+              onOpenConsultation={() => {
+                console.log('Open consultation detail clicked');
+              }}
+            />
+          </div>
+        )}
       </div>
     </MainLayout>
   );
