@@ -29,6 +29,7 @@ import Payment from './pages/appointments/payment/Payment'
 import PaymentWithPrescription from './pages/appointments/payment/PaymentWithPrescription'
 import PaymentComplete from './pages/appointments/payment/PaymentComplete'
 import MedicationList from './pages/medications/list/MedicationList'
+import MedicationDetail from './pages/medications/detail/MedicationDetail'
 import ConsultationRoom from './pages/consultation/ConsultationRoom'
 import PhrDashboard from './pages/phr/PhrDashboard'
 import PhrDetail from './pages/phr/PhrDetail'
@@ -104,6 +105,9 @@ function App() {
         {/* Medication Routes - Protected */}
         <Route path="/medications" element={
           <ProtectedRoute><MedicationList /></ProtectedRoute>
+        } />
+        <Route path="/medications/:id" element={
+          <ProtectedRoute><MedicationDetail /></ProtectedRoute>
         } />
 
         {/* Consultation Routes - Protected */}
