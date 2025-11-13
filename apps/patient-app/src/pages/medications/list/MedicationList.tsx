@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
@@ -89,6 +89,52 @@ export default function MedicationList() {
     { id: 'med-0015', status: 'prepared', medicationNumber: 'RX-2025-0015', requestedAt: '2025-01-07T11:11:11', method: 'direct', hospitalName: '프라람9병원', hospitalNameEn: 'Praram9 Hospital' }
   ];
 
+  // Filter + Sort
+  const filteredAndSortedMedications = useMemo(() => {
+    const filtered = selectedStatus === 'all'
+      ? mockMedications
+      : mockMedications.filter(item => item.status === selectedStatus);
+
+    const sorted = [...filtered].sort((a, b) => {
+      const timeA = new Date(a.requestedAt).getTime();
+      const timeB = new Date(b.requestedAt).getTime();
+      return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
+    });
+
+    return sorted;
+  }, [selectedStatus, sortOrder]);
+
+  // Infinite Scroll
+  const ITEMS_PER_PAGE = 10;
+  const [displayedItemsCount, setDisplayedItemsCount] = useState(ITEMS_PER_PAGE);
+  const observerTarget = useRef<HTMLDivElement>(null);
+
+  // Reset on filter/sort change
+  useEffect(() => {
+    setDisplayedItemsCount(ITEMS_PER_PAGE);
+  }, [selectedStatus, sortOrder]);
+
+  const displayedMedications = useMemo(() => {
+    return filteredAndSortedMedications.slice(0, displayedItemsCount);
+  }, [filteredAndSortedMedications, displayedItemsCount]);
+
+  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
+    const [target] = entries;
+    if (target.isIntersecting && displayedItemsCount < filteredAndSortedMedications.length) {
+      setDisplayedItemsCount(prev => prev + ITEMS_PER_PAGE);
+    }
+  }, [displayedItemsCount, filteredAndSortedMedications.length]);
+
+  useEffect(() => {
+    const element = observerTarget.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(handleObserver, { threshold: 0.5 });
+    observer.observe(element);
+    return () => {
+      observer.unobserve(element);
+    };
+  }, [handleObserver]);
+
   return (
     <MainLayout
       title={t('medication.list.title')}
@@ -150,7 +196,39 @@ export default function MedicationList() {
           </button>
         </div>
 
-        {/* Medication List Content will be implemented in subsequent steps */}
+        {/* List container (cards will be implemented next) */}
+        <div
+          style={{
+            paddingLeft: '1.25rem',
+            paddingRight: '1.25rem',
+            paddingTop: '1.25rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.625rem'
+          }}
+        >
+          {/* Placeholder for next step: Medication cards */}
+          {/* Infinite scroll trigger */}
+          <div
+            ref={observerTarget}
+            style={{
+              height: '1px',
+              visibility: 'hidden'
+            }}
+          />
+
+          {/* Loading indicator */}
+          {displayedItemsCount < filteredAndSortedMedications.length && (
+            <div style={{
+              textAlign: 'center',
+              padding: '1.25rem',
+              color: '#8A8A8A',
+              fontSize: '0.875rem'
+            }}>
+              {t('common.loading')}
+            </div>
+          )}
+        </div>
       </div>
       {/* Sort Modal */}
       <BottomSheetModal
