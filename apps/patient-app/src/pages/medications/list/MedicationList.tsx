@@ -14,7 +14,6 @@ export default function MedicationList() {
   const { t } = useTranslation();
 
   const handleBack = () => navigate(-1);
-  const handleClose = () => navigate('/');
 
   // Status Dropdown (replaces tabs)
   type MedicationStatus = 'preparing' | 'prepared' | 'shipping' | 'received';
@@ -153,7 +152,6 @@ export default function MedicationList() {
     <MainLayout
       title={t('medication.list.title')}
       onBack={handleBack}
-      onClose={handleClose}
       fullWidth
     >
       <div style={{
