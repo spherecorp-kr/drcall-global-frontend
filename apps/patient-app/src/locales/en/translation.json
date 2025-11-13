@@ -91,7 +91,7 @@
     "selectDoctor": "Select Doctor",
     "selectDate": "Select Date",
     "selectTime": "Select Time",
-    "selectDateTime": "Please select your preferred date,\ndoctor, and consultation time.",
+    "selectDateTime": "Please select your preferred date, doctor, and consultation time.",
     "selectDoctorAndDateTime": "Select Doctor & DateTime",
     "selectAppointmentType": "Please select your\npreferred appointment type.",
     "quickAppointmentDesc": "Book quickly through voice/video call with hospital staff.",
@@ -107,7 +107,7 @@
     "symptoms": "Symptoms",
     "primarySymptoms": "Primary Symptoms",
     "enterSymptoms": "Please enter your symptoms",
-    "symptomsTitle": "Please enter your symptoms and\nattach images if necessary.",
+    "symptomsTitle": "Please enter your symptoms and attach images if necessary.",
     "symptomImages": "Symptom Images",
     "attachImage": "Attach Image",
     "maxImages": "You can attach up to {{count}} images",
@@ -198,6 +198,8 @@
     "paymentWithPrescription": "Payment with Prescription",
     "paymentNotReady": "Payment information has not been entered yet.\nPlease wait a moment.",
     "deliveryFeeWarning": "Additional payment may be incurred depending on the selected delivery method.",
+    "paymentCompleteMessage": "Payment completed successfully.",
+    "paymentCompleteSubMessage": "*A doctor's opinion and uploaded prescriptions can be verified.",
     "hospitalAccountNumber": "Hospital Account Number",
     "paymentConfirmDate": "Payment Confirmation Date",
     "deliveryAddress": "Delivery Address",
@@ -443,7 +445,14 @@
     "defaultDeliveryAddress": "Default Address",
     "change": "Change",
     "deliveryRequest": "Delivery Request",
-    "deliveryRequestPlaceholder": "Please enter delivery instructions.\n(e.g., Please leave at the door if not home)"
+    "deliveryRequestPlaceholder": "Please enter delivery instructions.\n(e.g., Please leave at the door if not home)",
+    "validation": {
+      "titleRequired": "Please enter the address name.",
+      "recipientNameRequired": "Please enter the recipient name.",
+      "addressRequired": "Please enter the address.",
+      "phoneNumberRequired": "Please enter the phone number.",
+      "phoneNumberInvalid": "Please check the phone number."
+    }
   },
   "consultation": {
     "title": "Consultation Room",
@@ -475,6 +484,7 @@
     "notFound": "Page not found",
     "forbidden": "Access denied",
     "sessionExpired": "Session expired",
+    "expiredMessage": "Expired message",
     "api": {
       "forbidden": "Access denied.",
       "notFound": "The requested resource could not be found.",
