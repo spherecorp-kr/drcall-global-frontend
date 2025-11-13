@@ -107,7 +107,7 @@
     "symptoms": "Symptoms",
     "primarySymptoms": "Primary Symptoms",
     "enterSymptoms": "Please enter your symptoms",
-    "symptomsTitle": "Please enter your symptoms and\nattach images if necessary.",
+    "symptomsTitle": "Please enter your symptoms and attach images if necessary.",
     "symptomImages": "Symptom Images",
     "attachImage": "Attach Image",
     "maxImages": "You can attach up to {{count}} images",
