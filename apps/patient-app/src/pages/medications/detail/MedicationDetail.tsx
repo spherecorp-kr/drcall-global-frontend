@@ -5,6 +5,7 @@ import ProgressSteps from '../../../components/ui/display/ProgressSteps';
 import DetailHeader from './components/DetailHeader';
 import DeliveryInfoSection from './components/DeliveryInfoSection';
 import OrderInfoSection from './components/OrderInfoSection';
+import PickupInfoSection from './components/PickupInfoSection';
 import { MOCKS } from './mock';
 
 /**
@@ -66,6 +67,22 @@ export default function MedicationDetail() {
                 console.log('Track delivery clicked');
               }}
             />
+            <OrderInfoSection
+              info={data.orderInfo}
+              onOpenPrescription={() => {
+                console.log('Open prescription clicked');
+              }}
+              onOpenConsultation={() => {
+                console.log('Open consultation detail clicked');
+              }}
+            />
+          </div>
+        )}
+
+        {/* 직접 수령 섹션 */}
+        {isPickup && data.pickupInfo && (
+          <div className="flex flex-col gap-5 px-5">
+            <PickupInfoSection info={data.pickupInfo} />
             <OrderInfoSection
               info={data.orderInfo}
               onOpenPrescription={() => {
