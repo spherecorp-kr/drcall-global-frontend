@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
 import BottomSheetModal from '@ui/modals/BottomSheetModal';
+import InfoField from '@ui/display/InfoField';
 
 /**
  * 조제 및 배송 내역 페이지
@@ -88,6 +89,36 @@ export default function MedicationList() {
     { id: 'med-0014', status: 'shipping', medicationNumber: 'RX-2025-0014', requestedAt: '2025-01-08T07:07:07', method: 'standard', hospitalName: '삼성서울병원', hospitalNameEn: 'Samsung Medical Center' },
     { id: 'med-0015', status: 'prepared', medicationNumber: 'RX-2025-0015', requestedAt: '2025-01-07T11:11:11', method: 'direct', hospitalName: '프라람9병원', hospitalNameEn: 'Praram9 Hospital' }
   ];
+
+  // Selection (for showing detail button)
+  const [selectedMedicationId, setSelectedMedicationId] = useState<string | null>(null);
+
+  // Label helpers
+  const getStatusLabel = (status: MedicationStatus) => {
+    switch (status) {
+      case 'preparing':
+        return t('medication.statusPreparing');
+      case 'prepared':
+        return t('medication.statusPrepared');
+      case 'shipping':
+        return t('medication.statusShipping');
+      case 'received':
+        return t('medication.statusReceived');
+    }
+  };
+
+  const getMethodLabel = (method: DeliveryMethod) => {
+    switch (method) {
+      case 'direct':
+        return t('medication.methodDirect');
+      case 'standard':
+        return t('medication.methodStandard');
+      case 'express':
+        return t('medication.methodExpress');
+      case 'international':
+        return t('medication.methodInternational');
+    }
+  };
 
   // Filter + Sort
   const filteredAndSortedMedications = useMemo(() => {
@@ -207,7 +238,73 @@ export default function MedicationList() {
             gap: '0.625rem'
           }}
         >
-          {/* Placeholder for next step: Medication cards */}
+          {/* Medication Cards */}
+          {displayedMedications.map((item) => {
+            const isSelected = selectedMedicationId === item.id;
+            const hospitalValue = item.hospitalNameEn ? `${item.hospitalName} (${item.hospitalNameEn})` : item.hospitalName;
+            return (
+              <div
+                key={item.id}
+                style={{
+                  background: 'white',
+                  borderRadius: '0.625rem',
+                  border: isSelected ? '2px solid #00A0D2' : 'none',
+                  padding: '1.25rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  cursor: 'pointer',
+                  position: 'relative'
+                }}
+              >
+                <div
+                  onClick={() => setSelectedMedicationId(item.id)}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
+                >
+                  <InfoField label={t('medication.fields.status')} value={getStatusLabel(item.status)} />
+                  <InfoField label={t('medication.fields.number')} value={item.medicationNumber} />
+                  <InfoField label={t('medication.fields.requestedAt')} value={item.requestedAt} />
+                  <InfoField label={t('medication.fields.method')} value={getMethodLabel(item.method)} />
+                  <InfoField label={t('medication.fields.hospital')} value={hospitalValue} />
+                </div>
+
+                {/* 상세보기 버튼 - 선택된 경우에만 표시 */}
+                {isSelected && (
+                  <button
+                    onClick={() => {}}
+                    style={{
+                      marginTop: '0.75rem',
+                      width: '100%',
+                      height: '3rem',
+                      background: '#00A0D2',
+                      borderRadius: '1.5rem',
+                      border: 'none',
+                      color: 'white',
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem'
+                    }}
+                  >
+                    {t('medication.actions.viewDetail')}
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path
+                        d="M7.5 5L12.5 10L7.5 15"
+                        stroke="white"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            );
+          })}
+
           {/* Infinite scroll trigger */}
           <div
             ref={observerTarget}
