@@ -10,13 +10,12 @@ type DeliveryInfo = {
 
 type DeliveryInfoSectionProps = {
   info: DeliveryInfo;
-  onTrackNow?: () => void; // 실시간 배송 조회
 };
 
 /**
  * 배송형 상세: 수령인/연락처/배송지/요청사항
  */
-export default function DeliveryInfoSection({ info, onTrackNow }: DeliveryInfoSectionProps) {
+export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) {
   const { t } = useTranslation();
   return (
     <Section
@@ -27,17 +26,6 @@ export default function DeliveryInfoSection({ info, onTrackNow }: DeliveryInfoSe
           alt=""
           className="h-5 w-5"
         />
-      }
-      headerRight={
-        onTrackNow ? (
-          <button
-            type="button"
-            onClick={onTrackNow}
-            className="rounded-full border border-sky-500 px-4 py-2 text-[14px] font-semibold text-sky-600"
-          >
-            {t('medication.detail.actions.trackNow')}
-          </button>
-        ) : undefined
       }
     >
       <div className="flex flex-col gap-3">

@@ -6,6 +6,7 @@ import DetailHeader from './components/DetailHeader';
 import DeliveryInfoSection from './components/DeliveryInfoSection';
 import OrderInfoSection from './components/OrderInfoSection';
 import PickupInfoSection from './components/PickupInfoSection';
+import ActionButtons from './components/ActionButtons';
 import { MOCKS } from './mock';
 
 /**
@@ -71,17 +72,24 @@ export default function MedicationDetail() {
           totalSteps={data.receipt.labels.length}
           labels={data.receipt.labels}
         />
+        {/* 배송형: 실시간 배송 조회 버튼을 단계 아래에 배치 */}
+        {!isPickup && (
+          <div className="px-5">
+            <ActionButtons
+              onTrackNow={() => {
+                console.log('Track delivery clicked');
+              }}
+            />
+          </div>
+        )}
+
+        {/* 섹션 시작 구분선 */}
+        <div className="h-2 w-full bg-gray-50" />
 
         {/* 배송형 섹션 */}
         {!isPickup && data.deliveryInfo && (
           <div className="flex flex-col gap-5 px-5">
-            <DeliveryInfoSection
-              info={data.deliveryInfo}
-              onTrackNow={() => {
-                // UI 퍼블리싱 단계: 실제 트래킹 연동 전까지 안내
-                console.log('Track delivery clicked');
-              }}
-            />
+            <DeliveryInfoSection info={data.deliveryInfo} />
             <OrderInfoSection
               info={data.orderInfo}
               onOpenPrescription={() => {

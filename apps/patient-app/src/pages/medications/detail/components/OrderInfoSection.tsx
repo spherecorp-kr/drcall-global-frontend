@@ -29,29 +29,27 @@ export default function OrderInfoSection({
     >
       <div className="flex flex-col gap-3">
         <Row label={t('medication.detail.labels.orderNumber')} value={info.orderNumber} />
+        {/* 스크린샷 순서: 조제 번호 다음에 '처방전 보기' 버튼 */}
+        {onOpenPrescription && (
+          <button
+            type="button"
+            onClick={onOpenPrescription}
+            className="w-full rounded-2xl border border-sky-500 px-4 py-3 text-[15px] font-semibold text-sky-600"
+          >
+            {t('medication.detail.actions.viewPrescription')}
+          </button>
+        )}
         <Row label={t('medication.fields.hospital')} value={info.hospitalName} />
         <Row label={t('medication.detail.labels.appliedAt')} value={info.appliedAt} />
-
-        <div className="mt-1 flex flex-col gap-3">
-          {onOpenPrescription && (
-            <button
-              type="button"
-              onClick={onOpenPrescription}
-              className="w-full rounded-2xl border border-sky-500 px-4 py-3 text-[15px] font-semibold text-sky-600"
-            >
-              {t('medication.detail.actions.viewPrescription')}
-            </button>
-          )}
-          {onOpenConsultation && (
-            <button
-              type="button"
-              onClick={onOpenConsultation}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-[15px] font-semibold text-gray-700"
-            >
-              {t('medication.detail.actions.viewConsultation')}
-            </button>
-          )}
-        </div>
+        {onOpenConsultation && (
+          <button
+            type="button"
+            onClick={onOpenConsultation}
+            className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-[15px] font-semibold text-gray-700"
+          >
+            {t('medication.detail.actions.viewConsultation')}
+          </button>
+        )}
       </div>
     </Section>
   );
