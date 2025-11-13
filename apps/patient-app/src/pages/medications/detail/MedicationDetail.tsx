@@ -20,8 +20,23 @@ export default function MedicationDetail() {
   const handleBack = () => navigate(-1);
   const handleClose = () => navigate('/medications');
 
-  // 목데이터 선택 (id가 없거나 매칭되지 않으면 기본 배송 케이스 사용)
-  const scenarioKey = (id && Object.prototype.hasOwnProperty.call(MOCKS, id)) ? id : 'delivery-1';
+  // 리스트의 mock id를 상세 mock 시나리오에 매핑
+  const resolveScenarioKey = (listId?: string | null) => {
+    if (!listId) return 'delivery-1';
+    // 명시 매핑: 리스트의 method별 예시 id들을 상세 시나리오에 연결
+    const pickupIds = new Set(['med-0002', 'med-0005', 'med-0015']);
+    const quickIds = new Set(['med-0003', 'med-0010', 'med-0013']);
+    const intlIds = new Set(['med-0006', 'med-0011']);
+    if (pickupIds.has(listId)) return 'pickup-1';
+    if (quickIds.has(listId)) return 'quick-1';
+    if (intlIds.has(listId)) return 'intl-1';
+    // 상세 시나리오 키를 직접 넘긴 경우도 허용
+    if (Object.prototype.hasOwnProperty.call(MOCKS, listId)) return listId as keyof typeof MOCKS;
+    return 'delivery-1';
+  };
+
+  // 목데이터 선택
+  const scenarioKey = resolveScenarioKey(id);
   const data = MOCKS[scenarioKey];
   const isPickup = data.receipt.method === 'pickup';
 

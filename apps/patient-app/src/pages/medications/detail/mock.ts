@@ -1,5 +1,13 @@
 // UI 퍼블리싱 단계에서 사용하는 목데이터
-// 실제 연동 시 서버 DTO에 맞춰 교체 예정
+// - 목적: Figma 스펙(배송/직접 수령)에 맞춘 화면 퍼블리싱 및 상태 분기 검증
+// - 주의:
+//   1) 실제 연동 시 서버 DTO와 i18n 키에 맞춰 필드명/라벨을 교체하세요.
+//   2) ProgressSteps는 `statusStep`(1-base)와 `labels`를 동기화하여 표시합니다.
+//      예) labels가 4개면 totalSteps=4, statusStep은 1~4 범위여야 합니다.
+//   3) 날짜 포맷: appliedAt은 현재 퍼블리싱 편의상 표시용 문자열입니다.
+//      실제 API 연동 시 원천 데이터는 "YYYY-MM-DDTHH:mm:ss" 형태(예: "2024-11-06T17:34:22")를 권장합니다.
+//   4) 상세 시나리오 키는 `MedicationDetail.tsx`의 resolveScenarioKey에서
+//      리스트 아이템 id와 매핑됩니다. (delivery-1 / quick-1 / intl-1 / pickup-1)
 
 export type ReceiptMethod = 'delivery' | 'quick' | 'international' | 'pickup';
 
@@ -7,10 +15,10 @@ export type MedicationDetailMock = {
   id: string;
   receipt: {
     method: ReceiptMethod;
-    statusStep: number; // 1~4
-    labels: string[]; // ['조제 중', '조제 완료', '배송 중', '수령 완료'] 등
-    estimatedDate?: string; // 배송형: 예상 도착일
-    deadlineDate?: string; // 직접 수령: 수령 기한
+    statusStep: number; // 현재 단계 (1-base). labels의 인덱스+1과 동일한 범위여야 함
+    labels: string[]; // 단계 라벨. 배송형은 보통 4단계, 직접 수령은 3단계
+    estimatedDate?: string; // 배송형: 예상 도착일(상단 보조 정보)
+    deadlineDate?: string; // 직접 수령: 수령 기한(상단 보조 정보)
   };
   deliveryInfo?: {
     receiverName: string;
@@ -22,18 +30,18 @@ export type MedicationDetailMock = {
     hospitalName: string;
     hospitalAddress: string;
     pickupLocation: string;
-    businessHours: string[];
+    businessHours: string[]; // 줄 단위 출력
     contact: string;
   };
   orderInfo: {
     orderNumber: string;
     hospitalName: string;
-    appliedAt: string;
+    appliedAt: string; // 표시용 문자열. 실제 연동 시 ISO8601 권장
   };
 };
 
 export const MOCKS: Record<string, MedicationDetailMock> = {
-  // 배송 - 일반
+  // 배송 - 일반: 단계 3(배송 중) 예시
   'delivery-1': {
     id: 'delivery-1',
     receipt: {
@@ -54,7 +62,7 @@ export const MOCKS: Record<string, MedicationDetailMock> = {
       appliedAt: '11/05/2023 16:42',
     },
   },
-  // 배송 - 퀵
+  // 배송 - 퀵: 단계 2(조제 완료) 예시
   'quick-1': {
     id: 'quick-1',
     receipt: {
@@ -74,7 +82,7 @@ export const MOCKS: Record<string, MedicationDetailMock> = {
       appliedAt: '11/05/2023 16:42',
     },
   },
-  // 배송 - 해외
+  // 배송 - 해외: 단계 2(조제 완료) 예시
   'intl-1': {
     id: 'intl-1',
     receipt: {
@@ -94,7 +102,7 @@ export const MOCKS: Record<string, MedicationDetailMock> = {
       appliedAt: '11/05/2023 16:42',
     },
   },
-  // 직접 수령
+  // 직접 수령: 단계 2(조제 완료) 예시. labels는 3단계(조제 중/조제 완료/수령 완료)
   'pickup-1': {
     id: 'pickup-1',
     receipt: {
