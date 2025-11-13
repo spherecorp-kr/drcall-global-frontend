@@ -214,11 +214,11 @@ export default function DoctorSelectionModal({
         {/* Bottom Buttons */}
         <BottomButtons
           leftButton={{
-            text: '취소',
+            text: t('common.cancel'),
             onClick: onClose
           }}
           rightButton={{
-            text: '완료',
+            text: t('common.complete'),
             onClick: handleConfirmClick,
             disabled: !isSelectionComplete
           }}
