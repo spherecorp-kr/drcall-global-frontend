@@ -1,6 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
+import ProgressSteps from '../../../components/ui/display/ProgressSteps';
+import DetailHeader from './components/DetailHeader';
+import { MOCKS } from './mock';
 
 /**
  * 조제/배송 상세 페이지 (스캐폴드)
@@ -14,6 +17,25 @@ export default function MedicationDetail() {
   const handleBack = () => navigate(-1);
   const handleClose = () => navigate('/medications');
 
+  // 목데이터 선택 (id가 없거나 매칭되지 않으면 기본 배송 케이스 사용)
+  const scenarioKey = (id && Object.prototype.hasOwnProperty.call(MOCKS, id)) ? id : 'delivery-1';
+  const data = MOCKS[scenarioKey];
+  const isPickup = data.receipt.method === 'pickup';
+
+  const subTitleLines: string[] = [];
+  if (isPickup) {
+    if (data.orderInfo?.orderNumber) {
+      subTitleLines.push(`${t('medication.detail.labels.orderNumber')} ${data.orderInfo.orderNumber}`);
+    }
+    if (data.receipt.deadlineDate) {
+      subTitleLines.push(`${t('medication.detail.labels.deadlineDate')} ${data.receipt.deadlineDate}`);
+    }
+  } else {
+    if (data.receipt.estimatedDate) {
+      subTitleLines.push(`${t('medication.detail.labels.estimatedDate')} ${data.receipt.estimatedDate}`);
+    }
+  }
+
   return (
     <MainLayout
       title={t('medication.actions.viewDetail')}
@@ -21,19 +43,17 @@ export default function MedicationDetail() {
       onClose={handleClose}
       fullWidth
     >
-      <div style={{
-        paddingLeft: '1.25rem',
-        paddingRight: '1.25rem',
-        paddingTop: '1.25rem',
-        paddingBottom: '6rem',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1.25rem'
-      }}>
-        <div style={{ color: '#6E6E6E', fontSize: '0.9375rem' }}>
-          ID: {id}
-        </div>
-        {/* TODO: 섹션 구성 (조제상태/조제 번호/신청일/수령방법/병원/배송정보 등) */}
+      <div className="flex flex-col gap-5 pb-24">
+        {/* 상단 설명/수령방법/서브정보 */}
+        <DetailHeader method={isPickup ? 'pickup' : (data.receipt.method as any)} subTitleLines={subTitleLines} />
+
+        {/* 진행 단계 표시 */}
+        <ProgressSteps
+          currentStep={data.receipt.statusStep}
+          totalSteps={data.receipt.labels.length}
+          labels={data.receipt.labels}
+        />
+        {/* 다음 단계에서 상세 섹션들을 추가 렌더링합니다. */}
       </div>
     </MainLayout>
   );
