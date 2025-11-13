@@ -35,6 +35,34 @@
     "korean": "한국어",
     "viewMore": "더보기"
   },
+  "medication": {
+    "list": {
+      "title": "조제 및 배송 내역"
+    },
+    "statusAll": "전체",
+    "statusPreparing": "조제 중",
+    "statusPrepared": "조제 완료",
+    "statusShipping": "배송 중",
+    "statusReceived": "수령 완료",
+    "sortNewest": "최신순",
+    "sortOldest": "과거순",
+    "sortFilter": "정렬 필터",
+    "statusFilter": "상태정렬 필터",
+    "fields": {
+      "status": "조제 상태",
+      "number": "조제 번호",
+      "requestedAt": "신청일",
+      "method": "수령 방법",
+      "hospital": "병원"
+    },
+    "actions": {
+      "viewDetail": "상세보기"
+    },
+    "methodDirect": "직접 수령",
+    "methodStandard": "일반 배송",
+    "methodExpress": "퀵 배송",
+    "methodInternational": "해외 배송"
+  },
   "auth": {
     "phoneVerification": "휴대폰 인증",
     "phoneNumber": "휴대폰 번호",
