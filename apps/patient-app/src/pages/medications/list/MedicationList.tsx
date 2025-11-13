@@ -254,7 +254,7 @@ export default function MedicationList() {
                 {/* 상세보기 버튼 - 선택된 경우에만 표시 */}
                 {isSelected && (
                   <button
-                    onClick={() => {}}
+                    onClick={() => navigate(`/medications/${item.id}`)}
                     style={{
                       marginTop: '0.75rem',
                       width: '100%',
