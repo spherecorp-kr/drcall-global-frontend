@@ -35,6 +35,34 @@
     "korean": "เกาหลี",
     "viewMore": "ดูเพิ่มเติม"
   },
+  "medication": {
+    "list": {
+      "title": "ประวัติการจ่ายยาและจัดส่ง"
+    },
+    "statusAll": "ทั้งหมด",
+    "statusPreparing": "กำลังจ่ายยา",
+    "statusPrepared": "จ่ายยาเสร็จ",
+    "statusShipping": "กำลังจัดส่ง",
+    "statusReceived": "รับแล้ว",
+    "sortNewest": "ใหม่สุดก่อน",
+    "sortOldest": "เก่าสุดก่อน",
+    "sortFilter": "ตัวกรองการเรียง",
+    "statusFilter": "ตัวกรองสถานะ",
+    "fields": {
+      "status": "สถานะการจ่ายยา",
+      "number": "หมายเลขจ่ายยา",
+      "requestedAt": "วันที่ขอ",
+      "method": "วิธีรับยา",
+      "hospital": "โรงพยาบาล"
+    },
+    "actions": {
+      "viewDetail": "ดูรายละเอียด"
+    },
+    "methodDirect": "รับด้วยตนเอง",
+    "methodStandard": "จัดส่งทั่วไป",
+    "methodExpress": "จัดส่งด่วน",
+    "methodInternational": "จัดส่งระหว่างประเทศ"
+  },
   "auth": {
     "phoneVerification": "ยืนยันเบอร์โทรศัพท์",
     "phoneNumber": "เบอร์โทรศัพท์",

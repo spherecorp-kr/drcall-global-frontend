@@ -35,6 +35,34 @@
     "korean": "Korean",
     "viewMore": "View More"
   },
+  "medication": {
+    "list": {
+      "title": "Medication & Delivery History"
+    },
+    "statusAll": "All",
+    "statusPreparing": "Preparing",
+    "statusPrepared": "Prepared",
+    "statusShipping": "Shipping",
+    "statusReceived": "Received",
+    "sortNewest": "Newest First",
+    "sortOldest": "Oldest First",
+    "sortFilter": "Sort Filter",
+    "statusFilter": "Status Filter",
+    "fields": {
+      "status": "Status",
+      "number": "Medication Number",
+      "requestedAt": "Requested At",
+      "method": "Receiving Method",
+      "hospital": "Hospital"
+    },
+    "actions": {
+      "viewDetail": "View Detail"
+    },
+    "methodDirect": "Direct Pickup",
+    "methodStandard": "Standard Delivery",
+    "methodExpress": "Express Delivery",
+    "methodInternational": "International Delivery"
+  },
   "auth": {
     "phoneVerification": "Phone Verification",
     "phoneNumber": "Phone Number",

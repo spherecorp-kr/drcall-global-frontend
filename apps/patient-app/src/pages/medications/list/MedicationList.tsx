@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
 import BottomSheetModal from '@ui/modals/BottomSheetModal';
 import InfoField from '@ui/display/InfoField';
+import { DELIVERY_METHOD_LABEL_KEY_MAP, MEDICATION_STATUS_LABEL_KEY_MAP } from '../../../constants/medication';
 
 /**
  * 조제 및 배송 내역 페이지
@@ -95,29 +96,11 @@ export default function MedicationList() {
 
   // Label helpers
   const getStatusLabel = (status: MedicationStatus) => {
-    switch (status) {
-      case 'preparing':
-        return t('medication.statusPreparing');
-      case 'prepared':
-        return t('medication.statusPrepared');
-      case 'shipping':
-        return t('medication.statusShipping');
-      case 'received':
-        return t('medication.statusReceived');
-    }
+    return t(MEDICATION_STATUS_LABEL_KEY_MAP[status]);
   };
 
   const getMethodLabel = (method: DeliveryMethod) => {
-    switch (method) {
-      case 'direct':
-        return t('medication.methodDirect');
-      case 'standard':
-        return t('medication.methodStandard');
-      case 'express':
-        return t('medication.methodExpress');
-      case 'international':
-        return t('medication.methodInternational');
-    }
+    return t(DELIVERY_METHOD_LABEL_KEY_MAP[method]);
   };
 
   // Filter + Sort
