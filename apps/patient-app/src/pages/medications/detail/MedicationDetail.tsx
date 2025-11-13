@@ -8,6 +8,8 @@ import OrderInfoSection from './components/OrderInfoSection';
 import PickupInfoSection from './components/PickupInfoSection';
 import ActionButtons from './components/ActionButtons';
 import Divider from '@ui/layout/Divider';
+import PageContainer from '@ui/layout/PageContainer';
+import PageSection from '@ui/layout/PageSection';
 import { MOCKS } from './mock';
 
 /**
@@ -59,18 +61,24 @@ export default function MedicationDetail() {
   return (
     <MainLayout
       title={t('medication.detail.pageTitle')}
+      headerBackground='white'
       onBack={handleBack}
       onClose={handleClose}
       fullWidth
+      contentClassName="p-0"
     >
-      <div className="flex flex-col gap-5 pb-24 px-5">
-        {/* 상단 설명/수령방법/서브정보 */}
-        <div className="-mx-5">
-          <DetailHeader method={isPickup ? 'pickup' : (data.receipt.method as any)} subTitleLines={subTitleLines} />
-        </div>
+      <PageContainer>
+        {/* 상단 설명/수령방법/서브정보 (섹션 패딩으로 통일) */}
+        <PageSection padding>
+          <DetailHeader
+            method={isPickup ? 'pickup' : (data.receipt.method as any)}
+            subTitleLines={subTitleLines}
+            padding={false}
+          />
+        </PageSection>
 
         {/* 진행 단계 표시 */}
-        <div className="-mx-5">
+        <div>
           <ProgressSteps
             currentStep={data.receipt.statusStep}
             totalSteps={data.receipt.labels.length}
@@ -79,13 +87,13 @@ export default function MedicationDetail() {
         </div>
         {/* 배송형: 실시간 배송 조회 버튼을 단계 아래에 배치 */}
         {!isPickup && (
-          <div>
+          <PageSection padding>
             <ActionButtons
               onTrackNow={() => {
                 console.log('Track delivery clicked');
               }}
             />
-          </div>
+          </PageSection>
         )}
 
         {/* 섹션 시작 구분선(공통 Divider 컴포넌트) */}
@@ -93,38 +101,46 @@ export default function MedicationDetail() {
 
         {/* 배송형 섹션 */}
         {!isPickup && data.deliveryInfo && (
-          <div className="flex flex-col gap-5">
-            <DeliveryInfoSection info={data.deliveryInfo} />
+          <>
+            <PageSection padding>
+              <DeliveryInfoSection info={data.deliveryInfo} />
+            </PageSection>
             <Divider />
-            <OrderInfoSection
-              info={data.orderInfo}
-              onOpenPrescription={() => {
-                console.log('Open prescription clicked');
-              }}
-              onOpenConsultation={() => {
-                console.log('Open consultation detail clicked');
-              }}
-            />
-          </div>
+            <PageSection padding>
+              <OrderInfoSection
+                info={data.orderInfo}
+                onOpenPrescription={() => {
+                  console.log('Open prescription clicked');
+                }}
+                onOpenConsultation={() => {
+                  console.log('Open consultation detail clicked');
+                }}
+              />
+            </PageSection>
+          </>
         )}
 
         {/* 직접 수령 섹션 */}
         {isPickup && data.pickupInfo && (
-          <div className="flex flex-col gap-5">
-            <PickupInfoSection info={data.pickupInfo} />
+          <>
+            <PageSection padding>
+              <PickupInfoSection info={data.pickupInfo} />
+            </PageSection>
             <Divider />
-            <OrderInfoSection
-              info={data.orderInfo}
-              onOpenPrescription={() => {
-                console.log('Open prescription clicked');
-              }}
-              onOpenConsultation={() => {
-                console.log('Open consultation detail clicked');
-              }}
-            />
-          </div>
+            <PageSection padding>
+              <OrderInfoSection
+                info={data.orderInfo}
+                onOpenPrescription={() => {
+                  console.log('Open prescription clicked');
+                }}
+                onOpenConsultation={() => {
+                  console.log('Open consultation detail clicked');
+                }}
+              />
+            </PageSection>
+          </>
         )}
-      </div>
+      </PageContainer>
     </MainLayout>
   );
 }

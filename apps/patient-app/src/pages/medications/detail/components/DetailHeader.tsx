@@ -8,6 +8,7 @@ type DetailHeaderProps = {
   subTitleLines?: string[]; // e.g., ['일반 배송', '예상 도착일 14/09/2025']
   onBack?: () => void;
   onClose?: () => void;
+  padding?: boolean; // 외부에서 섹션 패딩을 제공하는 경우 false로 설정
 };
 
 /**
@@ -18,6 +19,7 @@ type DetailHeaderProps = {
 export default function DetailHeader({
   method,
   subTitleLines = [],
+  padding = true,
 }: DetailHeaderProps) {
   const { t } = useTranslation();
 
@@ -29,7 +31,7 @@ export default function DetailHeader({
   };
 
   return (
-    <div className="w-full px-5 pt-5">
+    <div className={['w-full', padding ? 'px-5 pt-5' : ''].join(' ')}>
       <h1 className="mb-3 text-xl font-semibold text-gray-900">
         {t('medication.detail.title')}
       </h1>
