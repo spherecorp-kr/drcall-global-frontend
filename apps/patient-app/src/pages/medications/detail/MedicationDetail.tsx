@@ -63,19 +63,23 @@ export default function MedicationDetail() {
       onClose={handleClose}
       fullWidth
     >
-      <div className="flex flex-col gap-5 pb-24">
+      <div className="flex flex-col gap-5 pb-24 px-5">
         {/* 상단 설명/수령방법/서브정보 */}
-        <DetailHeader method={isPickup ? 'pickup' : (data.receipt.method as any)} subTitleLines={subTitleLines} />
+        <div className="-mx-5">
+          <DetailHeader method={isPickup ? 'pickup' : (data.receipt.method as any)} subTitleLines={subTitleLines} />
+        </div>
 
         {/* 진행 단계 표시 */}
-        <ProgressSteps
-          currentStep={data.receipt.statusStep}
-          totalSteps={data.receipt.labels.length}
-          labels={data.receipt.labels}
-        />
+        <div className="-mx-5">
+          <ProgressSteps
+            currentStep={data.receipt.statusStep}
+            totalSteps={data.receipt.labels.length}
+            labels={data.receipt.labels}
+          />
+        </div>
         {/* 배송형: 실시간 배송 조회 버튼을 단계 아래에 배치 */}
         {!isPickup && (
-          <div className="px-5">
+          <div>
             <ActionButtons
               onTrackNow={() => {
                 console.log('Track delivery clicked');
@@ -89,7 +93,7 @@ export default function MedicationDetail() {
 
         {/* 배송형 섹션 */}
         {!isPickup && data.deliveryInfo && (
-          <div className="flex flex-col gap-5 px-5">
+          <div className="flex flex-col gap-5">
             <DeliveryInfoSection info={data.deliveryInfo} />
             <Divider />
             <OrderInfoSection
@@ -106,7 +110,7 @@ export default function MedicationDetail() {
 
         {/* 직접 수령 섹션 */}
         {isPickup && data.pickupInfo && (
-          <div className="flex flex-col gap-5 px-5">
+          <div className="flex flex-col gap-5">
             <PickupInfoSection info={data.pickupInfo} />
             <Divider />
             <OrderInfoSection
