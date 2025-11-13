@@ -63,6 +63,7 @@
     "methodExpress": "퀵 배송",
     "methodInternational": "해외 배송",
     "detail": {
+      "pageTitle": "조제 및 배송 상세",
       "title": "약 수령 진행 현황을 확인하세요.",
       "section": {
         "deliveryInfo": "배송 정보",

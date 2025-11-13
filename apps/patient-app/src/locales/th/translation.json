@@ -63,6 +63,7 @@
     "methodExpress": "จัดส่งด่วน",
     "methodInternational": "จัดส่งระหว่างประเทศ",
     "detail": {
+      "pageTitle": "รายละเอียดการจ่ายยาและจัดส่ง",
       "title": "ตรวจสอบความคืบหน้าการรับยา",
       "section": {
         "deliveryInfo": "ข้อมูลการจัดส่ง",

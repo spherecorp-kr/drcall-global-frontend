@@ -63,6 +63,7 @@
     "methodExpress": "Express Delivery",
     "methodInternational": "International Delivery",
     "detail": {
+      "pageTitle": "Medication & Delivery Detail",
       "title": "Check your medicine pickup progress.",
       "section": {
         "deliveryInfo": "Delivery Information",

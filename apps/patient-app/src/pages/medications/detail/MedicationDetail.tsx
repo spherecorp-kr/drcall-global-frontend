@@ -57,7 +57,7 @@ export default function MedicationDetail() {
 
   return (
     <MainLayout
-      title={t('medication.actions.viewDetail')}
+      title={t('medication.detail.pageTitle')}
       onBack={handleBack}
       onClose={handleClose}
       fullWidth
