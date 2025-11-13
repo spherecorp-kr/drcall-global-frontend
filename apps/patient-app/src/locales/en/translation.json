@@ -91,7 +91,7 @@
     "selectDoctor": "Select Doctor",
     "selectDate": "Select Date",
     "selectTime": "Select Time",
-    "selectDateTime": "Please select your preferred date,\ndoctor, and consultation time.",
+    "selectDateTime": "Please select your preferred date, doctor, and consultation time.",
     "selectDoctorAndDateTime": "Select Doctor & DateTime",
     "selectAppointmentType": "Please select your\npreferred appointment type.",
     "quickAppointmentDesc": "Book quickly through voice/video call with hospital staff.",
