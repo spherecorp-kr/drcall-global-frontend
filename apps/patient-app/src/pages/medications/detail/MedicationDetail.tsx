@@ -7,6 +7,7 @@ import DeliveryInfoSection from './components/DeliveryInfoSection';
 import OrderInfoSection from './components/OrderInfoSection';
 import PickupInfoSection from './components/PickupInfoSection';
 import ActionButtons from './components/ActionButtons';
+import Divider from '@ui/layout/Divider';
 import { MOCKS } from './mock';
 
 /**
@@ -83,13 +84,14 @@ export default function MedicationDetail() {
           </div>
         )}
 
-        {/* 섹션 시작 구분선 */}
-        <div className="h-2 w-full bg-gray-50" />
+        {/* 섹션 시작 구분선(공통 Divider 컴포넌트) */}
+        <Divider />
 
         {/* 배송형 섹션 */}
         {!isPickup && data.deliveryInfo && (
           <div className="flex flex-col gap-5 px-5">
             <DeliveryInfoSection info={data.deliveryInfo} />
+            <Divider />
             <OrderInfoSection
               info={data.orderInfo}
               onOpenPrescription={() => {
@@ -106,6 +108,7 @@ export default function MedicationDetail() {
         {isPickup && data.pickupInfo && (
           <div className="flex flex-col gap-5 px-5">
             <PickupInfoSection info={data.pickupInfo} />
+            <Divider />
             <OrderInfoSection
               info={data.orderInfo}
               onOpenPrescription={() => {
