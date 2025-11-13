@@ -56,7 +56,7 @@
       "hospital": "Hospital"
     },
     "actions": {
-      "viewDetail": "View Detail"
+      "viewDetail": "Medication & Delivery Detail"
     },
     "methodDirect": "Direct Pickup",
     "methodStandard": "Standard Delivery",

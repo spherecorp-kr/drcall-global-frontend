@@ -56,7 +56,7 @@
       "hospital": "โรงพยาบาล"
     },
     "actions": {
-      "viewDetail": "ดูรายละเอียด"
+      "viewDetail": "รายละเอียดการใช้ยาและการจัดส่ง"
     },
     "methodDirect": "รับด้วยตนเอง",
     "methodStandard": "จัดส่งทั่วไป",

@@ -56,7 +56,7 @@
       "hospital": "병원"
     },
     "actions": {
-      "viewDetail": "상세보기"
+      "viewDetail": "조제 및 배송 상세"
     },
     "methodDirect": "직접 수령",
     "methodStandard": "일반 배송",
