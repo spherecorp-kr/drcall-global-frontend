@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Section from './Section';
 
 type PickupInfo = {
@@ -16,21 +17,27 @@ type PickupInfoSectionProps = {
  * 직접 수령 상세: 병원/주소/수령 위치/운영시간/연락처
  */
 export default function PickupInfoSection({ info }: PickupInfoSectionProps) {
+  const { t } = useTranslation();
   return (
-    <Section title="직접 수령 정보" icon={<span className="text-sky-500">🏥</span>}>
+    <Section
+      title={t('medication.detail.section.pickupInfo')}
+      icon={<img src="/assets/icons/hospital.svg" alt="" className="h-5 w-5" />}
+    >
       <div className="flex flex-col gap-3">
-        <Row label="병원" value={info.hospitalName} />
-        <Row label="병원 주소" value={info.hospitalAddress} multi />
-        <Row label="수령 위치" value={info.pickupLocation} />
+        <Row label={t('medication.detail.labels.hospitalName')} value={info.hospitalName} />
+        <Row label={t('medication.detail.labels.hospitalAddress')} value={info.hospitalAddress} multi />
+        <Row label={t('medication.detail.labels.pickupLocation')} value={info.pickupLocation} />
         <div className="flex flex-col gap-1">
-          <div className="text-[13px] font-semibold text-gray-800">운영 시간</div>
+          <div className="text-[13px] font-semibold text-gray-800">
+            {t('medication.detail.labels.businessHours')}
+          </div>
           <div className="rounded-xl bg-gray-50 px-3 py-3 text-[13px] text-gray-700">
             {info.businessHours.map((line, i) => (
               <div key={i}>{line}</div>
             ))}
           </div>
         </div>
-        <Row label="연락처" value={info.contact} />
+        <Row label={t('medication.detail.labels.contact')} value={info.contact} />
       </div>
     </Section>
   );

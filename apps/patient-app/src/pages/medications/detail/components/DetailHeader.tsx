@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 type ReceiptMethod = 'delivery' | 'quick' | 'international' | 'pickup';
 
 type DetailHeaderProps = {
@@ -15,28 +17,36 @@ type DetailHeaderProps = {
  */
 export default function DetailHeader({
   method,
-  title = '약 수령 진행 현황을 확인하세요.',
   subTitleLines = [],
 }: DetailHeaderProps) {
+  const { t } = useTranslation();
+
   const methodTextMap: Record<ReceiptMethod, string> = {
-    delivery: '일반 배송',
-    quick: '퀵 배송',
-    international: '해외 배송',
-    pickup: '직접 수령',
+    delivery: t('medication.methodStandard'),
+    quick: t('medication.methodExpress'),
+    international: t('medication.methodInternational'),
+    pickup: t('medication.methodDirect'),
   };
 
   return (
     <div className="w-full px-5 pt-5">
-      <h1 className="mb-3 text-xl font-semibold text-gray-900">{title}</h1>
+      <h1 className="mb-3 text-xl font-semibold text-gray-900">
+        {t('medication.detail.title')}
+      </h1>
 
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50">
-            {/* 아이콘 자리는 이후 실제 아이콘으로 교체 가능 */}
-            <span className="text-sky-500">🧪</span>
+            <img
+              src="/assets/icons/ic_clipboard.svg"
+              alt=""
+              className="h-5 w-5"
+            />
           </div>
           <div className="flex flex-col">
-            <div className="text-[15px] font-semibold text-gray-900">수령 방법</div>
+            <div className="text-[15px] font-semibold text-gray-900">
+              {t('medication.fields.method')}
+            </div>
             <div className="text-[13px] text-gray-600">{methodTextMap[method]}</div>
           </div>
         </div>
@@ -44,7 +54,11 @@ export default function DetailHeader({
         {subTitleLines.map((line, i) => (
           <div key={i} className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50">
-              <span className="text-sky-500">📅</span>
+              <img
+                src="/assets/icons/calendar_today.svg"
+                alt=""
+                className="h-5 w-5"
+              />
             </div>
             <div className="text-[13px] text-gray-600">{line}</div>
           </div>

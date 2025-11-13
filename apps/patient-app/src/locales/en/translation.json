@@ -61,7 +61,35 @@
     "methodDirect": "Direct Pickup",
     "methodStandard": "Standard Delivery",
     "methodExpress": "Express Delivery",
-    "methodInternational": "International Delivery"
+    "methodInternational": "International Delivery",
+    "detail": {
+      "title": "Check your medicine pickup progress.",
+      "section": {
+        "deliveryInfo": "Delivery Information",
+        "pickupInfo": "Direct Pickup Information",
+        "orderInfo": "Medication Information"
+      },
+      "labels": {
+        "receiverName": "Recipient",
+        "phone": "Contact",
+        "address": "Address",
+        "requestNote": "Delivery Request",
+        "hospitalName": "Hospital",
+        "hospitalAddress": "Hospital Address",
+        "pickupLocation": "Pickup Location",
+        "businessHours": "Operating Hours",
+        "contact": "Contact",
+        "orderNumber": "Medication Number",
+        "appliedAt": "Requested At",
+        "estimatedDate": "Estimated Arrival",
+        "deadlineDate": "Pickup Deadline"
+      },
+      "actions": {
+        "trackNow": "Track Delivery",
+        "viewPrescription": "View Prescription",
+        "viewConsultation": "Consultation Detail"
+      }
+    }
   },
   "auth": {
     "phoneVerification": "Phone Verification",

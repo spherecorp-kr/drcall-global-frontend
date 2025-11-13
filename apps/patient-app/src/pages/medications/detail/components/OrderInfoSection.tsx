@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Section from './Section';
 
 type OrderInfo = {
@@ -20,12 +21,16 @@ export default function OrderInfoSection({
   onOpenPrescription,
   onOpenConsultation,
 }: OrderInfoSectionProps) {
+  const { t } = useTranslation();
   return (
-    <Section title="조제 정보" icon={<span className="text-sky-500">📄</span>}>
+    <Section
+      title={t('medication.detail.section.orderInfo')}
+      icon={<img src="/assets/icons/clipboard-text.svg" alt="" className="h-5 w-5" />}
+    >
       <div className="flex flex-col gap-3">
-        <Row label="조제 번호" value={info.orderNumber} />
-        <Row label="병원" value={info.hospitalName} />
-        <Row label="신청일시" value={info.appliedAt} />
+        <Row label={t('medication.detail.labels.orderNumber')} value={info.orderNumber} />
+        <Row label={t('medication.fields.hospital')} value={info.hospitalName} />
+        <Row label={t('medication.detail.labels.appliedAt')} value={info.appliedAt} />
 
         <div className="mt-1 flex flex-col gap-3">
           {onOpenPrescription && (
@@ -34,7 +39,7 @@ export default function OrderInfoSection({
               onClick={onOpenPrescription}
               className="w-full rounded-2xl border border-sky-500 px-4 py-3 text-[15px] font-semibold text-sky-600"
             >
-              처방전 보기
+              {t('medication.detail.actions.viewPrescription')}
             </button>
           )}
           {onOpenConsultation && (
@@ -43,7 +48,7 @@ export default function OrderInfoSection({
               onClick={onOpenConsultation}
               className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-[15px] font-semibold text-gray-700"
             >
-              진료 완료 상세
+              {t('medication.detail.actions.viewConsultation')}
             </button>
           )}
         </div>
