@@ -14,32 +14,37 @@ export default function ActionButtons({
   onOpenConsultation,
   className,
 }: ActionButtonsProps) {
+  const outlinedButtonStyle: React.CSSProperties = {
+    marginTop: '0.75rem',
+    width: '100%',
+    height: '3rem',
+    background: 'white',
+    borderRadius: '1.5rem',
+    border: '1px solid #00A0D2',
+    color: '#00A0D2',
+    fontSize: '1rem',
+    fontWeight: 500,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+  };
+
   return (
     <div className={['flex w-full flex-col gap-3', className ?? ''].join(' ')}>
       {onTrackNow && (
-        <button
-          type="button"
-          onClick={onTrackNow}
-          className="w-full rounded-2xl border border-sky-500 px-4 py-3 text-[15px] font-semibold text-sky-600"
-        >
+        <button type="button" onClick={onTrackNow} style={outlinedButtonStyle}>
           실시간 배송 조회
         </button>
       )}
       {onOpenPrescription && (
-        <button
-          type="button"
-          onClick={onOpenPrescription}
-          className="w-full rounded-2xl border border-sky-500 px-4 py-3 text-[15px] font-semibold text-sky-600"
-        >
+        <button type="button" onClick={onOpenPrescription} style={outlinedButtonStyle}>
           처방전 보기
         </button>
       )}
       {onOpenConsultation && (
-        <button
-          type="button"
-          onClick={onOpenConsultation}
-          className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-[15px] font-semibold text-gray-700"
-        >
+        <button type="button" onClick={onOpenConsultation} style={outlinedButtonStyle}>
           진료 완료 상세
         </button>
       )}
