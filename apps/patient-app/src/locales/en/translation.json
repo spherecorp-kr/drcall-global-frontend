@@ -445,7 +445,14 @@
     "defaultDeliveryAddress": "Default Address",
     "change": "Change",
     "deliveryRequest": "Delivery Request",
-    "deliveryRequestPlaceholder": "Please enter delivery instructions.\n(e.g., Please leave at the door if not home)"
+    "deliveryRequestPlaceholder": "Please enter delivery instructions.\n(e.g., Please leave at the door if not home)",
+    "validation": {
+      "titleRequired": "Please enter the address name.",
+      "recipientNameRequired": "Please enter the recipient name.",
+      "addressRequired": "Please enter the address.",
+      "phoneNumberRequired": "Please enter the phone number.",
+      "phoneNumberInvalid": "Please check the phone number."
+    }
   },
   "consultation": {
     "title": "Consultation Room",

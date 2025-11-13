@@ -445,7 +445,14 @@
     "defaultDeliveryAddress": "ที่อยู่เริ่มต้น",
     "change": "เปลี่ยน",
     "deliveryRequest": "คำขอการจัดส่ง",
-    "deliveryRequestPlaceholder": "กรุณาใส่คำแนะนำการจัดส่ง\n(ตัวอย่าง: กรุณาวางไว้ที่หน้าประตูหากไม่อยู่บ้าน)"
+    "deliveryRequestPlaceholder": "กรุณาใส่คำแนะนำการจัดส่ง\n(ตัวอย่าง: กรุณาวางไว้ที่หน้าประตูหากไม่อยู่บ้าน)",
+    "validation": {
+      "titleRequired": "กรุณาระบุชื่อเพื่อแยกที่อยู่จัดส่ง",
+      "recipientNameRequired": "กรุณากรอกชื่อผู้รับ",
+      "addressRequired": "กรุณากรอกที่อยู่ของคุณ",
+      "phoneNumberRequired": "กรุณากรอกหมายเลขโทรศัพท์มือถือของคุณ",
+      "phoneNumberInvalid": "กรุณายืนยันหมายเลขโทรศัพท์มือถือที่คุณกรอก"
+    }
   },
   "consultation": {
     "title": "ห้องตรวจ",

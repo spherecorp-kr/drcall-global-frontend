@@ -447,7 +447,14 @@
     "defaultDeliveryAddress": "기본 배송지",
     "change": "변경",
     "deliveryRequest": "배송 요청 사항",
-    "deliveryRequestPlaceholder": "배송 시 요청사항을 입력하세요.\n(예 : 부재 시 문 앞에 두세요)"
+    "deliveryRequestPlaceholder": "배송 시 요청사항을 입력하세요.\n(예 : 부재 시 문 앞에 두세요)",
+    "validation": {
+      "titleRequired": "배송지 이름을 입력해 주세요.",
+      "recipientNameRequired": "받는 사람을 입력해 주세요.",
+      "addressRequired": "주소를 입력해 주세요.",
+      "phoneNumberRequired": "휴대폰 번호를 입력해 주세요.",
+      "phoneNumberInvalid": "입력한 휴대폰 번호를 확인해 주세요."
+    }
   },
   "consultation": {
     "title": "진료실",
