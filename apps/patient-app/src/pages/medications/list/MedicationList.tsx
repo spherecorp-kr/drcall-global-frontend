@@ -59,6 +59,36 @@ export default function MedicationList() {
     setIsSortModalOpen(false);
   };
 
+  // Mock Data (Medication list)
+  type DeliveryMethod = 'direct' | 'standard' | 'express' | 'international';
+  interface MedicationListItem {
+    id: string;
+    status: MedicationStatus;
+    medicationNumber: string;
+    requestedAt: string; // ISO format e.g., 2024-11-06T17:34:22
+    method: DeliveryMethod;
+    hospitalName: string;
+    hospitalNameEn?: string;
+  }
+
+  const mockMedications: MedicationListItem[] = [
+    { id: 'med-0001', status: 'preparing', medicationNumber: 'RX-2025-0001', requestedAt: '2025-01-15T09:24:00', method: 'standard', hospitalName: '드콜병원', hospitalNameEn: 'Dr.Call Hospital' },
+    { id: 'med-0002', status: 'preparing', medicationNumber: 'RX-2025-0002', requestedAt: '2025-01-14T16:10:00', method: 'direct', hospitalName: '프라람9병원', hospitalNameEn: 'Praram9 Hospital' },
+    { id: 'med-0003', status: 'prepared', medicationNumber: 'RX-2025-0003', requestedAt: '2025-01-14T10:05:12', method: 'express', hospitalName: '드콜병원', hospitalNameEn: 'Dr.Call Hospital' },
+    { id: 'med-0004', status: 'shipping', medicationNumber: 'RX-2025-0004', requestedAt: '2025-01-13T18:30:45', method: 'standard', hospitalName: '프라람9병원', hospitalNameEn: 'Praram9 Hospital' },
+    { id: 'med-0005', status: 'received', medicationNumber: 'RX-2025-0005', requestedAt: '2025-01-12T08:12:31', method: 'direct', hospitalName: '드콜병원', hospitalNameEn: 'Dr.Call Hospital' },
+    { id: 'med-0006', status: 'shipping', medicationNumber: 'RX-2025-0006', requestedAt: '2025-01-12T07:59:00', method: 'international', hospitalName: '삼성서울병원', hospitalNameEn: 'Samsung Medical Center' },
+    { id: 'med-0007', status: 'prepared', medicationNumber: 'RX-2025-0007', requestedAt: '2025-01-11T21:40:10', method: 'standard', hospitalName: '세브란스병원', hospitalNameEn: 'Severance Hospital' },
+    { id: 'med-0008', status: 'preparing', medicationNumber: 'RX-2025-0008', requestedAt: '2025-01-11T13:25:33', method: 'standard', hospitalName: '아산병원', hospitalNameEn: 'Asan Medical Center' },
+    { id: 'med-0009', status: 'received', medicationNumber: 'RX-2025-0009', requestedAt: '2025-01-10T12:00:00', method: 'direct', hospitalName: '드콜병원', hospitalNameEn: 'Dr.Call Hospital' },
+    { id: 'med-0010', status: 'shipping', medicationNumber: 'RX-2025-0010', requestedAt: '2025-01-10T09:10:00', method: 'express', hospitalName: '프라람9병원', hospitalNameEn: 'Praram9 Hospital' },
+    { id: 'med-0011', status: 'prepared', medicationNumber: 'RX-2025-0011', requestedAt: '2025-01-09T19:45:00', method: 'international', hospitalName: '세브란스병원', hospitalNameEn: 'Severance Hospital' },
+    { id: 'med-0012', status: 'preparing', medicationNumber: 'RX-2025-0012', requestedAt: '2025-01-09T08:05:00', method: 'standard', hospitalName: '아산병원', hospitalNameEn: 'Asan Medical Center' },
+    { id: 'med-0013', status: 'received', medicationNumber: 'RX-2025-0013', requestedAt: '2025-01-08T23:59:59', method: 'express', hospitalName: '드콜병원', hospitalNameEn: 'Dr.Call Hospital' },
+    { id: 'med-0014', status: 'shipping', medicationNumber: 'RX-2025-0014', requestedAt: '2025-01-08T07:07:07', method: 'standard', hospitalName: '삼성서울병원', hospitalNameEn: 'Samsung Medical Center' },
+    { id: 'med-0015', status: 'prepared', medicationNumber: 'RX-2025-0015', requestedAt: '2025-01-07T11:11:11', method: 'direct', hospitalName: '프라람9병원', hospitalNameEn: 'Praram9 Hospital' }
+  ];
+
   return (
     <MainLayout
       title={t('medication.list.title')}
