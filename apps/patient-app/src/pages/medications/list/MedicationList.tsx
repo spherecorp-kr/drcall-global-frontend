@@ -102,6 +102,15 @@ export default function MedicationList() {
     return t(DELIVERY_METHOD_LABEL_KEY_MAP[method]);
   };
 
+  // Status badge style
+  const getStatusBadgeStyle = (status: MedicationStatus) => {
+    // preparing / shipping: green; prepared / received: light gray
+    if (status === 'preparing' || status === 'shipping') {
+      return { background: '#0AC256', color: '#FFFFFF' };
+    }
+    return { background: '#D5D5D5', color: '#FFFFFF' };
+  };
+
   // Filter + Sort
   const filteredAndSortedMedications = useMemo(() => {
     const filtered = selectedStatus === 'all'
@@ -242,7 +251,30 @@ export default function MedicationList() {
                   onClick={() => setSelectedMedicationId(item.id)}
                   style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
                 >
-                  <InfoField label={t('medication.fields.status')} value={getStatusLabel(item.status)} />
+                  {/* Status Badge */}
+                  <div style={{ display: 'flex' }}>
+                    {(() => {
+                      const style = getStatusBadgeStyle(item.status);
+                      return (
+                        <span
+                          style={{
+                            background: style.background,
+                            color: style.color,
+                            borderRadius: '100px',
+                            paddingLeft: '0.75rem',
+                            paddingRight: '0.75rem',
+                            paddingTop: '0.375rem',
+                            paddingBottom: '0.375rem',
+                            fontSize: '0.875rem',
+                            fontWeight: 700,
+                            lineHeight: 1
+                          }}
+                        >
+                          {getStatusLabel(item.status)}
+                        </span>
+                      );
+                    })()}
+                  </div>
                   <InfoField label={t('medication.fields.number')} value={item.medicationNumber} />
                   <InfoField label={t('medication.fields.requestedAt')} value={item.requestedAt} />
                   <InfoField label={t('medication.fields.method')} value={getMethodLabel(item.method)} />

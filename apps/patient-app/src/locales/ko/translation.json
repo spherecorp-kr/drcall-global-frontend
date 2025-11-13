@@ -40,14 +40,14 @@
       "title": "조제 및 배송 내역"
     },
     "statusAll": "전체",
-    "statusPreparing": "조제중",
+    "statusPreparing": "조제 중",
     "statusPrepared": "조제 완료",
     "statusShipping": "배송 중",
     "statusReceived": "수령 완료",
     "sortNewest": "최신순",
     "sortOldest": "과거순",
     "sortFilter": "정렬 필터",
-    "statusFilter": "상태 필터",
+    "statusFilter": "상태정렬 필터",
     "fields": {
       "status": "조제 상태",
       "number": "조제 번호",
