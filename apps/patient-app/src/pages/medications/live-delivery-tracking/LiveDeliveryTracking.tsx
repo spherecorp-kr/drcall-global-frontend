@@ -53,6 +53,56 @@ export default function LiveDeliveryTracking() {
           });
         });
         serverMarkersRef.current = created;
+
+        // 초기 bounds: 서버 마커 기준
+        const bounds = new g.maps.LatLngBounds();
+        created.forEach((m) => {
+          const p = m.getPosition();
+          if (p) bounds.extend(p);
+        });
+        if (!bounds.isEmpty()) {
+          mapInstanceRef.current!.fitBounds(bounds, { top: 12, left: 12, right: 12, bottom: 12 });
+        }
+
+        // 사용자 현재 위치: Geolocation
+        if ('geolocation' in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              if (!mapInstanceRef.current) return;
+              const { latitude, longitude } = pos.coords;
+              const here = new g.maps.LatLng(latitude, longitude);
+              userMarkerRef.current = new g.maps.Marker({
+                position: here,
+                map: mapInstanceRef.current,
+                icon: {
+                  url: '/assets/icons/ic_delivery_address.svg',
+                  scaledSize: new g.maps.Size(36, 36),
+                  anchor: new g.maps.Point(18, 18),
+                },
+              });
+              // 서버 마커 + 사용자 위치로 bounds 업데이트
+              const allBounds = new g.maps.LatLngBounds();
+              serverMarkersRef.current.forEach((m) => {
+                const p = m.getPosition();
+                if (p) allBounds.extend(p);
+              });
+              allBounds.extend(here);
+              mapInstanceRef.current.fitBounds(allBounds, {
+                top: 12,
+                left: 12,
+                right: 12,
+                bottom: 12,
+              });
+              setGeoMessage(null);
+            },
+            (err) => {
+              setGeoMessage('현재 위치를 가져올 수 없습니다. 브라우저 위치 권한을 확인해주세요.');
+            },
+            { enableHighAccuracy: true, maximumAge: 10_000, timeout: 10_000 }
+          );
+        } else {
+          setGeoMessage('이 브라우저는 위치 정보를 지원하지 않습니다.');
+        }
       } catch (e) {
         setLoadError(
           '지도를 불러올 수 없습니다. VITE_GOOGLE_MAPS_API_KEY 환경변수를 확인해주세요.'
