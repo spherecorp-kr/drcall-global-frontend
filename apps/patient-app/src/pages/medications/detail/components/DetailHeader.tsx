@@ -5,7 +5,7 @@ type ReceiptMethod = 'delivery' | 'quick' | 'international' | 'pickup';
 type DetailHeaderProps = {
   method: ReceiptMethod;
   title?: string;
-  subTitleLines?: string[]; // e.g., ['일반 배송', '예상 도착일 14/09/2025']
+  subTitle?: string; // e.g., '14/09/2025' (라벨 없이 날짜만 전달)
   onBack?: () => void;
   onClose?: () => void;
   padding?: boolean; // 외부에서 섹션 패딩을 제공하는 경우 false로 설정
@@ -18,7 +18,7 @@ type DetailHeaderProps = {
  */
 export default function DetailHeader({
   method,
-  subTitleLines = [],
+  subTitle,
   padding = true,
 }: DetailHeaderProps) {
   const { t } = useTranslation();
@@ -30,46 +30,111 @@ export default function DetailHeader({
     pickup: t('medication.methodDirect'),
   };
   const methodIconMap: Record<ReceiptMethod, string> = {
-    delivery: '/assets/icons/mypage-delivery.svg',
+    delivery: '/assets/icons/ic_drug.svg',
     quick: '/assets/icons/ic_box.svg',
     international: '/assets/icons/ic_box.svg',
     pickup: '/assets/icons/hospital.svg',
   };
 
   return (
-    <div className={['w-full', padding ? 'px-5 pt-5' : ''].join(' ')}>
-      <h1 className="mb-3 text-xl font-semibold text-gray-900">
+    <div
+      style={{
+        width: '100%',
+        ...(padding
+          ? { paddingLeft: '1.25rem', paddingRight: '1.25rem', paddingTop: '1.25rem' }
+          : {})
+      }}
+    >
+      <h1
+        style={{
+          marginBottom: '0.75rem',
+          fontSize: '1.5rem',
+          fontWeight: 600,
+          color: '#1F1F1F'
+        }}
+      >
         {t('medication.detail.title')}
       </h1>
 
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50">
-            <img src={methodIconMap[method]} alt="" className="h-5 w-5" />
-          </div>
-          <div className="flex flex-col">
-            <div className="text-[15px] font-semibold text-gray-900">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem'
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.625rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <img 
+              src={methodIconMap[method]} 
+              alt="" 
+              style={{ width: '1.375rem', height: '1.375rem' }} 
+            />
+            <div
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                color: '#1F1F1F'
+              }}
+            >
               {t('medication.fields.method')}
             </div>
-            <div className="text-[13px] text-gray-600">{methodTextMap[method]}</div>
+          </div>
+          <div
+            style={{
+              fontSize: '1rem', 
+              fontWeight: 400,
+              color: '#1F1F1F'
+            }}
+          >
+            {methodTextMap[method]}
           </div>
         </div>
 
-        {subTitleLines.map((line, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-50">
+        {subTitle && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.625rem'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <img
-                src="/assets/icons/calendar_today.svg"
+                src="/assets/icons/calendar-2.svg"
                 alt=""
-                className="h-5 w-5"
+                style={{ width: '1.375rem', height: '1.375rem' }} 
               />
+              <div
+                style={{
+                  fontSize: '1.125rem',
+                  fontWeight: 600,
+                  color: '#1F1F1F'
+                }}
+              >
+                {method === 'pickup'
+                  ? t('medication.detail.labels.deadlineDate')
+                  : t('medication.detail.labels.estimatedDate')}
+              </div>
             </div>
-            <div className="text-[13px] text-gray-600">{line}</div>
+            <div
+              style={{
+                fontSize: '1rem', 
+                fontWeight: 400,
+                color: '#1F1F1F'
+              }}
+            >
+              {subTitle}
+            </div>
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
 }
-
-

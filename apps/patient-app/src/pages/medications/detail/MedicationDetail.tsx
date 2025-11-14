@@ -44,19 +44,10 @@ export default function MedicationDetail() {
   const data = MOCKS[scenarioKey];
   const isPickup = data.receipt.method === 'pickup';
 
-  const subTitleLines: string[] = [];
-  if (isPickup) {
-    if (data.orderInfo?.orderNumber) {
-      subTitleLines.push(`${t('medication.detail.labels.orderNumber')} ${data.orderInfo.orderNumber}`);
-    }
-    if (data.receipt.deadlineDate) {
-      subTitleLines.push(`${t('medication.detail.labels.deadlineDate')} ${data.receipt.deadlineDate}`);
-    }
-  } else {
-    if (data.receipt.estimatedDate) {
-      subTitleLines.push(`${t('medication.detail.labels.estimatedDate')} ${data.receipt.estimatedDate}`);
-    }
-  }
+  // 헤더 보조 정보는 날짜 문자열만 전달
+  const subTitle: string | undefined = isPickup
+    ? data.receipt.deadlineDate
+    : data.receipt.estimatedDate;
 
   return (
     <MainLayout
@@ -72,7 +63,7 @@ export default function MedicationDetail() {
         <PageSection padding>
           <DetailHeader
             method={isPickup ? 'pickup' : (data.receipt.method as any)}
-            subTitleLines={subTitleLines}
+            subTitle={subTitle}
             padding={false}
           />
         </PageSection>
