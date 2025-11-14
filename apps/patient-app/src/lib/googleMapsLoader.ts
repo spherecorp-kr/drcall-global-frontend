@@ -27,7 +27,8 @@ export async function loadGoogle(): Promise<typeof google> {
   if (!optionsConfigured) {
     setOptions({ 
       key: apiKey, 
-      v: 'weekly' // 최신 안정 주간 채널을 사용
+      v: 'weekly', // 최신 안정 주간 채널을 사용
+      mapIds: [import.meta.env.VITE_GOOGLE_MAPS_ID || 'DEMO_MAP_ID'],
     });
     optionsConfigured = true;
   }

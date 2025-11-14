@@ -45,13 +45,16 @@ export default function LiveDeliveryTracking() {
     (async () => {
       try {
         const g = await loadGoogle();
+        const { Map: GoogleMap } = await g.maps.importLibrary('maps') as google.maps.MapsLibrary;
         if (!isMounted || !mapContainerRef.current) return;
-        mapInstanceRef.current = new g.maps.Map(mapContainerRef.current, {
+        
+        mapInstanceRef.current = new GoogleMap(mapContainerRef.current, {
           mapTypeControl: false,
           streetViewControl: false,
           fullscreenControl: false,
           zoomControl: true,
           gestureHandling: 'greedy',
+          mapId: import.meta.env.VITE_GOOGLE_MAPS_ID || 'DEMO_MAP_ID',
         });
 
         // Advanced Marker 라이브러리 보장
