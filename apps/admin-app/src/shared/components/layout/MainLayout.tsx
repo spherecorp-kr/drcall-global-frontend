@@ -40,7 +40,7 @@ const MainLayout = ({
 	const [buttonPosition, setButtonPosition] = useState({ x: 32, y: 32 });
 
 	// Get menu items based on user role and set active based on current route
-	const menuItems = getMenuByRole(userRole).map((item) => ({
+	const menuItems = getMenuByRole().map((item) => ({
 		...item,
 		active: location.pathname.includes(item.id),
 		onClick: () => onMenuClick?.(item.id),
