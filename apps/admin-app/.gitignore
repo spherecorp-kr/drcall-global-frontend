@@ -30,3 +30,4 @@ figma/
 *.njsproj
 *.sln
 *.sw?
+*.tsbuildinfo
