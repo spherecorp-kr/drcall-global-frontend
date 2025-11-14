@@ -18,7 +18,7 @@ export interface Appointment {
     name: string;
     nameEn: string;
     photo: string;
-    department: string;
+    specialty: string;
   };
   symptoms: string;
   symptomImages: string[];

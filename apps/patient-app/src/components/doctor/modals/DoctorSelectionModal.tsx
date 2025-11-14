@@ -3,9 +3,11 @@ import CalendarModal from '@ui/modals/CalendarModal';
 import BottomButtons from '@ui/layout/BottomButtons';
 import DoctorCard from '../cards/DoctorCard';
 import EmptyDoctorState from '../EmptyDoctorState';
+import useModalScrollLock from '@hooks/useModalScrollLock';
 import { useDoctorSelection } from '@hooks/useDoctorSelection';
 import { mockDoctors } from '@mocks/doctors';
 import { formatDate } from '@utils/date';
+import { useTranslation } from 'react-i18next';
 
 interface DoctorSelectionModalProps {
   isOpen: boolean;
@@ -25,6 +27,11 @@ export default function DoctorSelectionModal({
   onConfirm,
   initialDate
 }: DoctorSelectionModalProps) {
+  // 모달 오픈 동안 배경 스크롤 차단
+  useModalScrollLock(isOpen);
+
+  const { t } = useTranslation();
+
   const {
     selectedDate,
     selectedDoctor,
@@ -71,30 +78,30 @@ export default function DoctorSelectionModal({
         <div
           style={{
             height: '3.5rem',
-            background: 'white',
+            background: '#FAFAFA',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
-            paddingLeft: '1.25rem',
-            paddingRight: '1.25rem',
-            borderBottom: '1px solid #E0E0E0'
+            justifyContent: 'center',
+            padding: '1.25rem'
           }}
         >
           <h1
             style={{
               fontSize: '1.125rem',
-              fontWeight: '600',
+              fontWeight: '500',
               color: '#1F1F1F',
               margin: 0
             }}
           >
-            의사·진료 일시 수정 팝업
+            {t('appointment.selectDoctorAndDateTime')}
           </h1>
           <button
             onClick={onClose}
             style={{
-              width: '2rem',
-              height: '2rem',
+              position: 'absolute',
+              right: '1.25rem',
+              width: '1.875rem',
+              height: '1.875rem',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
@@ -104,7 +111,7 @@ export default function DoctorSelectionModal({
               justifyContent: 'center'
             }}
           >
-            <img src='/assets/icons/btn-끄기.svg' alt='close_popup' width={24} height={24}/>
+            <img src='/assets/icons/btn-끄기.svg' alt='close_popup' width={30} height={30}/>
           </button>
         </div>
 
@@ -121,12 +128,12 @@ export default function DoctorSelectionModal({
             style={{
               paddingLeft: '1.25rem',
               paddingRight: '1.25rem',
-              marginTop: '1.875rem',
-              marginBottom: '1.75rem'
+              marginTop: '1.25rem',
+              marginBottom: '1.25rem'
             }}
           >
             <PageTitle>
-              진료를 희망하시는 날짜와 의사, 진료 시간을 선택해 주세요.
+              {t('appointment.selectDateTime')}
             </PageTitle>
           </div>
 
@@ -207,11 +214,11 @@ export default function DoctorSelectionModal({
         {/* Bottom Buttons */}
         <BottomButtons
           leftButton={{
-            text: '취소',
+            text: t('common.cancel'),
             onClick: onClose
           }}
           rightButton={{
-            text: '완료',
+            text: t('common.complete'),
             onClick: handleConfirmClick,
             disabled: !isSelectionComplete
           }}

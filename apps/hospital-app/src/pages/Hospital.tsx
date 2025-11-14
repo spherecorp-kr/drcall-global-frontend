@@ -13,31 +13,31 @@ import CircleLogo from '@/assets/logo_circle.png';
 // Mock data
 const mockHospital = {
 	id: '1',
-	name: 'Lorem Ipsum',
+	nameLocal: 'Lorem Ipsum',
 	nameEn: 'Lorem Ipsum',
-	webBiUrl: '',
-	mobileBiUrl: '',
+	logoUrl: '',
+	mobileLogoUrl: '',
 	bankName: 'Lorem Ipsum',
 	accountHolder: 'Lorem Ipsum',
 	accountNumber: '123456789000',
-	websiteUrl: 'https://spherecorp.kr',
+	website: 'https://spherecorp.kr',
 	address: 'Seocho-gu, Seoul, Republic of Korea 162, Baumoe-ro 1902, Building 103, Raemian Apartment, 192-458',
 	postalCode: '192-458',
-	detailAddress: 'Building 103, Raemian Apartment',
-	phoneNumber: '01-123-456',
+	addressDetail: 'Building 103, Raemian Apartment',
+	phone: '01-123-456',
 };
 
 interface ValidationErrors {
-	name?: string;
+	nameLocal?: string;
 	nameEn?: string;
 	bankName?: string;
 	accountHolder?: string;
 	accountNumber?: string;
-	websiteUrl?: string;
+	website?: string;
 	postalCode?: string;
 	address?: string;
-	detailAddress?: string;
-	phoneNumber?: string;
+	addressDetail?: string;
+	phone?: string;
 }
 
 export function Hospital() {
@@ -65,8 +65,8 @@ export function Hospital() {
 		// Validation
 		const newErrors: ValidationErrors = {};
 
-		if (!formData.name.trim()) {
-			newErrors.name = '병원명을 입력해 주세요.';
+		if (!formData.nameLocal.trim()) {
+			newErrors.nameLocal = '병원명을 입력해 주세요.';
 		}
 		if (!formData.nameEn.trim()) {
 			newErrors.nameEn = '병원명(영문명)을 입력해 주세요.';
@@ -80,8 +80,8 @@ export function Hospital() {
 		if (!formData.accountNumber?.trim()) {
 			newErrors.accountNumber = '계좌번호를 입력해 주세요.';
 		}
-		if (!formData.websiteUrl?.trim()) {
-			newErrors.websiteUrl = '병원 홈페이지 주소를 입력해 주세요.';
+		if (!formData.website?.trim()) {
+			newErrors.website = '병원 홈페이지 주소를 입력해 주세요.';
 		}
 		if (!formData.postalCode?.trim()) {
 			newErrors.postalCode = '우편번호를 검색해 주세요.';
@@ -89,11 +89,11 @@ export function Hospital() {
 		if (!formData.address?.trim()) {
 			newErrors.address = '주소를 입력해 주세요.';
 		}
-		if (!formData.detailAddress?.trim()) {
-			newErrors.detailAddress = '상세 주소를 입력해 주세요.';
+		if (!formData.addressDetail?.trim()) {
+			newErrors.addressDetail = '상세 주소를 입력해 주세요.';
 		}
-		if (!formData.phoneNumber?.trim()) {
-			newErrors.phoneNumber = '병원 연락처를 입력해 주세요.';
+		if (!formData.phone?.trim()) {
+			newErrors.phone = '병원 연락처를 입력해 주세요.';
 		}
 
 		if (Object.keys(newErrors).length > 0) {
@@ -324,18 +324,18 @@ export function Hospital() {
 							{isEditMode ? (
 								<div className="flex-1 flex flex-col gap-1.5">
 									<Input
-										value={formData.name}
-										onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('name', e.target.value)}
+										value={formData.nameLocal}
+										onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('nameLocal', e.target.value)}
 										placeholder="병원명을 입력해 주세요."
 										size="small"
-										error={!!errors.name}
+										error={!!errors.nameLocal}
 									/>
-									{errors.name && (
-										<span className="text-system-error text-14">{errors.name}</span>
+									{errors.nameLocal && (
+										<span className="text-system-error text-14">{errors.nameLocal}</span>
 									)}
 								</div>
 							) : (
-								<div className="flex-1 text-text-100 text-16">{formData.name}</div>
+								<div className="flex-1 text-text-100 text-16">{formData.nameLocal}</div>
 							)}
 						</div>
 
@@ -442,18 +442,18 @@ export function Hospital() {
 							{isEditMode ? (
 								<div className="flex-1 flex flex-col gap-1.5">
 									<Input
-										value={formData.websiteUrl}
-										onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('websiteUrl', e.target.value)}
+										value={formData.website}
+										onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('website', e.target.value)}
 										placeholder="병원 홈페이지 주소를 입력해 주세요."
 										size="small"
-										error={!!errors.websiteUrl}
+										error={!!errors.website}
 									/>
-									{errors.websiteUrl && (
-										<span className="text-system-error text-14">{errors.websiteUrl}</span>
+									{errors.website && (
+										<span className="text-system-error text-14">{errors.website}</span>
 									)}
 								</div>
 							) : (
-								<div className="flex-1 text-text-100 text-16">{formData.websiteUrl}</div>
+								<div className="flex-1 text-text-100 text-16">{formData.website}</div>
 							)}
 						</div>
 
@@ -505,18 +505,18 @@ export function Hospital() {
 								{isEditMode ? (
 									<div className="flex flex-col gap-1.5">
 										<Input
-											value={formData.detailAddress}
-											onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('detailAddress', e.target.value)}
+											value={formData.addressDetail}
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('addressDetail', e.target.value)}
 											placeholder="상세 주소를 입력해 주세요."
 											size="small"
-											error={!!errors.detailAddress}
+											error={!!errors.addressDetail}
 										/>
-										{errors.detailAddress && (
-											<span className="text-system-error text-14">{errors.detailAddress}</span>
+										{errors.addressDetail && (
+											<span className="text-system-error text-14">{errors.addressDetail}</span>
 										)}
 									</div>
 								) : (
-									<div className="text-text-100 text-16">{formData.detailAddress}</div>
+									<div className="text-text-100 text-16">{formData.addressDetail}</div>
 								)}
 							</div>
 						</div>
@@ -530,18 +530,18 @@ export function Hospital() {
 							{isEditMode ? (
 								<div className="flex-1 flex flex-col gap-1.5">
 									<Input
-										value={formData.phoneNumber}
-										onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phoneNumber', e.target.value)}
+										value={formData.phone}
+										onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phone', e.target.value)}
 										placeholder="병원 연락처를 입력해 주세요."
 										size="small"
-										error={!!errors.phoneNumber}
+										error={!!errors.phone}
 									/>
-									{errors.phoneNumber && (
-										<span className="text-system-error text-14">{errors.phoneNumber}</span>
+									{errors.phone && (
+										<span className="text-system-error text-14">{errors.phone}</span>
 									)}
 								</div>
 							) : (
-								<div className="flex-1 text-text-100 text-16">{formData.phoneNumber}</div>
+								<div className="flex-1 text-text-100 text-16">{formData.phone}</div>
 							)}
 						</div>
 					</div>

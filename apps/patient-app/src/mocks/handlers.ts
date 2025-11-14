@@ -13,9 +13,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1808
  */
 const MOCK_USER: Patient = {
   id: 1,
-  channelUserId: 'mock-channel-user-id',
-  firstName: 'John',
-  lastName: 'Doe',
+  name: 'John Doe',
   email: 'john.doe@example.com',
   phoneCountryCode: '+82',
   phone: '01012345678',
@@ -25,7 +23,11 @@ const MOCK_USER: Patient = {
   emergencyContactName: 'Jane Doe',
   emergencyContactPhone: '01087654321',
   address: 'Seoul, South Korea',
+  addressDetail: 'Apt 101',
+  postalCode: '12345',
   profileImageUrl: undefined,
+  allergies: 'Penicillin',
+  grade: 'NORMAL',
   marketingConsent: true,
   dataSharingConsent: true,
   createdAt: '2024-01-01T00:00:00Z',

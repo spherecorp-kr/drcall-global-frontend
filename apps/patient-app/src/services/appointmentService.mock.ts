@@ -86,7 +86,7 @@ export const mockAppointmentService = {
         name: '의사 이름',
         nameEn: 'Doctor Name',
         photo: '/assets/images/doctors/default.jpg',
-        department: '일반의',
+        specialty: '일반의',
       },
       symptoms: data.symptoms,
       symptomImages: data.symptomImages || [],
