@@ -25,16 +25,25 @@ export default function OrderInfoSection({
   return (
     <Section
       title={t('medication.detail.section.orderInfo')}
-      icon={<img src="/assets/icons/clipboard-text.svg" alt="" className="h-5 w-5" />}
     >
-      <div className="flex flex-col gap-3">
-        <Row label={t('medication.detail.labels.orderNumber')} value={info.orderNumber} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.25rem'
+        }}
+      >
+        <Row
+          imgSrc="/assets/icons/ic_number.svg"
+          label={t('medication.detail.labels.orderNumber')}
+          value={info.orderNumber}
+          variant="text"
+        />
         {/* 스크린샷 순서: 조제 번호 다음에 '처방전 보기' 버튼 */}
         {onOpenPrescription && (
           <button
             onClick={onOpenPrescription}
             style={{
-              marginTop: '0.75rem',
               width: '100%',
               height: '3rem',
               background: 'white',
@@ -53,13 +62,22 @@ export default function OrderInfoSection({
             {t('medication.detail.actions.viewPrescription')}
           </button>
         )}
-        <Row label={t('medication.fields.hospital')} value={info.hospitalName} />
-        <Row label={t('medication.detail.labels.appliedAt')} value={info.appliedAt} />
+        <Row
+          imgSrc="/assets/icons/hospital.svg"
+          label={t('medication.fields.hospital')}
+          value={info.hospitalName}
+          variant="text"
+        />
+        <Row
+          imgSrc="/assets/icons/calendar-2.svg"
+          label={t('medication.detail.labels.appliedAt')}
+          value={info.appliedAt}
+          variant="text"
+        />
         {onOpenConsultation && (
           <button
             onClick={onOpenConsultation}
             style={{
-              marginTop: '0.75rem',
               width: '100%',
               height: '3rem',
               background: 'white',
@@ -83,13 +101,68 @@ export default function OrderInfoSection({
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({
+  imgSrc = '',
+  label,
+  value,
+  variant = 'text'
+}: {
+  imgSrc: string;
+  label: string;
+  value: string;
+  variant?: 'box' | 'text';
+}) {
   return (
-    <div className="flex flex-col gap-1">
-      <div className="text-[13px] font-semibold text-gray-800">{label}</div>
-      <div className="rounded-xl bg-gray-50 px-3 py-3 text-[13px] text-gray-700">{value}</div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.625rem'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <img
+          src={imgSrc}
+          alt=""
+          style={{ width: '1.375rem', height: '1.375rem' }} 
+        />
+        <div
+          style={{
+            fontSize: '1.125rem',
+            fontWeight: 600,
+            color: '#1F1F1F'
+          }}
+        >
+          {label}
+        </div>
+      </div>
+      {variant === 'box' ? (
+        <div
+          style={{
+            borderRadius: '0.5rem',
+            border: '1px solid #E0E0E0',
+            background: '#FAFAFA',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            paddingTop: '0.5rem',
+            paddingBottom: '0.5rem',
+            fontSize: '0.875rem',
+            color: '#1F1F1F'
+          }}
+        >
+          {value}
+        </div>
+      ) : (
+        <div
+          style={{
+            fontSize: '1rem',
+            fontWeight: 400,
+            color: '#1F1F1F'
+          }}
+        >
+          {value}
+        </div>
+      )}
     </div>
   );
 }
-
-
