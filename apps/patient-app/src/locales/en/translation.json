@@ -114,6 +114,7 @@
       }
     },
     "liveTracking": {
+      "pageTitle": "Track Delivery",
       "etaMinutes": "{{minutes}} min",
       "etaArrivalAt": "Arriving at {{time}}",
       "actions": {

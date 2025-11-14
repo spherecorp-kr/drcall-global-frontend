@@ -113,7 +113,8 @@
         "viewConsultation": "진료 완료 상세"
       }
     },
-      "liveTracking": {
+    "liveTracking": {
+      "pageTitle": "실시간 배송 조회",
       "etaMinutes": "{{minutes}}분",
       "etaArrivalAt": "{{time}} 도착 예정",
       "actions": {

@@ -114,6 +114,7 @@
       }
     },
     "liveTracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
       "etaMinutes": "{{minutes}} นาที",
       "etaArrivalAt": "ถึงประมาณ {{time}}",
       "actions": {

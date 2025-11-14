@@ -157,7 +157,11 @@ export default function LiveDeliveryTracking() {
   }, []);
 
   return (
-    <MainLayout title={t('medication.actions.trackNow')} onBack={handleBack} onClose={handleClose}>
+    <MainLayout 
+      title={t('medication.liveTracking.pageTitle')} 
+      onBack={handleBack} 
+      onClose={handleClose}
+    >
       <PageContainer>
         <PageSection>
           <div
