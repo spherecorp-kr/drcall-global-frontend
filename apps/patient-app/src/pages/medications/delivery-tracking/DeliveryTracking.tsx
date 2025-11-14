@@ -98,6 +98,8 @@ export default function DeliveryTracking() {
               flex: 1,
               overflowY: 'auto',
               borderTop: '1px solid #E0E0E0',
+              marginLeft: '1.25rem',
+              marginRight: '1.25rem'
             }}
           >
             {/* 헤더 (sticky) */}
@@ -113,33 +115,47 @@ export default function DeliveryTracking() {
             >
               <div
                 style={{
-                  width: '40%',
-                  padding: '0.75rem 1rem',
+                  width: '33.3333%',
+                  padding: '0.75rem',
                   color: '#1F1F1F',
                   fontSize: '0.875rem',
                   fontWeight: 600,
+                  textAlign: 'center',
+                  borderRight: '1px solid #E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 {t('medication.tracking.table.processedAt')}
               </div>
               <div
                 style={{
-                  width: '30%',
-                  padding: '0.75rem 1rem',
+                  width: '33.3333%',
+                  padding: '0.75rem',
                   color: '#1F1F1F',
                   fontSize: '0.875rem',
                   fontWeight: 600,
+                  textAlign: 'center',
+                  borderRight: '1px solid #E0E0E0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 {t('medication.tracking.table.step')}
               </div>
               <div
                 style={{
-                  width: '30%',
-                  padding: '0.75rem 1rem',
+                  width: '33.3333%',
+                  padding: '0.75rem',
                   color: '#1F1F1F',
                   fontSize: '0.875rem',
                   fontWeight: 600,
+                  textAlign: 'center',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                 }}
               >
                 {t('medication.tracking.table.location')}
@@ -159,31 +175,45 @@ export default function DeliveryTracking() {
                 >
                   <div
                     style={{
-                      width: '40%',
-                      padding: '0.875rem 1rem',
+                      width: '33.3333%',
+                      padding: '0.75rem',
                       color: '#1F1F1F',
-                      fontSize: '0.875rem',
+                      fontSize: '0.75rem',
                       lineHeight: 1.4,
+                      textAlign: 'center',
+                      borderRight: '1px solid #E0E0E0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
                     {formatDateTime(ev.timestamp)}
                   </div>
                   <div
                     style={{
-                      width: '30%',
-                      padding: '0.875rem 1rem',
+                      width: '33.3333%',
+                      padding: '0.75rem',
                       color: '#1F1F1F',
-                      fontSize: '0.875rem',
+                      fontSize: '0.75rem',
+                      textAlign: 'center',
+                      borderRight: '1px solid #E0E0E0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
                     {t(STEP_LABEL_KEY_MAP[ev.step])}
                   </div>
                   <div
                     style={{
-                      width: '30%',
-                      padding: '0.875rem 1rem',
+                      width: '33.3333%',
+                      padding: '0.75rem',
                       color: '#1F1F1F',
-                      fontSize: '0.875rem',
+                      fontSize: '0.75rem',
+                      textAlign: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
                     {ev.location}
