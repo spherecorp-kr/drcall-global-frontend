@@ -73,7 +73,7 @@ export default function TimePickerModal({
           position: 'relative',
           borderBottom: '1px solid #F0F0F0'
         }}>
-          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', margin: 0 }}>
+          <h3 style={{ fontSize: '1rem', fontWeight: '400', color: '#1f1f1f', margin: 0 }}>
             {modalTitle}
           </h3>
           <button
@@ -87,9 +87,7 @@ export default function TimePickerModal({
               cursor: 'pointer'
             }}
           >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M18 6L6 18M6 6L18 18" stroke="#1f1f1f" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <img src='/assets/icons/btn_close_pupup.svg' alt='close_popup' width={24} height={24}/>
           </button>
         </div>
 
@@ -97,29 +95,16 @@ export default function TimePickerModal({
         <div style={{
           display: 'flex',
           height: '15rem',
-          padding: '1rem 0',
+          padding: '1rem 0.625rem',
           overflow: 'hidden',
           position: 'relative'
         }}>
-          {/* Selection highlight - spanning both columns */}
-          <div style={{
-            position: 'absolute',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            left: 0,
-            right: 0,
-            height: '3rem',
-            background: '#F5F5F5',
-            zIndex: 0,
-            pointerEvents: 'none'
-          }} />
-
           {/* Hour */}
           <PickerColumn
             values={hours}
             selectedValue={selectedHour}
             onChange={setSelectedHour}
-            showHighlight={false}
+            isFirst
             padZero={false}
           />
           {/* Minute */}
@@ -127,7 +112,7 @@ export default function TimePickerModal({
             values={minutes}
             selectedValue={selectedMinute}
             onChange={setSelectedMinute}
-            showHighlight={false}
+            isLast
             padZero={true}
           />
         </div>
@@ -159,9 +144,11 @@ interface PickerColumnProps {
   onChange: (value: number) => void;
   showHighlight?: boolean;
   padZero?: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
-function PickerColumn({ values, selectedValue, onChange, showHighlight = true, padZero = false }: PickerColumnProps) {
+function PickerColumn({ values, selectedValue, onChange, showHighlight = true, padZero = false, isFirst, isLast }: PickerColumnProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const ITEM_HEIGHT = 48; // 3rem = 48px
@@ -214,9 +201,9 @@ function PickerColumn({ values, selectedValue, onChange, showHighlight = true, p
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      fontSize: isSelected ? '1.75rem' : '1.25rem',
-      fontWeight: isSelected ? '700' : '400',
-      color: isSelected ? '#1f1f1f' : '#999999',
+      fontSize: isSelected ? '1.375rem' : '1.125rem',
+      fontWeight: isSelected ? '500' : '400',
+      color: isSelected ? '#1f1f1f' : '#979797',
       cursor: 'pointer',
       userSelect: 'none' as const,
       scrollSnapAlign: 'center' as const,
@@ -245,7 +232,11 @@ function PickerColumn({ values, selectedValue, onChange, showHighlight = true, p
           height: '3rem',
           background: '#F5F5F5',
           zIndex: 0,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          borderTopLeftRadius: isFirst ? '0.625rem' : 0,
+          borderBottomLeftRadius: isFirst ? '0.625rem' : 0,
+          borderTopRightRadius: isLast ? '0.625rem' : 0,
+          borderBottomRightRadius: isLast ? '0.625rem' : 0
         }} />
       )}
 

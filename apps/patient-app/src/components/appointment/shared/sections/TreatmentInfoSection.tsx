@@ -1,11 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ImageGalleryField from '@ui/media/ImageGalleryField';
 import PrescriptionSection from '@appointment/completed/sections/treatment/PrescriptionSection';
 import DoctorAdviceSection from '@appointment/completed/sections/treatment/DoctorAdviceSection';
 import AiSummarySection from '@appointment/completed/sections/treatment/AiSummarySection';
+import ImageViewerModal from '@ui/modals/ImageViewerModal';
 
 interface TreatmentInfoSectionProps {
+  background?: 'white' | 'gray';
+
   symptoms: string;
   symptomImages?: string[];
   onSymptomsChange?: (value: string) => void;
@@ -45,10 +48,13 @@ export default function TreatmentInfoSection({
   doctorAdvice,
   prescriptionStatus,
   paymentStatus,
-  onViewPrescription
+  onViewPrescription,
+  background = 'white'
 }: TreatmentInfoSectionProps) {
   const { t } = useTranslation();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
+  const [viewerIndex, setViewerIndex] = useState(0);
 
   // 텍스트 변경 시 높이 자동 조정
   useEffect(() => {
@@ -60,7 +66,7 @@ export default function TreatmentInfoSection({
   }, [symptoms, readOnly]);
 
   return (
-    <div style={{ background: '#FFFFFF', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div style={{ background: background === 'white' ? '#FFFFFF' : '#FAFAFA', padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
       {/* 제목 */}
       <h2 style={{ color: '#1F1F1F', fontSize: '1.125rem', fontWeight: '600', margin: 0 }}>
         {t('appointment.treatmentInfo')}
@@ -75,7 +81,7 @@ export default function TreatmentInfoSection({
             style={{ width: '1.375rem', height: '1.375rem' }}
           />
           <div style={{ color: '#1F1F1F', fontSize: '1.125rem', fontWeight: '600' }}>
-            {t('appointment.symptoms')}
+            {t('appointment.primarySymptoms')}
           </div>
         </div>
         <textarea
@@ -131,6 +137,10 @@ export default function TreatmentInfoSection({
               onImageAdd={onImageAdd}
               onImageUpload={onImageUpload}
               onImageRemove={onImageRemove}
+              onImageClick={(index) => {
+                setViewerIndex(index);
+                setViewerOpen(true);
+              }}
               maxImages={maxImages}
               readOnly={readOnly}
               showCount={!readOnly}
@@ -139,6 +149,14 @@ export default function TreatmentInfoSection({
           </div>
         </div>
       ) : null}
+
+      {/* 이미지 상세보기 모달 */}
+      <ImageViewerModal
+        isOpen={viewerOpen}
+        images={symptomImages || []}
+        initialIndex={viewerIndex}
+        onClose={() => setViewerOpen(false)}
+      />
 
       {/* 진료 완료 시 추가 항목들 */}
       {isCompleted && (

@@ -35,6 +35,93 @@
     "korean": "เกาหลี",
     "viewMore": "ดูเพิ่มเติม"
   },
+  "medication": {
+    "list": {
+      "title": "ประวัติการจ่ายยาและจัดส่ง"
+    },
+    "tracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
+      "section": {
+        "basicInfo": "ข้อมูลพื้นฐาน"
+      },
+      "fields": {
+        "trackingNumber": "หมายเลขพัสดุ",
+        "carrier": "ผู้ให้บริการขนส่ง"
+      },
+      "table": {
+        "processedAt": "เวลาการประมวลผล",
+        "step": "ขั้นตอนการจัดส่ง",
+        "location": "สถานที่"
+      },
+      "steps": {
+        "depart": "ออกจัดส่ง",
+        "unload": "ขนถ่ายที่ศูนย์คัดแยก",
+        "inbound": "รับเข้าศูนย์",
+        "collection": "รับพัสดุเสร็จสิ้น",
+        "shipped": "ส่งยาออกแล้ว"
+      }
+    },
+    "statusAll": "ทั้งหมด",
+    "statusPreparing": "กำลังจ่ายยา",
+    "statusPrepared": "จ่ายยาเสร็จ",
+    "statusShipping": "กำลังจัดส่ง",
+    "statusReceived": "รับแล้ว",
+    "sortNewest": "ใหม่สุดก่อน",
+    "sortOldest": "เก่าสุดก่อน",
+    "sortFilter": "ตัวกรองการเรียง",
+    "statusFilter": "ตัวกรองสถานะ",
+    "fields": {
+      "status": "สถานะการจ่ายยา",
+      "number": "หมายเลขจ่ายยา",
+      "requestedAt": "วันที่ขอ",
+      "method": "วิธีรับยา",
+      "hospital": "โรงพยาบาล"
+    },
+    "actions": {
+      "viewDetail": "รายละเอียดการใช้ยาและการจัดส่ง"
+    },
+    "methodDirect": "รับด้วยตนเอง",
+    "methodStandard": "จัดส่งทั่วไป",
+    "methodExpress": "จัดส่งด่วน",
+    "methodInternational": "จัดส่งระหว่างประเทศ",
+    "detail": {
+      "pageTitle": "รายละเอียดการจ่ายยาและจัดส่ง",
+      "title": "ตรวจสอบความคืบหน้าการรับยา",
+      "section": {
+        "deliveryInfo": "ข้อมูลการจัดส่ง",
+        "pickupInfo": "ข้อมูลรับด้วยตนเอง",
+        "orderInfo": "ข้อมูลการจ่ายยา"
+      },
+      "labels": {
+        "receiverName": "ผู้รับ",
+        "phone": "ติดต่อ",
+        "address": "ที่อยู่",
+        "requestNote": "คำขอการจัดส่ง",
+        "hospitalName": "โรงพยาบาล",
+        "hospitalAddress": "ที่อยู่โรงพยาบาล",
+        "pickupLocation": "สถานที่รับยา",
+        "businessHours": "เวลาทำการ",
+        "contact": "ติดต่อ",
+        "orderNumber": "หมายเลขจ่ายยา",
+        "appliedAt": "วันที่ขอ",
+        "estimatedDate": "คาดว่าจะถึง",
+        "deadlineDate": "กำหนดรับยา"
+      },
+      "actions": {
+        "trackNow": "ติดตามการจัดส่ง",
+        "viewPrescription": "ดูใบสั่งยา",
+        "viewConsultation": "รายละเอียดการรักษา"
+      }
+    },
+    "liveTracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
+      "etaMinutes": "{{minutes}} นาที",
+      "etaArrivalAt": "ถึงประมาณ {{time}}",
+      "actions": {
+        "callNow": "เรียก"
+      }
+    }
+  },
   "auth": {
     "phoneVerification": "ยืนยันเบอร์โทรศัพท์",
     "phoneNumber": "เบอร์โทรศัพท์",
@@ -49,10 +136,12 @@
     "verificationSuccess": "ยืนยันสำเร็จ",
     "verificationFailed": "การยืนยันล้มเหลว",
     "serviceRegistration": "ลงทะเบียนบริการ",
+    "userRegistration": "การลงทะเบียนผู้ใช้",
     "name": "ชื่อ",
     "enterName": "กรุณากรอกชื่อ",
     "birthdate": "วันเกิด",
     "selectBirthdate": "กรุณาเลือกวันเกิด",
+    "birthdatePlaceholder": "DD/MM/YYYY",
     "thaiId": "Thai ID Number",
     "enterThaiId": "กรุณากรอก Thai ID Number",
     "gender": "เพศ",
@@ -64,12 +153,21 @@
     "enterDetailAddress": "กรุณากรอกที่อยู่โดยละเอียด",
     "completeRegistration": "ลงทะเบียนเสร็จสมบูรณ์",
     "registrationSuccess": "ลงทะเบียนบริการเสร็จสมบูรณ์",
+    "linePrivacy": "ความยินยอมในการให้ข้อมูลส่วนบุคคลของ LINE แก่บุคคลที่สาม",
+    "serviceTerms": "เงื่อนไขการบริการ",
+    "personalInfo": "ความยินยอมในการรวบรวมและใช้ข้อมูลส่วนบุคคลและข้อมูลละเอียดอ่อน",
+    "marketing": "ความยินยอมในการรับโฆษณาและการตลาด",
+    "allAgreeTerms": "ข้อตกลงฉบับเต็ม",
+    "registrationNotice1": "คุณจะต้องลงทะเบียนเพื่อใช้บริการ Dr.Call",
+    "registrationNotice2": "คุณสามารถหยุดใช้บริการได้โดยใช้ฟังก์ชั่นบล็อกเพื่อน",
+    "agree": "ข้อตกลง",
     "verifyPhoneNumber": "กรุณาตรวจสอบเบอร์โทรศัพท์",
     "verifyCodeCheck": "กรุณาตรวจสอบรหัสยืนยัน",
     "enterPhoneToChange": "ใส่เบอร์โทรศัพท์ที่ต้องการเปลี่ยน",
     "enterVerificationCode": "กรุณาใส่รหัสยืนยัน",
     "verificationCodeSent": "กรุณาใส่รหัสยืนยันที่ส่งไปยังเบอร์ของคุณ",
-    "selectCountry": "เลือกประเทศ"
+    "selectCountry": "เลือกประเทศ",
+    "terms": "เงื่อนไขการใช้งาน"
   },
   "appointment": {
     "title": "การนัดหมาย",
@@ -92,7 +190,9 @@
     "paymentStatusPendingBilling": "รอการเรียกเก็บเงิน",
     "paymentStatusPendingPayment": "รอการชำระเงิน",
     "paymentStatusComplete": "ชำระเงินแล้ว",
+    "symptomsInput": "เข้าอาการ",
     "symptoms": "อาการ",
+    "primarySymptoms": "อาการหลักๆ",
     "enterSymptoms": "กรุณากรอกอาการ",
     "symptomsTitle": "กรุณากรอกอาการและ\nแนบรูปภาพหากจำเป็น",
     "symptomImages": "รูปอาการ",
@@ -105,8 +205,11 @@
     "height": "ส่วนสูง",
     "weight": "น้ำหนัก",
     "bloodType": "กรุ๊ปเลือด",
+    "heightWeight": "ส่วนสูง/น้ำหนัก/BMI",
     "alcohol": "การดื่มแอลกอฮอล์",
+    "alcoholUnit": "การดื่มแอลกอฮอล์ (มาตรฐาน: 200ml, 1 สัปดาห์)",
     "smoking": "การสูบบุหรี่",
+    "smokingUnit": "การสูบบุหรี่ (มาตรฐาน: บุหรี่ 1 day)",
     "medications": "ยาที่กำลังรับประทาน",
     "personalHistory": "ประวัติการรักษา",
     "familyHistory": "ประวัติครอบครัว",
@@ -154,6 +257,7 @@
     "serviceFee": "ค่าธรรมเนียม",
     "deliveryFee": "ค่าจัดส่ง",
     "prescriptionFee": "ค่าใบสั่งยา",
+    "prescription": "ใบสั่งยา",
     "paymentMethodQr": "ชำระเงินด้วย QR",
     "paymentMethodCard": "บัตรเครดิต/เดบิต",
     "paymentMethodEasy": "ชำระเงินง่าย",
@@ -181,6 +285,8 @@
     "paymentWithPrescription": "ชำระเงินพร้อมใบสั่งยา",
     "paymentNotReady": "ยังไม่ได้ใส่ข้อมูลการชำระเงิน\nกรุณารอสักครู่",
     "deliveryFeeWarning": "อาจมีค่าใช้จ่ายเพิ่มเติมขึ้นอยู่กับวิธีการจัดส่งที่เลือก",
+    "paymentCompleteMessage": "ชำระเงินสำเร็จ",
+    "paymentCompleteSubMessage": "*สามารถตรวจสอบความเห็นของแพทย์และใบสั่งยาที่อัพโหลดได้",
     "hospitalAccountNumber": "หมายเลขบัญชีโรงพยาบาล",
     "paymentConfirmDate": "วันที่ยืนยันการชำระเงิน",
     "deliveryAddress": "ที่อยู่จัดส่ง",
@@ -196,6 +302,7 @@
     "treatmentInfo": "ข้อมูลการรักษา",
     "completedDateTime": "วันเวลาที่รักษาเสร็จสิ้น & แพทย์",
     "scheduledDateTime": "วันเวลาที่กำหนด & แพทย์",
+    "preferredDateTimeDoctor": "วันและเวลาที่ต้องการ & แพทย์",
     "confirmedDateTime": "วันเวลาที่ยืนยัน",
     "enterRoom": "เข้าห้องรักษา",
     "imagesCount": " ภาพ",
@@ -217,6 +324,7 @@
     "prescriptionWaitingMessage": "ใบสั่งยายังไม่มาถึง\nกรุณารอสักครู่",
     "prescriptionComplete": "เสร็จสิ้น",
     "viewPrescription": "ดูใบสั่งยา",
+    "download": "ดาวน์โหลด",
     "makePayment": "ชำระเงิน",
     "viewDetail": "ดูรายละเอียด",
     "cancelledBy": "ยกเลิกโดย",
@@ -236,7 +344,7 @@
     "maxImagesReached": "ถึงจำนวนรูปภาพสูงสุดแล้ว",
     "agreeToTerms": "กรุณายอมรับข้อกำหนด",
     "editPendingStatus": "แก้ไขการนัดหมายที่รอดำเนินการ",
-    "editPendingTitle": "แก้ไขข้อมูลการนัดหมาย\nที่รอดำเนินการของคุณ",
+    "editPendingTitle": "กรุณาตรวจสอบข้อมูล\nการนัดหมายที่รอดำเนินการ",
     "editProfileNotice": "ชื่อ วันเกิด เพศ และเบอร์โทรศัพท์สามารถเปลี่ยนได้ใน 'ข้อมูลของฉัน > แก้ไขข้อมูล'",
     "cancelEditConfirm": "คุณต้องการยกเลิกการแก้ไขหรือไม่?",
     "completeEditConfirm": "คุณต้องการทำการแก้ไขให้เสร็จสิ้นหรือไม่?",
@@ -267,6 +375,17 @@
       "profileEdit": "ชื่อ วันเกิด เพศ และเบอร์โทรศัพท์สามารถเปลี่ยนได้ใน 'ข้อมูลของฉัน > แก้ไขข้อมูล'"
     }
   },
+	"calendar": {
+		"week": {
+			"mon": "จ",
+			"tue": "อ",
+			"wed": "พ",
+			"thu": "พฤ",
+			"fri": "ศ",
+			"sat": "ส",
+			"sun": "อา"
+		}
+	},
   "chat": {
     "title": "แชท",
     "chatList": "รายการแชท",
@@ -301,6 +420,8 @@
     "phoneChange": "เปลี่ยนเบอร์โทรศัพท์",
     "phoneChanged": "เปลี่ยนเบอร์โทรศัพท์แล้ว",
     "confirmEdit": "คุณต้องการบันทึกการเปลี่ยนแปลงหรือไม่?",
+    "verificationCodeSentToSMS": "รหัสยืนยันจะถูกส่งไปยังหมายเลขของคุณผ่านทาง SMS",
+    "verificationCode4Digits": "รหัสยืนยัน (4 หลัก)",
     "delivery": "จัดการที่อยู่จัดส่ง",
     "deliveryDescription": "ตรวจสอบและเปลี่ยนที่อยู่จัดส่ง",
     "deliveryManagement": "การจัดการจัดส่ง",
@@ -308,6 +429,7 @@
     "editDeliveryAddress": "แก้ไขที่อยู่จัดส่ง",
     "deleteDeliveryAddress": "ลบที่อยู่จัดส่ง",
     "confirmDelete": "คุณต้องการลบหรือไม่?",
+    "confirmDeleteDeliveryAddress": "คุณต้องการลบที่อยู่นี้หรือไม่?",
     "deleteSuccess": "ลบสำเร็จ",
     "announcements": "ประกาศ",
     "announcementsDescription": "ตรวจสอบข่าวสารต่างๆ",
@@ -342,6 +464,7 @@
     "addRecord": "เพิ่มบันทึก",
     "editRecord": "แก้ไขบันทึก",
     "deleteRecord": "ลบบันทึก",
+    "deleteRecordConfirm": "คุณต้องการลบข้อมูลนี้หรือไม่?",
     "recordDetail": "รายละเอียดบันทึก",
     "noRecords": "ไม่มีบันทึก",
     "bloodPressure": "ความดันโลหิต",
@@ -409,7 +532,14 @@
     "defaultDeliveryAddress": "ที่อยู่เริ่มต้น",
     "change": "เปลี่ยน",
     "deliveryRequest": "คำขอการจัดส่ง",
-    "deliveryRequestPlaceholder": "กรุณาใส่คำแนะนำการจัดส่ง\n(ตัวอย่าง: กรุณาวางไว้ที่หน้าประตูหากไม่อยู่บ้าน)"
+    "deliveryRequestPlaceholder": "กรุณาใส่คำแนะนำการจัดส่ง\n(ตัวอย่าง: กรุณาวางไว้ที่หน้าประตูหากไม่อยู่บ้าน)",
+    "validation": {
+      "titleRequired": "กรุณาระบุชื่อเพื่อแยกที่อยู่จัดส่ง",
+      "recipientNameRequired": "กรุณากรอกชื่อผู้รับ",
+      "addressRequired": "กรุณากรอกที่อยู่ของคุณ",
+      "phoneNumberRequired": "กรุณากรอกหมายเลขโทรศัพท์มือถือของคุณ",
+      "phoneNumberInvalid": "กรุณายืนยันหมายเลขโทรศัพท์มือถือที่คุณกรอก"
+    }
   },
   "consultation": {
     "title": "ห้องตรวจ",
@@ -441,6 +571,7 @@
     "notFound": "ไม่พบหน้าที่ต้องการ",
     "forbidden": "ไม่มีสิทธิ์เข้าถึง",
     "sessionExpired": "เซสชั่นหมดอายุ",
+    "expiredMessage": "ข้อความที่หมดอายุ",
     "api": {
       "forbidden": "ไม่มีสิทธิ์เข้าถึง",
       "notFound": "ไม่พบทรัพยากรที่ร้องขอ",

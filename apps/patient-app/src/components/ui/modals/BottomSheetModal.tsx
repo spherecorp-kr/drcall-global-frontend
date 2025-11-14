@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { COLORS, SPACING, FONT_SIZE, FONT_WEIGHT } from '@/constants';
+import { useTranslation } from 'react-i18next';
 
 interface BottomSheetModalProps {
   isOpen: boolean;
@@ -18,6 +19,8 @@ export default function BottomSheetModal({
   confirmText = '확인',
   onConfirm
 }: BottomSheetModalProps) {
+  const { t } = useTranslation();
+
   if (!isOpen) return null;
 
   const handleConfirm = () => {
@@ -100,9 +103,7 @@ export default function BottomSheetModal({
               justifyContent: 'center'
             }}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M1 1L15 15M15 1L1 15" stroke={COLORS.text.primary} strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <img src='/assets/icons/btn_close_pupup.svg' alt='close_popup' width={24} height={24}/>
           </button>
         </div>
 
@@ -145,7 +146,7 @@ export default function BottomSheetModal({
               flexDirection: 'column'
             }}
           >
-            {confirmText}
+            {confirmText === '확인' ? t('common.confirm') : confirmText}
           </button>
         </div>
       </div>

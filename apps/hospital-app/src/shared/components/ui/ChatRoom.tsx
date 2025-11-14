@@ -69,7 +69,7 @@ export function ChatRoom({
 	const firstUnreadRef = useRef<HTMLDivElement>(null);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const menuRef = useRef<HTMLDivElement>(null);
-	const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const typingTimeoutRef = useRef<number | null>(null);
 	const isSendingRef = useRef(false);
 	const messageTimestamps = useRef<number[]>([]);
 

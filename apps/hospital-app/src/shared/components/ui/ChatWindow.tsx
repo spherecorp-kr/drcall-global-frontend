@@ -6,7 +6,7 @@ import profileBgIcon from '@/shared/assets/icons/ic_profile_bg.svg';
 import userIcon from '@/shared/assets/icons/ic_user.svg';
 import warningIcon from '@/shared/assets/icons/ic_circle_warning.svg';
 import resetIcon from '@/shared/assets/icons/ic_reset.svg';
-import { SearchInput } from './SearchInput';
+import { SearchInput } from '@/shared/components/ui';
 import { ChatRoom } from './ChatRoom';
 import { Badge } from './Badge';
 
@@ -82,7 +82,7 @@ const mockChats: ChatItem[] = [
 	},
 ];
 
-export function ChatWindow({ isOpen, onClose, className, buttonPosition }: ChatWindowProps) {
+const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowProps) => {
 	const { t } = useTranslation();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedChat, setSelectedChat] = useState<string | null>(null);
@@ -625,3 +625,5 @@ export function ChatWindow({ isOpen, onClose, className, buttonPosition }: ChatW
 		</div>
 	);
 }
+
+export default ChatWindow;

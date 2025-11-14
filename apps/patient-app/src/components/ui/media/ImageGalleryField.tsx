@@ -6,6 +6,7 @@ interface ImageGalleryFieldProps {
   onImageAdd?: () => void;
   onImageUpload?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onImageRemove?: (index: number) => void;
+  onImageClick?: (index: number) => void;
   maxImages?: number;
   readOnly?: boolean;
   icon?: string;
@@ -24,6 +25,7 @@ export default function ImageGalleryField({
   onImageAdd,
   onImageUpload,
   onImageRemove,
+  onImageClick,
   maxImages = 10,
   readOnly = false,
   icon,
@@ -127,6 +129,7 @@ export default function ImageGalleryField({
                 flexShrink: 0,
                 scrollSnapAlign: 'start'
               }}
+              onClick={onImageClick ? () => onImageClick(index) : undefined}
             >
               <div
                 style={{
@@ -135,7 +138,8 @@ export default function ImageGalleryField({
                   background: '#F0F0F0',
                   borderRadius: '0.5rem',
                   overflow: 'hidden',
-                  border: '1px solid #D9D9D9'
+                  border: '1px solid #D9D9D9',
+                  cursor: onImageClick ? 'pointer' : 'default'
                 }}
               >
                 <img
@@ -152,11 +156,14 @@ export default function ImageGalleryField({
               {/* Delete button - only show in edit mode */}
               {!readOnly && onImageRemove && (
                 <button
-                  onClick={() => onImageRemove(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onImageRemove(index);
+                  }}
                   style={{
                     position: 'absolute',
-                    top: '-0.375rem',
-                    right: '-0.375rem',
+                    top: '0.375rem',
+                    right: '0.375rem',
                     width: '1.25rem',
                     height: '1.25rem',
                     padding: 0,
@@ -339,6 +346,7 @@ export default function ImageGalleryField({
                 flexShrink: 0,
                 scrollSnapAlign: 'start'
               }}
+              onClick={onImageClick ? () => onImageClick(index) : undefined}
             >
               <div
                 style={{
@@ -347,7 +355,8 @@ export default function ImageGalleryField({
                   background: '#F0F0F0',
                   borderRadius: '0.5rem',
                   overflow: 'hidden',
-                  border: '1px solid #D9D9D9'
+                  border: '1px solid #D9D9D9',
+                  cursor: onImageClick ? 'pointer' : 'default'
                 }}
               >
                 <img
@@ -364,11 +373,14 @@ export default function ImageGalleryField({
               {/* Delete button - only show in edit mode */}
               {!readOnly && onImageRemove && (
                 <button
-                  onClick={() => onImageRemove(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onImageRemove(index);
+                  }}
                   style={{
                     position: 'absolute',
-                    top: '-0.375rem',
-                    right: '-0.375rem',
+                    top: '0.375rem',
+                    right: '0.375rem',
                     width: '1.25rem',
                     height: '1.25rem',
                     padding: 0,

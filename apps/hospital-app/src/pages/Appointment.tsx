@@ -1,15 +1,28 @@
-import { useState } from 'react';
+import { useCallback } from 'react';
 import { AppointmentStatusTab } from '@/shared/components/ui';
-import type { AppointmentStatus } from '@/shared/types/appointment';
-import { SearchConfirmed, SearchWaiting } from '@/shared/components/ui/AppointmentSearch';
-import { WaitingTable } from '@/shared/components/ui/AppointmentTables';
+import {
+	SearchCancelled,
+	SearchCompleted,
+	SearchConfirmed,
+	SearchWaiting
+} from '@/shared/components/ui/appointmentSearch';
+import {
+	CancelledTable,
+	CompletedTable,
+	ConfirmedTable,
+	WaitingTable
+} from '@/shared/components/ui/appointmentTables';
+import { ConfirmedCalendar } from '@/shared/components/ui/appointmentCalendar';
+import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore';
+import { useConfirmedAppointmentStore } from '@/shared/store/confirmedAppointmentStore';
 
-export function Appointment() {
-	const [status, setStatus] = useState<AppointmentStatus>('waiting');
+const Appointment = () => {
+	const { appointmentTab } = useAppointmentTabStore();
+	const { viewMode } = useConfirmedAppointmentStore();
 
 	// 상태별 UI 렌더링 함수
-	const renderStatusContent = () => {
-		switch (status) {
+	const renderStatusContent = useCallback(() => {
+		switch (appointmentTab) {
 			case 'waiting':
 				return (
 					<>
@@ -21,23 +34,36 @@ export function Appointment() {
 				return (
 					<>
 						<SearchConfirmed />
+						{viewMode === 'list' ? <ConfirmedTable /> : <ConfirmedCalendar />}
 					</>
 				);
 			case 'completed':
-				return <></>;
+				return (
+					<>
+						<SearchCompleted />
+						<CompletedTable />
+					</>
+				);
 			case 'cancelled':
-				return <></>;
+				return (
+					<>
+						<SearchCancelled />
+						<CancelledTable />
+					</>
+				);
 			default:
 				return null;
 		}
-	};
+	}, [appointmentTab, viewMode]);
 
 	return (
 		<div className="flex flex-col h-full overflow-hidden">
 			<div className="bg-white border-b border-b-[#e0e0e0] flex flex-col h-20 items-start justify-end px-5 shrink-0">
-				<AppointmentStatusTab handleClick={setStatus} status={status} />
+				<AppointmentStatusTab />
 			</div>
-			<div className="bg-bg-gray flex flex-1 flex-col gap-5 p-5">{renderStatusContent()}</div>
+			<div className="bg-bg-gray flex flex-1 flex-col gap-5 overflow-y-auto p-5">{renderStatusContent()}</div>
 		</div>
 	);
 }
+
+export default Appointment;

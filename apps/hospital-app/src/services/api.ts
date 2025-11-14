@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { logError } from '@utils/errorHandler';
-import i18n from '../lib/i18n';
+import i18n from '../i18n/i18n';
 
 /**
  * Validates and returns the API base URL
@@ -14,7 +13,7 @@ function getApiBaseUrl(): string {
 	// In production, API URL must be explicitly set
 	if (isProduction && !apiUrl) {
 		const error = new Error('VITE_API_BASE_URL environment variable must be set in production');
-		logError(error, { feature: 'API', action: 'initialization' });
+		console.error('[API] Initialization error:', error);
 		throw error;
 	}
 
@@ -98,43 +97,23 @@ apiClient.interceptors.response.use(
 
 		// Handle other common errors
 		if (status === 403) {
-			logError(error, {
-				feature: 'API',
-				action: 'forbidden',
-				metadata: { url: error.config?.url },
-			});
+			console.error('[API] Forbidden error:', error.config?.url);
 			showErrorToast(i18n.t('error.api.forbidden'));
 		} else if (status === 404) {
-			logError(error, {
-				feature: 'API',
-				action: 'not_found',
-				metadata: { url: error.config?.url },
-			});
+			console.error('[API] Not found error:', error.config?.url);
 			const errorMessage = error.response?.data?.message || i18n.t('error.api.notFound');
 			showErrorToast(errorMessage);
 		} else if (status >= 500) {
-			logError(error, {
-				feature: 'API',
-				action: 'server_error',
-				metadata: { url: error.config?.url, status },
-			});
+			console.error('[API] Server error:', error.config?.url, status);
 			showErrorToast(i18n.t('error.api.serverError'));
 		} else if (status >= 400) {
 			// Other 4xx errors (bad request, etc.)
-			logError(error, {
-				feature: 'API',
-				action: 'client_error',
-				metadata: { url: error.config?.url, status },
-			});
+			console.error('[API] Client error:', error.config?.url, status);
 			const errorMessage = error.response?.data?.message || i18n.t('error.api.clientError');
 			showErrorToast(errorMessage);
 		} else if (!error.response) {
 			// Network error
-			logError(error, {
-				feature: 'API',
-				action: 'network_error',
-				metadata: { message: error.message },
-			});
+			console.error('[API] Network error:', error.message);
 			showErrorToast(i18n.t('error.api.networkError'));
 		}
 

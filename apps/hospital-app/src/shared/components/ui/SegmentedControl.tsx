@@ -2,31 +2,33 @@ import React from 'react';
 import { cn } from '@/shared/utils/cn';
 
 export interface SegmentOption {
-	value: string;
 	label: string;
+	value: string;
 }
 
 interface SegmentedControlProps {
+	buttonClassName?: string;
+	className?: string;
+	onChange: (value: string) => void;
 	options: SegmentOption[];
 	value: string;
-	onChange: (value: string) => void;
-	className?: string;
 	variant?: 'default' | 'primary'; // default: tap-1 (검정), primary: primary-70 (파랑)
 }
 
-export function SegmentedControl({
+const SegmentedControl = ({
+	buttonClassName = '',
+	className,
+	onChange,
 	options,
 	value,
-	onChange,
-	className,
 	variant = 'default',
-}: SegmentedControlProps) {
+}: SegmentedControlProps) => {
 	const selectedBgClass = variant === 'primary' ? 'bg-primary-70' : 'bg-tap-1';
 
 	return (
 		<div
 			className={cn(
-				'flex h-7 items-center rounded-lg border border-stroke-input bg-bg-white p-0.5',
+				'flex h-7 items-center rounded-lg border border-stroke-input bg-white p-0.5',
 				className,
 			)}
 		>
@@ -44,9 +46,10 @@ export function SegmentedControl({
 							className={cn(
 								'flex flex-1 items-center justify-center self-stretch rounded-md px-2.5 py-[3px] text-12 font-semibold capitalize transition-colors',
 								isSelected ? `${selectedBgClass} text-text-0` : 'text-text-100',
+								buttonClassName,
 							)}
 						>
-							<div className="flex h-[18px] flex-col justify-center text-center">
+							<div className="flex h-[18px] flex-col justify-center text-center text-sm">
 								{option.label}
 							</div>
 						</button>
@@ -66,3 +69,5 @@ export function SegmentedControl({
 		</div>
 	);
 }
+
+export default SegmentedControl;

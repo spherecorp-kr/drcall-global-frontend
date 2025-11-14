@@ -10,23 +10,27 @@ interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>
 	size?: InputSize;
 	state?: InputState;
 	wrapperClassName?: string;
+	compact?: boolean;
 }
 
-const sizeStyles: Record<InputSize, { wrapper: string; input: string; radius: string }> = {
+const sizeStyles: Record<InputSize, { wrapper: string; input: string; radius: string; innerPadding: string }> = {
 	small: {
-		wrapper: 'h-8',
-		input: 'px-2 text-14',
+		wrapper: 'h-8 px-2',
+		input: 'text-14',
 		radius: 'rounded-[6px]',
+		innerPadding: 'px-1',
 	},
 	medium: {
-		wrapper: 'h-10',
-		input: 'px-4 text-16',
-		radius: 'rounded-[9px]',
+		wrapper: 'h-10 px-4 py-2.5',
+		input: 'text-16',
+		radius: 'rounded-lg',
+		innerPadding: '',
 	},
 	large: {
 		wrapper: 'h-12',
 		input: 'px-4 text-16',
 		radius: 'rounded-[9px]',
+		innerPadding: '',
 	},
 };
 
@@ -50,11 +54,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			placeholder,
 			size = 'medium',
 			wrapperClassName,
+			compact = false,
 			...props
 		},
 		ref,
 	) => {
-		const { wrapper, input, radius } = sizeStyles[size];
+		const { wrapper, input, radius, innerPadding } = sizeStyles[size];
 		const outlineStyle = getOutlineStyle(error, disabled);
 
 		return (
@@ -65,13 +70,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 					wrapper,
 					radius,
 					outlineStyle,
+					compact && 'px-4',
 					wrapperClassName,
 				)}
 			>
 				<div
 					className={cn(
-						'flex flex-1 items-center gap-2 self-stretch pl-4',
-						!icon && 'pr-4',
+						'flex flex-1 items-center gap-2 self-stretch',
+						size === 'large' && !compact && 'pl-4',
+						size === 'large' && !icon && !compact && 'pr-4',
+						innerPadding,
 					)}
 				>
 					<input
@@ -82,13 +90,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 							'flex-1 bg-transparent font-pretendard outline-none',
 							'text-text-100 placeholder:text-text-30',
 							'disabled:cursor-not-allowed disabled:text-text-100',
-							input,
+							'[&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-inner-spin-button]:hidden [&::-webkit-outer-spin-button]:hidden',
+							!compact && input,
+							compact && 'text-16',
 							className,
 						)}
 						{...props}
 					/>
 				</div>
-				{icon}
+				{icon && <div className="pr-2">{icon}</div>}
 			</div>
 		);
 	},

@@ -53,8 +53,8 @@ export default function ConfirmModal({
           padding: '3.75rem 2.5rem',
           textAlign: 'center',
           color: '#1F1F1F',
-          fontSize: '1.5rem',
-          fontWeight: '600',
+          fontSize: '1.25rem',
+          fontWeight: '400',
           lineHeight: '1.4',
           whiteSpace: 'pre-line'
         }}>
@@ -70,11 +70,11 @@ export default function ConfirmModal({
             onClick={onCancel}
             style={{
               flex: 1,
-              background: '#BBBBBB',
+              background: '#C1C1C1',
               border: 'none',
               color: 'white',
-              fontSize: '1.25rem',
-              fontWeight: '600',
+              fontSize: '1.125rem',
+              fontWeight: '700',
               cursor: 'pointer'
             }}
           >
@@ -87,8 +87,8 @@ export default function ConfirmModal({
               background: '#00A0D2',
               border: 'none',
               color: 'white',
-              fontSize: '1.25rem',
-              fontWeight: '600',
+              fontSize: '1.125rem',
+              fontWeight: '700',
               cursor: 'pointer'
             }}
           >

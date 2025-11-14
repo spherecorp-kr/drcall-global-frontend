@@ -2,28 +2,38 @@ import { type ReactNode } from 'react';
 import { cn } from '@/shared/utils/cn';
 import { NumberBadge } from '@/shared/components/ui/Badge';
 import { useTranslation } from 'react-i18next';
+import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
 
 interface SideNavigationItemProps {
 	active?: boolean;
 	badges?: Array<number | 'dot'>;
 	icon: ReactNode;
-	isExpanded: boolean;
 	id: string;
+	isExpanded: boolean;
 	onClick?: () => void;
 }
 
-export function SideNavigationItem({
+const SideNavigationItem = ({
 	active = false,
 	badges,
 	icon,
-	isExpanded,
 	id,
+	isExpanded,
 	onClick,
-}: SideNavigationItemProps) {
+}: SideNavigationItemProps) => {
 	const { t } = useTranslation();
+	const { resetAppointmentTab } = useAppointmentTabStore();
+
+	const handleClick = () => {
+		if (onClick) {
+			onClick();
+		}
+		resetAppointmentTab();
+	}
+
 	return (
 		<button
-			onClick={onClick}
+			onClick={handleClick}
 			className={cn(
 				'h-[42px] rounded-[10px] relative overflow-visible',
 				'transition-[width,background-color] duration-500 ease-in-out',
@@ -65,3 +75,5 @@ export function SideNavigationItem({
 		</button>
 	);
 }
+
+export default SideNavigationItem;

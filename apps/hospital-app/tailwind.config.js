@@ -36,12 +36,12 @@ export default {
 					white: '#FFFFFF',
 				},
 				stroke: {
-					input: '#E6E6E6',
+					input: '#E0E0E0',
 					segmented: '#D9D9D9',
 				},
 				system: {
 					error: '#FC0606',
-					successful: '#61CC56',
+					successful: '#51CC56',
 					successful2: '#11AC51',
 					caution: '#FF5F06',
 				},
@@ -89,6 +89,9 @@ export default {
 				sm: '4px',
 				md: '8px',
 				lg: '12px',
+			},
+			boxShadow: {
+				dialog: '4px 4px 10px 0 rgba(0, 0, 0, 0.25)',
 			},
 		},
 	},

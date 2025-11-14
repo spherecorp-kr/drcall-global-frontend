@@ -1,19 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import MainLayout from '@layouts/MainLayout';
-import DeliveryAddressCard from '@appointment/shared/payment/DeliveryAddressCard';
 import ConfirmModal from '@ui/modals/ConfirmModal';
 import AlertModal from '@ui/modals/AlertModal';
 import DeliveryAddressAdd from '@pages/mypage/DeliveryAddressAdd';
-
-interface DeliveryAddress {
-  id: string;
-  isDefault: boolean;
-  title: string;
-  recipientName: string;
-  address: string;
-  phoneNumber: string;
-}
+import { useDeliveryAddresses } from '@/features/delivery/useDeliveryAddresses';
+import DeliveryAddressList from '@/features/delivery/DeliveryAddressList';
+import DeliveryAddressConfirmButton from '@/features/delivery/DeliveryAddressConfirmButton';
 
 interface DeliveryAddressSelectionProps {
   isOpen: boolean;
@@ -35,58 +27,17 @@ export default function DeliveryAddressSelection({
   initialSelectedId
 }: DeliveryAddressSelectionProps) {
   const { t } = useTranslation();
-  // TODO: API에서 배송지 목록 가져오기
-  const [addresses] = useState<DeliveryAddress[]>([
-    {
-      id: '1',
-      isDefault: true,
-      title: '회사 근처에서 약 배송 받으려고 등록해둔 강남역 인근 오피스텔 주소',
-      recipientName: '김환자',
-      address: '1902, Building 103, Raemian Apartment, 162 Baumoe-ro, Seocho-gu, Seoul, Republic of Korea',
-      phoneNumber: '062-1234-1234'
-    },
-    {
-      id: '2',
-      isDefault: false,
-      title: '서울 본가 집',
-      recipientName: '김환자',
-      address: '1902, Building 103, Raemian Apartment, 162 Baumoe-ro, Seocho-gu, Seoul, Republic of Korea',
-      phoneNumber: '062-1234-1234'
-    },
-    {
-      id: '3',
-      isDefault: false,
-      title: '부산 친구 집',
-      recipientName: '이친구',
-      address: '789, Haeundae-ro, Haeundae-gu, Busan, Republic of Korea',
-      phoneNumber: '051-2222-3333'
-    },
-    {
-      id: '4',
-      isDefault: false,
-      title: '대전 부모님 댁',
-      recipientName: '김부모',
-      address: '321, Dunsan-ro, Seo-gu, Daejeon, Republic of Korea',
-      phoneNumber: '042-5555-6666'
-    },
-    {
-      id: '5',
-      isDefault: false,
-      title: '제주도 별장',
-      recipientName: '박제주',
-      address: '555, Jeju-daero, Jeju-si, Jeju-do, Republic of Korea',
-      phoneNumber: '064-7777-8888'
+  // 공통 headless 훅: 목록/선택/모달 상태 및 액션 제공 (i18n 라벨 키 주입)
+  const { addresses, selectedId, ui, actions } = useDeliveryAddresses({
+    selectionEnabled: true,
+    initialSelectedId,
+    labels: {
+      addButtonKey: 'appointment.addDeliveryAddress',
+      deleteConfirmKey: 'appointment.deleteDeliveryAddressConfirm',
+      maxLimitKey: 'appointment.maxDeliveryAddressLimit',
+      confirmKey: 'common.confirm'
     }
-  ]);
-
-  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(initialSelectedId || '1');
-  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
-  const [maxLimitAlertOpen, setMaxLimitAlertOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [editingAddress, setEditingAddress] = useState<DeliveryAddress | null>(null);
-
-  const MAX_ADDRESSES = 10;
+  });
 
   // 모달이 열렸을 때 body 스크롤 막기
   useEffect(() => {
@@ -107,82 +58,20 @@ export default function DeliveryAddressSelection({
     }
   }, [isOpen]);
 
-  const handleEdit = (id: string) => {
-    const addressToEdit = addresses.find(addr => addr.id === id);
-    if (addressToEdit) {
-      setEditingAddress(addressToEdit);
-      setIsAddModalOpen(true);
-    }
-  };
-
-  const handleDelete = (id: string) => {
-    setDeleteTargetId(id);
-    setDeleteConfirmOpen(true);
-  };
-
-  const handleDeleteConfirm = () => {
-    if (deleteTargetId) {
-      // TODO: 배송지 삭제 API 호출
-      setDeleteConfirmOpen(false);
-      setDeleteTargetId(null);
-    }
-  };
-
-  const handleDeleteCancel = () => {
-    setDeleteConfirmOpen(false);
-    setDeleteTargetId(null);
-  };
-
-  const handleSelect = (id: string) => {
-    setSelectedAddressId(id);
-  };
-
-  const handleAddAddress = () => {
-    if (addresses.length >= MAX_ADDRESSES) {
-      setMaxLimitAlertOpen(true);
-      return;
-    }
-    setIsAddModalOpen(true);
-  };
-
-  const handleSaveAddress = (addressData: {
-    id?: string;
-    title: string;
-    recipientName: string;
-    address: string;
-    detailAddress: string;
-    phoneNumber: string;
-    isDefault: boolean;
-  }) => {
-    if (addressData.id) {
-      // 수정 모드
-      // TODO: 배송지 수정 API 호출
-      console.log('Update address:', addressData);
-    } else {
-      // 추가 모드
-      // TODO: 배송지 추가 API 호출
-      console.log('Save new address:', addressData);
-    }
-    setIsAddModalOpen(false);
-    setEditingAddress(null);
-  };
-
-  const handleCloseAddModal = () => {
-    setIsAddModalOpen(false);
-    setEditingAddress(null);
-  };
+  const handleEdit = (id: string) => actions.edit(id);
+  const handleDelete = (id: string) => actions.deleteAsk(id);
 
   const handleConfirm = () => {
-    if (!selectedAddressId) {
+    if (!selectedId) {
       // TODO: 배송지 선택 알림
       return;
     }
 
-    onConfirm(selectedAddressId);
+    onConfirm(selectedId);
     onClose();
   };
 
-  const isConfirmEnabled = selectedAddressId !== null;
+  const isConfirmEnabled = selectedId !== null;
 
   if (!isOpen) return null;
 
@@ -255,7 +144,6 @@ export default function DeliveryAddressSelection({
           overflowY: 'auto',
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem',
           minHeight: 0
         }}
@@ -263,17 +151,16 @@ export default function DeliveryAddressSelection({
         {/* 배송지 추가 button - 우측 정렬 */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.25rem' }}>
           <button
-            onClick={handleAddAddress}
+            onClick={actions.addOpen}
             style={{
-              width: '6.75rem',
-              height: '2rem',
               background: '#00A0D2',
               borderRadius: '0.25rem',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              padding: '0.375rem 1.125rem'
             }}
           >
             <div
@@ -290,81 +177,47 @@ export default function DeliveryAddressSelection({
         </div>
 
         {/* 카드 목록 */}
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.625rem'
-          }}
-        >
-          {addresses.map((address) => (
-            <DeliveryAddressCard
-              key={address.id}
-              id={address.id}
-              isDefault={address.isDefault}
-              isSelected={selectedAddressId === address.id}
-              title={address.title}
-              recipientName={address.recipientName}
-              address={address.address}
-              phoneNumber={address.phoneNumber}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onSelect={handleSelect}
-            />
-          ))}
-        </div>
+        <DeliveryAddressList
+          addresses={addresses}
+          selectedId={selectedId}
+          selectable
+          onSelect={actions.select}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+        />
       </div>
 
       {/* Fixed Bottom Button */}
-      <div
-        style={{
-          width: '100%',
-          height: '4.375rem',
-          background: isConfirmEnabled ? '#00A0D2' : '#D0D0D0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: isConfirmEnabled ? 'pointer' : 'not-allowed',
-          flexShrink: 0
-        }}
-        onClick={handleConfirm}
-      >
-        <div
-          style={{
-            textAlign: 'center',
-            color: 'white',
-            fontSize: '1.125rem',
-            fontWeight: '500'
-          }}
-        >
-          {t('common.confirm')}
-        </div>
-      </div>
+      <DeliveryAddressConfirmButton
+        enabled={isConfirmEnabled}
+        labelKey={'common.confirm'}
+        onConfirm={handleConfirm}
+      />
 
       {/* 배송지 삭제 확인 모달 */}
       <ConfirmModal
-        isOpen={deleteConfirmOpen}
+        isOpen={ui.isDeleteConfirmOpen}
         message={t('appointment.deleteDeliveryAddressConfirm')}
-        onConfirm={handleDeleteConfirm}
-        onCancel={handleDeleteCancel}
+        onConfirm={actions.deleteConfirm}
+        onCancel={actions.deleteCancel}
         confirmText={t('common.confirm')}
         cancelText={t('common.cancel')}
       />
 
       {/* 배송지 추가 불가 알림 모달 */}
       <AlertModal
-        isOpen={maxLimitAlertOpen}
-        onClose={() => setMaxLimitAlertOpen(false)}
+        isOpen={ui.isMaxLimitOpen}
+        onClose={actions.maxLimitClose}
         message={t('appointment.maxDeliveryAddressLimit')}
         confirmText={t('common.confirm')}
       />
 
       {/* 배송지 추가/수정 모달 */}
       <DeliveryAddressAdd
-        isOpen={isAddModalOpen}
-        onClose={handleCloseAddModal}
-        onSave={handleSaveAddress}
-        editingAddress={editingAddress}
+        isOpen={ui.isAddOpen}
+        onClose={actions.addClose}
+        onSave={actions.save}
+        editingAddress={ui.editingAddress}
       />
     </div>
   );

@@ -1,129 +1,157 @@
-# DrCall Global Frontend Monorepo
+# DrCall Global Frontend
 
-Frontend monorepo for DrCall Global applications using pnpm workspaces.
+> DrCall Global 헬스케어 플랫폼 프론트엔드
 
-## Structure
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite)](https://vitejs.dev/)
+[![pnpm](https://img.shields.io/badge/pnpm-9-F69220?logo=pnpm)](https://pnpm.io/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3-38B2AC?logo=tailwind-css)](https://tailwindcss.com/)
+
+## 📋 개요
+
+pnpm workspace 기반 모노레포로 Patient App과 Hospital App을 관리합니다.
+
+**배포 환경**
+- **Patient App**: https://patient.dev.drcall.global
+- **Hospital App**: https://hospital.dev.drcall.global
+
+## 🚀 빠른 시작
+
+```bash
+# 설치
+pnpm install
+
+# 개발 서버 실행
+pnpm dev:patient    # 환자용 앱
+pnpm dev:hospital   # 병원용 앱
+
+# 빌드
+pnpm build:patient
+pnpm build:hospital
+```
+
+## 🏗️ 프로젝트 구조
 
 ```
 drcall-global-frontend/
-├── apps/                     # Applications
-│   ├── hospital-app/        # Hospital management application (Desktop)
-│   └── patient-app/         # Patient mobile application
-├── packages/                 # Shared packages
-│   └── shared-lib/          # Shared utilities, services, and types
-├── package.json             # Root package.json with workspace config
-└── pnpm-workspace.yaml      # pnpm workspace configuration
+├── apps/
+│   ├── patient-app/      # 환자용 모바일 앱
+│   └── hospital-app/     # 병원용 데스크톱 앱
+├── packages/
+│   └── shared-lib/       # 공유 라이브러리
+└── docs/                 # 문서
 ```
 
-## Setup
+## 🛠️ 기술 스택
 
-### Prerequisites
-- Node.js >= 18
-- pnpm >= 9
+### 코어
+- React 19 + TypeScript 5.9
+- Vite 6
+- pnpm 9
 
-### Installation
+### UI/스타일링
+- TailwindCSS
+- shadcn/ui
+- Radix UI
+
+### 상태 관리
+- Zustand (클라이언트)
+- TanStack Query (서버)
+
+### 기타
+- react-i18next (다국어)
+- Axios (HTTP)
+- MSW (모킹)
+
+## 🚢 배포
+
+### 자동 배포
 
 ```bash
-# Install all dependencies
-pnpm install
+# DEV 배포 (patch 버전 자동 증가)
+git push origin develop
+
+# PROD 배포 (minor 버전 자동 증가)
+git push origin main
 ```
 
-## Development
+**자동화 프로세스:**
+1. 버전 자동 증가
+2. GitHub Release 생성
+3. S3/CloudFront 배포
+4. 배포 완료 (2-3분)
 
-### Run Applications
+### 배포 환경
+
+| 환경 | Patient App | Hospital App |
+|------|-------------|--------------|
+| **DEV** | [patient.dev.drcall.global](https://patient.dev.drcall.global) | [hospital.dev.drcall.global](https://hospital.dev.drcall.global) |
+| **STG** | patient.stg.drcall.global | hospital.stg.drcall.global |
+| **PROD** | patient.drcall.global | hospital.drcall.global |
+
+### GitHub Secrets 설정
+
+다음 시크릿이 설정되어 있어야 합니다:
 
 ```bash
-# Run hospital app
-pnpm dev:hospital
+# AWS 인증
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
 
-# Run patient app
-pnpm dev:patient
+# Patient App ({ENV} = DEV, STG, PROD)
+PATIENT_APP_{ENV}_API_URL
+PATIENT_APP_{ENV}_CLOUDFRONT_ID
+PATIENT_APP_{ENV}_S3_BUCKET
+
+# Hospital App
+HOSPITAL_APP_{ENV}_API_URL
+HOSPITAL_APP_{ENV}_CLOUDFRONT_ID
+HOSPITAL_APP_{ENV}_S3_BUCKET
 ```
 
-### Build Applications
+### 배포 프로세스
+
+1. **체크아웃**: 코드 클론
+2. **설치**: Node.js 20 + pnpm 9 설치
+3. **빌드**: 환경변수 주입 후 빌드
+4. **S3 업로드**: 정적 파일 업로드
+5. **캐시 무효화**: CloudFront 캐시 삭제
+
+**캐시 전략:**
+- JS/CSS/이미지: 1년 캐시
+- index.html: 캐시 없음
+
+## 📝 커밋 규칙
+
+Conventional Commits 사용 (commitlint 자동 검증)
 
 ```bash
-# Build hospital app
-pnpm build:hospital
+# 형식
+<type>(<scope>): <subject>
 
-# Build patient app
-pnpm build:patient
-
-# Build all apps
-pnpm build:all
+# 예시
+feat: add appointment cancellation feature
+fix: resolve login page crash on mobile
+docs: update README
 ```
 
-### Lint
+**Type**: `feat`, `fix`, `docs`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`
 
-```bash
-# Lint hospital app
-pnpm lint:hospital
+## 📚 문서
 
-# Lint patient app
-pnpm lint:patient
+- [버전 관리 가이드](docs/VERSIONING.md)
+- [커밋 컨벤션](docs/COMMIT_CONVENTION.md)
 
-# Lint all apps
-pnpm lint:all
-```
+## 📦 관련 저장소
 
-## Shared Library (@drcall/shared-lib)
+- [Infrastructure](https://github.com/spherecorp-kr/drcall-global-infra)
+- [Backend](https://github.com/spherecorp-kr/drcall-global-backend)
 
-The shared library contains:
+## 📄 라이선스
 
-- **API Client**: Axios instance with interceptors
-- **Services**: Chat service (SendBird integration)
-- **Utils**:
-  - Error handling
-  - Validation utilities
-  - Date formatting
-  - Sorting utilities
-  - Country codes
-  - Tailwind class merging (cn)
-- **Types**: Shared TypeScript types
-- **Config**: i18n and React Query configurations
+Private - Sphere Corp Internal Use Only
 
-### Usage in Apps
+---
 
-```typescript
-// Import from shared-lib
-import { apiClient, cn, formatDate } from '@drcall/shared-lib';
-import { chatService } from '@drcall/shared-lib/services';
-import { handleError } from '@drcall/shared-lib/utils';
-```
-
-## Apps Overview
-
-### Hospital App
-- **Purpose**: Hospital staff management interface
-- **Platform**: Desktop (responsive web)
-- **Key Features**:
-  - Patient management
-  - Appointment scheduling
-  - Medical records
-  - Analytics dashboard
-- **Tech Stack**: React 19, TypeScript, Vite, TailwindCSS, React Query, Zustand
-
-### Patient App
-- **Purpose**: Patient mobile application
-- **Platform**: Mobile-first web application
-- **Key Features**:
-  - Book appointments
-  - Chat with doctors
-  - View medical records
-  - Multi-channel support (LINE, Telegram, WhatsApp)
-- **Tech Stack**: React 19, TypeScript, Vite, TailwindCSS, React Query, MSW
-
-## Development Workflow
-
-1. Make changes in apps or shared-lib
-2. If shared code is modified, rebuild shared-lib: `cd packages/shared-lib && pnpm build`
-3. Apps will automatically pick up changes via workspace linking
-4. Test changes in respective apps
-5. Commit and push
-
-## Notes
-
-- Each app maintains its own git history from migration
-- Shared code should only contain truly reusable utilities
-- App-specific code (UI components, business logic) stays in respective apps
-- channel-specific utilities (LINE, Telegram, etc.) remain in patient-app only
+**Last Updated**: 2025-10-30

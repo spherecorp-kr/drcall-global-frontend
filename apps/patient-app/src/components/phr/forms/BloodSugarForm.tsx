@@ -75,166 +75,167 @@ export default function BloodSugarForm({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-      {/* Date & Time */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-        <label style={{ color: '#595959', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400', lineHeight: '1.225rem' }}>
-          {t('phr.dateTime')}
-        </label>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-          {/* Date Input */}
-          <button
-            onClick={() => {
-              setShowDatePicker(true);
-              onPickerStateChange?.(true);
-            }}
-            style={{
-              flex: 1,
-              height: '2.5rem',
-              padding: '0.75rem',
-              background: 'white',
-              borderRadius: '0.5625rem',
-              border: '1px solid #E0E0E0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '0.5rem',
-            }}
-          >
-            <span style={{ color: '#1F1F1F', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
-              {format(date, 'dd/MM/yyyy')}
-            </span>
-            <img src="/src/assets/icons/phr/calendar_today.svg" alt="Calendar" style={{ width: '1.5rem', height: '1.5rem' }} />
-          </button>
-
-          {/* Time Input */}
-          <button
-            onClick={() => {
-              setShowTimePicker(true);
-              onPickerStateChange?.(true);
-            }}
-            style={{
-              flex: 1,
-              height: '2.5rem',
-              padding: '0.75rem',
-              background: 'white',
-              borderRadius: '0.5625rem',
-              border: '1px solid #E0E0E0',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '0.5rem',
-            }}
-          >
-            <span style={{ color: '#1F1F1F', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400' }}>{time}</span>
-            <img src="/src/assets/icons/phr/Time Circle.svg" alt="Time" style={{ width: '1.5rem', height: '1.5rem' }} />
-          </button>
-        </div>
-      </div>
-
-      {/* Measurement Time */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-        <label style={{ color: '#595959', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400', lineHeight: '1.225rem' }}>
-          {t('phr.measurementTime')}
-        </label>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-          {/* Left Column */}
-          <div style={{ width: '11.0625rem', display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            {leftColumnOptions.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setMeasurementTime(option.value)}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}
-              >
-                <div
-                  style={{
-                    width: '1.5rem',
-                    height: '1.5rem',
-                    background: 'white',
-                    borderRadius: '9999px',
-                    border: `1px solid ${measurementTime === option.value ? '#00A0D2' : '#E0E0E0'}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {measurementTime === option.value && (
-                    <div style={{ width: '0.75rem', height: '0.75rem', borderRadius: '9999px', background: '#00A0D2' }} />
-                  )}
-                </div>
-                <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', color: '#1F1F1F', fontSize: '1rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
-                  {option.label}
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Right Column */}
-          <div style={{ width: '11.0625rem', display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            {rightColumnOptions.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setMeasurementTime(option.value)}
-                style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}
-              >
-                <div
-                  style={{
-                    width: '1.5rem',
-                    height: '1.5rem',
-                    background: 'white',
-                    borderRadius: '9999px',
-                    border: `1px solid ${measurementTime === option.value ? '#00A0D2' : '#E0E0E0'}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {measurementTime === option.value && (
-                    <div style={{ width: '0.75rem', height: '0.75rem', borderRadius: '9999px', background: '#00A0D2' }} />
-                  )}
-                </div>
-                <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', color: '#1F1F1F', fontSize: '1rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
-                  {option.label}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Blood Sugar Value */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-        <div style={{ paddingTop: '0.5rem', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: '0 1.25rem 0 1.25rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        {/* Date & Time */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
           <label style={{ color: '#595959', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400', lineHeight: '1.225rem' }}>
-            혈당
+            {t('phr.dateTime')}
           </label>
-          <div style={{ paddingTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-              <input
-                type="text"
-                inputMode="decimal"
-                value={value}
-                onChange={handleValueChange}
-                placeholder={t('phr.enterBloodSugar')}
-                style={{
-                  flex: 1,
-                  color: '#1F1F1F',
-                  fontSize: '1rem',
-                  fontFamily: 'Pretendard',
-                  fontWeight: '400',
-                  background: 'transparent',
-                  border: 'none',
-                  outline: 'none',
-                }}
-              />
-              <span style={{ textAlign: 'right', color: '#C1C1C1', fontSize: '1rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
-                mg/dL
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+            {/* Date Input */}
+            <button
+              onClick={() => {
+                setShowDatePicker(true);
+                onPickerStateChange?.(true);
+              }}
+              style={{
+                flex: 1,
+                height: '2.5rem',
+                padding: '0.75rem',
+                background: 'white',
+                borderRadius: '0.5625rem',
+                border: '1px solid #E0E0E0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '0.5rem',
+              }}
+            >
+              <span style={{ color: '#1F1F1F', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
+                {format(date, 'dd/MM/yyyy')}
               </span>
+              <img src="/src/assets/icons/phr/calendar_today.svg" alt="Calendar" style={{ width: '1.5rem', height: '1.5rem' }} />
+            </button>
+
+            {/* Time Input */}
+            <button
+              onClick={() => {
+                setShowTimePicker(true);
+                onPickerStateChange?.(true);
+              }}
+              style={{
+                flex: 1,
+                height: '2.5rem',
+                padding: '0.75rem',
+                background: 'white',
+                borderRadius: '0.5625rem',
+                border: '1px solid #E0E0E0',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '0.5rem',
+              }}
+            >
+              <span style={{ color: '#1F1F1F', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400' }}>{time}</span>
+              <img src="/src/assets/icons/phr/Time Circle.svg" alt="Time" style={{ width: '1.5rem', height: '1.5rem' }} />
+            </button>
+          </div>
+        </div>
+
+        {/* Measurement Time */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+          <label style={{ color: '#595959', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400', lineHeight: '1.225rem' }}>
+            {t('phr.measurementTime')}
+          </label>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            {/* Left Column */}
+            <div style={{ width: '11.0625rem', display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+              {leftColumnOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setMeasurementTime(option.value)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}
+                >
+                  <div
+                    style={{
+                      width: '1.5rem',
+                      height: '1.5rem',
+                      background: 'white',
+                      borderRadius: '9999px',
+                      border: `1px solid ${measurementTime === option.value ? '#00A0D2' : '#E0E0E0'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {measurementTime === option.value && (
+                      <div style={{ width: '0.75rem', height: '0.75rem', borderRadius: '9999px', background: '#00A0D2' }} />
+                    )}
+                  </div>
+                  <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', color: '#1F1F1F', fontSize: '1rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
+                    {option.label}
+                  </div>
+                </button>
+              ))}
             </div>
-            <div style={{ height: '1px', background: '#E0E0E0' }} />
+
+            {/* Right Column */}
+            <div style={{ width: '11.0625rem', display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+              {rightColumnOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => setMeasurementTime(option.value)}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}
+                >
+                  <div
+                    style={{
+                      width: '1.5rem',
+                      height: '1.5rem',
+                      background: 'white',
+                      borderRadius: '9999px',
+                      border: `1px solid ${measurementTime === option.value ? '#00A0D2' : '#E0E0E0'}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {measurementTime === option.value && (
+                      <div style={{ width: '0.75rem', height: '0.75rem', borderRadius: '9999px', background: '#00A0D2' }} />
+                    )}
+                  </div>
+                  <div style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', color: '#1F1F1F', fontSize: '1rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
+                    {option.label}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Blood Sugar Value */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+          <div style={{ paddingTop: '0.5rem', display: 'flex', flexDirection: 'column' }}>
+            <label style={{ color: '#595959', fontSize: '0.875rem', fontFamily: 'Pretendard', fontWeight: '400', lineHeight: '1.225rem' }}>
+            {t('phr.bloodSugar')}
+            </label>
+            <div style={{ paddingTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                <input
+                  type="text"
+                  inputMode="decimal"
+                  value={value}
+                  onChange={handleValueChange}
+                  placeholder={t('phr.enterBloodSugar')}
+                  style={{
+                    flex: 1,
+                    color: '#1F1F1F',
+                    fontSize: '1rem',
+                    fontFamily: 'Pretendard',
+                    fontWeight: '400',
+                    background: 'transparent',
+                    border: 'none',
+                    outline: 'none',
+                  }}
+                />
+                <span style={{ textAlign: 'right', color: '#C1C1C1', fontSize: '1rem', fontFamily: 'Pretendard', fontWeight: '400' }}>
+                  mg/dL
+                </span>
+              </div>
+              <div style={{ height: '1px', background: '#E0E0E0' }} />
+            </div>
           </div>
         </div>
       </div>
-
       {/* Submit Button */}
       <button
         onClick={handleSubmit}

@@ -20,13 +20,13 @@ export interface Position {
 
 const STORAGE_KEY = 'chat-floating-button-position';
 
-export function ChatFloatingButton({
+const ChatFloatingButton = ({
 	onClick,
 	unreadCount = 0,
 	className,
 	isOpen = false,
 	onPositionChange,
-}: ChatFloatingButtonProps) {
+}: ChatFloatingButtonProps) => {
 	const { t } = useTranslation();
 	const [isDragging, setIsDragging] = useState(false);
 	const [position, setPosition] = useState<Position>({ x: 32, y: 32 });
@@ -181,3 +181,5 @@ export function ChatFloatingButton({
 		</button>
 	);
 }
+
+export default ChatFloatingButton;

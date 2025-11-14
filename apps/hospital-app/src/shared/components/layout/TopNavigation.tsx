@@ -14,7 +14,7 @@ interface TopNavigationProps {
 	userRole: 'coordinator' | 'doctor';
 }
 
-export function TopNavigation({
+const TopNavigation = ({
 	className,
 	onBack,
 	showBackButton = false,
@@ -22,7 +22,7 @@ export function TopNavigation({
 	userAvatar,
 	userName,
 	userRole,
-}: TopNavigationProps) {
+}: TopNavigationProps) => {
 	const { t } = useTranslation();
 	return (
 		<div
@@ -35,14 +35,8 @@ export function TopNavigation({
 			<div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-0 flex-shrink">
 				{showBackButton && (
 					<button onClick={onBack} className="flex-shrink-0" aria-label="Go back">
-						<svg width="9" height="16" viewBox="0 0 9 16" fill="none">
-							<path
-								d="M8 1L1 8L8 15"
-								stroke="#1F1F1F"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								strokeWidth="2"
-							/>
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+							<path d="M16.5333 4L8 11.937L16.5333 19.874" stroke="#1F1F1F" strokeWidth="2" />
 						</svg>
 					</button>
 				)}
@@ -71,3 +65,5 @@ export function TopNavigation({
 		</div>
 	);
 }
+
+export default TopNavigation;

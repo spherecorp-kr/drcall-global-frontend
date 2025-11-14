@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, CSSProperties } from 'react';
 import MainLayout from './MainLayout';
 import PageContainer from '@ui/layout/PageContainer';
 import PageSection from '@ui/layout/PageSection';
@@ -11,6 +11,7 @@ import Notice from '@ui/display/Notice';
 interface AppointmentDetailLayoutProps {
   // Header
   title: string;
+  titleStyle?: CSSProperties;
   onBack: () => void;
   onClose: () => void;
 
@@ -65,6 +66,7 @@ interface AppointmentDetailLayoutProps {
  */
 export default function AppointmentDetailLayout({
   title,
+  titleStyle,
   onBack,
   onClose,
   pageTitle,
@@ -91,7 +93,7 @@ export default function AppointmentDetailLayout({
       <PageContainer hasBottomButton={hasBottomButton}>
         {/* 페이지 타이틀 */}
         {pageTitle && (
-          <PageSection padding>
+          <PageSection padding style={{ ...titleStyle }}>
             <PageTitle>{pageTitle}</PageTitle>
             {additionalTitleContent}
           </PageSection>

@@ -62,16 +62,25 @@ export default function Confirmation({ appointmentType = 'standard' }: Confirmat
     >
       <PageContainer hasBottomButton style={{ background: '#FAFAFA' }}>
         {/* Progress Steps */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 0 0.625rem 0' }}>
           <ProgressSteps
             currentStep={appointmentType === 'quick' ? 3 : 4}
             totalSteps={appointmentType === 'quick' ? 3 : 4}
-            labels={appointmentType === 'quick' ? [t('appointment.symptoms'), t('appointment.questionnaire'), t('appointment.confirmation')] : [t('appointment.date'), t('appointment.symptoms'), t('appointment.questionnaire'), t('appointment.confirmation')]}
+            labels={appointmentType === 'quick' ? [
+              t('appointment.progressSteps.symptoms'),
+              t('appointment.progressSteps.questionnaire'),
+              t('appointment.progressSteps.confirmation')
+            ] : [
+              t('appointment.progressSteps.date'),
+              t('appointment.progressSteps.symptoms'),
+              t('appointment.progressSteps.questionnaire'),
+              t('appointment.progressSteps.confirmation')
+            ]}
           />
         </PageSection>
 
         {/* Check Icon and Message */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <div className="flex flex-col items-center gap-[1.875rem] pt-10 pb-5">
             <img
               src="/assets/icons/check-large.svg"
@@ -87,29 +96,27 @@ export default function Confirmation({ appointmentType = 'standard' }: Confirmat
         {/* Appointment Details */}
         <PageSection padding>
           <div className="bg-white rounded-[10px] flex flex-col gap-4" style={{ padding: '1.25rem' }}>
-            <InfoField label={t('appointment.name')} value={userName} bold gap="0.375rem" />
-            <InfoField label={t('appointment.phone')} value={userPhone} bold gap="0.375rem" />
+            <InfoField label={t('appointment.name')} value={userName} gap="0.375rem" />
+            <InfoField label={t('appointment.phone')} value={userPhone} gap="0.375rem" />
             <InfoField
               label={t('appointment.appointmentType')}
               value={appointmentType === 'quick' ? t('appointment.quickAppointment') : t('appointment.standardAppointment')}
-              bold
               gap="0.375rem"
             />
-            <InfoField label={t('appointment.hospital')} value={hospitalName} bold gap="0.375rem" />
+            <InfoField label={t('appointment.hospital')} value={hospitalName} gap="0.375rem" />
 
             {/* 진료 희망 일시 - 일반 예약만 표시 */}
             {appointmentType === 'standard' && (
               <InfoField
                 label={t('appointment.preferredDateTime')}
                 value={formatDateTime(selectedDate, selectedTimeSlot)}
-                bold
                 gap="0.375rem"
               />
             )}
 
             {/* 진료 희망 의사 - 일반 예약만 표시 */}
             {appointmentType === 'standard' && (
-              <InfoField label={t('appointment.preferredDoctor')} value={selectedDoctorName} bold gap="0.375rem" />
+              <InfoField label={t('appointment.preferredDoctor')} value={selectedDoctorName} gap="0.375rem" />
             )}
           </div>
         </PageSection>

@@ -143,7 +143,7 @@ export default function PhrDetail() {
     <MainLayout title={typeInfo.title} showHeader onBack={() => navigate('/phr')} fullWidth contentClassName="p-0">
       <PageContainer style={{ background: '#FAFAFA' }}>
         {/* Header: 상세기록 + 추가 버튼 */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem' }}>
           <div className="flex items-center justify-between">
             <span className="text-[#1F1F1F] text-[1rem] font-normal">{t('phr.recordDetail')}</span>
             <button
@@ -183,7 +183,7 @@ export default function PhrDetail() {
         isOpen={deleteModalOpen}
         onCancel={() => setDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        message={t('mypage.confirmDelete')}
+        message={t('phr.deleteRecordConfirm')}
         confirmText={t('common.delete')}
         cancelText={t('common.cancel')}
       />
@@ -225,6 +225,7 @@ export default function PhrDetail() {
               justifyContent: 'space-between',
               alignItems: 'center',
             }}>
+            <div style={{ width: '1.5rem', height: '1.5rem', background: 'transparent', visibility: 'hidden' }}></div>
               <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ color: '#1F1F1F', fontSize: '1.25rem', fontFamily: 'Pretendard', fontWeight: '600' }}>
                   {typeInfo.title} {t('common.add')}
@@ -234,19 +235,12 @@ export default function PhrDetail() {
                 onClick={() => setAddModalOpen(false)}
                 style={{ width: '1.5rem', height: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
               >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path
-                    d="M2 2L14 14M2 14L14 2"
-                    stroke="#1F1F1F"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <img src='/assets/icons/btn_close_pupup.svg' alt='close_popup' width={24} height={24}/>
               </button>
             </div>
 
             {/* Form Content */}
-            <div style={{ padding: '0 1.25rem 1.25rem 1.25rem', maxHeight: '70vh', overflowY: 'auto' }}>
+            <div style={{ maxHeight: '70vh', overflowY: 'auto' }}>
               {renderForm()}
             </div>
           </div>

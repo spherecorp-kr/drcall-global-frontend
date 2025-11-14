@@ -1,0 +1,86 @@
+.react-datepicker__month-container div[role=table] {
+	padding: 0 1rem;
+}
+
+.react-datepicker__day-names {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+}
+
+.react-datepicker__aria-live,
+.react-datepicker__sr-only {
+	display: none;
+}
+
+.react-datepicker__day-name {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+	width: 2.75rem;
+}
+
+.react-datepicker__day-name span:not(.react-datepicker__sr-only) {
+	color: #c1c1c1;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	line-height: 1.125rem;
+	text-align: center;
+}
+
+.react-datepicker__day-names .react-datepicker__day-name:first-child span:not(.react-datepicker__sr-only),
+.react-datepicker__week .react-datepicker__day--weekend:first-child {
+	color: #fc0606;
+}
+
+.react-datepicker__day-names .react-datepicker__day-name:last-child span:not(.react-datepicker__sr-only),
+.react-datepicker__week .react-datepicker__day--weekend:last-child {
+	color: #3076df;
+}
+
+.react-datepicker__week {
+	align-items: center;
+	align-self: stretch;
+	display: flex;
+	justify-content: space-between;
+}
+
+.react-datepicker__day {
+	align-items: center;
+	color: #1f1f1f;
+	cursor: pointer;
+	display: flex;
+	font-size: 1.25rem;
+	font-weight: 400;
+	height: 2.75rem;
+	justify-content: center;
+	line-height: 1.5625rem;
+	width: 2.75rem;
+}
+
+.react-datepicker__day--disabled {
+	color: #c1c1c1 !important;
+	cursor: not-allowed;
+}
+
+.react-datepicker__month {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4375rem;
+	margin-top: 0.625rem;
+}
+
+.react-datepicker__day--selected {
+	background-color: #00a0d2;
+	border-radius: 50%;
+	color: #fff !important;
+	font-size: 1.5rem;
+	font-weight: 500;
+}
+
+#editPatientInfoForm .react-datepicker__day {
+	font-size: 1rem;
+	height: 2.5rem;
+	line-height: normal;
+	width: 2.5rem;
+}

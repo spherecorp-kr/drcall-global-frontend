@@ -129,7 +129,7 @@ export default function MedicalHistory() {
     { key: 'pending', label: t('appointment.pending') },
     { key: 'confirmed', label: t('appointment.confirmed') },
     { key: 'completed', label: t('appointment.completed') },
-    { key: 'cancelled', label: t('appointment.cancelled') }
+    { key: 'cancelled', label: t('appointment.cancel') }
   ];
 
   const handleOpenModal = () => {
@@ -243,7 +243,7 @@ export default function MedicalHistory() {
               }}
             >
               <span>{currentPaymentStatusLabel}</span>
-              <img src="/assets/icons/chevron-down.svg" alt="" style={{ width: '1.5rem', height: '1.5rem' }} />
+              <img src="/assets/icons/btn_opening.svg" alt="" style={{ width: '1.5rem', height: '1.5rem' }} />
             </button>
           )}
           <button
@@ -262,7 +262,7 @@ export default function MedicalHistory() {
             }}
           >
             <span>{currentSortLabel}</span>
-            <img src="/assets/icons/chevron-down.svg" alt="" style={{ width: '1.5rem', height: '1.5rem' }} />
+            <img src="/assets/icons/btn_opening.svg" alt="" style={{ width: '1.5rem', height: '1.5rem' }} />
           </button>
         </div>
 
@@ -356,7 +356,7 @@ export default function MedicalHistory() {
               <span
                 style={{
                   fontSize: 16,
-                  fontWeight: '400',
+                  fontWeight: '700',
                   color: '#1F1F1F'
                 }}
               >

@@ -24,9 +24,9 @@ export default function Settings() {
     navigate('/mypage');
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     // 저장 버튼 클릭 시에만 전역 상태 변경
-    await setLanguage(selectedLanguage);
+    setLanguage(selectedLanguage);
     navigate('/mypage');
   };
 
@@ -48,7 +48,6 @@ export default function Settings() {
         style={{
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '6rem'
         }}
       >

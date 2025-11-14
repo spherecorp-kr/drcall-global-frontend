@@ -54,7 +54,7 @@ export default function PaymentStatusFilterModal({
             <span
               style={{
                 fontSize: 16,
-                fontWeight: '400',
+                fontWeight: '700',
                 color: '#1F1F1F'
               }}
             >

@@ -75,7 +75,7 @@ export default function PhrAdd() {
         parsedData.value = parseFloat(data.value || '0');
       }
 
-      await createRecord(typeInfo.type, parsedData);
+      await createRecord(typeInfo.type, parsedData as any);
 
       // Show success toast
       setShowSuccessToast(true);
@@ -128,14 +128,7 @@ export default function PhrAdd() {
             onClick={() => navigate(-1)}
             className="w-6 h-6 flex items-center justify-center flex-shrink-0"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path
-                d="M2 2L14 14M2 14L14 2"
-                stroke="#1F1F1F"
-                strokeWidth="2"
-                strokeLinecap="round"
-              />
-            </svg>
+            <img src='/assets/icons/btn_close_pupup.svg' alt='close_popup' width={24} height={24}/>
           </button>
         </div>
 

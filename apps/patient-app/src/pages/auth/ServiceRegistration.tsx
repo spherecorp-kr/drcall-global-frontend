@@ -206,7 +206,7 @@ export default function ServiceRegistration() {
           marginLeft: '-1.25rem',
           marginRight: '-1.25rem',
           marginTop: '-1.25rem',
-          marginBottom: '2.5rem',
+          marginBottom: '1.25rem',
           paddingLeft: '1.25rem'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
@@ -243,8 +243,8 @@ export default function ServiceRegistration() {
         </div>
 
         {/* Form Title */}
-        <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', marginBottom: '2.5rem' }}>
-          {t('auth.serviceRegistration')}
+        <h2 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#1f1f1f', marginBottom: '1.25rem' }}>
+          {t('auth.userRegistration')}
         </h2>
 
         {/* Form Fields */}
@@ -264,7 +264,7 @@ export default function ServiceRegistration() {
                 setErrors(prev => ({ ...prev, name: e.target.value ? '' : t('auth.enterName') }));
               }
             }}
-            placeholder=""
+            placeholder={t('auth.enterName')}
             error={showErrors ? errors.name : ''}
           />
 
@@ -279,13 +279,10 @@ export default function ServiceRegistration() {
               type="text"
               value={birthdate}
               onChange={(e) => setBirthdate(e.target.value)}
-              placeholder=""
+              placeholder={t('auth.birthdatePlaceholder')}
               readOnly
               rightElement={
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="4" width="18" height="18" rx="2" stroke="#00A0D2" strokeWidth="2"/>
-                  <path d="M16 2V6M8 2V6M3 10H21" stroke="#00A0D2" strokeWidth="2"/>
-                </svg>
+                <img src="/src/assets/icons/phr/calendar_today.svg" alt="Calendar"  width={24} height={24} />
               }
             />
           </div>
@@ -300,7 +297,7 @@ export default function ServiceRegistration() {
             type="text"
             value={thaiId}
             onChange={(e) => setThaiId(e.target.value)}
-            placeholder=""
+            placeholder={t('auth.enterThaiId')}
           />
 
           {/* Gender */}
@@ -335,7 +332,7 @@ export default function ServiceRegistration() {
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder=""
+            placeholder={t('auth.enterPhone')}
             readOnly
             disabled
           />
@@ -369,10 +366,7 @@ export default function ServiceRegistration() {
               }}>
                 {address || t('auth.searchAddress')}
               </div>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
-                <circle cx="9" cy="9" r="7" stroke="#00A0D2" strokeWidth="2"/>
-                <path d="M15 15L19 19" stroke="#00A0D2" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+              <img src='/assets/icons/ic_search.svg' alt='search' width={24} height={24}/>
             </div>
 
             {/* Detail Address - 주소가 선택된 후에만 표시 */}

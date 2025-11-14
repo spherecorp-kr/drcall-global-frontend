@@ -73,7 +73,7 @@ export function loadGoogleMaps(opts: LoadOptions = {}, onLoaded?: () => void) {
       if (window.google?.maps && 'importLibrary' in window.google.maps) {
         await window.google.maps.importLibrary('places');
       }
-    } catch {
+    } catch (e) {
       // noop: importLibrary 실패 시에도 onReady 호출로 후속 로직 진행
       console.error('[gmaps:onReady:importLibrary:failed]', e);
     } finally {

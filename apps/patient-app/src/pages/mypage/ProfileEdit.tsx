@@ -111,7 +111,7 @@ export default function ProfileEdit() {
     >
       <PageContainer hasBottomButton style={{ background: 'transparent' }}>
         {/* Page Title */}
-        <PageSection padding style={{ paddingBottom: '1.25rem' }}>
+        <PageSection style={{ padding: '0 1.25rem 0 1.25rem' }}>
           <PageTitle>{t('mypage.profileTitle')}</PageTitle>
         </PageSection>
 
@@ -144,10 +144,7 @@ export default function ProfileEdit() {
               placeholder=""
               readOnly
               rightElement={
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <rect x="3" y="4" width="18" height="18" rx="2" stroke="#00A0D2" strokeWidth="2"/>
-                  <path d="M16 2V6M8 2V6M3 10H21" stroke="#00A0D2" strokeWidth="2"/>
-                </svg>
+                <img src="/src/assets/icons/phr/calendar_today.svg" alt="Calendar"  width={24} height={24} />
               }
             />
           </div>
@@ -259,10 +256,7 @@ export default function ProfileEdit() {
               }}>
                 {address || t('delivery.addressPlaceholder')}
               </div>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
-                <circle cx="9" cy="9" r="7" stroke="#00A0D2" strokeWidth="2"/>
-                <path d="M15 15L19 19" stroke="#00A0D2" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+              <img src='/assets/icons/ic_search.svg' alt='search' width={24} height={24}/>
             </div>
 
             {/* Detail Address */}

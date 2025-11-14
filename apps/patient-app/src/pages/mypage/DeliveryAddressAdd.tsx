@@ -247,9 +247,7 @@ export default function DeliveryAddressAdd({
             padding: 0
           }}
         >
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-            <path d="M22.5 7.5L7.5 22.5M7.5 7.5L22.5 22.5" stroke="black" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
+          <img src='/assets/icons/btn-끄기.svg' alt='close' width={30} height={30}/>
         </button>
       </div>
 
@@ -260,7 +258,6 @@ export default function DeliveryAddressAdd({
           overflowY: 'auto',
           paddingLeft: '1.25rem',
           paddingRight: '1.25rem',
-          paddingTop: '1.25rem',
           paddingBottom: '1.25rem',
           minHeight: 0
         }}
@@ -455,10 +452,7 @@ export default function DeliveryAddressAdd({
               }}
             >
               <div style={{ flex: 1 }}>{address || t('delivery.addressPlaceholder')}</div>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="11" cy="11" r="7" stroke="#00A0D2" strokeWidth="2"/>
-                <path d="M16 16L21 21" stroke="#00A0D2" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+              <img src='/assets/icons/ic_search.svg' alt='search' width={24} height={24}/>
             </div>
 
             {/* 상세주소 입력 필드 - 주소가 선택된 후에만 표시 */}
