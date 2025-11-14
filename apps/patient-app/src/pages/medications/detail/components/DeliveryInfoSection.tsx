@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import Section from './Section';
 
 type DeliveryInfo = {
+  imgSrc?: string;
   receiverName: string;
   phone: string;
   address: string;
@@ -26,19 +27,22 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.75rem'
+          gap: '1.25rem'
         }}
       >
         {/* Figma: 배송지/요청사항만 박스형, 그 외는 텍스트형 */}
         <Row 
+          imgSrc="/assets/icons/user-square.svg" 
           label={t('medication.detail.labels.receiverName')} 
           value={info.receiverName} variant="text" 
         />
         <Row 
+          imgSrc="/assets/icons/ic_mobile.svg" 
           label={t('medication.detail.labels.phone')} 
           value={info.phone} variant="text" 
         />
         <Row 
+          imgSrc="/assets/icons/ic_location.svg" 
           label={t('medication.detail.labels.address')} 
           value={info.address} 
           variant="box" 
@@ -46,6 +50,7 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
         />
         {info.requestNote && (
           <Row
+            imgSrc="/assets/icons/ic_box.svg"
             label={t('medication.detail.labels.requestNote')}
             value={info.requestNote}
             variant="box"
@@ -58,11 +63,13 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
 }
 
 function Row({
+  imgSrc = '',
   label,
   value,
   variant = 'box',
   multi = false
 }: {
+  imgSrc: string;
   label: string;
   value: string;
   variant?: 'box' | 'text';
@@ -77,6 +84,11 @@ function Row({
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <img
+          src={imgSrc}
+          alt=""
+          style={{ width: '1.375rem', height: '1.375rem' }} 
+        />
         <div
           style={{
             fontSize: '1.125rem',

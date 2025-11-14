@@ -21,6 +21,7 @@ export type MedicationDetailMock = {
     deadlineDate?: string; // 직접 수령: 수령 기한(상단 보조 정보)
   };
   deliveryInfo?: {
+    imgSrc?: string;
     receiverName: string;
     phone: string;
     address: string;
