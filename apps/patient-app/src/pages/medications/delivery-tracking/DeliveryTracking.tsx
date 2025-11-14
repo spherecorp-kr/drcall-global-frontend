@@ -80,6 +80,107 @@ export default function DeliveryTracking() {
               </div>
             </div>
           </PageSection>
+
+          {/* 표 컨테이너: 스크롤 영역 */}
+          <div
+            style={{
+              flex: 1,
+              overflowY: 'auto',
+              borderTop: '1px solid #E0E0E0',
+            }}
+          >
+            {/* 헤더 (sticky) */}
+            <div
+              style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 1,
+                background: '#F5F5F5',
+                borderBottom: '1px solid #E0E0E0',
+                display: 'flex',
+              }}
+            >
+              <div
+                style={{
+                  width: '40%',
+                  padding: '0.75rem 1rem',
+                  color: '#1F1F1F',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                }}
+              >
+                {t('medication.tracking.table.processedAt')}
+              </div>
+              <div
+                style={{
+                  width: '30%',
+                  padding: '0.75rem 1rem',
+                  color: '#1F1F1F',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                }}
+              >
+                {t('medication.tracking.table.step')}
+              </div>
+              <div
+                style={{
+                  width: '30%',
+                  padding: '0.75rem 1rem',
+                  color: '#1F1F1F',
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                }}
+              >
+                {t('medication.tracking.table.location')}
+              </div>
+            </div>
+
+            {/* 바디 */}
+            <div>
+              {events.map((ev, idx) => (
+                <div
+                  key={`${ev.timestamp}-${idx}`}
+                  style={{
+                    display: 'flex',
+                    borderBottom: '1px solid #E0E0E0',
+                    background: '#FFFFFF',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '40%',
+                      padding: '0.875rem 1rem',
+                      color: '#1F1F1F',
+                      fontSize: '0.875rem',
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {formatDateTime(ev.timestamp)}
+                  </div>
+                  <div
+                    style={{
+                      width: '30%',
+                      padding: '0.875rem 1rem',
+                      color: '#1F1F1F',
+                      fontSize: '0.875rem',
+                    }}
+                  >
+                    {t(STEP_LABEL_KEY_MAP[ev.step])}
+                  </div>
+                  <div
+                    style={{
+                      width: '30%',
+                      padding: '0.875rem 1rem',
+                      color: '#1F1F1F',
+                      fontSize: '0.875rem',
+                    }}
+                  >
+                    {ev.location}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </PageContainer>
     </MainLayout>
