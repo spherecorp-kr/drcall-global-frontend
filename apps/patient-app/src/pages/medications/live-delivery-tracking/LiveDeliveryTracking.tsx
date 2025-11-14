@@ -115,78 +115,67 @@ export default function LiveDeliveryTracking() {
           });
         }
 
-        // 사용자 현재 위치: Geolocation
-        if ('geolocation' in navigator) {
-          navigator.geolocation.getCurrentPosition(
-            (pos) => {
-              if (!mapInstanceRef.current) return;
-              const { latitude, longitude } = pos.coords;
-              const here = new g.maps.LatLng(latitude, longitude);
-              userMarkerRef.current = new g.maps.marker.AdvancedMarkerElement({
-                map: mapInstanceRef.current,
-                position: here,
-                content: createContent('/assets/icons/ic_delivery_address.svg'),
-              });
-              // 사용자 위치 근처로 서버 마커 재배치 (실제 배송 상황처럼 근접 좌표로 지정)
-              // 1도(lat) ≈ 111,320m, lng는 위도에 따라 보정
-              const degLatPerM = 1 / 111320;
-              const degLngPerM = 1 / (111320 * Math.cos((latitude * Math.PI) / 180));
-              const motorcyclePos = {
-                lat: latitude + 300 * degLatPerM, // 북쪽 300m
-                lng: longitude + 300 * degLngPerM, // 동쪽 300m
-              };
-              const truckPos = {
-                lat: latitude - 200 * degLatPerM, // 남쪽 200m
-                lng: longitude + 700 * degLngPerM, // 동쪽 700m
-              };
-              // 기존 서버 마커 제거
-              serverMarkersRef.current.forEach((m) => {
-                (m as any).map = null;
-              });
-              // 근접 좌표로 서버 마커 재생성
-              serverMarkersRef.current = [
-                new g.maps.marker.AdvancedMarkerElement({
-                  map: mapInstanceRef.current,
-                  position: motorcyclePos,
-                  content: createContent(getIconUrl('motorcycle')),
-                }),
-                new g.maps.marker.AdvancedMarkerElement({
-                  map: mapInstanceRef.current,
-                  position: truckPos,
-                  content: createContent(getIconUrl('truck')),
-                }),
-              ];
-              // 서버 마커 + 사용자 위치로 bounds 업데이트
-              const allBounds = new g.maps.LatLngBounds();
-              serverMarkersRef.current.forEach((m) => {
-                const pos2 = m.position;
-                if (pos2 instanceof g.maps.LatLng) {
-                  allBounds.extend(pos2);
-                } else if (pos2) {
-                  allBounds.extend(new g.maps.LatLng(pos2 as google.maps.LatLngLiteral));
-                }
-              });
-              allBounds.extend(here);
-              {
-                const overlayHeight = overlayCardRef.current?.offsetHeight ?? 0;
-                const bottomPadding = Math.max(overlayHeight + 16, 12);
-                mapInstanceRef.current.fitBounds(allBounds, {
-                  top: 12,
-                  left: 12,
-                  right: 12,
-                  bottom: bottomPadding,
-                });
-              }
-              setGeoMessage(null);
-            },
-            (err) => {
-              setGeoMessage('현재 위치를 가져올 수 없습니다. 브라우저 위치 권한을 확인해주세요.');
-            },
-            { enableHighAccuracy: true, maximumAge: 10_000, timeout: 10_000 }
-          );
-        } else {
-          setGeoMessage('이 브라우저는 위치 정보를 지원하지 않습니다.');
+        // 사용자 배송지 위치 (서버 응답 대체 Mock)로 주소 마커 표시
+        // 예시: 방콕 시내 좌표 (실서버에서는 API 응답 값을 사용)
+        const deliveryLat = 13.7568;
+        const deliveryLng = 100.5022;
+        const deliveryHere = new g.maps.LatLng(deliveryLat, deliveryLng);
+        userMarkerRef.current = new g.maps.marker.AdvancedMarkerElement({
+          map: mapInstanceRef.current,
+          position: deliveryHere,
+          content: createContent('/assets/icons/ic_delivery_address.svg'),
+        });
+        // 배송지 근처로 서버 마커 재배치 (실제 배송 상황처럼 근접 좌표로 지정)
+        // 1도(lat) ≈ 111,320m, lng는 위도에 따라 보정
+        const degLatPerM = 1 / 111320;
+        const degLngPerM = 1 / (111320 * Math.cos((deliveryLat * Math.PI) / 180));
+        const motorcyclePos = {
+          lat: deliveryLat + 120 * degLatPerM, // 북쪽 120m
+          lng: deliveryLng + 120 * degLngPerM, // 동쪽 120m
+        };
+        const truckPos = {
+          lat: deliveryLat - 80 * degLatPerM, // 남쪽 80m
+          lng: deliveryLng + 180 * degLngPerM, // 동쪽 180m
+        };
+        // 기존 서버 마커 제거
+        serverMarkersRef.current.forEach((m) => {
+          (m as any).map = null;
+        });
+        // 근접 좌표로 서버 마커 재생성
+        serverMarkersRef.current = [
+          new g.maps.marker.AdvancedMarkerElement({
+            map: mapInstanceRef.current,
+            position: motorcyclePos,
+            content: createContent(getIconUrl('motorcycle')),
+          }),
+          new g.maps.marker.AdvancedMarkerElement({
+            map: mapInstanceRef.current,
+            position: truckPos,
+            content: createContent(getIconUrl('truck')),
+          }),
+        ];
+        // 서버 마커 + 배송지 위치로 bounds 업데이트
+        const allBounds = new g.maps.LatLngBounds();
+        serverMarkersRef.current.forEach((m) => {
+          const pos2 = m.position;
+          if (pos2 instanceof g.maps.LatLng) {
+            allBounds.extend(pos2);
+          } else if (pos2) {
+            allBounds.extend(new g.maps.LatLng(pos2 as google.maps.LatLngLiteral));
+          }
+        });
+        allBounds.extend(deliveryHere);
+        {
+          const overlayHeight = overlayCardRef.current?.offsetHeight ?? 0;
+          const bottomPadding = Math.max(overlayHeight + 16, 12);
+          mapInstanceRef.current.fitBounds(allBounds, {
+            top: 12,
+            left: 12,
+            right: 12,
+            bottom: bottomPadding,
+          });
         }
+        setGeoMessage(null);
       } catch (e) {
         setLoadError(
           '지도를 불러올 수 없습니다. VITE_GOOGLE_MAPS_API_KEY 환경변수를 확인해주세요.'
