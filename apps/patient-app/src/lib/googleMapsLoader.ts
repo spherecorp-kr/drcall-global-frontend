@@ -1,4 +1,5 @@
 import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
+import { useLanguageStore } from '@/stores/languageStore';
 
 let optionsConfigured = false;              // setOptions 1회 보장
 let loadingPromise: Promise<typeof google> | null = null;  // 동시 호출 단일화
@@ -12,6 +13,8 @@ let loadingPromise: Promise<typeof google> | null = null;  // 동시 호출 단�
  * 반환: 전역 google 네임스페이스 (typeof google)
  */
 export async function loadGoogle(): Promise<typeof google> {
+  const lang = useLanguageStore.getState().language;
+
   // 이미 초기화된 경우 전역 네임스페이스 재사용
   if ((window as any).google) {
     return (window as any).google as typeof google;
@@ -28,6 +31,7 @@ export async function loadGoogle(): Promise<typeof google> {
     setOptions({ 
       key: apiKey, 
       v: 'weekly', // 최신 안정 주간 채널을 사용
+      language: lang,
       mapIds: [import.meta.env.VITE_GOOGLE_MAPS_ID || 'DEMO_MAP_ID'],
     });
     optionsConfigured = true;
