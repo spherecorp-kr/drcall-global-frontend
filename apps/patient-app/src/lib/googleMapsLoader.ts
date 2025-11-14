@@ -1,7 +1,7 @@
 import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 
-// 첫 로드 이후 재호출 시 중복 로딩을 방지하기 위한 로컬 플래그
-let initialized = false;
+let optionsConfigured = false;              // setOptions 1회 보장
+let loadingPromise: Promise<typeof google> | null = null;  // 동시 호출 단일화
 
 /**
  * Google Maps JavaScript API를 최신 functional API로 로드합니다.
@@ -13,7 +13,7 @@ let initialized = false;
  */
 export async function loadGoogle(): Promise<typeof google> {
   // 이미 초기화된 경우 전역 네임스페이스 재사용
-  if (initialized && (window as any).google) {
+  if ((window as any).google) {
     return (window as any).google as typeof google;
   }
 
@@ -24,15 +24,18 @@ export async function loadGoogle(): Promise<typeof google> {
   }
 
   // 첫 로드 전에 전역 옵션을 설정해야 합니다
-  setOptions({
-    key: apiKey,
-    v: 'weekly', // 최신 안정 주간 채널을 사용
-  });
+  if (!optionsConfigured) {
+    setOptions({ 
+      key: apiKey, 
+      v: 'weekly' // 최신 안정 주간 채널을 사용
+    });
+    optionsConfigured = true;
+  }
 
   // core maps 라이브러리를 로드하여 google 네임스페이스를 준비합니다
-  await importLibrary('maps');
-  initialized = true;
+  if (!loadingPromise) {
+    loadingPromise = importLibrary('maps').then(() => (window as any).google as typeof google);
+  }
 
-  // API가 주입한 전역 네임스페이스 반환
-  return (window as any).google as typeof google;
+  return loadingPromise;
 }
