@@ -45,6 +45,17 @@ export default function DeliveryTracking() {
     { timestamp: '2025-09-07T16:49:00', step: 'shipped', location: 'Praram9' },
   ];
 
+  // UI 표시용 날짜 포맷: DD/MM/YYYY HH:mm
+  const formatDateTime = (iso: string) => {
+    const d = new Date(iso);
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    return `${dd}/${mm}/${yyyy} ${hh}:${mi}`;
+  };
+
   return (
     <MainLayout
       title={t('medication.tracking.pageTitle')}
