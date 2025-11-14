@@ -1,0 +1,12 @@
+.treatment-history-action {
+	background: url("../assets/icons/btn_action_default.png") center no-repeat;
+	background-size: 1.875rem;
+	border-radius: 50%;
+	height: 1.875rem;
+	width: 1.875rem;
+}
+
+.tr:active .treatment-history-action {
+	background: url("../assets/icons/btn_action_active.png") center no-repeat;
+	background-size: 1.875rem;
+}

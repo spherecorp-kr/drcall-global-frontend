@@ -1,0 +1,227 @@
+{
+	"language": {
+		"en": "English",
+		"ko": "한국어",
+		"th": "ไทย"
+	},
+	"role": {
+		"admin": "관리자",
+		"coordinator": "코디네이터",
+		"doctor": "의사",
+		"patient": "환자"
+	},
+	"canceler": {
+		"hospital": "병원",
+		"patient": "환자",
+		"system": "시스템"
+	},
+	"menu": {
+		"dashboard": "대시보드",
+		"hospitals": "병원 관리",
+		"users": "사용자 관리",
+		"monitoring": "시스템 모니터링",
+		"content": "콘텐츠 관리",
+		"audit": "감사 로그",
+		"settings": "설정"
+	},
+	"dashboard": {
+		"section": {
+			"summary": {
+				"title": "현황 요약",
+				"card": {
+					"todayCount": {
+						"description": "어제 예약 수 : 22명",
+						"label": "오늘 예약 건수",
+						"tooltip": "오늘 접수한 모든 예약 건수입니다. 어제 예약 건수와 비교하여 증감 여부를 확인할 수 있습니다.",
+						"value": "{{value}}명"
+					},
+					"todaySales": {
+						"description": "어제 총 매출 : 48,000THB",
+						"label": "오늘 총 매출",
+						"tooltip": "오늘 발생한 총 매출 금액입니다. 어제 매출과 비교해 증가/감소 추이를 보여줍니다.",
+						"value": "{{value}}THB"
+					},
+					"monthlyCount": {
+						"description": "7월 예약 수 : 220명",
+						"label": "이번 달 예약 건수",
+						"tooltip": "이번 달 누적 예약 건수입니다. 지난달 예약 건수와 비교하여 월간 변화를 확인할 수 있습니다.",
+						"value": "{{value}}명"
+					},
+					"monthlyNewPatient": {
+						"description": "7월 신규 환자 : 1,000명",
+						"label": "이번 달 신규 환자",
+						"tooltip": "이번 달 처음 방문한 신규 환자 수입니다. 지난달 신규 환자 수와 비교해 증감을 표시합니다.",
+						"value": "{{value}}명"
+					}
+				}
+			},
+			"chart": {
+				"title": "환자 통계",
+				"viewOption": {
+					"weekly": "주간",
+					"monthly": "월간"
+				},
+				"legend": {
+					"new": "신규",
+					"fu": "재진"
+				}
+			},
+			"appointments": {
+				"title": "오늘 진료 예정"
+			},
+			"doctors": {
+				"title": "의사 목록"
+			}
+		}
+	},
+	"phr": {
+		"bloodPressure": {
+			"systole": "수축기",
+			"diastole": "이완기"
+		},
+		"bloodSugar": {
+			"mn": "아침",
+			"lnc": "점심",
+			"din": "저녁",
+			"bb": "취침 전",
+			"am": "식후",
+			"bm": "식전",
+			"premav": "식전 평균",
+			"postav": "식후 평균",
+			"avbb": "취침 전 평균",
+			"mnbm": "아침 식전",
+			"mnam": "아침 식후",
+			"lcbm": "점심 식전",
+			"lcam": "점심 식후",
+			"dnbm": "저녁 식전",
+			"dnam": "저녁 식후",
+			"aswb": "이번 주 평균 아침 혈당 : ",
+			"aswl": "이번 주 평균 점심 혈당 : ",
+			"aswd": "이번 주 평균 저녁 혈당 : ",
+			"aswbb": "이번 주 평균 취침 전 혈당 : ",
+			"asmb": "이번 달 평균 아침 혈당 : ",
+			"asml": "이번 달 평균 점심 혈당 : ",
+			"asmd": "이번 달 평균 저녁 혈당 : ",
+			"asmbb": "이번 달 평균 취침 전 혈당 : ",
+			"adw": "이번 주 평균 데이터가 없습니다.",
+			"adm": "이번 달 평균 데이터가 없습니다."
+		},
+		"lbl": {
+			"weekly": "주간",
+			"monthly": "월간",
+			"info": "키 / 몸무게 / BMI",
+			"we": "체중",
+			"bs": "혈당",
+			"bp": "혈압",
+			"bt": "체온",
+			"m01": "1월",
+			"m02": "2월",
+			"m03": "3월",
+			"m04": "4월",
+			"m05": "5월",
+			"m06": "6월",
+			"m07": "7월",
+			"m08": "8월",
+			"m09": "9월",
+			"m10": "10월",
+			"m11": "11월",
+			"m12": "12월",
+			"avmon": "월요일 평균",
+			"avtue": "화요일 평균",
+			"avwed": "수요일 평균",
+			"avthu": "목요일 평균",
+			"avfri": "금요일 평균",
+			"avsat": "토요일 평균",
+			"avsun": "일요일 평균"
+		},
+		"nodata": {
+			"wnb": "체중 및 BMI 기록이 없습니다.",
+			"bp": "혈압 기록이 없습니다.",
+			"bs": "혈당 기록이 없습니다.",
+			"bt": "체온 기록이 없습니다.",
+			"wnbw": "이번 주 체중 및 BMI 기록이 없습니다.",
+			"wnbm": "이번 달 체중 및 BMI 기록이 없습니다.",
+			"bpw": "이번 주 혈압 기록이 없습니다.",
+			"bpm": "이번 달 혈압 기록이 없습니다.",
+			"bsw": "이번 주 혈당 기록이 없습니다.",
+			"bsm": "이번 달 혈당 기록이 없습니다.",
+			"btw": "이번 주 체온 기록이 없습니다.",
+			"btm": "이번 달 체온 기록이 없습니다."
+		}
+	},
+	"calendar": {
+		"week": {
+			"mon": "월요일",
+			"tue": "화요일",
+			"wed": "수요일",
+			"thu": "목요일",
+			"fri": "금요일",
+			"sat": "토요일",
+			"sun": "일요일"
+		}
+	},
+	"chat": {
+		"title": "채팅",
+		"chatList": "채팅 목록",
+		"chatRoom": "채팅방",
+		"search": "환자/의사 이름을 입력해 주세요.",
+		"enterMessage": "메시지를 입력해 주세요.",
+		"sending": "전송 중...",
+		"noMessages": "메시지가 없습니다",
+		"noSearchResults": "검색 결과가 없습니다.",
+		"noChatRooms": "채팅방이 없습니다",
+		"noChats": "채팅 내역이 없습니다",
+		"newMessage": "새 메시지",
+		"spamWarning": "메시지를 너무 빠르게 보낼 수 없습니다",
+		"waitPlease": "잠시만 기다려주세요...",
+		"today": "오늘",
+		"yesterday": "어제",
+		"closed": "종료됨",
+		"closedMessage": "대화가 종료되었습니다.",
+		"closedPlaceholder": "종료된 대화입니다",
+		"unknownUser": "알 수 없는 사용자",
+		"willReopenOnSend": "메시지를 보내면 대화가 다시 시작됩니다.",
+		"reopening": "대화 재개 중...",
+		"endSession": "세션 종료",
+		"systemMessage": {
+			"channelCreated": "채팅방이 개설되었습니다.",
+			"channelClosed": "채팅방이 종료되었습니다.",
+			"channelReopened": "채팅방이 재개되었습니다."
+		},
+		"filter": {
+			"userType": "사용자 유형",
+			"reset": "필터 초기화"
+		}
+	},
+	"appointment": {
+		"type": {
+			"standard": "일반 예약",
+			"quick": "빠른 예약"
+		},
+		"status": {
+			"pending": "대기",
+			"confirmed": "확정",
+			"inProgress": "진료 중",
+			"completed": "완료",
+			"cancelled": "취소",
+			"noShow": "노쇼"
+		},
+		"consultationType": {
+			"videoCall": "화상 통화",
+			"chat": "채팅",
+			"phone": "전화"
+		},
+		"paymentStatus": {
+			"pending": "결제 대기",
+			"processing": "결제 처리 중",
+			"completed": "결제 완료",
+			"failed": "결제 실패",
+			"refunded": "환불 완료"
+		},
+		"canceller": {
+			"hospital": "병원",
+			"patient": "환자",
+			"system": "시스템"
+		}
+	}
+}
