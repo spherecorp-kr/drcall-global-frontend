@@ -75,6 +75,7 @@ export interface UpdateAppointmentRequest {
   doctorNote?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface StartAppointmentRequest {
   // Empty for now, can add fields if needed
 }

@@ -51,6 +51,6 @@ export const adminMenu: MenuItem[] = [
 	},
 ];
 
-export const getMenuByRole = (role: 'admin'): MenuItem[] => {
+export const getMenuByRole = (_role: 'admin'): MenuItem[] => {
 	return adminMenu;
 };

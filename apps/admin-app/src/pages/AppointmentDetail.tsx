@@ -19,6 +19,7 @@ interface AppointmentContextValue {
 
 const AppointmentContext = createContext<AppointmentContextValue | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAppointment = () => {
 	const context = useContext(AppointmentContext);
 	if (!context) {
@@ -49,7 +50,7 @@ const AppointmentDetail = () => {
 
 			// Map backend status to UI status
 			const uiStatus = Object.entries(StatusMapper).find(
-				([_, backendStatus]) => backendStatus === data.status
+				([, backendStatus]) => backendStatus === data.status
 			)?.[0] as AppointmentStatus;
 
 			setStatus(uiStatus || 'waiting');
