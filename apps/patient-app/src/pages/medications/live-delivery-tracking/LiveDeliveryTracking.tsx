@@ -149,6 +149,7 @@ export default function LiveDeliveryTracking() {
         setLoadError(
           '지도를 불러올 수 없습니다. VITE_GOOGLE_MAPS_API_KEY 환경변수를 확인해주세요.'
         );
+        console.error(e);
       }
     })();
     return () => {
