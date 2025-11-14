@@ -20,15 +20,15 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
   return (
     <Section
       title={t('medication.detail.section.deliveryInfo')}
-      icon={
-        <img
-          src="/assets/icons/mypage-delivery.svg"
-          alt=""
-          className="h-5 w-5"
-        />
-      }
+      icon={<img src="/assets/icons/mypage-delivery.svg" alt="" style={{ width: '1.25rem', height: '1.25rem' }} />}
     >
-      <div className="flex flex-col gap-3">
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem'
+        }}
+      >
         <Row label={t('medication.detail.labels.receiverName')} value={info.receiverName} />
         <Row label={t('medication.detail.labels.phone')} value={info.phone} />
         <Row label={t('medication.detail.labels.address')} value={info.address} multi />
@@ -46,13 +46,34 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
 
 function Row({ label, value, multi = false }: { label: string; value: string; multi?: boolean }) {
   return (
-    <div className="flex flex-col gap-1">
-      <div className="text-[13px] font-semibold text-gray-800">{label}</div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.25rem'
+      }}
+    >
       <div
-        className={[
-          'rounded-xl bg-gray-50 px-3 py-3 text-[13px] text-gray-700',
-          multi ? 'whitespace-pre-wrap' : '',
-        ].join(' ')}
+        style={{
+          fontSize: '13px',
+          fontWeight: 600,
+          color: '#1F2937'
+        }}
+      >
+        {label}
+      </div>
+      <div
+        style={{
+          borderRadius: '0.75rem',
+          background: '#F9FAFB',
+          paddingLeft: '0.75rem',
+          paddingRight: '0.75rem',
+          paddingTop: '0.75rem',
+          paddingBottom: '0.75rem',
+          fontSize: '13px',
+          color: '#374151',
+          whiteSpace: multi ? 'pre-wrap' as const : 'normal'
+        }}
       >
         {value}
       </div>
