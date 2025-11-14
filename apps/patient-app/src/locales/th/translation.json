@@ -39,6 +39,28 @@
     "list": {
       "title": "ประวัติการจ่ายยาและจัดส่ง"
     },
+    "tracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
+      "section": {
+        "basicInfo": "ข้อมูลพื้นฐาน"
+      },
+      "fields": {
+        "trackingNumber": "หมายเลขพัสดุ",
+        "carrier": "ผู้ให้บริการขนส่ง"
+      },
+      "table": {
+        "processedAt": "เวลาการประมวลผล",
+        "step": "ขั้นตอนการจัดส่ง",
+        "location": "สถานที่"
+      },
+      "steps": {
+        "depart": "ออกจัดส่ง",
+        "unload": "ขนถ่ายที่ศูนย์คัดแยก",
+        "inbound": "รับเข้าศูนย์",
+        "collection": "รับพัสดุเสร็จสิ้น",
+        "shipped": "ส่งยาออกแล้ว"
+      }
+    },
     "statusAll": "ทั้งหมด",
     "statusPreparing": "กำลังจ่ายยา",
     "statusPrepared": "จ่ายยาเสร็จ",

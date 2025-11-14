@@ -30,6 +30,7 @@ import PaymentWithPrescription from './pages/appointments/payment/PaymentWithPre
 import PaymentComplete from './pages/appointments/payment/PaymentComplete'
 import MedicationList from './pages/medications/list/MedicationList'
 import MedicationDetail from './pages/medications/detail/MedicationDetail'
+import DeliveryTracking from './pages/medications/delivery-tracking/DeliveryTracking'
 import ConsultationRoom from './pages/consultation/ConsultationRoom'
 import PhrDashboard from './pages/phr/PhrDashboard'
 import PhrDetail from './pages/phr/PhrDetail'
@@ -108,6 +109,9 @@ function App() {
         } />
         <Route path="/medications/:id" element={
           <ProtectedRoute><MedicationDetail /></ProtectedRoute>
+        } />
+        <Route path="/medications/delivery-tracking" element={
+          <ProtectedRoute><DeliveryTracking /></ProtectedRoute>
         } />
 
         {/* Consultation Routes - Protected */}

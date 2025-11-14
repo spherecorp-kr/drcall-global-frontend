@@ -39,6 +39,28 @@
     "list": {
       "title": "Medication & Delivery History"
     },
+    "tracking": {
+      "pageTitle": "Track Delivery",
+      "section": {
+        "basicInfo": "Basic Information"
+      },
+      "fields": {
+        "trackingNumber": "Tracking Number",
+        "carrier": "Courier Company"
+      },
+      "table": {
+        "processedAt": "Date and Time",
+        "step": "Delivery Status",
+        "location": "Location"
+      },
+      "steps": {
+        "depart": "Out for delivery",
+        "unload": "Unloaded at hub",
+        "inbound": "Inbound",
+        "collection": "Collection complete",
+        "shipped": "Shipped"
+      }
+    },
     "statusAll": "All",
     "statusPreparing": "Preparing",
     "statusPrepared": "Prepared",

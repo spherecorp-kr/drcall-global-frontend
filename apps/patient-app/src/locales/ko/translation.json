@@ -39,6 +39,28 @@
     "list": {
       "title": "조제 및 배송 내역"
     },
+    "tracking": {
+      "pageTitle": "배송 조회",
+      "section": {
+        "basicInfo": "기본 정보"
+      },
+      "fields": {
+        "trackingNumber": "송장번호",
+        "carrier": "택배사"
+      },
+      "table": {
+        "processedAt": "처리 일시",
+        "step": "배송 단계",
+        "location": "처리 장소"
+      },
+      "steps": {
+        "depart": "배달 출발",
+        "unload": "간선 하차",
+        "inbound": "입고",
+        "collection": "집하 완료",
+        "shipped": "약 발송"
+      }
+    },
     "statusAll": "전체",
     "statusPreparing": "조제 중",
     "statusPrepared": "조제 완료",
