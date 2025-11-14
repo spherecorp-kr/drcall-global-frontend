@@ -1,0 +1,227 @@
+{
+	"language": {
+		"en": "English",
+		"ko": "한국어",
+		"th": "ไทย"
+	},
+	"role": {
+		"admin": "Administrator",
+		"coordinator": "Coordinator",
+		"doctor": "Doctor",
+		"patient": "Patient"
+	},
+	"canceler": {
+		"hospital": "Hospital",
+		"patient": "Patient",
+		"system": "System"
+	},
+	"menu": {
+		"dashboard": "Dashboard",
+		"hospitals": "Hospital Management",
+		"users": "User Management",
+		"monitoring": "System Monitoring",
+		"content": "Content Management",
+		"audit": "Audit Log",
+		"settings": "Settings"
+	},
+	"dashboard": {
+		"section": {
+			"summary": {
+				"title": "Status summary",
+				"card": {
+					"todayCount": {
+						"description": "Yesterday's appointments: 22",
+						"label": "Today's appointments",
+						"tooltip": "Total number of appointments received today. You can check the increase or decrease compared to yesterday's appointment count.",
+						"value": "{{value}}"
+					},
+					"todaySales": {
+						"description": "Yesterday's total sales: 48,000 THB",
+						"label": "Today's total sales",
+						"tooltip": "Total sales amount generated today. Shows increase/decrease trend compared to yesterday's sales.",
+						"value": "{{value}} THB"
+					},
+					"monthlyCount": {
+						"description": "July appointments: 220",
+						"label": "This month's appointments",
+						"tooltip": "Cumulative number of appointments this month. You can check monthly changes compared to last month's appointment count.",
+						"value": "{{value}}"
+					},
+					"monthlyNewPatient": {
+						"description": "July new patients: 1,000",
+						"label": "This month's new patients",
+						"tooltip": "Number of new patients who visited for the first time this month. Shows increase/decrease compared to last month's new patient count.",
+						"value": "{{value}}"
+					}
+				}
+			},
+			"chart": {
+				"title": "Patient statistics",
+				"viewOption": {
+					"weekly": "Weekly",
+					"monthly": "Monthly"
+				},
+				"legend": {
+					"new": "New",
+					"fu": "Follow-up visit"
+				}
+			},
+			"appointments": {
+				"title": "Treatment scheduled for today"
+			},
+			"doctors": {
+				"title": "Doctor list"
+			}
+		}
+	},
+	"phr": {
+		"bloodPressure": {
+			"systole": "Systole",
+			"diastole": "Diastole"
+		},
+		"bloodSugar": {
+			"mn": "Breakfast",
+			"lnc": "Lunch",
+			"din": "Dinner",
+			"bb": "Before bed",
+			"am": "After meals",
+			"bm": "Before meals",
+			"premav": "Pre-meal average",
+			"postav": "Postprandial average",
+			"avbb": "Average before bed",
+			"mnbm": "Before breakfast",
+			"mnam": "After breakfast",
+			"lcbm": "Before lunch",
+			"lcam": "After lunch",
+			"dnbm": "Before dinner",
+			"dnam": "After dinner",
+			"aswb": "Average breakfast blood sugar this week :",
+			"aswl": "Average lunch blood sugar this week :",
+			"aswd": "Average dinner blood sugar this week :",
+			"aswbb": "Average before bed blood sugar this week :",
+			"asmb": "Average breakfast blood sugar this month :",
+			"asml": "Average lunch blood sugar this month :",
+			"asmd": "Average dinner blood sugar this month :",
+			"asmbb": "Average before bed blood sugar this month :",
+			"adw": "There are no week's average data.",
+			"adm": "There are no month's average data."
+		},
+		"lbl": {
+			"weekly": "Weekly",
+			"monthly": "Monthly",
+			"info": "Height / Weight / BMI",
+			"we": "Weight",
+			"bs": "Blood sugar",
+			"bp": "Blood pressure",
+			"bt": "Body temperature",
+			"m01": "January",
+			"m02": "February",
+			"m03": "March",
+			"m04": "April",
+			"m05": "May",
+			"m06": "June",
+			"m07": "July",
+			"m08": "August",
+			"m09": "September",
+			"m10": "October",
+			"m11": "November",
+			"m12": "December",
+			"avmon": "Monday Average",
+			"avtue": "Tuesday Average",
+			"avwed": "Wednesday Average",
+			"avthu": "Thursday Average",
+			"avfri": "Friday Average",
+			"avsat": "Saturday Average",
+			"avsun": "Sunday Average"
+		},
+		"nodata": {
+			"wnb": "There are no weight and BMI record.",
+			"bp": "There are no Blood pressure record.",
+			"bs": "There are no Blood sugar record.",
+			"bt": "There are no Body temperature record.",
+			"wnbw": "There are no week's weight and BMI record.",
+			"wnbm": "There are no month's weight and BMI record.",
+			"bpw": "There are no week's Blood pressure record.",
+			"bpm": "There are no month's Blood pressure record.",
+			"bsw": "There are no week's Blood sugar record.",
+			"bsm": "There are no month's Blood sugar record.",
+			"btw": "There are no week's Body temperature record.",
+			"btm": "There are no month's Body temperature record."
+		}
+	},
+	"calendar": {
+		"week": {
+			"mon": "MON",
+			"tue": "TUE",
+			"wed": "WED",
+			"thu": "THU",
+			"fri": "FRI",
+			"sat": "SAT",
+			"sun": "SUN"
+		}
+	},
+	"chat": {
+		"title": "Chat",
+		"chatList": "Chat List",
+		"chatRoom": "Chat Room",
+		"search": "Enter patient/doctor name",
+		"enterMessage": "Type a message",
+		"sending": "Sending...",
+		"noMessages": "No messages",
+		"noSearchResults": "No search results",
+		"noChatRooms": "No chat rooms",
+		"noChats": "No chats available",
+		"newMessage": "New Message",
+		"spamWarning": "You are sending messages too quickly",
+		"waitPlease": "Please wait...",
+		"today": "Today",
+		"yesterday": "Yesterday",
+		"closed": "Closed",
+		"closedMessage": "This conversation has been closed.",
+		"closedPlaceholder": "This conversation is closed",
+		"unknownUser": "Unknown User",
+		"willReopenOnSend": "Sending a message will reopen the conversation.",
+		"reopening": "Reopening conversation...",
+		"endSession": "End Session",
+		"systemMessage": {
+			"channelCreated": "Chat room has been created.",
+			"channelClosed": "Chat room has been closed.",
+			"channelReopened": "Chat room has been reopened."
+		},
+		"filter": {
+			"userType": "User Type",
+			"reset": "Reset Filters"
+		}
+	},
+	"appointment": {
+		"type": {
+			"standard": "Standard Appointment",
+			"quick": "Quick Appointment"
+		},
+		"status": {
+			"pending": "Waiting",
+			"confirmed": "Confirmed",
+			"inProgress": "In Progress",
+			"completed": "Completed",
+			"cancelled": "Cancelled",
+			"noShow": "No Show"
+		},
+		"consultationType": {
+			"videoCall": "Video Call",
+			"chat": "Chat",
+			"phone": "Phone"
+		},
+		"paymentStatus": {
+			"pending": "Pending Payment",
+			"processing": "Processing Payment",
+			"completed": "Payment Complete",
+			"failed": "Payment Failed",
+			"refunded": "Refunded"
+		},
+		"canceller": {
+			"hospital": "Hospital",
+			"patient": "Patient",
+			"system": "System"
+		}
+	}
+}
