@@ -75,12 +75,13 @@ export default function MedicationDetail() {
             labels={data.receipt.labels}
           />
         </div>
-        {/* 배송형: 실시간 배송 조회 버튼을 단계 아래에 배치 */}
-        {!isPickup && (
+        {/* 배송형(퀵 제외): 실시간 배송 조회 버튼을 단계 아래에 배치 */}
+        {!isPickup && data.receipt.method !== 'quick' && (
           <PageSection padding>
             <ActionButtons
               onTrackNow={() => {
-                console.log('Track delivery clicked');
+                // 실시간 배송 조회 화면으로 이동
+                navigate('/medications/delivery-tracking');
               }}
             />
           </PageSection>
