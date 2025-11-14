@@ -17,6 +17,7 @@ import {
 	PatientRegistrationPage,
 	PaymentPage,
 	AppointmentEditPage,
+	LoginPage,
 } from '@/pages';
 
 // 라우트 설정 정의 (확장 시 여기에 추가)
@@ -70,43 +71,41 @@ function AppContent() {
 		navigate(-1);
 	}, [navigate]);
 
-	return (
-		<Routes>
-			<Route
-				path="/"
-				element={
-					<MainLayout
-						logo={<img src={TextLogo} alt="Dr.Call" className="w-[164px] h-[42px]" />}
-						onBack={handleBack}
-						onLogout={() => console.log('Logout clicked')}
-						onMenuClick={handleMenuClick}
-						pageTitle={pageTitle}
-						showBackButton={shouldShowBackButton}
-						userName="홍길동"
-						userRole="coordinator"
-					/>
-				}
-			>
-				<Route index element={<Navigate to="/dashboard" replace />} />
-				<Route path="dashboard" element={<DashboardPage />} />
-				<Route path="appointment/:appointmentSequence/edit" element={<AppointmentEditPage />} />
-				<Route path="appointment/:appointmentSequence" element={<AppointmentDetailPage />} />
-				<Route path="appointment" element={<AppointmentPage />} />
-				<Route path="payment" element={<PaymentPage />} />
-				<Route path="patient">
-					<Route index element={<PatientPage />} />
-					<Route path="new" element={<PatientRegistrationPage />} />
-					<Route path=":id" element={<PatientDetailPage />} />
-				</Route>
-				<Route path="doctor" element={<DoctorPage />} />
-				<Route path="doctor/:id" element={<DoctorDetailPage />} />
-				<Route path="hospital" element={<HospitalPage />} />
-				<Route path="myinfo" element={<MyInfoPage />} />
-				<Route path="consultation" element={<ConsultationPage />} />
-				<Route path="*" element={<Navigate to="/dashboard" replace />} />
-			</Route>
-		</Routes>
-	);
+return (
+	<Routes>
+		<Route path="/login" element={<LoginPage />} />
+		<Route path="/" element={<Navigate to="/login" replace />} />
+		<Route
+			element={
+				<MainLayout
+					logo={<img alt="Dr.Call" className="h-[42px] w-[164px]" src={TextLogo} />}
+					onBack={handleBack}
+					onLogout={() => console.log('Logout clicked')}
+					onMenuClick={handleMenuClick}
+					pageTitle={pageTitle}
+					showBackButton={shouldShowBackButton}
+					userName="홍길동"
+					userRole="coordinator"
+				/>
+			}
+		>
+			<Route path="/dashboard" element={<DashboardPage />} />
+			<Route path="/appointment/:appointmentSequence/edit" element={<AppointmentEditPage />} />
+			<Route path="/appointment/:appointmentSequence" element={<AppointmentDetailPage />} />
+			<Route path="/appointment" element={<AppointmentPage />} />
+			<Route path="/payment" element={<PaymentPage />} />
+			<Route path="/patient" element={<PatientPage />} />
+			<Route path="/patient/new" element={<PatientRegistrationPage />} />
+			<Route path="/patient/:id" element={<PatientDetailPage />} />
+			<Route path="/doctor" element={<DoctorPage />} />
+			<Route path="/doctor/:id" element={<DoctorDetailPage />} />
+			<Route path="/hospital" element={<HospitalPage />} />
+			<Route path="/myinfo" element={<MyInfoPage />} />
+			<Route path="/consultation" element={<ConsultationPage />} />
+			<Route path="*" element={<Navigate to="/dashboard" replace />} />
+		</Route>
+	</Routes>
+);
 }
 
 function App() {
