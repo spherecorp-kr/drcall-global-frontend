@@ -177,7 +177,7 @@ const ImageViewer = ({
 				{images.map((_, i) => (
 					<img
 						alt='image'
-						className={cn('border-2 h-[2.875rem] w-[2.925rem]', i === page ? 'border-primary-70' : 'border-transparent')}
+						className={cn('bg-text-90 border-2 h-[2.875rem] w-[2.925rem]', i === page ? 'border-primary-70' : 'border-transparent')}
 						key={`symptom-image-${i}`}
 						src={reactIcon}
 					/>

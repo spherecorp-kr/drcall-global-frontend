@@ -5,12 +5,14 @@ import {
 	MonthlySugar,
 	MonthlyTemp,
 	MonthlyWeight,
-	sampleMonthlyPressureData,
-	sampleMonthlySugarData,
-	sampleMonthlyTempData,
-	sampleMonthlyWeightData,
 } from '@/shared/components/ui/patient/phr/month';
 import { usePhrChartStore } from '@/shared/store/phrChartStore';
+import {
+	mockMonthlyPressureData,
+	mockMonthlySugarData,
+	mockMonthlyTempData,
+	mockMonthlyWeightData,
+} from '@/mocks/monthlyPhrData';
 
 interface Props {
 	patientkey: number;
@@ -28,16 +30,16 @@ const Monthly = ({ patientkey, phrType }: Props) => {
 			// TODO 월요일을 시작 날짜, 일요일을 끝 날짜로 지정. API에 맞춰 날짜 포맷. API 조회 후 setContent
 			switch (phrType) {
 				case 'weight':
-					setContent(<MonthlyWeight {...sampleMonthlyWeightData} />);
+					setContent(<MonthlyWeight {...mockMonthlyWeightData} />);
 					break;
 				case 'pressure':
-					setContent(<MonthlyPressure {...sampleMonthlyPressureData} />);
+					setContent(<MonthlyPressure {...mockMonthlyPressureData} />);
 					break;
 				case 'sugar':
-					setContent(<MonthlySugar {...sampleMonthlySugarData} />);
+					setContent(<MonthlySugar {...mockMonthlySugarData} />);
 					break;
 				case 'temp':
-					setContent(<MonthlyTemp {...sampleMonthlyTempData} />);
+					setContent(<MonthlyTemp {...mockMonthlyTempData} />);
 					break;
 			}
 		}, 100);

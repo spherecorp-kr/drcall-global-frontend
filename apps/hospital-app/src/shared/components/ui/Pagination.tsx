@@ -124,7 +124,7 @@ const Pagination = ({
 				<button
 					key={pageNumber}
 					className={cn(
-						'border cursor-pointer font-normal h-9 leading-normal rounded-sm text-sm w-9',
+						'border cursor-pointer font-normal h-9 leading-[normal] rounded-sm text-sm w-9',
 						currentPage === pageNumber
 							? 'bg-primary-70 border-primary-70 text-white'
 							: 'bg-white border-[#e0e0e0] text-text-100',
