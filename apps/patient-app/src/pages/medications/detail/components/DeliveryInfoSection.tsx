@@ -29,13 +29,26 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
           gap: '0.75rem'
         }}
       >
-        <Row label={t('medication.detail.labels.receiverName')} value={info.receiverName} />
-        <Row label={t('medication.detail.labels.phone')} value={info.phone} />
-        <Row label={t('medication.detail.labels.address')} value={info.address} multi />
+        {/* Figma: 배송지/요청사항만 박스형, 그 외는 텍스트형 */}
+        <Row 
+          label={t('medication.detail.labels.receiverName')} 
+          value={info.receiverName} variant="text" 
+        />
+        <Row 
+          label={t('medication.detail.labels.phone')} 
+          value={info.phone} variant="text" 
+        />
+        <Row 
+          label={t('medication.detail.labels.address')} 
+          value={info.address} 
+          variant="box" 
+          multi 
+        />
         {info.requestNote && (
           <Row
             label={t('medication.detail.labels.requestNote')}
             value={info.requestNote}
+            variant="box"
             multi
           />
         )}
@@ -44,7 +57,17 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
   );
 }
 
-function Row({ label, value, multi = false }: { label: string; value: string; multi?: boolean }) {
+function Row({
+  label,
+  value,
+  variant = 'box',
+  multi = false
+}: {
+  label: string;
+  value: string;
+  variant?: 'box' | 'text';
+  multi?: boolean;
+}) {
   return (
     <div
       style={{
@@ -53,30 +76,44 @@ function Row({ label, value, multi = false }: { label: string; value: string; mu
         gap: '0.25rem'
       }}
     >
-      <div
-        style={{
-          fontSize: '13px',
-          fontWeight: 600,
-          color: '#1F2937'
-        }}
-      >
-        {label}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div
+          style={{
+            fontSize: '1.125rem',
+            fontWeight: 600,
+            color: '#1F1F1F'
+          }}
+        >
+          {label}
+        </div>
       </div>
-      <div
-        style={{
-          borderRadius: '0.75rem',
-          background: '#F9FAFB',
-          paddingLeft: '0.75rem',
-          paddingRight: '0.75rem',
-          paddingTop: '0.75rem',
-          paddingBottom: '0.75rem',
-          fontSize: '13px',
-          color: '#374151',
-          whiteSpace: multi ? 'pre-wrap' as const : 'normal'
-        }}
-      >
-        {value}
-      </div>
+      {variant === 'box' ? (
+        <div
+          style={{
+            borderRadius: '0.75rem',
+            background: '#F9FAFB',
+            paddingLeft: '0.75rem',
+            paddingRight: '0.75rem',
+            paddingTop: '0.75rem',
+            paddingBottom: '0.75rem',
+            fontSize: '13px',
+            color: '#374151',
+            whiteSpace: multi ? 'pre-wrap' as const : 'normal'
+          }}
+        >
+          {value}
+        </div>
+      ) : (
+        <div
+          style={{
+            fontSize: '1rem',
+            fontWeight: 400,
+            color: '#1F1F1F'
+          }}
+        >
+          {value}
+        </div>
+      )}
     </div>
   );
 }
