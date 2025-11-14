@@ -16,6 +16,7 @@ export default function LiveDeliveryTracking() {
   const serverMarkersRef = useRef<google.maps.Marker[]>([]);
   const userMarkerRef = useRef<google.maps.Marker | null>(null);
   const [geoMessage, setGeoMessage] = useState<string | null>(null);
+  const overlayCardRef = useRef<HTMLDivElement | null>(null);
 
   const handleClose = () => {
     navigate(-1);
@@ -66,7 +67,14 @@ export default function LiveDeliveryTracking() {
           if (p) bounds.extend(p);
         });
         if (!bounds.isEmpty()) {
-          mapInstanceRef.current!.fitBounds(bounds, { top: 12, left: 12, right: 12, bottom: 12 });
+          const overlayHeight = overlayCardRef.current?.offsetHeight ?? 0;
+          const bottomPadding = Math.max(overlayHeight + 16, 12);
+          mapInstanceRef.current!.fitBounds(bounds, {
+            top: 12,
+            left: 12,
+            right: 12,
+            bottom: bottomPadding,
+          });
         }
 
         // 사용자 현재 위치: Geolocation
@@ -92,12 +100,16 @@ export default function LiveDeliveryTracking() {
                 if (p) allBounds.extend(p);
               });
               allBounds.extend(here);
-              mapInstanceRef.current.fitBounds(allBounds, {
-                top: 12,
-                left: 12,
-                right: 12,
-                bottom: 12,
-              });
+              {
+                const overlayHeight = overlayCardRef.current?.offsetHeight ?? 0;
+                const bottomPadding = Math.max(overlayHeight + 16, 12);
+                mapInstanceRef.current.fitBounds(allBounds, {
+                  top: 12,
+                  left: 12,
+                  right: 12,
+                  bottom: bottomPadding,
+                });
+              }
               setGeoMessage(null);
             },
             (err) => {
@@ -200,6 +212,7 @@ export default function LiveDeliveryTracking() {
                   padding: '0.875rem 1rem',
                   pointerEvents: 'auto',
                 }}
+                ref={overlayCardRef}
               >
                 <div
                   style={{
