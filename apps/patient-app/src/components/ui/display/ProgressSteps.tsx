@@ -2,9 +2,17 @@ interface ProgressStepsProps {
   currentStep: number;
   totalSteps: number;
   labels: string[];
+  paddingX?: string; // 컨테이너 좌우 여백
+  paddingY?: string; // 컨테이너 상하 여백
 }
 
-export default function ProgressSteps({ currentStep, totalSteps, labels }: ProgressStepsProps) {
+export default function ProgressSteps({
+  currentStep,
+  totalSteps,
+  labels,
+  paddingX = '1.25rem',
+  paddingY = '0.625rem'
+}: ProgressStepsProps) {
   const renderStepIndicator = (index: number) => {
     const isCompleted = index < currentStep - 1;
     const isCurrent = index === currentStep - 1;
@@ -57,10 +65,10 @@ export default function ProgressSteps({ currentStep, totalSteps, labels }: Progr
   return (
     <div style={{
       width: '100%',
-      paddingLeft: '1.25rem',
-      paddingRight: '1.25rem',
-      paddingTop: '0.625rem',
-      paddingBottom: '0.625rem',
+      paddingLeft: paddingX,
+      paddingRight: paddingX,
+      paddingTop: paddingY,
+      paddingBottom: paddingY,
       display: 'flex',
       flexDirection: 'column',
       gap: '0.5rem'

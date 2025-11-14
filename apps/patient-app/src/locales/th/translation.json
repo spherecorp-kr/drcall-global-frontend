@@ -56,12 +56,41 @@
       "hospital": "โรงพยาบาล"
     },
     "actions": {
-      "viewDetail": "ดูรายละเอียด"
+      "viewDetail": "รายละเอียดการใช้ยาและการจัดส่ง"
     },
     "methodDirect": "รับด้วยตนเอง",
     "methodStandard": "จัดส่งทั่วไป",
     "methodExpress": "จัดส่งด่วน",
-    "methodInternational": "จัดส่งระหว่างประเทศ"
+    "methodInternational": "จัดส่งระหว่างประเทศ",
+    "detail": {
+      "pageTitle": "รายละเอียดการจ่ายยาและจัดส่ง",
+      "title": "ตรวจสอบความคืบหน้าการรับยา",
+      "section": {
+        "deliveryInfo": "ข้อมูลการจัดส่ง",
+        "pickupInfo": "ข้อมูลรับด้วยตนเอง",
+        "orderInfo": "ข้อมูลการจ่ายยา"
+      },
+      "labels": {
+        "receiverName": "ผู้รับ",
+        "phone": "ติดต่อ",
+        "address": "ที่อยู่",
+        "requestNote": "คำขอการจัดส่ง",
+        "hospitalName": "โรงพยาบาล",
+        "hospitalAddress": "ที่อยู่โรงพยาบาล",
+        "pickupLocation": "สถานที่รับยา",
+        "businessHours": "เวลาทำการ",
+        "contact": "ติดต่อ",
+        "orderNumber": "หมายเลขจ่ายยา",
+        "appliedAt": "วันที่ขอ",
+        "estimatedDate": "คาดว่าจะถึง",
+        "deadlineDate": "กำหนดรับยา"
+      },
+      "actions": {
+        "trackNow": "ติดตามการจัดส่ง",
+        "viewPrescription": "ดูใบสั่งยา",
+        "viewConsultation": "รายละเอียดการรักษา"
+      }
+    }
   },
   "auth": {
     "phoneVerification": "ยืนยันเบอร์โทรศัพท์",
