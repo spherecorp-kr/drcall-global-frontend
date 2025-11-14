@@ -19,6 +19,32 @@ export default function DeliveryTracking() {
     trackingNumber: '2132432465',
     carrier: '$택배사$ 택배',
   };
+
+  // Mock: 이벤트 리스트 (원천 데이터는 ISO 유지)
+  const STEP_LABEL_KEY_MAP = {
+    depart: 'medication.tracking.steps.depart',
+    unload: 'medication.tracking.steps.unload',
+    inbound: 'medication.tracking.steps.inbound',
+    collection: 'medication.tracking.steps.collection',
+    shipped: 'medication.tracking.steps.shipped',
+  } as const;
+
+  type StepKey = keyof typeof STEP_LABEL_KEY_MAP;
+  type DeliveryEvent = {
+    timestamp: string; // ISO format
+    step: StepKey;
+    location: string;
+  };
+
+  const events: DeliveryEvent[] = [
+    { timestamp: '2025-09-12T16:49:00', step: 'depart', location: '방콕' },
+    { timestamp: '2025-09-12T16:49:00', step: 'unload', location: '방콕' },
+    { timestamp: '2025-09-10T16:49:00', step: 'inbound', location: '방콕' },
+    { timestamp: '2025-09-09T16:49:00', step: 'collection', location: '방콕' },
+    { timestamp: '2025-09-08T16:49:00', step: 'unload', location: '방콕' },
+    { timestamp: '2025-09-07T16:49:00', step: 'shipped', location: 'Praram9' },
+  ];
+
   return (
     <MainLayout
       title={t('medication.tracking.pageTitle')}
