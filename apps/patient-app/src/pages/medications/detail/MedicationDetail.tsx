@@ -22,7 +22,6 @@ export default function MedicationDetail() {
   const { id } = useParams<{ id: string }>();
 
   const handleBack = () => navigate(-1);
-  const handleClose = () => navigate('/medications');
 
   // 리스트의 mock id를 상세 mock 시나리오에 매핑
   const resolveScenarioKey = (listId?: string | null) => {
@@ -54,7 +53,6 @@ export default function MedicationDetail() {
       title={t('medication.detail.pageTitle')}
       headerBackground='white'
       onBack={handleBack}
-      onClose={handleClose}
       fullWidth
       contentClassName="p-0"
     >
@@ -136,5 +134,3 @@ export default function MedicationDetail() {
     </MainLayout>
   );
 }
-
-
