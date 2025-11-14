@@ -1,0 +1,91 @@
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import type {
+	MonthlyPressurePhrInfo,
+	MonthlyPressurePhrItem,
+	VisiblePHRDetails,
+} from '@/shared/types/phr';
+import { MonthlyTitle, NoPhrData } from '@/shared/components/ui/patient/phr/components';
+
+interface Props {
+	items: MonthlyPressurePhrItem[];
+}
+
+interface DetailProps {
+	infos: MonthlyPressurePhrInfo[];
+	isVisible: boolean;
+}
+
+const Detail = ({ infos, isVisible }: DetailProps) => {
+	const { t } = useTranslation();
+
+	return (
+		<div className={isVisible ? 'bg-bg-gray flex flex-col gap-5 p-5 rounded-[1.25rem]' : 'hidden'}>
+			{infos.map(({ day, diastolic = 0, pulse = 0, systolic = 0 }, i) => (
+				<div className="flex items-center justify-between" key={`month-pressure-detail-${i}`}>
+					<p className='flex gap-1 items-center justify-start text-text-100'>
+						<span className='font-semibold'>{systolic}/{diastolic}</span>
+						<span>mmHg</span>
+						<span className='font-semibold'>{pulse}</span>
+						<span>BPM</span>
+					</p>
+					<p className="text-right text-text-60">{t(`phr.lbl.av${day}`)}</p>
+				</div>
+			))}
+		</div>
+	);
+}
+
+const BloodPressure = ({ items }: Props) => {
+	const { t } = useTranslation();
+
+	const [visibleDetails, setVisibleDetails] = useState<VisiblePHRDetails>({});
+
+	// 초기 상태 설정
+	useEffect(() => {
+		const initialState = items.reduce((acc, _, index) => {
+			acc[index] = index === 0; // isFirst가 true인 경우만 true로 설정
+			return acc;
+		}, {} as VisiblePHRDetails);
+		setVisibleDetails(initialState);
+	}, [items]);
+
+	const toggleVisibility = useCallback((index: number) => {
+		setVisibleDetails(prev => ({
+			...prev,
+			[index]: !prev[index]
+		}));
+	}, []);
+
+	return (
+		<div className='border border-stroke-input rounded-[1.25rem]'>
+			{Array.isArray(items) &&
+				items
+					.filter(item => new Date >= new Date(item.startDate))
+					.map((item, i) => (
+						<div
+							key={`month-pressure-${i}`}
+							className={`${i !== 0 ? 'border-t border-stroke-input' : ''} ${visibleDetails[i] ? 'pb-5' : ''} cursor-pointer flex flex-col gap-3 px-5 w-full`}
+							onClick={() => toggleVisibility(i)}>
+							<MonthlyTitle
+								endDate={item.endDate}
+								isVisible={visibleDetails[i]}
+								startDate={item.startDate}
+								weekOfMonth={item.weekOfMonth}
+							/>
+							{item.infos
+								? <Detail
+									infos={item.infos}
+									isVisible={visibleDetails[i]} />
+								: <NoPhrData
+									isVisible={visibleDetails[i]}
+									text={t('phr.nodata.bp')} />
+							}
+						</div>
+					))
+			}
+		</div>
+	);
+};
+
+export default BloodPressure;
