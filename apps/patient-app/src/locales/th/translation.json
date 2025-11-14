@@ -112,6 +112,14 @@
         "viewPrescription": "ดูใบสั่งยา",
         "viewConsultation": "รายละเอียดการรักษา"
       }
+    },
+    "liveTracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
+      "etaMinutes": "{{minutes}} นาที",
+      "etaArrivalAt": "ถึงประมาณ {{time}}",
+      "actions": {
+        "callNow": "เรียก"
+      }
     }
   },
   "auth": {

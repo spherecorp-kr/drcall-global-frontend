@@ -112,6 +112,14 @@
         "viewPrescription": "View Prescription",
         "viewConsultation": "Consultation Detail"
       }
+    },
+    "liveTracking": {
+      "pageTitle": "Track Delivery",
+      "etaMinutes": "{{minutes}} min",
+      "etaArrivalAt": "Arriving at {{time}}",
+      "actions": {
+        "callNow": "Call"
+      }
     }
   },
   "auth": {

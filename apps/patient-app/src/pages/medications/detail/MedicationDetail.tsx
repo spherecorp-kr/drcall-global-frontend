@@ -84,7 +84,7 @@ export default function MedicationDetail() {
             <ActionButtons
               onTrackNow={() => {
                 if (data.receipt.method === 'quick') {
-                  console.log('Track delivery clicked (quick): navigation disabled');
+                  navigate('/medications/live-delivery-tracking');
                 } else {
                   navigate('/medications/delivery-tracking');
                 }
