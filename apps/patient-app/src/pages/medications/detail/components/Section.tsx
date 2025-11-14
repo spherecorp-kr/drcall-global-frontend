@@ -5,7 +5,6 @@ type SectionProps = {
   subtitle?: string;
   icon?: ReactNode;
   headerRight?: ReactNode;
-  className?: string;
   children: ReactNode;
 };
 
@@ -17,33 +16,64 @@ type SectionProps = {
 export default function Section({
   title,
   subtitle,
-  icon,
   headerRight,
-  className,
   children,
 }: SectionProps) {
   return (
     <section
-      className={[
-        'w-full rounded-2xl border border-gray-100 bg-white',
-        'px-5 py-4',
-        className ?? '',
-      ].join(' ')}
+      style={{
+        width: '100%',
+        background: 'transparent'
+      }}
     >
-      {(title || subtitle || icon || headerRight) && (
-        <div className="mb-3 flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2">
-            {icon && <div className="shrink-0">{icon}</div>}
-            <div className="flex flex-col">
+      {(title || subtitle || headerRight) && (
+        <div
+          style={{
+            marginBottom: '0.75rem',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: '0.5rem'
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
               {title && (
-                <h2 className="text-[15px] font-semibold text-gray-900">{title}</h2>
+                <h2
+                  style={{
+                    fontSize: '1.125rem',
+                    fontWeight: 600,
+                    color: '#1F1F1F'
+                  }}
+                >
+                  {title}
+                </h2>
               )}
               {subtitle && (
-                <p className="text-[13px] text-gray-500">{subtitle}</p>
+                <p
+                  style={{
+                    fontSize: '13px',
+                    color: '#6B7280',
+                    margin: 0
+                  }}
+                >
+                  {subtitle}
+                </p>
               )}
             </div>
           </div>
-          {headerRight && <div className="shrink-0">{headerRight}</div>}
+          {headerRight && <div style={{ flexShrink: 0 }}>{headerRight}</div>}
         </div>
       )}
       <div>{children}</div>

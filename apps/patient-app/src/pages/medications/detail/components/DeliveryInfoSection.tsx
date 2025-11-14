@@ -21,7 +21,12 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
   return (
     <Section
       title={t('medication.detail.section.deliveryInfo')}
-      icon={<img src="/assets/icons/mypage-delivery.svg" alt="" style={{ width: '1.25rem', height: '1.25rem' }} />}
+      icon={
+        <img src={info.imgSrc || '/assets/icons/mypage-delivery.svg'} 
+          alt="" 
+          style={{ width: '1.25rem', height: '1.25rem' }} 
+        />
+      }
     >
       <div
         style={{
@@ -34,12 +39,14 @@ export default function DeliveryInfoSection({ info }: DeliveryInfoSectionProps) 
         <Row 
           imgSrc="/assets/icons/user-square.svg" 
           label={t('medication.detail.labels.receiverName')} 
-          value={info.receiverName} variant="text" 
+          value={info.receiverName} 
+          variant="text" 
         />
         <Row 
           imgSrc="/assets/icons/ic_mobile.svg" 
           label={t('medication.detail.labels.phone')} 
-          value={info.phone} variant="text" 
+          value={info.phone} 
+          variant="text" 
         />
         <Row 
           imgSrc="/assets/icons/ic_location.svg" 
@@ -80,7 +87,7 @@ function Row({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '0.25rem'
+        gap: '0.625rem'
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -102,18 +109,22 @@ function Row({
       {variant === 'box' ? (
         <div
           style={{
-            borderRadius: '0.75rem',
-            background: '#F9FAFB',
-            paddingLeft: '0.75rem',
-            paddingRight: '0.75rem',
-            paddingTop: '0.75rem',
-            paddingBottom: '0.75rem',
-            fontSize: '13px',
-            color: '#374151',
-            whiteSpace: multi ? 'pre-wrap' as const : 'normal'
+            borderRadius: '0.5rem',
+            border: '1px solid #E0E0E0',
+            background: '#FAFAFA',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            paddingTop: '0.5rem',
+            paddingBottom: '0.5rem',
+            fontSize: '0.875rem',
+            color: '#1F1F1F',
+            whiteSpace: multi ? 'pre-wrap' as const : 'normal',
+            minHeight: '5rem'
           }}
         >
-          {value}
+          <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+            {value}
+          </div>
         </div>
       ) : (
         <div
