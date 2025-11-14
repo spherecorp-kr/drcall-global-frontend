@@ -58,7 +58,7 @@ export default function MedicationDetail() {
     >
       <PageContainer>
         {/* 상단 설명/수령방법/서브정보 (섹션 패딩으로 통일) */}
-        <PageSection padding>
+        <PageSection style={{ padding: '0 1.25rem 1.25rem 1.25rem' }}>
           <DetailHeader
             method={isPickup ? 'pickup' : (data.receipt.method as any)}
             subTitle={subTitle}
