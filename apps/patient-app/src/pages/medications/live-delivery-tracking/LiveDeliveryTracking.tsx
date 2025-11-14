@@ -60,10 +60,15 @@ export default function LiveDeliveryTracking() {
         // Advanced Marker 라이브러리 보장
         await g.maps.importLibrary('marker');
 
-        // Mock 서버 좌표 2쌍 (예: 방콕 중심 인근)
-        const mockLocations = [
-          { lat: 13.7563, lng: 100.5018, iconUrl: '/assets/icons/ic_delivery_motorcycle.svg' },
-          { lat: 13.7463, lng: 100.5118, iconUrl: '/assets/icons/ic_delivery_truck.svg' },
+        // Mock 서버 좌표 2쌍 (예: 방콕 중심 인근) - 차량 타입 기반
+        type VehicleType = 'motorcycle' | 'truck';
+        const getIconUrl = (type: VehicleType) =>
+          type === 'motorcycle'
+            ? '/assets/icons/ic_delivery_motorcycle.svg'
+            : '/assets/icons/ic_delivery_truck.svg';
+        const mockLocations: Array<{ lat: number; lng: number; type: VehicleType }> = [
+          { lat: 13.7563, lng: 100.5018, type: 'motorcycle' },
+          { lat: 13.7463, lng: 100.5118, type: 'truck' },
         ];
 
         // 커스텀 마커 콘텐츠(HTML Element) 생성
@@ -84,7 +89,7 @@ export default function LiveDeliveryTracking() {
           new g.maps.marker.AdvancedMarkerElement({
             map: mapInstanceRef.current!,
             position: { lat: loc.lat, lng: loc.lng },
-            content: createContent(loc.iconUrl),
+            content: createContent(getIconUrl(loc.type)),
           })
         ));
         serverMarkersRef.current = created;
@@ -143,12 +148,12 @@ export default function LiveDeliveryTracking() {
                 new g.maps.marker.AdvancedMarkerElement({
                   map: mapInstanceRef.current,
                   position: motorcyclePos,
-                  content: createContent('/assets/icons/ic_delivery_motorcycle.svg'),
+                  content: createContent(getIconUrl('motorcycle')),
                 }),
                 new g.maps.marker.AdvancedMarkerElement({
                   map: mapInstanceRef.current,
                   position: truckPos,
-                  content: createContent('/assets/icons/ic_delivery_truck.svg'),
+                  content: createContent(getIconUrl('truck')),
                 }),
               ];
               // 서버 마커 + 사용자 위치로 bounds 업데이트
