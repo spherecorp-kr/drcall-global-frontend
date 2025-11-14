@@ -29,6 +29,30 @@ export default function LiveDeliveryTracking() {
           zoomControl: true,
           gestureHandling: 'greedy',
         });
+
+        // Mock 서버 좌표 2쌍 (예: 방콕 중심 인근)
+        const mockLocations = [
+          { lat: 13.7563, lng: 100.5018, iconUrl: '/assets/icons/ic_delivery_motorcycle.svg' },
+          { lat: 13.7463, lng: 100.5118, iconUrl: '/assets/icons/ic_delivery_truck.svg' },
+        ];
+
+        // 커스텀 아이콘 생성 유틸
+        const createIcon = (url: string) =>
+          ({
+            url,
+            scaledSize: new g.maps.Size(36, 36),
+            anchor: new g.maps.Point(18, 18),
+          }) as google.maps.Icon;
+
+        // 마커 생성
+        const created: google.maps.Marker[] = mockLocations.map((loc) => {
+          return new g.maps.Marker({
+            position: { lat: loc.lat, lng: loc.lng },
+            map: mapInstanceRef.current!,
+            icon: createIcon(loc.iconUrl),
+          });
+        });
+        serverMarkersRef.current = created;
       } catch (e) {
         setLoadError(
           '지도를 불러올 수 없습니다. VITE_GOOGLE_MAPS_API_KEY 환경변수를 확인해주세요.'
