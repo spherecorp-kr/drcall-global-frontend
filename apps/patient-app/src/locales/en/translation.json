@@ -110,7 +110,13 @@
       "actions": {
         "trackNow": "Track Delivery",
         "viewPrescription": "View Prescription",
-        "viewConsultation": "Consultation Detail",
+        "viewConsultation": "Consultation Detail"
+      }
+    },
+    "liveTracking": {
+      "etaMinutes": "{{minutes}} min",
+      "etaArrivalAt": "Arriving at {{time}}",
+      "actions": {
         "callNow": "Call"
       }
     }

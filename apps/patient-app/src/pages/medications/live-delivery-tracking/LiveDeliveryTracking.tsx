@@ -20,10 +20,21 @@ export default function LiveDeliveryTracking() {
   const overlayCardRef = useRef<HTMLDivElement | null>(null);
 
   const { t } = useTranslation();
-  
+  const [etaMinutes, setEtaMinutes] = useState<number>(15);
+  const [etaTimeText, setEtaTimeText] = useState<string>('');
+
   const handleClose = () => {
     navigate(-1);
   };
+
+  useEffect(() => {
+    // ETA 텍스트 초기화(모의: 현재로부터 etaMinutes 분 후)
+    const minutes = etaMinutes;
+    const arrival = new Date(Date.now() + minutes * 60_000);
+    const hh = String(arrival.getHours()).padStart(2, '0');
+    const mm = String(arrival.getMinutes()).padStart(2, '0');
+    setEtaTimeText(`${hh}:${mm}`);
+  }, [etaMinutes]);
 
   useEffect(() => {
     let isMounted = true;
@@ -197,7 +208,6 @@ export default function LiveDeliveryTracking() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                padding: '0.75rem 1rem',
                 pointerEvents: 'none',
                 // 상단 그라데이션로 지도와 자연스럽게 겹침
                 background:
@@ -212,7 +222,7 @@ export default function LiveDeliveryTracking() {
                   border: '1px solid #E6E6E6',
                   borderRadius: '12px',
                   boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
-                  padding: '0.875rem 1rem',
+                  padding: '1rem 1.25rem',
                   pointerEvents: 'auto',
                 }}
                 ref={overlayCardRef}
@@ -222,25 +232,37 @@ export default function LiveDeliveryTracking() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '0.75rem',
-                    marginBottom: '0.75rem',
+                    gap: '0.375rem',
                   }}
                 >
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ fontSize: '0.875rem', color: '#8A8A8A' }}>현재 상태</div>
-                    <div style={{ fontSize: '1rem', color: '#1F1F1F', fontWeight: 600 }}>
-                      라이더가 이동 중입니다
-                    </div>
+                  <div
+                    style={{
+                      color: '#1F1F1F',
+                      fontSize: '1.5rem',
+                      fontWeight: '600',
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {t('medication.liveTracking.etaMinutes', { minutes: etaMinutes })}
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.875rem', color: '#8A8A8A' }}>예상 도착</div>
-                    <div style={{ fontSize: '1rem', color: '#1F1F1F', fontWeight: 600 }}>15분</div>
+                  <div
+                    style={{
+                      color: '#1F1F1F',
+                      fontSize: '1rem',
+                      fontWeight: '400',
+                    }}
+                  >
+                    {t('medication.liveTracking.etaArrivalAt', { time: etaTimeText })}
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '0.625rem' }}>
+                <div style={{ marginTop: '0.75rem' }}>
                   <button
+                    type="button"
+                    onClick={() => {
+                      // TODO: 전화번호 데이터 연동 시 tel: 링크 적용
+                      console.log('Call button clicked');
+                    }}
                     style={{
-                      marginTop: '0.75rem',
                       width: '100%',
                       height: '3rem',
                       background: '#00A0D2',
@@ -248,15 +270,11 @@ export default function LiveDeliveryTracking() {
                       border: 'none',
                       color: 'white',
                       fontSize: '1rem',
-                      fontWeight: '500',
+                      fontWeight: 600,
                       cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem'
                     }}
                   >
-                    {t('medication.detail.actions.callNow')}
+                    {t('medication.liveTracking.actions.callNow')}
                   </button>
                 </div>
               </div>
