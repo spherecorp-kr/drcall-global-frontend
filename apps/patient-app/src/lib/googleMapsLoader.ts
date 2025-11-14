@@ -20,7 +20,7 @@ export async function loadGoogle(): Promise<typeof google> {
     loader = new Loader({
       apiKey,
       version: 'weekly',
-      libraries: [],
+      libraries: ['marker'],
     });
   }
 

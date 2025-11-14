@@ -14,8 +14,8 @@ export default function LiveDeliveryTracking() {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const serverMarkersRef = useRef<google.maps.Marker[]>([]);
-  const userMarkerRef = useRef<google.maps.Marker | null>(null);
+  const serverMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const userMarkerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(null);
   const [geoMessage, setGeoMessage] = useState<string | null>(null);
   const overlayCardRef = useRef<HTMLDivElement | null>(null);
 
@@ -23,6 +23,7 @@ export default function LiveDeliveryTracking() {
   const [etaMinutes, setEtaMinutes] = useState<number>(15);
   const [etaTimeText, setEtaTimeText] = useState<string>('');
 
+  const handleBack = () => navigate(-1);
   const handleClose = () => {
     navigate(-1);
   };
@@ -50,35 +51,45 @@ export default function LiveDeliveryTracking() {
           gestureHandling: 'greedy',
         });
 
+        // Advanced Marker 라이브러리 보장
+        await g.maps.importLibrary('marker');
+
         // Mock 서버 좌표 2쌍 (예: 방콕 중심 인근)
         const mockLocations = [
           { lat: 13.7563, lng: 100.5018, iconUrl: '/assets/icons/ic_delivery_motorcycle.svg' },
           { lat: 13.7463, lng: 100.5118, iconUrl: '/assets/icons/ic_delivery_truck.svg' },
         ];
 
-        // 커스텀 아이콘 생성 유틸
-        const createIcon = (url: string) =>
-          ({
-            url,
-            scaledSize: new g.maps.Size(36, 36),
-            anchor: new g.maps.Point(18, 18),
-          }) as google.maps.Icon;
+        // 커스텀 마커 콘텐츠(HTML Element) 생성
+        const createContent = (url: string) => {
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = 'marker';
+          img.style.width = '36px';
+          img.style.height = '36px';
+          img.style.objectFit = 'contain';
+          return img;
+        };
 
         // 마커 생성
-        const created: google.maps.Marker[] = mockLocations.map((loc) => {
-          return new g.maps.Marker({
-            position: { lat: loc.lat, lng: loc.lng },
+        const created: google.maps.marker.AdvancedMarkerElement[] = mockLocations.map((loc) => (
+          new g.maps.marker.AdvancedMarkerElement({
             map: mapInstanceRef.current!,
-            icon: createIcon(loc.iconUrl),
-          });
-        });
+            position: { lat: loc.lat, lng: loc.lng },
+            content: createContent(loc.iconUrl),
+          })
+        ));
         serverMarkersRef.current = created;
 
         // 초기 bounds: 서버 마커 기준
         const bounds = new g.maps.LatLngBounds();
         created.forEach((m) => {
-          const p = m.getPosition();
-          if (p) bounds.extend(p);
+          const pos = m.position;
+          if (pos instanceof g.maps.LatLng) {
+            bounds.extend(pos);
+          } else if (pos) {
+            bounds.extend(new g.maps.LatLng(pos as google.maps.LatLngLiteral));
+          }
         });
         if (!bounds.isEmpty()) {
           const overlayHeight = overlayCardRef.current?.offsetHeight ?? 0;
@@ -98,20 +109,20 @@ export default function LiveDeliveryTracking() {
               if (!mapInstanceRef.current) return;
               const { latitude, longitude } = pos.coords;
               const here = new g.maps.LatLng(latitude, longitude);
-              userMarkerRef.current = new g.maps.Marker({
-                position: here,
+              userMarkerRef.current = new g.maps.marker.AdvancedMarkerElement({
                 map: mapInstanceRef.current,
-                icon: {
-                  url: '/assets/icons/ic_delivery_address.svg',
-                  scaledSize: new g.maps.Size(36, 36),
-                  anchor: new g.maps.Point(18, 18),
-                },
+                position: here,
+                content: createContent('/assets/icons/ic_delivery_address.svg'),
               });
               // 서버 마커 + 사용자 위치로 bounds 업데이트
               const allBounds = new g.maps.LatLngBounds();
               serverMarkersRef.current.forEach((m) => {
-                const p = m.getPosition();
-                if (p) allBounds.extend(p);
+                const pos2 = m.position;
+                if (pos2 instanceof g.maps.LatLng) {
+                  allBounds.extend(pos2);
+                } else if (pos2) {
+                  allBounds.extend(new g.maps.LatLng(pos2 as google.maps.LatLngLiteral));
+                }
               });
               allBounds.extend(here);
               {
@@ -146,7 +157,7 @@ export default function LiveDeliveryTracking() {
   }, []);
 
   return (
-    <MainLayout title="실시간 배송 조회" onClose={handleClose}>
+    <MainLayout title={t('medication.actions.trackNow')} onBack={handleBack} onClose={handleClose}>
       <PageContainer>
         <PageSection>
           <div
