@@ -21,40 +21,120 @@ export default function PickupInfoSection({ info }: PickupInfoSectionProps) {
   return (
     <Section
       title={t('medication.detail.section.pickupInfo')}
-      icon={<img src="/assets/icons/hospital.svg" alt="" className="h-5 w-5" />}
+      icon={<img src="/assets/icons/hospital.svg" alt="" style={{ width: '1.25rem', height: '1.25rem' }} />}
     >
-      <div className="flex flex-col gap-3">
-        <Row label={t('medication.detail.labels.hospitalName')} value={info.hospitalName} />
-        <Row label={t('medication.detail.labels.hospitalAddress')} value={info.hospitalAddress} multi />
-        <Row label={t('medication.detail.labels.pickupLocation')} value={info.pickupLocation} />
-        <div className="flex flex-col gap-1">
-          <div className="text-[13px] font-semibold text-gray-800">
-            {t('medication.detail.labels.businessHours')}
-          </div>
-          <div className="rounded-xl bg-gray-50 px-3 py-3 text-[13px] text-gray-700">
-            {info.businessHours.map((line, i) => (
-              <div key={i}>{line}</div>
-            ))}
-          </div>
-        </div>
-        <Row label={t('medication.detail.labels.contact')} value={info.contact} />
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.25rem'
+        }}
+      >
+        <Row
+          imgSrc="/assets/icons/hospital.svg"
+          label={t('medication.detail.labels.hospitalName')}
+          value={info.hospitalName}
+          variant="text"
+        />
+        <Row
+          imgSrc="/assets/icons/ic_location.svg"
+          label={t('medication.detail.labels.hospitalAddress')}
+          value={info.hospitalAddress}
+          variant="text"
+          multi
+        />
+        <Row
+          imgSrc="/assets/icons/ic_location.svg"
+          label={t('medication.detail.labels.pickupLocation')}
+          value={info.pickupLocation}
+          variant="text"
+        />
+        <Row
+          imgSrc="/assets/icons/time.svg"
+          label={t('medication.detail.labels.businessHours')}
+          value={info.businessHours.join('\n')}
+          variant="text"
+          multi
+        />
+        <Row
+          imgSrc="/assets/icons/ic_mobile.svg"
+          label={t('medication.detail.labels.contact')}
+          value={info.contact}
+          variant="text"
+        />
       </div>
     </Section>
   );
 }
 
-function Row({ label, value, multi = false }: { label: string; value: string; multi?: boolean }) {
+function Row({
+  imgSrc = '',
+  label,
+  value,
+  variant = 'box',
+  multi = false
+}: {
+  imgSrc: string;
+  label: string;
+  value: string;
+  variant?: 'box' | 'text';
+  multi?: boolean;
+}) {
   return (
-    <div className="flex flex-col gap-1">
-      <div className="text-[13px] font-semibold text-gray-800">{label}</div>
-      <div
-        className={[
-          'rounded-xl bg-gray-50 px-3 py-3 text-[13px] text-gray-700',
-          multi ? 'whitespace-pre-wrap' : '',
-        ].join(' ')}
-      >
-        {value}
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '0.625rem'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <img
+          src={imgSrc}
+          alt=""
+          style={{ width: '1.375rem', height: '1.375rem' }} 
+        />
+        <div
+          style={{
+            fontSize: '1.125rem',
+            fontWeight: 600,
+            color: '#1F1F1F'
+          }}
+        >
+          {label}
+        </div>
       </div>
+      {variant === 'box' ? (
+        <div
+          style={{
+            borderRadius: '0.5rem',
+            border: '1px solid #E0E0E0',
+            background: '#FAFAFA',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            paddingTop: '0.5rem',
+            paddingBottom: '0.5rem',
+            fontSize: '0.875rem',
+            color: '#1F1F1F',
+            whiteSpace: multi ? 'pre-wrap' as const : 'normal',
+            minHeight: '5rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+            {value}
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            fontSize: '1rem',
+            fontWeight: 400,
+            color: '#1F1F1F'
+          }}
+        >
+          {value}
+        </div>
+      )}
     </div>
   );
 }
