@@ -74,6 +74,8 @@ export default function LiveDeliveryTracking() {
           img.style.width = '36px';
           img.style.height = '36px';
           img.style.objectFit = 'contain';
+          img.style.touchAction = 'none';       // 터치 제스처(스크롤/줌) 기본 동작 차단
+          img.draggable = false;                // 드래그 이미지 고스트 방지
           return img;
         };
 
