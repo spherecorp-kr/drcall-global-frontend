@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
 import PageContainer from '@ui/layout/PageContainer';
 import PageSection from '@ui/layout/PageSection';
@@ -18,6 +19,8 @@ export default function LiveDeliveryTracking() {
   const [geoMessage, setGeoMessage] = useState<string | null>(null);
   const overlayCardRef = useRef<HTMLDivElement | null>(null);
 
+  const { t } = useTranslation();
+  
   const handleClose = () => {
     navigate(-1);
   };
@@ -236,33 +239,24 @@ export default function LiveDeliveryTracking() {
                 </div>
                 <div style={{ display: 'flex', gap: '0.625rem' }}>
                   <button
-                    type="button"
                     style={{
-                      flex: 1,
-                      height: '44px',
-                      borderRadius: '8px',
-                      border: '1px solid #E6E6E6',
-                      background: '#FFFFFF',
-                      color: '#1F1F1F',
-                      fontSize: '0.9375rem',
-                    }}
-                  >
-                    배송 상세
-                  </button>
-                  <button
-                    type="button"
-                    style={{
-                      flex: 1,
-                      height: '44px',
-                      borderRadius: '8px',
+                      marginTop: '0.75rem',
+                      width: '100%',
+                      height: '3rem',
+                      background: '#00A0D2',
+                      borderRadius: '1.5rem',
                       border: 'none',
-                      background: '#2F6FED',
-                      color: '#FFFFFF',
-                      fontWeight: 600,
-                      fontSize: '0.9375rem',
+                      color: 'white',
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem'
                     }}
                   >
-                    연락하기
+                    {t('medication.detail.actions.callNow')}
                   </button>
                 </div>
               </div>

@@ -110,7 +110,8 @@
       "actions": {
         "trackNow": "ติดตามการจัดส่ง",
         "viewPrescription": "ดูใบสั่งยา",
-        "viewConsultation": "รายละเอียดการรักษา"
+        "viewConsultation": "รายละเอียดการรักษา",
+        "callNow": "เรียก"
       }
     }
   },

@@ -110,7 +110,8 @@
       "actions": {
         "trackNow": "실시간 배송 조회",
         "viewPrescription": "처방전 보기",
-        "viewConsultation": "진료 완료 상세"
+        "viewConsultation": "진료 완료 상세",
+        "callNow": "전화하기"
       }
     }
   },
