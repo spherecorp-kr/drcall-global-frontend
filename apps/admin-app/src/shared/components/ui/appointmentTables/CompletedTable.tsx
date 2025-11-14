@@ -41,6 +41,7 @@ const transformAppointmentToCompleted = (appointment: Appointment): CompletedTab
 	}
 
 	return {
+		appointmentSequence: appointment.id,
 		appointmentNumber: appointment.externalId,
 		completedDatetime: appointment.endedAt
 			? format(new Date(appointment.endedAt), 'dd/MM/yy HH:mm')

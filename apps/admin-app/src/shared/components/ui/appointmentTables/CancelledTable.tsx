@@ -25,6 +25,7 @@ const ColGroup = () => (
  */
 const transformAppointmentToCancelled = (appointment: Appointment): CancelledTableColumnProps => {
 	return {
+		appointmentSequence: appointment.id,
 		appointmentNumber: appointment.externalId,
 		cancelledDatetime: appointment.cancelledAt
 			? format(new Date(appointment.cancelledAt), 'dd/MM/yy HH:mm')

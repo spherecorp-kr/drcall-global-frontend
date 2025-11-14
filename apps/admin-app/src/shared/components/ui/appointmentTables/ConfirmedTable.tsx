@@ -27,6 +27,7 @@ const ColGroup = () => (
  */
 const transformAppointmentToConfirmed = (appointment: Appointment): ConfirmedTableColumnProps => {
 	return {
+		appointmentSequence: appointment.id,
 		appointmentNumber: appointment.externalId,
 		appointmentDatetime: appointment.scheduledAt
 			? format(new Date(appointment.scheduledAt), 'dd/MM/yy HH:mm')
