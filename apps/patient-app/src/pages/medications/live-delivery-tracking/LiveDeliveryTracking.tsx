@@ -122,6 +122,35 @@ export default function LiveDeliveryTracking() {
                 position: here,
                 content: createContent('/assets/icons/ic_delivery_address.svg'),
               });
+              // 사용자 위치 근처로 서버 마커 재배치 (실제 배송 상황처럼 근접 좌표로 지정)
+              // 1도(lat) ≈ 111,320m, lng는 위도에 따라 보정
+              const degLatPerM = 1 / 111320;
+              const degLngPerM = 1 / (111320 * Math.cos((latitude * Math.PI) / 180));
+              const motorcyclePos = {
+                lat: latitude + 300 * degLatPerM, // 북쪽 300m
+                lng: longitude + 300 * degLngPerM, // 동쪽 300m
+              };
+              const truckPos = {
+                lat: latitude - 200 * degLatPerM, // 남쪽 200m
+                lng: longitude + 700 * degLngPerM, // 동쪽 700m
+              };
+              // 기존 서버 마커 제거
+              serverMarkersRef.current.forEach((m) => {
+                (m as any).map = null;
+              });
+              // 근접 좌표로 서버 마커 재생성
+              serverMarkersRef.current = [
+                new g.maps.marker.AdvancedMarkerElement({
+                  map: mapInstanceRef.current,
+                  position: motorcyclePos,
+                  content: createContent('/assets/icons/ic_delivery_motorcycle.svg'),
+                }),
+                new g.maps.marker.AdvancedMarkerElement({
+                  map: mapInstanceRef.current,
+                  position: truckPos,
+                  content: createContent('/assets/icons/ic_delivery_truck.svg'),
+                }),
+              ];
               // 서버 마커 + 사용자 위치로 bounds 업데이트
               const allBounds = new g.maps.LatLngBounds();
               serverMarkersRef.current.forEach((m) => {
