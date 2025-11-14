@@ -186,6 +186,8 @@ export default function LiveDeliveryTracking() {
               height: `calc(100dvh - ${HEADER_HEIGHT_REM}rem - ${NAV_BAR_HEIGHT_PX}px)`, // 브라우저 UI 제외한 실측 뷰포트 기준
               backgroundColor: '#F0F0F0',
               overflow: 'hidden',
+              touchAction: 'none',
+              overscrollBehavior: 'contain'
             }}
           >
             <div
