@@ -23,6 +23,9 @@ export default function LiveDeliveryTracking() {
   const [etaMinutes, setEtaMinutes] = useState<number>(15);
   const [etaTimeText, setEtaTimeText] = useState<string>('');
 
+  const HEADER_HEIGHT_REM = 3.5; // 3.5rem = 56px
+  const NAV_BAR_HEIGHT_PX = 56; // 네비게이션바 없으면 0으로 유지
+
   const handleBack = () => navigate(-1);
   const handleClose = () => {
     navigate(-1);
@@ -163,14 +166,21 @@ export default function LiveDeliveryTracking() {
       onBack={handleBack} 
       onClose={handleClose}
     >
-      <PageContainer>
-        <PageSection>
+      <PageContainer
+        style={{
+          paddingBottom: 0,
+          minHeight: 'auto',
+          overflow: 'hidden',
+        }}
+      >
+        <PageSection padding={false}>
           <div
             style={{
               position: 'relative',
               width: '100%',
-              height: 'calc(100vh - 3.5rem)', // 헤더를 제외한 영역을 지도에 할당
+              height: `calc(100dvh - ${HEADER_HEIGHT_REM}rem - ${NAV_BAR_HEIGHT_PX}px)`, // 브라우저 UI 제외한 실측 뷰포트 기준
               backgroundColor: '#F0F0F0',
+              overflow: 'hidden',
             }}
           >
             <div
@@ -224,10 +234,14 @@ export default function LiveDeliveryTracking() {
                 left: 0,
                 right: 0,
                 bottom: 0,
+                zIndex: 2,
                 pointerEvents: 'none',
                 // 상단 그라데이션로 지도와 자연스럽게 겹침
                 background:
                   'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.04) 24%, rgba(255,255,255,0.92) 56%, #FFFFFF 100%)',
+                // 화면 하단에 겹치지 않게 내부 여백으로 처리
+                padding: '0 1.25rem calc(env(safe-area-inset-bottom) + 1.25rem) 1.25rem',
+                boxSizing: 'border-box',
               }}
             >
               <div
