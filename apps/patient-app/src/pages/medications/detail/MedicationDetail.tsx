@@ -64,6 +64,7 @@ export default function MedicationDetail() {
           <DetailHeader
             method={isPickup ? 'pickup' : (data.receipt.method as any)}
             subTitle={subTitle}
+            orderNumber={isPickup ? data.orderInfo?.orderNumber : undefined}
             padding={false}
           />
         </PageSection>

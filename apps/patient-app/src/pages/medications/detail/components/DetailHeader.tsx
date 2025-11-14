@@ -6,6 +6,7 @@ type DetailHeaderProps = {
   method: ReceiptMethod;
   title?: string;
   subTitle?: string; // e.g., '14/09/2025' (라벨 없이 날짜만 전달)
+  orderNumber?: string; // 직접 수령 시 표시할 조제 번호
   onBack?: () => void;
   onClose?: () => void;
   padding?: boolean; // 외부에서 섹션 패딩을 제공하는 경우 false로 설정
@@ -19,6 +20,7 @@ type DetailHeaderProps = {
 export default function DetailHeader({
   method,
   subTitle,
+  orderNumber,
   padding = true,
 }: DetailHeaderProps) {
   const { t } = useTranslation();
@@ -96,6 +98,42 @@ export default function DetailHeader({
             {methodTextMap[method]}
           </div>
         </div>
+
+        {method === 'pickup' && orderNumber && (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.625rem'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <img
+                src="/assets/icons/ic_number.svg"
+                alt=""
+                style={{ width: '1.375rem', height: '1.375rem' }} 
+              />
+              <div
+                style={{
+                  fontSize: '1.125rem',
+                  fontWeight: 600,
+                  color: '#1F1F1F'
+                }}
+              >
+                {t('medication.detail.labels.orderNumber')}
+              </div>
+            </div>
+            <div
+              style={{
+                fontSize: '1rem', 
+                fontWeight: 400,
+                color: '#1F1F1F'
+              }}
+            >
+              {orderNumber}
+            </div>
+          </div>
+        )}
 
         {subTitle && (
           <div
