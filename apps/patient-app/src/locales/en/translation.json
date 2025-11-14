@@ -35,6 +35,93 @@
     "korean": "Korean",
     "viewMore": "View More"
   },
+  "medication": {
+    "list": {
+      "title": "Medication & Delivery History"
+    },
+    "tracking": {
+      "pageTitle": "Track Delivery",
+      "section": {
+        "basicInfo": "Basic Information"
+      },
+      "fields": {
+        "trackingNumber": "Tracking Number",
+        "carrier": "Courier Company"
+      },
+      "table": {
+        "processedAt": "Date and Time",
+        "step": "Delivery Status",
+        "location": "Location"
+      },
+      "steps": {
+        "depart": "Out for delivery",
+        "unload": "Unloaded at hub",
+        "inbound": "Inbound",
+        "collection": "Collection complete",
+        "shipped": "Shipped"
+      }
+    },
+    "statusAll": "All",
+    "statusPreparing": "Preparing",
+    "statusPrepared": "Prepared",
+    "statusShipping": "Shipping",
+    "statusReceived": "Received",
+    "sortNewest": "Newest First",
+    "sortOldest": "Oldest First",
+    "sortFilter": "Sort Filter",
+    "statusFilter": "Status Filter",
+    "fields": {
+      "status": "Status",
+      "number": "Medication Number",
+      "requestedAt": "Requested At",
+      "method": "Receiving Method",
+      "hospital": "Hospital"
+    },
+    "actions": {
+      "viewDetail": "Medication & Delivery Detail"
+    },
+    "methodDirect": "Direct Pickup",
+    "methodStandard": "Standard Delivery",
+    "methodExpress": "Express Delivery",
+    "methodInternational": "International Delivery",
+    "detail": {
+      "pageTitle": "Medication & Delivery Detail",
+      "title": "Check your medicine pickup progress.",
+      "section": {
+        "deliveryInfo": "Delivery Information",
+        "pickupInfo": "Direct Pickup Information",
+        "orderInfo": "Medication Information"
+      },
+      "labels": {
+        "receiverName": "Recipient",
+        "phone": "Contact",
+        "address": "Address",
+        "requestNote": "Delivery Request",
+        "hospitalName": "Hospital",
+        "hospitalAddress": "Hospital Address",
+        "pickupLocation": "Pickup Location",
+        "businessHours": "Operating Hours",
+        "contact": "Contact",
+        "orderNumber": "Medication Number",
+        "appliedAt": "Requested At",
+        "estimatedDate": "Estimated Arrival",
+        "deadlineDate": "Pickup Deadline"
+      },
+      "actions": {
+        "trackNow": "Track Delivery",
+        "viewPrescription": "View Prescription",
+        "viewConsultation": "Consultation Detail"
+      }
+    },
+    "liveTracking": {
+      "pageTitle": "Track Delivery",
+      "etaMinutes": "{{minutes}} min",
+      "etaArrivalAt": "Arriving at {{time}}",
+      "actions": {
+        "callNow": "Call"
+      }
+    }
+  },
   "auth": {
     "phoneVerification": "Phone Verification",
     "phoneNumber": "Phone Number",
@@ -91,7 +178,7 @@
     "selectDoctor": "Select Doctor",
     "selectDate": "Select Date",
     "selectTime": "Select Time",
-    "selectDateTime": "Please select your preferred date,\ndoctor, and consultation time.",
+    "selectDateTime": "Please select your preferred date, doctor, and consultation time.",
     "selectDoctorAndDateTime": "Select Doctor & DateTime",
     "selectAppointmentType": "Please select your\npreferred appointment type.",
     "quickAppointmentDesc": "Book quickly through voice/video call with hospital staff.",
@@ -107,7 +194,7 @@
     "symptoms": "Symptoms",
     "primarySymptoms": "Primary Symptoms",
     "enterSymptoms": "Please enter your symptoms",
-    "symptomsTitle": "Please enter your symptoms and\nattach images if necessary.",
+    "symptomsTitle": "Please enter your symptoms and attach images if necessary.",
     "symptomImages": "Symptom Images",
     "attachImage": "Attach Image",
     "maxImages": "You can attach up to {{count}} images",
@@ -198,6 +285,8 @@
     "paymentWithPrescription": "Payment with Prescription",
     "paymentNotReady": "Payment information has not been entered yet.\nPlease wait a moment.",
     "deliveryFeeWarning": "Additional payment may be incurred depending on the selected delivery method.",
+    "paymentCompleteMessage": "Payment completed successfully.",
+    "paymentCompleteSubMessage": "*A doctor's opinion and uploaded prescriptions can be verified.",
     "hospitalAccountNumber": "Hospital Account Number",
     "paymentConfirmDate": "Payment Confirmation Date",
     "deliveryAddress": "Delivery Address",
@@ -467,7 +556,14 @@
     "defaultDeliveryAddress": "Default Address",
     "change": "Change",
     "deliveryRequest": "Delivery Request",
-    "deliveryRequestPlaceholder": "Please enter delivery instructions.\n(e.g., Please leave at the door if not home)"
+    "deliveryRequestPlaceholder": "Please enter delivery instructions.\n(e.g., Please leave at the door if not home)",
+    "validation": {
+      "titleRequired": "Please enter the address name.",
+      "recipientNameRequired": "Please enter the recipient name.",
+      "addressRequired": "Please enter the address.",
+      "phoneNumberRequired": "Please enter the phone number.",
+      "phoneNumberInvalid": "Please check the phone number."
+    }
   },
   "consultation": {
     "title": "Consultation Room",
@@ -499,6 +595,7 @@
     "notFound": "Page not found",
     "forbidden": "Access denied",
     "sessionExpired": "Session expired",
+    "expiredMessage": "Expired message",
     "api": {
       "forbidden": "Access denied.",
       "notFound": "The requested resource could not be found.",

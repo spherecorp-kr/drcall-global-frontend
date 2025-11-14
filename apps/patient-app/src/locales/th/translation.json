@@ -35,6 +35,93 @@
     "korean": "เกาหลี",
     "viewMore": "ดูเพิ่มเติม"
   },
+  "medication": {
+    "list": {
+      "title": "ประวัติการจ่ายยาและจัดส่ง"
+    },
+    "tracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
+      "section": {
+        "basicInfo": "ข้อมูลพื้นฐาน"
+      },
+      "fields": {
+        "trackingNumber": "หมายเลขพัสดุ",
+        "carrier": "ผู้ให้บริการขนส่ง"
+      },
+      "table": {
+        "processedAt": "เวลาการประมวลผล",
+        "step": "ขั้นตอนการจัดส่ง",
+        "location": "สถานที่"
+      },
+      "steps": {
+        "depart": "ออกจัดส่ง",
+        "unload": "ขนถ่ายที่ศูนย์คัดแยก",
+        "inbound": "รับเข้าศูนย์",
+        "collection": "รับพัสดุเสร็จสิ้น",
+        "shipped": "ส่งยาออกแล้ว"
+      }
+    },
+    "statusAll": "ทั้งหมด",
+    "statusPreparing": "กำลังจ่ายยา",
+    "statusPrepared": "จ่ายยาเสร็จ",
+    "statusShipping": "กำลังจัดส่ง",
+    "statusReceived": "รับแล้ว",
+    "sortNewest": "ใหม่สุดก่อน",
+    "sortOldest": "เก่าสุดก่อน",
+    "sortFilter": "ตัวกรองการเรียง",
+    "statusFilter": "ตัวกรองสถานะ",
+    "fields": {
+      "status": "สถานะการจ่ายยา",
+      "number": "หมายเลขจ่ายยา",
+      "requestedAt": "วันที่ขอ",
+      "method": "วิธีรับยา",
+      "hospital": "โรงพยาบาล"
+    },
+    "actions": {
+      "viewDetail": "รายละเอียดการใช้ยาและการจัดส่ง"
+    },
+    "methodDirect": "รับด้วยตนเอง",
+    "methodStandard": "จัดส่งทั่วไป",
+    "methodExpress": "จัดส่งด่วน",
+    "methodInternational": "จัดส่งระหว่างประเทศ",
+    "detail": {
+      "pageTitle": "รายละเอียดการจ่ายยาและจัดส่ง",
+      "title": "ตรวจสอบความคืบหน้าการรับยา",
+      "section": {
+        "deliveryInfo": "ข้อมูลการจัดส่ง",
+        "pickupInfo": "ข้อมูลรับด้วยตนเอง",
+        "orderInfo": "ข้อมูลการจ่ายยา"
+      },
+      "labels": {
+        "receiverName": "ผู้รับ",
+        "phone": "ติดต่อ",
+        "address": "ที่อยู่",
+        "requestNote": "คำขอการจัดส่ง",
+        "hospitalName": "โรงพยาบาล",
+        "hospitalAddress": "ที่อยู่โรงพยาบาล",
+        "pickupLocation": "สถานที่รับยา",
+        "businessHours": "เวลาทำการ",
+        "contact": "ติดต่อ",
+        "orderNumber": "หมายเลขจ่ายยา",
+        "appliedAt": "วันที่ขอ",
+        "estimatedDate": "คาดว่าจะถึง",
+        "deadlineDate": "กำหนดรับยา"
+      },
+      "actions": {
+        "trackNow": "ติดตามการจัดส่ง",
+        "viewPrescription": "ดูใบสั่งยา",
+        "viewConsultation": "รายละเอียดการรักษา"
+      }
+    },
+    "liveTracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
+      "etaMinutes": "{{minutes}} นาที",
+      "etaArrivalAt": "ถึงประมาณ {{time}}",
+      "actions": {
+        "callNow": "เรียก"
+      }
+    }
+  },
   "auth": {
     "phoneVerification": "ยืนยันเบอร์โทรศัพท์",
     "phoneNumber": "เบอร์โทรศัพท์",
@@ -198,6 +285,8 @@
     "paymentWithPrescription": "ชำระเงินพร้อมใบสั่งยา",
     "paymentNotReady": "ยังไม่ได้ใส่ข้อมูลการชำระเงิน\nกรุณารอสักครู่",
     "deliveryFeeWarning": "อาจมีค่าใช้จ่ายเพิ่มเติมขึ้นอยู่กับวิธีการจัดส่งที่เลือก",
+    "paymentCompleteMessage": "ชำระเงินสำเร็จ",
+    "paymentCompleteSubMessage": "*สามารถตรวจสอบความเห็นของแพทย์และใบสั่งยาที่อัพโหลดได้",
     "hospitalAccountNumber": "หมายเลขบัญชีโรงพยาบาล",
     "paymentConfirmDate": "วันที่ยืนยันการชำระเงิน",
     "deliveryAddress": "ที่อยู่จัดส่ง",
@@ -467,7 +556,14 @@
     "defaultDeliveryAddress": "ที่อยู่เริ่มต้น",
     "change": "เปลี่ยน",
     "deliveryRequest": "คำขอการจัดส่ง",
-    "deliveryRequestPlaceholder": "กรุณาใส่คำแนะนำการจัดส่ง\n(ตัวอย่าง: กรุณาวางไว้ที่หน้าประตูหากไม่อยู่บ้าน)"
+    "deliveryRequestPlaceholder": "กรุณาใส่คำแนะนำการจัดส่ง\n(ตัวอย่าง: กรุณาวางไว้ที่หน้าประตูหากไม่อยู่บ้าน)",
+    "validation": {
+      "titleRequired": "กรุณาระบุชื่อเพื่อแยกที่อยู่จัดส่ง",
+      "recipientNameRequired": "กรุณากรอกชื่อผู้รับ",
+      "addressRequired": "กรุณากรอกที่อยู่ของคุณ",
+      "phoneNumberRequired": "กรุณากรอกหมายเลขโทรศัพท์มือถือของคุณ",
+      "phoneNumberInvalid": "กรุณายืนยันหมายเลขโทรศัพท์มือถือที่คุณกรอก"
+    }
   },
   "consultation": {
     "title": "ห้องตรวจ",
@@ -499,6 +595,7 @@
     "notFound": "ไม่พบหน้าที่ต้องการ",
     "forbidden": "ไม่มีสิทธิ์เข้าถึง",
     "sessionExpired": "เซสชั่นหมดอายุ",
+    "expiredMessage": "ข้อความที่หมดอายุ",
     "api": {
       "forbidden": "ไม่มีสิทธิ์เข้าถึง",
       "notFound": "ไม่พบทรัพยากรที่ร้องขอ",

@@ -28,6 +28,10 @@ import AppointmentEditComplete from './pages/appointments/edit/AppointmentEditCo
 import Payment from './pages/appointments/payment/Payment'
 import PaymentWithPrescription from './pages/appointments/payment/PaymentWithPrescription'
 import PaymentComplete from './pages/appointments/payment/PaymentComplete'
+import MedicationList from './pages/medications/list/MedicationList'
+import MedicationDetail from './pages/medications/detail/MedicationDetail'
+import DeliveryTracking from './pages/medications/delivery-tracking/DeliveryTracking'
+import LiveDeliveryTracking from './pages/medications/live-delivery-tracking/LiveDeliveryTracking'
 import ConsultationRoom from './pages/consultation/ConsultationRoom'
 import PhrDashboard from './pages/phr/PhrDashboard'
 import PhrDetail from './pages/phr/PhrDetail'
@@ -98,6 +102,20 @@ function App() {
         } />
         <Route path="/appointments/payment/complete" element={
           <ProtectedRoute><PaymentComplete /></ProtectedRoute>
+        } />
+
+        {/* Medication Routes - Protected */}
+        <Route path="/medications" element={
+          <ProtectedRoute><MedicationList /></ProtectedRoute>
+        } />
+        <Route path="/medications/:id" element={
+          <ProtectedRoute><MedicationDetail /></ProtectedRoute>
+        } />
+        <Route path="/medications/delivery-tracking" element={
+          <ProtectedRoute><DeliveryTracking /></ProtectedRoute>
+        } />
+        <Route path="/medications/live-delivery-tracking" element={
+          <ProtectedRoute><LiveDeliveryTracking /></ProtectedRoute>
         } />
 
         {/* Consultation Routes - Protected */}

@@ -35,6 +35,93 @@
     "korean": "한국어",
     "viewMore": "더보기"
   },
+  "medication": {
+    "list": {
+      "title": "조제 및 배송 내역"
+    },
+    "tracking": {
+      "pageTitle": "배송 조회",
+      "section": {
+        "basicInfo": "기본 정보"
+      },
+      "fields": {
+        "trackingNumber": "송장번호",
+        "carrier": "택배사"
+      },
+      "table": {
+        "processedAt": "처리 일시",
+        "step": "배송 단계",
+        "location": "처리 장소"
+      },
+      "steps": {
+        "depart": "배달 출발",
+        "unload": "간선 하차",
+        "inbound": "입고",
+        "collection": "집하 완료",
+        "shipped": "약 발송"
+      }
+    },
+    "statusAll": "전체",
+    "statusPreparing": "조제 중",
+    "statusPrepared": "조제 완료",
+    "statusShipping": "배송 중",
+    "statusReceived": "수령 완료",
+    "sortNewest": "최신순",
+    "sortOldest": "과거순",
+    "sortFilter": "정렬 필터",
+    "statusFilter": "상태정렬 필터",
+    "fields": {
+      "status": "조제 상태",
+      "number": "조제 번호",
+      "requestedAt": "신청일",
+      "method": "수령 방법",
+      "hospital": "병원"
+    },
+    "actions": {
+      "viewDetail": "조제 및 배송 상세"
+    },
+    "methodDirect": "직접 수령",
+    "methodStandard": "일반 배송",
+    "methodExpress": "퀵 배송",
+    "methodInternational": "해외 배송",
+    "detail": {
+      "pageTitle": "조제 및 배송 상세",
+      "title": "약 수령 진행 현황을 확인하세요.",
+      "section": {
+        "deliveryInfo": "배송 정보",
+        "pickupInfo": "직접 수령 정보",
+        "orderInfo": "조제 정보"
+      },
+      "labels": {
+        "receiverName": "수령인",
+        "phone": "연락처",
+        "address": "배송지",
+        "requestNote": "배송 요청사항",
+        "hospitalName": "병원",
+        "hospitalAddress": "병원 주소",
+        "pickupLocation": "수령 위치",
+        "businessHours": "운영 시간",
+        "contact": "연락처",
+        "orderNumber": "조제 번호",
+        "appliedAt": "신청일시",
+        "estimatedDate": "예상 도착일",
+        "deadlineDate": "수령 기한"
+      },
+      "actions": {
+        "trackNow": "실시간 배송 조회",
+        "viewPrescription": "처방전 보기",
+        "viewConsultation": "진료 완료 상세"
+      }
+    },
+    "liveTracking": {
+      "pageTitle": "실시간 배송 조회",
+      "etaMinutes": "{{minutes}}분",
+      "etaArrivalAt": "{{time}} 도착 예정",
+      "actions": {
+        "callNow": "전화하기"
+      }
+    }
+  },
   "auth": {
     "phoneVerification": "휴대폰 인증",
     "phoneNumber": "휴대폰 번호",
@@ -198,6 +285,8 @@
     "paymentWithPrescription": "처방전 결제",
     "paymentNotReady": "아직 결제 정보가 입력되지 않았습니다.\n조금만 기다려 주세요.",
     "deliveryFeeWarning": "선택한 배송방식에 따라서 추가 결제금액이 발생할 수 있습니다.",
+    "paymentCompleteMessage": "결제가 완료되었습니다.",
+    "paymentCompleteSubMessage": "*의사 소견과 업로드 완료된 처방전이\n있다면 확인할 수 있습니다.",
     "hospitalAccountNumber": "병원 계좌 번호",
     "paymentConfirmDate": "결제 확인 날짜",
     "deliveryAddress": "배송지",
@@ -469,7 +558,14 @@
     "defaultDeliveryAddress": "기본 배송지",
     "change": "변경",
     "deliveryRequest": "배송 요청 사항",
-    "deliveryRequestPlaceholder": "배송 시 요청사항을 입력하세요.\n(예 : 부재 시 문 앞에 두세요)"
+    "deliveryRequestPlaceholder": "배송 시 요청사항을 입력하세요.\n(예 : 부재 시 문 앞에 두세요)",
+    "validation": {
+      "titleRequired": "배송지 이름을 입력해 주세요.",
+      "recipientNameRequired": "받는 사람을 입력해 주세요.",
+      "addressRequired": "주소를 입력해 주세요.",
+      "phoneNumberRequired": "휴대폰 번호를 입력해 주세요.",
+      "phoneNumberInvalid": "입력한 휴대폰 번호를 확인해 주세요."
+    }
   },
   "consultation": {
     "title": "진료실",
@@ -501,6 +597,7 @@
     "notFound": "페이지를 찾을 수 없습니다",
     "forbidden": "접근 권한이 없습니다",
     "sessionExpired": "세션이 만료되었습니다",
+    "expiredMessage": "만료된 메시지",
     "api": {
       "forbidden": "접근 권한이 없습니다.",
       "notFound": "요청한 리소스를 찾을 수 없습니다.",
