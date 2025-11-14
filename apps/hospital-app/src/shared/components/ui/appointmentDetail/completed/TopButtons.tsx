@@ -3,9 +3,11 @@ import chatIcon from '@/assets/icons/ic_chat.svg';
 import { Button } from '@/shared/components/ui';
 import { useDialog } from '@/shared/hooks/useDialog';
 import { useDialogStore } from '@/shared/store/dialogStore';
-import { SingleDialogBottomButton } from '@/shared/components/ui/dialog';
+import { DoubleDialogBottomButton, SingleDialogBottomButton } from '@/shared/components/ui/dialog';
 import PrescriptionEdit from './PrescriptionEdit';
 import PrescriptionRegistration from './PrescriptionRegistration';
+import type { BottomButtonProps } from '@/shared/types/dialog';
+import ReAppointmentDialog from './ReAppointmentDialog';
 
 interface Fee {
 	treatmentFee: number,
@@ -14,12 +16,11 @@ interface Fee {
 }
 
 const TopButtons = () => {
-	const { openDialog } = useDialog();
+	const { closeDialog, openDialog } = useDialog();
 	const { setDialog } = useDialogStore();
 
 	const [cost, setCost] = useState<string>('0');
 	const [payCheckAvailable, setPayCheckAvailable] = useState<boolean>(true);
-	const [reAppointmentAvailable, setReAppointmentAvailable] = useState<boolean>(true);
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
 
 	const handleCostChange = useCallback(({ treatmentFee, dispensingFee, tip }: Fee) => {
@@ -100,10 +101,25 @@ const TopButtons = () => {
 		});
 	}, [openDialog]);
 
+	const openReAppointmentDialog = useCallback(() => {
+		const actions: BottomButtonProps[] = [
+			{ onClick: () => closeDialog('reappointmentDialog'), text: '취소' },
+			{ onClick: () => {}, text: '완료' },
+		];
+
+		openDialog({
+			dialogButtons: <DoubleDialogBottomButton actions={actions} />,
+			dialogClass: 'w-[36.25rem]',
+			dialogContents: <ReAppointmentDialog />,
+			dialogId: 'reappointmentDialog',
+			dialogTitle: '예약',
+			hasCloseButton: true
+		});
+	}, [closeDialog, openDialog]);
+
 	// TODO FIXME 아래 useEffect 삭제
 	useEffect(() => {
 		setPayCheckAvailable(true);
-		setReAppointmentAvailable(false);
 	}, []);
 
 	return (
@@ -172,9 +188,7 @@ const TopButtons = () => {
 					}
 				>입금 완료</Button>
 				<Button
-					variant='outline'
-					size='default'
-					disabled={!reAppointmentAvailable}
+					onClick={openReAppointmentDialog}
 					icon={
 						<svg
 							fill="none"
@@ -192,6 +206,8 @@ const TopButtons = () => {
 							/>
 						</svg>
 					}
+					size='default'
+					variant='outline'
 				>재예약</Button>
 			</div>
 		</div>

@@ -1,3 +1,5 @@
+import DeliveryInfo from './DeliveryInfo';
+import PaymentInfo from './PaymentInfo';
 import TopButtons from './TopButtons';
 import {
 	Memo,
@@ -13,6 +15,8 @@ const Layout = () => {
 			<TopButtons />
 			<PatientInfoTable />
 			<ReadOnlyTreatmentInfo />
+			<PaymentInfo />
+			<DeliveryInfo />
 			<div className='flex gap-4 items-center self-stretch'>
 				<Memo />
 				<PatientHealthInfo />
