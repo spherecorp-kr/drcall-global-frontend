@@ -20,8 +20,6 @@ on:
         required: true
       AWS_SECRET_ACCESS_KEY:
         required: true
-      API_URL:
-        required: true
       CLOUDFRONT_ID:
         required: true
 
@@ -66,10 +64,26 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Copy environment file
+        run: |
+          ENV="${{ inputs.environment }}"
+          APP="${{ inputs.app-name }}"
+
+          # Map environment names
+          if [ "$ENV" == "staging" ]; then
+            ENV_FILE="stg"
+          else
+            ENV_FILE="$ENV"
+          fi
+
+          if [ -f "apps/${APP}/.env.${ENV_FILE}" ]; then
+            cp "apps/${APP}/.env.${ENV_FILE}" "apps/${APP}/.env"
+            echo "✅ Copied .env.${ENV_FILE} to .env"
+          else
+            echo "⚠️ .env.${ENV_FILE} not found, using default .env"
+          fi
+
       - name: Build application
-        env:
-          VITE_API_BASE_URL: ${{ secrets.API_URL }}
-          VITE_ENVIRONMENT: ${{ inputs.environment }}
         run: pnpm ${{ inputs.build-command }}
 
       - name: Upload build artifacts
@@ -106,7 +120,14 @@ jobs:
           ENV="${{ inputs.environment }}"
           APP="${{ inputs.app-name }}"
 
-          BUCKET="${ENV}-${APP}-frontend"
+          # Map environment names
+          if [ "$ENV" == "staging" ]; then
+            ENV_NAME="stg"
+          else
+            ENV_NAME="$ENV"
+          fi
+
+          BUCKET="drcall-global-${ENV_NAME}-${APP}-frontend"
 
           echo "🪣 Deploying to S3 bucket: ${BUCKET}"
 
@@ -144,6 +165,6 @@ jobs:
           echo "| **Application** | \`${{ inputs.app-name }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Environment** | \`${{ inputs.environment }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **URL** | https://${{ inputs.app-name }}.${{ inputs.environment }}.drcall.global |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Bucket** | \`${{ inputs.environment }}-${{ inputs.app-name }}-frontend\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Bucket** | \`drcall-global-${{ inputs.environment }}-${{ inputs.app-name }}-frontend\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Triggered by** | @${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
