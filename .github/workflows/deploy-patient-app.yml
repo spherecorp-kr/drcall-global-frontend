@@ -3,12 +3,13 @@ name: 🚀 Deploy Patient App
 on:
   push:
     branches:
-      - main
       - staging
       - develop
     paths:
       - 'apps/patient-app/**'
       - 'packages/**'
+      - '.github/workflows/deploy-patient-app.yml'
+      - '.github/workflows/_reusable-app-deploy.yml'
   workflow_dispatch:
     inputs:
       environment:
