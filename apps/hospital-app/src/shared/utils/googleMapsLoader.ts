@@ -16,30 +16,35 @@ export async function loadGoogle(): Promise<typeof google> {
   const lang = useLanguageStore.getState().language;
 
   // 이미 초기화된 경우 전역 네임스페이스 재사용
-  if ((window as any).google) {
-    return (window as any).google as typeof google;
+  if (window.google) {
+    return window.google;
   }
 
   // Vite 환경변수에서 API 키를 읽어옵니다 (노출 금지)
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string | undefined;
+  const apiKey = (import.meta.env as { VITE_GOOGLE_MAPS_API_KEY?: string }).VITE_GOOGLE_MAPS_API_KEY;
   if (!apiKey) {
     throw new Error('VITE_GOOGLE_MAPS_API_KEY가 설정되지 않았습니다.');
   }
 
   // 첫 로드 전에 전역 옵션을 설정해야 합니다
   if (!optionsConfigured) {
-    setOptions({ 
-      key: apiKey, 
+    setOptions({
+      key: apiKey,
       v: 'weekly', // 최신 안정 주간 채널을 사용
       language: lang,
-      mapIds: [import.meta.env.VITE_GOOGLE_MAPS_ID || 'DEMO_MAP_ID'],
+      mapIds: [(import.meta.env as { VITE_GOOGLE_MAPS_ID?: string }).VITE_GOOGLE_MAPS_ID || 'DEMO_MAP_ID'],
     });
     optionsConfigured = true;
   }
 
   // core maps 라이브러리를 로드하여 google 네임스페이스를 준비합니다
   if (!loadingPromise) {
-    loadingPromise = importLibrary('maps').then(() => (window as any).google as typeof google);
+    loadingPromise = importLibrary('maps').then(() => {
+      if (!window.google) {
+        throw new Error('Google Maps API 로드 실패');
+      }
+      return window.google;
+    });
   }
 
   return loadingPromise;

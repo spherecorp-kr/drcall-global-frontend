@@ -36,13 +36,17 @@ function onReady() {
 // Google Maps API 로드
 export function loadGoogleMaps(opts: LoadOptions = {}, onLoaded?: () => void) {
   if (window.google?.maps?.places) {
-    onLoaded && onLoaded();
+    if (onLoaded) {
+      onLoaded();
+    }
     return;
   }
 
   // 이미 로드되어 있는지 확인
   if (loaded) {
-    onLoaded && onLoaded();
+    if (onLoaded) {
+      onLoaded();
+    }
     return;
   }
 

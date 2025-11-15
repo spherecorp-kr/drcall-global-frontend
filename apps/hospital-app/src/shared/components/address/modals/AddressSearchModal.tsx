@@ -19,9 +19,9 @@ export default function AddressSearchModal({ isOpen, onClose, onSelect }: Addres
   const [searchResults, setSearchResults] = useState<AddressSuggestion[]>([]);
   const [isReady, setIsReady] = useState(false);
   const seqRef = useRef(0);
-  const sessionRef = useRef<any | null>(null);
+  const sessionRef = useRef<google.maps.places.AutocompleteSessionToken | null>(null);
 
-  const apiKey = useMemo(() => (import.meta.env as any).VITE_GOOGLE_MAPS_API_KEY as string | undefined, []);
+  const apiKey = useMemo(() => (import.meta.env as { VITE_GOOGLE_MAPS_API_KEY?: string }).VITE_GOOGLE_MAPS_API_KEY, []);
 
   // 모달 오픈 시 Google Maps 로드 및 입력 포커스
   useEffect(() => {
@@ -74,7 +74,9 @@ export default function AddressSearchModal({ isOpen, onClose, onSelect }: Addres
   // 주소 선택 처리
   const handleSelect = async (s: AddressSuggestion) => {
     const { object } = await finalizePlaceSelection(s, { ensureDetails: true });
-    onSelect && onSelect(object);
+    if (onSelect) {
+      onSelect(object);
+    }
     onClose();
     setSearchQuery('');
     setSearchResults([]);

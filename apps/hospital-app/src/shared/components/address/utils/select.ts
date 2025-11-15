@@ -25,16 +25,20 @@ export async function finalizePlaceSelection(
   let s = suggestion;
 
   if (options.ensureDetails && s.placeId && (!s.postalCode || !s.latitude || !s.longitude) && ensurePlacesAvailable()) { // 부족한 정보가 있을 때 Place.fetchFields로 보강 시도
-    const g: any = (window as any).google; // Google Maps API 인스턴스
+    const g = window.google; // Google Maps API 인스턴스
     const place = g?.maps?.places?.Place ? new g.maps.places.Place({ id: s.placeId }) : null; // Place 인스턴스
     if (place) {
       await place.fetchFields({ fields: ['addressComponents', 'formattedAddress', 'location'] }); // 주소 상세 조회시 필요한 필드만 조회하여 비용/성능 최적화
 
       const comps: Record<string, string> = {}; // 주소 컴포넌트 구조(longText/shortText)
       if (Array.isArray(place.addressComponents)) {
-        place.addressComponents.forEach((c: any) => Array.isArray(c.types) && c.types.forEach((t: string) => {
-          comps[t] = (c.longText || c.shortText); // 주소 컴포넌트 구조(longText/shortText)
-        }));
+        place.addressComponents.forEach((c: google.maps.places.AddressComponent) => {
+          if (Array.isArray(c.types)) {
+            c.types.forEach((t: string) => {
+              comps[t] = (c.longText || c.shortText); // 주소 컴포넌트 구조(longText/shortText)
+            });
+          }
+        });
       }
 
       s = {

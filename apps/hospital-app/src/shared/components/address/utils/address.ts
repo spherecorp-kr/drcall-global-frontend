@@ -30,18 +30,21 @@ export async function fetchAddressResults(query: string): Promise<AddressSuggest
     return []; // 응답이 비정상(HTTP !ok)인 경우에도 빈 배열을 반환
   }
 
-  const payload: any = await response.json(); // 응답 파싱
-  const arr: any[] = Array.isArray(payload?.data) ? payload.data : []; // 응답 데이터가 배열이 아니면 빈 배열로 변환
+  const payload = await response.json() as { data?: unknown }; // 응답 파싱
+  const arr = Array.isArray(payload?.data) ? payload.data : []; // 응답 데이터가 배열이 아니면 빈 배열로 변환
 
-  return arr.map((r: any) => ({
-    displayAddress: r.displayAddress || r.address || '',
-    detail: r.detail || '',
-    postalCode: r.postalCode || '',
-    latitude: typeof r.latitude === 'number' ? r.latitude : (r.latitude ?? ''),
-    longitude: typeof r.longitude === 'number' ? r.longitude : (r.longitude ?? ''),
-    placeId: r.placeId || undefined,
-    types: Array.isArray(r.types) ? r.types : undefined
-  })); // 응답 데이터를 주소 제안 목록으로 변환
+  return arr.map((r: unknown) => {
+    const item = r as Record<string, unknown>;
+    return {
+      displayAddress: (item.displayAddress as string) || (item.address as string) || '',
+      detail: (item.detail as string) || '',
+      postalCode: (item.postalCode as string) || '',
+      latitude: typeof item.latitude === 'number' ? item.latitude : (item.latitude ?? ''),
+      longitude: typeof item.longitude === 'number' ? item.longitude : (item.longitude ?? ''),
+      placeId: (item.placeId as string) || undefined,
+      types: Array.isArray(item.types) ? (item.types as string[]) : undefined
+    };
+  }); // 응답 데이터를 주소 제안 목록으로 변환
 }
 
 

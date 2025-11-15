@@ -37,7 +37,7 @@ export async function prefetchPlaceDetails(
    * - 'point_of_interest'  // 관심 지점
    */
   const precise = new Set(['street_address', 'premise', 'subpremise', 'establishment', 'point_of_interest']); // 정밀 타입 세트
-  const g: any = (window as any).google;
+  const g = window.google;
 
   // 선조회 대상 인덱스 필터링
   const needing = suggestions
@@ -73,9 +73,13 @@ export async function prefetchPlaceDetails(
 
         const comps: Record<string, string> = {};
         if (Array.isArray(place.addressComponents)) {
-          place.addressComponents.forEach((c: any) => Array.isArray(c.types) && c.types.forEach((t: string) => {
-            comps[t] = (c.longText || c.shortText);
-          }));
+          place.addressComponents.forEach((c: google.maps.places.AddressComponent) => {
+            if (Array.isArray(c.types)) {
+              c.types.forEach((t: string) => {
+                comps[t] = (c.longText || c.shortText);
+              });
+            }
+          });
         }
 
         const updated: AddressSuggestion = {
