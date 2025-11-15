@@ -16,10 +16,6 @@ on:
         type: string
         description: 'Deployment environment (dev, staging, prod)'
     secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
       CLOUDFRONT_ID:
         required: true
 
@@ -27,6 +23,10 @@ env:
   PNPM_VERSION: '9.0.0'
   NODE_VERSION: '20'
   AWS_REGION: 'ap-northeast-2'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
   validate:
@@ -107,11 +107,11 @@ jobs:
           name: ${{ inputs.app-name }}-dist
           path: dist
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::665321880316:role/drcall-global-prod-github-actions-role
+          role-session-name: github-actions-frontend-deploy
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to S3
