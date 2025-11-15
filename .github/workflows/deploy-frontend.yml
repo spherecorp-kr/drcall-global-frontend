@@ -1,0 +1,221 @@
+name: Deploy Frontend to S3 + CloudFront
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+    paths:
+      - 'frontend/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        type: choice
+        options:
+          - dev
+          - stg
+          - prod
+      app:
+        description: 'App to deploy (leave empty for all)'
+        required: false
+        type: choice
+        options:
+          - all
+          - patient-app
+          - hospital-app
+          - admin-app
+
+env:
+  PNPM_VERSION: '9.0.0'
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    strategy:
+      matrix:
+        app: ${{ github.event.inputs.app == 'all' || github.event.inputs.app == '' ? fromJSON('["patient-app", "hospital-app", "admin-app"]') : fromJSON(format('["{0}"]', github.event.inputs.app)) }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine environment
+        id: env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            ENV="${{ github.event.inputs.environment }}"
+          elif [[ "${{ github.ref }}" == "refs/heads/staging" ]]; then
+            ENV="stg"
+          elif [[ "${{ github.ref }}" == "refs/heads/develop" ]]; then
+            ENV="dev"
+          else
+            echo "Unknown branch or trigger"
+            exit 1
+          fi
+
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+
+          # Set region based on environment
+          if [[ "${ENV}" == "dev" ]]; then
+            echo "region=ap-northeast-2" >> $GITHUB_OUTPUT
+          else
+            echo "region=ap-southeast-1" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Copy environment file
+        working-directory: frontend/apps/${{ matrix.app }}
+        run: |
+          if [ -f ".env.${{ steps.env.outputs.environment }}" ]; then
+            cp .env.${{ steps.env.outputs.environment }} .env
+            echo "Using .env.${{ steps.env.outputs.environment }}"
+          else
+            echo "Warning: .env.${{ steps.env.outputs.environment }} not found, using default .env"
+          fi
+
+      - name: Build
+        working-directory: frontend/apps/${{ matrix.app }}
+        run: pnpm build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ steps.env.outputs.region }}
+
+      - name: Deploy to S3
+        working-directory: frontend/apps/${{ matrix.app }}
+        run: |
+          BUCKET_NAME="drcall-global-${{ steps.env.outputs.environment }}-${{ matrix.app }}-frontend"
+          aws s3 sync dist/ s3://${BUCKET_NAME}/ --delete --cache-control "public,max-age=31536000,immutable"
+          # index.html은 캐시 안 함
+          aws s3 cp dist/index.html s3://${BUCKET_NAME}/index.html --cache-control "no-cache"
+
+      - name: Get CloudFront Distribution ID
+        id: cloudfront
+        run: |
+          BUCKET_NAME="drcall-global-${{ steps.env.outputs.environment }}-${{ matrix.app }}-frontend"
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?Origins.Items[?DomainName=='${BUCKET_NAME}.s3.${{ steps.env.outputs.region }}.amazonaws.com']].Id | [0]" \
+            --output text \
+            --region ${{ steps.env.outputs.region }})
+          echo "distribution_id=${DISTRIBUTION_ID}" >> $GITHUB_OUTPUT
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ steps.cloudfront.outputs.distribution_id }} \
+            --paths "/*" \
+            --region ${{ steps.env.outputs.region }}
+
+      - name: Get CloudFront URL
+        id: url
+        run: |
+          DOMAIN=$(aws cloudfront get-distribution \
+            --id ${{ steps.cloudfront.outputs.distribution_id }} \
+            --query "Distribution.DomainName" \
+            --output text \
+            --region ${{ steps.env.outputs.region }})
+          echo "url=https://${DOMAIN}" >> $GITHUB_OUTPUT
+
+          # Custom domain mapping
+          if [[ "${{ matrix.app }}" == "patient-app" ]]; then
+            if [[ "${{ steps.env.outputs.environment }}" == "dev" ]]; then
+              echo "custom_url=https://patient.dev.drcall.global" >> $GITHUB_OUTPUT
+            elif [[ "${{ steps.env.outputs.environment }}" == "stg" ]]; then
+              echo "custom_url=https://patient.stg.drcall.global" >> $GITHUB_OUTPUT
+            elif [[ "${{ steps.env.outputs.environment }}" == "prod" ]]; then
+              echo "custom_url=https://patient.drcall.global" >> $GITHUB_OUTPUT
+            fi
+          elif [[ "${{ matrix.app }}" == "hospital-app" ]]; then
+            if [[ "${{ steps.env.outputs.environment }}" == "dev" ]]; then
+              echo "custom_url=https://hospital.dev.drcall.global" >> $GITHUB_OUTPUT
+            elif [[ "${{ steps.env.outputs.environment }}" == "stg" ]]; then
+              echo "custom_url=https://hospital.stg.drcall.global" >> $GITHUB_OUTPUT
+            elif [[ "${{ steps.env.outputs.environment }}" == "prod" ]]; then
+              echo "custom_url=https://hospital.drcall.global" >> $GITHUB_OUTPUT
+            fi
+          elif [[ "${{ matrix.app }}" == "admin-app" ]]; then
+            if [[ "${{ steps.env.outputs.environment }}" == "dev" ]]; then
+              echo "custom_url=https://admin.dev.drcall.global" >> $GITHUB_OUTPUT
+            elif [[ "${{ steps.env.outputs.environment }}" == "stg" ]]; then
+              echo "custom_url=https://admin.stg.drcall.global" >> $GITHUB_OUTPUT
+            elif [[ "${{ steps.env.outputs.environment }}" == "prod" ]]; then
+              echo "custom_url=https://admin.drcall.global" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Output deployment info
+        run: |
+          echo "### 🚀 Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**App**: ${{ matrix.app }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment**: ${{ steps.env.outputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Region**: ${{ steps.env.outputs.region }}" >> $GITHUB_STEP_SUMMARY
+          echo "**S3 Bucket**: drcall-global-${{ steps.env.outputs.environment }}-${{ matrix.app }}-frontend" >> $GITHUB_STEP_SUMMARY
+          echo "**CloudFront URL**: ${{ steps.url.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Custom Domain**: ${{ steps.url.outputs.custom_url }}" >> $GITHUB_STEP_SUMMARY
+
+  notify-success:
+    needs: deploy-frontend
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Notify Slack
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST $SLACK_WEBHOOK_URL -H 'Content-Type: application/json' -d '{
+            "text": "✅ Frontend deployed successfully!",
+            "attachments": [{
+              "color": "good",
+              "fields": [
+                {"title": "Ref", "value": "${{ github.ref }}", "short": true},
+                {"title": "Commit", "value": "${{ github.sha }}", "short": true}
+              ]
+            }]
+          }'
+
+  notify-failure:
+    needs: deploy-frontend
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Notify Slack
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -X POST $SLACK_WEBHOOK_URL -H 'Content-Type: application/json' -d '{
+            "text": "❌ Frontend deployment failed!",
+            "attachments": [{
+              "color": "danger",
+              "fields": [
+                {"title": "Ref", "value": "${{ github.ref }}", "short": true},
+                {"title": "Commit", "value": "${{ github.sha }}", "short": true}
+              ]
+            }]
+          }'
