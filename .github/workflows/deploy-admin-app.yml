@@ -3,12 +3,13 @@ name: 🚀 Deploy Admin App
 on:
   push:
     branches:
-      - main
       - staging
       - develop
     paths:
       - 'apps/admin-app/**'
       - 'packages/**'
+      - '.github/workflows/deploy-admin-app.yml'
+      - '.github/workflows/_reusable-app-deploy.yml'
   workflow_dispatch:
     inputs:
       environment:
