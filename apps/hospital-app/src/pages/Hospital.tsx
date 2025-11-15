@@ -9,6 +9,8 @@ import icCancel from '@/shared/assets/icons/ic_cancel.svg';
 import icSave from '@/shared/assets/icons/ic_register.svg';
 import TextLogo from '@/assets/logo_drcall.svg';
 import CircleLogo from '@/assets/logo_circle.png';
+import AddressSearchModal from '@/shared/components/address/modals/AddressSearchModal';
+import type { SelectedAddress } from '@/shared/constants/address';
 
 // Mock data
 const mockHospital = {
@@ -46,6 +48,7 @@ export function Hospital() {
 	const [errors, setErrors] = useState<ValidationErrors>({});
 	const [webBiPreview, setWebBiPreview] = useState<string | null>(null);
 	const [mobileBiPreview, setMobileBiPreview] = useState<string | null>(null);
+	const [isAddressSearchOpen, setIsAddressSearchOpen] = useState(false);
 	const webBiInputRef = useRef<HTMLInputElement>(null);
 	const mobileBiInputRef = useRef<HTMLInputElement>(null);
 
@@ -210,6 +213,22 @@ export function Hospital() {
 				alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
 			}
 		}
+	};
+
+	const handleAddressSelect = (address: SelectedAddress) => {
+		setFormData((prev) => ({
+			...prev,
+			postalCode: address.postalCode,
+			address: address.displayAddress,
+			addressDetail: address.detail || ''
+		}));
+		// Clear errors for address fields
+		setErrors((prev) => ({
+			...prev,
+			postalCode: undefined,
+			address: undefined,
+			addressDetail: undefined
+		}));
 	};
 
 	return (
@@ -467,14 +486,23 @@ export function Hospital() {
 								{/* 우편번호 */}
 								{isEditMode ? (
 									<div className="flex flex-col gap-1.5">
-										<Input
-											value={formData.postalCode}
-											onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('postalCode', e.target.value)}
-											placeholder="우편번호를 검색해 주세요."
-											size="small"
-											error={!!errors.postalCode}
-											icon={<img src={icSearch} alt="search" className="w-7 h-7" />}
-										/>
+										<div className="relative">
+											<Input
+												value={formData.postalCode}
+												onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('postalCode', e.target.value)}
+												placeholder="우편번호를 검색해 주세요."
+												size="small"
+												error={!!errors.postalCode}
+												readOnly
+											/>
+											<button
+												type="button"
+												onClick={() => setIsAddressSearchOpen(true)}
+												className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+											>
+												<img src={icSearch} alt="search" className="w-7 h-7" />
+											</button>
+										</div>
 										{errors.postalCode && (
 											<span className="text-system-error text-14">{errors.postalCode}</span>
 										)}
@@ -547,6 +575,13 @@ export function Hospital() {
 					</div>
 				</div>
 			</div>
+
+			{/* 주소 검색 모달 */}
+			<AddressSearchModal
+				isOpen={isAddressSearchOpen}
+				onClose={() => setIsAddressSearchOpen(false)}
+				onSelect={handleAddressSelect}
+			/>
 		</div>
 	);
 }

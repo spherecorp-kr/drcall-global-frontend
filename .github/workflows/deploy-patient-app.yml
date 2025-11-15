@@ -58,8 +58,6 @@ jobs:
       app-name: patient-app
       build-command: build:patient
       environment: dev
-    secrets:
-      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_DEV_CLOUDFRONT_ID }}
 
   deploy-staging:
     name: 🚀 Deploy to STAGING
@@ -70,8 +68,6 @@ jobs:
       app-name: patient-app
       build-command: build:patient
       environment: staging
-    secrets:
-      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_STAGING_CLOUDFRONT_ID }}
 
   deploy-prod:
     name: 🚀 Deploy to PRODUCTION
@@ -82,5 +78,3 @@ jobs:
       app-name: patient-app
       build-command: build:patient
       environment: prod
-    secrets:
-      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_PROD_CLOUDFRONT_ID }}
