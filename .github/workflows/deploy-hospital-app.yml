@@ -56,7 +56,6 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      API_URL: ${{ secrets.HOSPITAL_APP_DEV_API_URL }}
       CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_DEV_CLOUDFRONT_ID }}
 
   deploy-staging:
@@ -71,7 +70,6 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      API_URL: ${{ secrets.HOSPITAL_APP_STAGING_API_URL }}
       CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_STAGING_CLOUDFRONT_ID }}
 
   deploy-prod:
@@ -86,5 +84,4 @@ jobs:
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      API_URL: ${{ secrets.HOSPITAL_APP_PROD_API_URL }}
       CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_PROD_CLOUDFRONT_ID }}
