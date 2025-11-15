@@ -20,6 +20,10 @@ on:
           - staging
           - prod
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   # Determine environment from branch or input
   determine-env:
