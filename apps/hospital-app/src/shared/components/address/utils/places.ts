@@ -2,7 +2,7 @@
 // - 입력한 검색어에 대해 Places Autocomplete 예측 목록을 반환합니다.
 // - 주소 문자열/상세/타입/placeId만 매핑하여 반환(우편번호/좌표는 상세 조회 단계에서 보강).
 
-import { ensurePlacesAvailable } from '@/utils/gmaps';
+import { ensurePlacesAvailable } from '@/shared/utils/gmaps';
 import type { AddressSuggestion } from './address';
 
 /// <reference types="@types/google.maps" />

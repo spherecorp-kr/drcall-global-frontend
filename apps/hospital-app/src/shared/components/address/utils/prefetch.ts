@@ -2,7 +2,7 @@
 // - 주소 제안 목록 중 우편번호/좌표가 비어있는 항목을 우선순위에 따라 상세 조회하여 보강합니다.
 // - UI/DOM과 무관한 순수 함수로, 호출자는 결과 배열을 그대로 상태에 반영하면 됩니다.
 
-import { ensurePlacesAvailable } from '@/utils/gmaps';
+import { ensurePlacesAvailable } from '@/shared/utils/gmaps';
 import type { AddressSuggestion } from './address';
 
 export type PrefetchOptions = {
@@ -66,7 +66,7 @@ export async function prefetchPlaceDetails(
       const { i, r } = targets[cursor++];
       try {
         // placePrediction이 없을 수 있으므로 placeID 기반 생성으로 안전하게 처리
-        const place = g?.maps?.places?.Place ? new g.maps.places.Place({ id: r.placeId }) : null;
+        const place = g?.maps?.places?.Place && r.placeId ? new g.maps.places.Place({ id: r.placeId }) : null;
         if (!place) continue;
 
         await place.fetchFields({ fields: ['addressComponents', 'location'] });
@@ -76,7 +76,7 @@ export async function prefetchPlaceDetails(
           place.addressComponents.forEach((c: google.maps.places.AddressComponent) => {
             if (Array.isArray(c.types)) {
               c.types.forEach((t: string) => {
-                comps[t] = (c.longText || c.shortText);
+                comps[t] = (c.longText || c.shortText || '');
               });
             }
           });

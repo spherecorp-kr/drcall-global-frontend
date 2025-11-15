@@ -54,7 +54,7 @@ export default function AddressSearchModal({ isOpen, onClose, onSelect }: Addres
       // Places 우선, 불가 시 서버 폴백
       if (isReady && ensurePlacesAvailable()) {
         if (!sessionRef.current) sessionRef.current = createAutocompleteSessionToken();
-        const suggestions = await searchPlacesSuggestions(trimmed, { sessionToken: sessionRef.current });
+        const suggestions = await searchPlacesSuggestions(trimmed, { sessionToken: sessionRef.current || undefined });
         if (currentSeq !== seqRef.current) return;
         const enriched = await prefetchPlaceDetails(suggestions, { maxCount: 5, concurrency: 2 });
         if (currentSeq !== seqRef.current) return;

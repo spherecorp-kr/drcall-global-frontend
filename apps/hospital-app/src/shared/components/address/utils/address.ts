@@ -39,8 +39,8 @@ export async function fetchAddressResults(query: string): Promise<AddressSuggest
       displayAddress: (item.displayAddress as string) || (item.address as string) || '',
       detail: (item.detail as string) || '',
       postalCode: (item.postalCode as string) || '',
-      latitude: typeof item.latitude === 'number' ? item.latitude : (item.latitude ?? ''),
-      longitude: typeof item.longitude === 'number' ? item.longitude : (item.longitude ?? ''),
+      latitude: typeof item.latitude === 'number' ? item.latitude : '',
+      longitude: typeof item.longitude === 'number' ? item.longitude : '',
       placeId: (item.placeId as string) || undefined,
       types: Array.isArray(item.types) ? (item.types as string[]) : undefined
     };

@@ -2,8 +2,8 @@
 // - placeId가 있고 postalCode/좌표가 비어있다면 상세 조회로 보강합니다.
 // - 반환: SelectedAddress(객체)와 레거시 문자열("{postalCode}\n{displayAddress}") 모두 생성
 
-import { ensurePlacesAvailable } from '@/utils/gmaps';
-import type { SelectedAddress } from '@/constants/address';
+import { ensurePlacesAvailable } from '@/shared/utils/gmaps';
+import type { SelectedAddress } from '@/shared/constants/address';
 import type { AddressSuggestion } from './address';
 
 // 선택 처리 옵션 타입
@@ -35,7 +35,7 @@ export async function finalizePlaceSelection(
         place.addressComponents.forEach((c: google.maps.places.AddressComponent) => {
           if (Array.isArray(c.types)) {
             c.types.forEach((t: string) => {
-              comps[t] = (c.longText || c.shortText); // 주소 컴포넌트 구조(longText/shortText)
+              comps[t] = (c.longText || c.shortText || ''); // 주소 컴포넌트 구조(longText/shortText)
             });
           }
         });
