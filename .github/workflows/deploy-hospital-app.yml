@@ -1,0 +1,90 @@
+name: 🚀 Deploy Hospital App
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - develop
+    paths:
+      - 'apps/hospital-app/**'
+      - 'packages/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  # Determine environment from branch or input
+  determine-env:
+    name: 🎯 Determine Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
+    steps:
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENV="${{ inputs.environment }}"
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            ENV="prod"
+          elif [ "${{ github.ref }}" == "refs/heads/staging" ]; then
+            ENV="staging"
+          else
+            ENV="dev"
+          fi
+
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+          echo "📍 Deploying to: ${ENV}"
+
+  deploy-dev:
+    name: 🚀 Deploy to DEV
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'dev'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: hospital-app
+      build-command: build:hospital
+      environment: dev
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      API_URL: ${{ secrets.HOSPITAL_APP_DEV_API_URL }}
+      CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_DEV_CLOUDFRONT_ID }}
+
+  deploy-staging:
+    name: 🚀 Deploy to STAGING
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'staging'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: hospital-app
+      build-command: build:hospital
+      environment: staging
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      API_URL: ${{ secrets.HOSPITAL_APP_STAGING_API_URL }}
+      CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_STAGING_CLOUDFRONT_ID }}
+
+  deploy-prod:
+    name: 🚀 Deploy to PRODUCTION
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'prod'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: hospital-app
+      build-command: build:hospital
+      environment: prod
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      API_URL: ${{ secrets.HOSPITAL_APP_PROD_API_URL }}
+      CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_PROD_CLOUDFRONT_ID }}
