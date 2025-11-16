@@ -14,6 +14,7 @@
     "@googlemaps/js-api-loader": "^2.0.2",
     "@react-pdf-viewer/core": "^3.12.0",
     "@react-pdf-viewer/default-layout": "^3.12.0",
+    "@stomp/stompjs": "^7.2.1",
     "@tanstack/react-query": "^5.90.5",
     "axios": "^1.12.2",
     "date-fns": "^4.1.0",
@@ -24,6 +25,8 @@
     "react-hook-form": "^7.65.0",
     "react-i18next": "^16.1.5",
     "react-router-dom": "^7.9.4",
+    "sendbird-calls": "^1.10.20",
+    "sockjs-client": "^1.6.1",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"
   },
