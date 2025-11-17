@@ -84,6 +84,12 @@
     "methodStandard": "일반 배송",
     "methodExpress": "퀵 배송",
     "methodInternational": "해외 배송",
+    "progressSteps": {
+      "statusPreparing": "조제 중",
+      "statusPrepared": "조제 완료",
+      "statusShipping": "배송 중",
+      "statusReceived": "수령 완료"
+    },
     "detail": {
       "pageTitle": "조제 및 배송 상세",
       "title": "약 수령 진행 현황을 확인하세요.",

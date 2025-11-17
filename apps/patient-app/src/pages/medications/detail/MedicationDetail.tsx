@@ -71,8 +71,17 @@ export default function MedicationDetail() {
         <div>
           <ProgressSteps
             currentStep={data.receipt.statusStep}
-            totalSteps={data.receipt.labels.length}
-            labels={data.receipt.labels}
+            totalSteps={data.receipt.medicationType === 'pickup' ? 3 : 4}
+            labels={data.receipt.medicationType === 'pickup' ? [
+              t('medication.progressSteps.statusPreparing'),
+              t('medication.progressSteps.statusPrepared'),
+              t('medication.progressSteps.statusReceived')
+            ] : [
+              t('medication.progressSteps.statusPreparing'),
+              t('medication.progressSteps.statusPrepared'),
+              t('medication.progressSteps.statusShipping'),
+              t('medication.progressSteps.statusReceived')
+            ]}
           />
         </div>
         {/* 배송형: 실시간 배송 조회 버튼을 단계 아래에 배치
