@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { MainLayout } from '@/shared/components/layout';
 import TextLogo from '@/assets/logo_drcall.svg';
 import {
@@ -110,9 +111,11 @@ return (
 
 function App() {
 	return (
-		<BrowserRouter>
-			<AppContent />
-		</BrowserRouter>
+		<AuthProvider>
+			<BrowserRouter>
+				<AppContent />
+			</BrowserRouter>
+		</AuthProvider>
 	);
 }
 
