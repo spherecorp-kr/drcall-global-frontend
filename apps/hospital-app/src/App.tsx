@@ -85,7 +85,7 @@ return (
 					pageTitle={pageTitle}
 					showBackButton={shouldShowBackButton}
 					userName="홍길동"
-					userRole="coordinator"
+					userRole="doctor"
 				/>
 			}
 		>
