@@ -9,8 +9,8 @@ interface PatientDetailInfo {
   height?: string;
   weight?: string;
   bloodType?: 'A' | 'B' | 'O' | 'AB';
-  alcohol?: AlcoholConsumption | string;  // ENUM 또는 표시값 ("0", "1~2", "3+")
-  smoking?: SmokingStatus | string;        // ENUM 또는 표시값 ("0", "1~5", "6+")
+  alcohol?: '0' | '1~2' | '3+';  // 표시값
+  smoking?: '0' | '1~5' | '6+';  // 표시값
   medications?: string;
   personalHistory?: string;
   familyHistory?: string;

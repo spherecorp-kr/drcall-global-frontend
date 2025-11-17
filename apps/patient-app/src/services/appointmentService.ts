@@ -37,9 +37,9 @@ export interface CreateAppointmentRequest {
   questionnaireAnswers: {
     height: string;
     weight: string;
-    bloodType: 'A' | 'B' | 'O' | 'AB';
-    alcohol: AlcoholConsumption | string;  // ENUM 또는 표시값 (서비스에서 변환)
-    smoking: SmokingStatus | string;        // ENUM 또는 표시값 (서비스에서 변환)
+    bloodType?: 'A' | 'B' | 'O' | 'AB';
+    alcohol?: string;
+    smoking?: string;
     medications: string;
     personalHistory: string;
     familyHistory: string;

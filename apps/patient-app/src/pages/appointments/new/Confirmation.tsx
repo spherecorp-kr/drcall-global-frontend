@@ -145,8 +145,8 @@ export default function Confirmation({ appointmentType = 'standard' }: Confirmat
       await createAppointmentMutation.mutateAsync({
         appointmentType,
         hospitalId: String(hospital.id),
-        doctorId: appointmentType === 'standard' ? selectedDoctorId : undefined,
-        dateTime: scheduledAt, // STANDARD일 때만 값이 있음
+        doctorId: (appointmentType === 'standard' && selectedDoctorId) ? selectedDoctorId : undefined,
+        dateTime: scheduledAt ? scheduledAt : undefined, // STANDARD일 때만 값이 있음
         symptoms: symptoms.trim(),
         symptomImages: symptomImages.length > 0 ? symptomImages : undefined,
         questionnaireAnswers: questionnaireData,
