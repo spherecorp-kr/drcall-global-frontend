@@ -1,5 +1,6 @@
 import { useCallback, useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { Button, Input } from '@/shared/components/ui';
 import { authService } from '@/services/authService';
 import { useAuth } from '@/contexts/AuthContext';
@@ -60,9 +61,12 @@ const Login = () => {
 			navigate('/dashboard');
 		} catch (err) {
 			// 실패: 에러 메시지 표시
-			const errorMessage = (err as any).response?.data?.error?.message ||
-				(err as any).response?.data?.message ||
-				'아이디 또는 비밀번호가 올바르지 않습니다.';
+			let errorMessage = '아이디 또는 비밀번호가 올바르지 않습니다.';
+			if (err instanceof AxiosError) {
+				errorMessage = err.response?.data?.error?.message ||
+					err.response?.data?.message ||
+					errorMessage;
+			}
 			setError(errorMessage);
 		} finally {
 			setIsLoading(false);
