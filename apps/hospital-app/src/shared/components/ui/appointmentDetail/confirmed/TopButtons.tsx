@@ -3,7 +3,6 @@ import editIcon from '@/shared/assets/icons/ic_edit.svg';
 import cancelIcon from '@/assets/icons/ic_cancel_blue.svg';
 import { Button } from '@/shared/components/ui';
 import { useCancelReasonDialog } from '@/shared/hooks/useCancelReasonDialog.tsx';
-import { useAuth } from '@/contexts/AuthContext';
 import type { Appointment } from '@/services/appointmentService';
 
 interface TopButtonsProps {
