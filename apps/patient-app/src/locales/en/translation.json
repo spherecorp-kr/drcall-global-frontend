@@ -84,6 +84,12 @@
     "methodStandard": "Standard Delivery",
     "methodExpress": "Express Delivery",
     "methodInternational": "International Delivery",
+    "progressSteps": {
+      "statusPreparing": "Preparing",
+      "statusPrepared": "Prepared",
+      "statusShipping": "Shipping",
+      "statusReceived": "Received"
+    },
     "detail": {
       "pageTitle": "Medication & Delivery Detail",
       "title": "Check your medicine pickup progress.",

@@ -84,6 +84,12 @@
     "methodStandard": "จัดส่งทั่วไป",
     "methodExpress": "จัดส่งด่วน",
     "methodInternational": "จัดส่งระหว่างประเทศ",
+    "progressSteps": {
+      "statusPreparing": "กำลังจ่ายยา",
+      "statusPrepared": "จ่ายยาเสร็จ",
+      "statusShipping": "กำลังจัดส่ง",
+      "statusReceived": "รับแล้ว"
+    },
     "detail": {
       "pageTitle": "รายละเอียดการจ่ายยาและจัดส่ง",
       "title": "ตรวจสอบความคืบหน้าการรับยา",
