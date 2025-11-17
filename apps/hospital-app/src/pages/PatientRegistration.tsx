@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { Button } from '@/shared/components/ui';
 import { PatientForm, type PatientFormData, type ValidationErrors } from '@/shared/components/ui/PatientForm';
 import { patientService } from '@/services/patientService';
@@ -115,9 +116,13 @@ export function PatientRegistration() {
 
 			// 성공 시 이전 페이지로 이동
 			navigate(-1);
-		} catch (error: any) {
+		} catch (error) {
 			console.error('환자 등록 실패:', error);
-			alert(error.response?.data?.message || '환자 등록에 실패했습니다.');
+			let errorMessage = '환자 등록에 실패했습니다.';
+			if (error instanceof AxiosError) {
+				errorMessage = error.response?.data?.message || errorMessage;
+			}
+			alert(errorMessage);
 		}
 	};
 

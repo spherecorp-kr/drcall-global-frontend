@@ -14,7 +14,6 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 	const navigate = useNavigate();
 	const { appointmentSequence } = useParams<{ appointmentSequence: string }>();
 	const { openCancelReasonDialog } = useCancelReasonDialog();
-	const { user } = useAuth();
 
 	const handleVideoCall = () => {
 		const appointmentId = appointment.id.toString();

@@ -79,19 +79,28 @@ export interface AddressVO {
   longitude: number | null;   // 경도
 }
 
+interface GooglePlaceComponent {
+  types: string[];
+  shortText?: string;
+}
+
+interface GooglePlace {
+  addressComponents?: GooglePlaceComponent[];
+}
+
 /**
  * Google Place에서 국가 코드 추출
  * @param place - Google Maps Place 객체
  * @returns 국가 코드 (ISO 3166-1 alpha-2, 예: 'TH', 'KR')
  */
-export function extractCountryCodeFromPlace(place: any): string {
+export function extractCountryCodeFromPlace(place: GooglePlace): string {
   if (!place?.addressComponents) return 'TH'; // 기본값: 태국
-  
+
   const components = place.addressComponents;
-  const countryComponent = components.find((c: any) => 
+  const countryComponent = components.find((c) =>
     Array.isArray(c.types) && c.types.includes('country')
   );
-  
+
   return countryComponent?.shortText || 'TH'; // 기본값: 태국
 }
 
@@ -101,7 +110,7 @@ export function extractCountryCodeFromPlace(place: any): string {
  * @param place - Google Maps Place 객체 (선택적, 국가 코드 추출용)
  * @returns Address VO 형식의 객체
  */
-export function toAddressVO(selected: SelectedAddress, place?: any): AddressVO {
+export function toAddressVO(selected: SelectedAddress, place?: GooglePlace): AddressVO {
   const countryCode = place ? extractCountryCodeFromPlace(place) : 'TH';
   
   return {
