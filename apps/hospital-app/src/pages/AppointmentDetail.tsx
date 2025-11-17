@@ -53,7 +53,7 @@ const AppointmentDetail = () => {
 			case 'completed':
 				return <CompletedDetailLayout appointment={appointment} />;
 			case 'cancelled':
-				return <CancelledDetailLayout appointment={appointment} />;
+				return <CancelledDetailLayout />;
 		}
 	}, [appointmentTab, appointment, isLoading]);
 

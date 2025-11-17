@@ -6,13 +6,7 @@ import {
 	ReadOnlyTreatmentInfo,
 	TreatmentHistory,
 } from '@/shared/components/ui/appointmentDetail';
-import type { Appointment } from '@/services/appointmentService';
-
-interface LayoutProps {
-	appointment: Appointment;
-}
-
-const Layout = ({ appointment: _appointment }: LayoutProps) => {
+const Layout = () => {
 	return (
 		<>
 			<CancelInfo />
