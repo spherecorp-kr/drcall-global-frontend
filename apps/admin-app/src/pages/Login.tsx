@@ -58,10 +58,10 @@ const Login = () => {
 
 			// 대시보드로 이동
 			navigate('/dashboard');
-		} catch (err: any) {
+		} catch (err) {
 			// 실패: 에러 메시지 표시
-			const errorMessage = err.response?.data?.error?.message ||
-				err.response?.data?.message ||
+			const errorMessage = (err as any).response?.data?.error?.message ||
+				(err as any).response?.data?.message ||
 				'아이디 또는 비밀번호가 올바르지 않습니다.';
 			setError(errorMessage);
 		} finally {

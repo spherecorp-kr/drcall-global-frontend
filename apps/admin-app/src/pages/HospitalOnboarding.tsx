@@ -108,11 +108,11 @@ export default function HospitalOnboarding() {
 				shipping: shippingData,
 			};
 
-			const response = await onboardingService.onboardHospital(request);
-			
+			await onboardingService.onboardHospital(request);
+
 			// 성공 시 완료 페이지로 이동
 			setCurrentStep('complete');
-		} catch (error: any) {
+		} catch (error) {
 			console.error('Onboarding failed:', error);
 			alert(error.response?.data?.message || '온보딩에 실패했습니다.');
 		} finally {

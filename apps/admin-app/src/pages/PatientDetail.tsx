@@ -287,7 +287,7 @@ const PatientDetailPage = () => {
 			onClick: handleCreateAppointment,
 			text: isCreatingAppointment ? '예약 중...' : '예약하기'
 		}
-	], [closeDialog, canMakeAppointment, selectedDoctor, selectedDate, selectedTime, isCreatingAppointment, handleCreateAppointment]);
+	], [closeDialog, canMakeAppointment, isCreatingAppointment, handleCreateAppointment]);
 
 	// Mock doctor options
 	const doctorOptions = useMemo(() => [
