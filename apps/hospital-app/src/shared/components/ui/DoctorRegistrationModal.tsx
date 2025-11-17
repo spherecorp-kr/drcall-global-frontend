@@ -5,6 +5,7 @@ import { cn } from '@/shared/utils/cn';
 import ValidationInfoIcon from '@/shared/assets/icons/ic_validation_info.svg';
 import BlankProfileImage from '@/shared/assets/icons/img_blank_profile.svg';
 import CameraIcon from '@/shared/assets/icons/ic_camera.svg';
+import { uploadFile } from '@/services/storageService';
 
 interface DoctorRegistrationModalProps {
 	isOpen: boolean;
@@ -18,7 +19,7 @@ export interface DoctorFormData {
 	nameEn: string;
 	introduction: string;
 	careerEducation: string;
-	profileImage?: File;
+	profileImageFileId?: number; // Storage Service File ID
 }
 
 type IdCheckStatus = 'idle' | 'error-format' | 'error-duplicate' | 'success';
@@ -38,16 +39,51 @@ export function DoctorRegistrationModal({
 
 	const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
 	const [idCheckStatus, setIdCheckStatus] = useState<IdCheckStatus>('idle');
+	const [isUploading, setIsUploading] = useState(false);
 
-	const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (file) {
-			setFormData({ ...formData, profileImage: file });
+		if (!file) return;
+
+		// 파일 크기 체크 (5MB)
+		if (file.size > 5 * 1024 * 1024) {
+			alert('파일 크기는 5MB 이하여야 합니다.');
+			return;
+		}
+
+		// 파일 형식 체크
+		if (!file.type.match(/image\/(jpeg|jpg|png)/)) {
+			alert('JPG, PNG 형식만 업로드 가능합니다.');
+			return;
+		}
+
+		setIsUploading(true);
+
+		try {
+			// 미리보기 설정
 			const reader = new FileReader();
 			reader.onloadend = () => {
 				setProfileImagePreview(reader.result as string);
 			};
 			reader.readAsDataURL(file);
+
+			// Storage Service에 업로드
+			// TODO: 실제 hospitalId와 doctorId는 인증된 사용자 정보에서 가져와야 함
+			const fileId = await uploadFile(file, {
+				category: 'PROFILE_IMAGE',
+				ownerId: 1, // TODO: 실제 doctor ID (등록 전이므로 임시값)
+				ownerType: 'DOCTOR',
+				hospitalId: 1, // TODO: 실제 hospital ID
+				accessLevel: 'PUBLIC',
+			});
+
+			setFormData({ ...formData, profileImageFileId: fileId });
+		} catch (error) {
+			console.error('프로필 이미지 업로드 실패:', error);
+			alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
+			setProfileImagePreview(null);
+		} finally {
+			setIsUploading(false);
 		}
 	};
 

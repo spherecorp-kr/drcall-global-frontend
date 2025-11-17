@@ -16,6 +16,7 @@ import Divider from '@ui/layout/Divider';
 import PatientBasicInfoSection from '@appointment/shared/sections/PatientBasicInfoSection';
 import PatientDetailInfoSection from '@appointment/shared/sections/PatientDetailInfoSection';
 import type { PatientDetailInfo } from '@/types/appointment';
+import { mapAlcoholToDisplay, mapSmokingToDisplay } from '@/types/appointment';
 import { mockQuestionnairePatientInfo } from '@mocks/appointment';
 
 type AppointmentType = 'standard' | 'quick';
@@ -38,12 +39,13 @@ export default function Questionnaire({ appointmentType = 'standard' }: Question
   const patientBasicData = mockQuestionnairePatientInfo;
 
   // Health Info - using PatientDetailInfo type, initialized with stored data
+  // Store에서 가져온 값은 표시값("0", "1~2" 등)이므로 그대로 사용
   const [detailInfo, setDetailInfo] = useState<PatientDetailInfo>({
     height: storedAnswers.height ? storedAnswers.height : '',
     weight: storedAnswers.weight ? storedAnswers.weight : '',
-    bloodType: storedAnswers.bloodType ? (storedAnswers.bloodType as any) : undefined,
-    alcohol: storedAnswers.alcohol ? (storedAnswers.alcohol as any) : undefined,
-    smoking: storedAnswers.smoking ? (storedAnswers.smoking as any) : undefined,
+    bloodType: storedAnswers.bloodType ? (storedAnswers.bloodType as 'A' | 'B' | 'O' | 'AB') : undefined,
+    alcohol: storedAnswers.alcohol ? (storedAnswers.alcohol as any) : undefined,  // 표시값 저장
+    smoking: storedAnswers.smoking ? (storedAnswers.smoking as any) : undefined,  // 표시값 저장
     medications: storedAnswers.medications ? storedAnswers.medications : '',
     personalHistory: storedAnswers.personalHistory ? storedAnswers.personalHistory : '',
     familyHistory: storedAnswers.familyHistory ? storedAnswers.familyHistory : ''

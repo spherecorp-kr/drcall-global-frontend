@@ -25,6 +25,7 @@ import actionArrowHoverIcon from '@/shared/assets/icons/ic_action_arrow_hover.sv
 import { mockPatients } from '@/mocks/patientData';
 import type { PatientGrade } from '@/shared/types/patient';
 import { PATIENT_GRADE_COLOR_MAP, PATIENT_GRADE_MAP } from '@/shared/types/patient';
+import { appointmentService } from '@/services/appointmentService';
 
 // Types
 interface AppointmentStatus {
@@ -194,6 +195,7 @@ const PatientDetailPage = () => {
 		familyHistory: '',
 	});
 	const [errors, setErrors] = useState<ValidationErrors>({});
+	const [isCreatingAppointment, setIsCreatingAppointment] = useState(false);
 
 	// 환자 데이터 찾기
 	const patient = mockPatients.find(p => p.id === id);
@@ -212,13 +214,65 @@ const PatientDetailPage = () => {
 
 	// 예약 가능 여부 체크
 	const canMakeAppointment = useMemo(() => {
-		return !!(selectedDoctor && selectedDate && selectedTime);
-	}, [selectedDoctor, selectedDate, selectedTime]);
+		return !!(selectedDoctor && selectedDate && selectedTime) && !isCreatingAppointment;
+	}, [selectedDoctor, selectedDate, selectedTime, isCreatingAppointment]);
+
+	// 예약 생성 핸들러
+	const handleCreateAppointment = useCallback(async () => {
+		if (!id || !selectedDoctor || !selectedDate || !selectedTime) {
+			return;
+		}
+
+		setIsCreatingAppointment(true);
+
+		try {
+			// 날짜와 시간을 ISO 8601 형식으로 변환
+			// selectedDate는 "DD/MM/YYYY" 형식, selectedTime은 "HH:mm" 형식
+			// "DD/MM/YYYY" → "YYYY-MM-DD"로 변환
+			const [day, month, year] = selectedDate.split('/').map(Number);
+			const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+			const scheduledAt = `${dateStr}T${selectedTime}:00.000Z`;
+
+			// 환자 정보에서 건강 설문지 정보 추출
+			const appointmentData: Parameters<typeof appointmentService.createAppointment>[0] = {
+				patientId: Number(id),
+				doctorId: Number(selectedDoctor),
+				appointmentType: 'STANDARD', // 병원앱에서는 STANDARD 타입만 사용
+				consultationType: 'VIDEO_CALL', // 기본값
+				scheduledAt,
+				// 건강 설문지 정보 (formData에서 가져오거나 patient 객체에서 가져옴)
+				...(formData.height && { height: formData.height }),
+				...(formData.weight && { weight: formData.weight }),
+				...(formData.bloodType && { bloodType: formData.bloodType }),
+				...(formData.drinkingHabit && { alcoholConsumption: formData.drinkingHabit }),
+				...(formData.smokingHabit && { smokingStatus: formData.smokingHabit }),
+				...(formData.currentMedications && { medications: formData.currentMedications }),
+				...(formData.personalHistory && { personalHistory: formData.personalHistory }),
+				...(formData.familyHistory && { familyHistory: formData.familyHistory }),
+			};
+
+			await appointmentService.createAppointment(appointmentData);
+
+			// 성공 시 다이얼로그 닫기 및 상태 초기화
+			closeDialog('appointmentDialog');
+			setSelectedDoctor('');
+			setSelectedDate('');
+			setSelectedTime('');
+
+			// TODO: 성공 메시지 표시 (토스트 등)
+			console.log('예약 생성 성공');
+		} catch (error) {
+			console.error('예약 생성 실패:', error);
+			// TODO: 에러 메시지 표시 (토스트 등)
+		} finally {
+			setIsCreatingAppointment(false);
+		}
+	}, [id, selectedDoctor, selectedDate, selectedTime, formData, closeDialog]);
 
 	// 다이얼로그 하단 버튼 설정
 	const appointmentDialogActions = useMemo((): BottomButtonProps[] => [
 		{
-			disabled: false,
+			disabled: isCreatingAppointment,
 			onClick: () => {
 				closeDialog('appointmentDialog');
 				// 상태 초기화
@@ -230,22 +284,10 @@ const PatientDetailPage = () => {
 		},
 		{
 			disabled: !canMakeAppointment,
-			onClick: () => {
-				// TODO: 예약 API 호출
-				console.log('예약하기:', {
-					doctor: selectedDoctor,
-					date: selectedDate,
-					time: selectedTime,
-				});
-				closeDialog('appointmentDialog');
-				// 상태 초기화
-				setSelectedDoctor('');
-				setSelectedDate('');
-				setSelectedTime('');
-			},
-			text: '예약하기'
+			onClick: handleCreateAppointment,
+			text: isCreatingAppointment ? '예약 중...' : '예약하기'
 		}
-	], [closeDialog, canMakeAppointment, selectedDoctor, selectedDate, selectedTime]);
+	], [closeDialog, canMakeAppointment, selectedDoctor, selectedDate, selectedTime, isCreatingAppointment, handleCreateAppointment]);
 
 	// Mock doctor options
 	const doctorOptions = useMemo(() => [

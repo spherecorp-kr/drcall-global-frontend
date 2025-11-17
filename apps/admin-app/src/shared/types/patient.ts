@@ -1,8 +1,8 @@
 // ===== DTO (Data Transfer Object) =====
 // 서버에서 받는 데이터 구조
 
-export type PatientGrade = 'vip' | 'risk' | 'normal';
-export type Gender = 'male' | 'female';
+export type PatientGrade = 'VIP' | 'RISK' | 'NORMAL';
+export type Gender = 'MALE' | 'FEMALE';
 
 export interface PatientManagementDto {
 	id: string;
@@ -76,7 +76,6 @@ export interface PatientManagement {
 	height?: number;
 	weight?: number;
 	bloodType?: string;
-	allergies?: string; // 알레르기 정보 (추가됨)
 }
 
 export interface PatientManagementFilterState {
@@ -87,26 +86,26 @@ export interface PatientManagementFilterState {
 // ===== Helper Types =====
 
 export const GENDER_MAP: Record<Gender, string> = {
-	male: '남자',
-	female: '여자',
+	MALE: '남자',
+	FEMALE: '여자',
 };
 
 export const PATIENT_GRADE_MAP: Record<PatientGrade, string> = {
-	vip: 'VIP',
-	risk: 'Risk',
-	normal: 'Normal',
+	VIP: 'VIP',
+	RISK: 'Risk',
+	NORMAL: 'Normal',
 };
 
 export const PATIENT_GRADE_COLOR_MAP: Record<PatientGrade, { bg: string; text: string }> = {
-	vip: {
+	VIP: {
 		bg: 'var(--Badge-Badge5, #E6F6FB)',
 		text: 'var(--Primary-Blue-70, #00A0D2)',
 	},
-	risk: {
+	RISK: {
 		bg: 'var(--Badge-Badge6, #FFE5E5)',
 		text: 'var(--System-Error, #FC0606)',
 	},
-	normal: {
+	NORMAL: {
 		bg: 'var(--Bg-Gray, #FAFAFA)',
 		text: 'var(--Text-60, #6E6E6E)',
 	},

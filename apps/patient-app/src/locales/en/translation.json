@@ -412,7 +412,12 @@
     "closed": "Closed",
     "closedMessage": "This conversation has been closed. You cannot send messages.",
     "closedPlaceholder": "This conversation is closed",
-    "unknownUser": "Unknown User"
+    "unknownUser": "Unknown User",
+    "system": {
+      "system_created": "Chat room has been created",
+      "system_closed": "Conversation has been closed",
+      "system_reopened": "Conversation has been reopened"
+    }
   },
   "mypage": {
     "title": "My Page",

@@ -167,6 +167,9 @@ function App() {
         <Route path="/chat" element={
           <ProtectedRoute><ChatList /></ProtectedRoute>
         } />
+        <Route path="/chat/:channelUrl" element={
+          <ProtectedRoute><ChatRoom /></ProtectedRoute>
+        } />
 
         {/* Error Routes */}
         <Route path="/error/403" element={<Error403 />} />

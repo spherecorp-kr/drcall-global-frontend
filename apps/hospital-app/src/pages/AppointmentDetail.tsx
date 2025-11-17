@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { DetailPageLayout } from '@/shared/components/layout';
 import {
@@ -8,30 +8,54 @@ import {
 	WaitingDetailLayout,
 } from '@/shared/components/ui/appointmentDetail';
 import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
+import { appointmentService, type Appointment } from '@/services/appointmentService';
 
 const AppointmentDetail = () => {
 	const { appointmentSequence } = useParams<{ appointmentSequence: string }>();
-
 	const { appointmentTab } = useAppointmentTabStore();
+	const [appointment, setAppointment] = useState<Appointment | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	// 예약 정보 조회
+	useEffect(() => {
+		const fetchAppointment = async () => {
+			if (!appointmentSequence) return;
+
+			try {
+				setIsLoading(true);
+				const data = await appointmentService.getAppointmentBySequence(appointmentSequence);
+				setAppointment(data);
+			} catch (error) {
+				console.error('[AppointmentDetail] Failed to fetch appointment:', error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchAppointment();
+	}, [appointmentSequence]);
 
 	// 상태별 UI 렌더링 함수
 	const renderStatusContent = useCallback(() => {
+		if (isLoading) {
+			return <div>Loading...</div>;
+		}
+
+		if (!appointment) {
+			return <div>예약 정보를 찾을 수 없습니다.</div>;
+		}
+
 		switch (appointmentTab) {
 			case 'waiting':
-				return <WaitingDetailLayout />;
+				return <WaitingDetailLayout appointment={appointment} />;
 			case 'confirmed':
-				return <ConfirmedDetailLayout />;
+				return <ConfirmedDetailLayout appointment={appointment} />;
 			case 'completed':
-				return <CompletedDetailLayout />;
+				return <CompletedDetailLayout appointment={appointment} />;
 			case 'cancelled':
-				return <CancelledDetailLayout />;
+				return <CancelledDetailLayout appointment={appointment} />;
 		}
-	}, [appointmentTab]);
-
-	// TODO FIXME 아래 useEffect 삭제
-	useEffect(() => {
-		console.log(`appointmentSequence: ${appointmentSequence}`);
-	}, [appointmentSequence]);
+	}, [appointmentTab, appointment, isLoading]);
 
 	return (
 		<div className="flex flex-col h-full overflow-y-auto p-5">

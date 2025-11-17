@@ -624,6 +624,11 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
 
           // 시스템 메시지
           if (msg.type === 'system' && !msg.date) {
+            // i18n translation based on custom_type
+            // msg.content contains custom_type like "system_created", "system_closed", "system_reopened"
+            const systemMessageKey = `chat.system.${msg.content}`;
+            const translatedMessage = t(systemMessageKey, msg.content); // Fallback to msg.content if key not found
+
             return (
               <div
                 key={msg.id}
@@ -645,7 +650,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
                     textAlign: 'center'
                   }}
                 >
-                  {msg.content}
+                  {translatedMessage}
                 </div>
               </div>
             );

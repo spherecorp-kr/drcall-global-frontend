@@ -25,6 +25,7 @@ export type SelectedAddress = {
   postalCode: string;
   latitude: number | '';
   longitude: number | '';
+  placeId?: string; // Google Place ID
 };
 
 

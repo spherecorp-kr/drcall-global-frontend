@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 import EditableTextInput from '@ui/inputs/EditableTextInput';
 import ToggleButtonGroup from '@ui/buttons/ToggleButtonGroup';
 import TextareaField from '@ui/inputs/TextareaField';
+import type { AlcoholConsumption, SmokingStatus, mapAlcoholToDisplay, mapSmokingToDisplay } from '@/types/appointment';
 
 interface PatientDetailInfo {
   height?: string;
   weight?: string;
   bloodType?: 'A' | 'B' | 'O' | 'AB';
-  alcohol?: '0' | '1~2' | '3+';
-  smoking?: '0' | '1~5' | '6+';
+  alcohol?: AlcoholConsumption | string;  // ENUM 또는 표시값 ("0", "1~2", "3+")
+  smoking?: SmokingStatus | string;        // ENUM 또는 표시값 ("0", "1~5", "6+")
   medications?: string;
   personalHistory?: string;
   familyHistory?: string;
@@ -212,7 +213,7 @@ export default function PatientDetailInfoSection({
           ) : (
             <ToggleButtonGroup
               label={t('appointment.alcoholUnit')}
-              options={['0', '1~2', '3+'] as const}
+              options={['ZERO', 'ONE_TO_TWO', 'THREE_PLUS'] as const}
               selectedValue={data.alcohol}
               onChange={(value) => handleChange('alcohol', value)}
             />
@@ -255,7 +256,7 @@ export default function PatientDetailInfoSection({
           ) : (
             <ToggleButtonGroup
               label={t('appointment.smokingUnit')}
-              options={['0', '1~5', '6+'] as const}
+              options={['ZERO', 'ONE_TO_FIVE', 'SIX_PLUS'] as const}
               selectedValue={data.smoking}
               onChange={(value) => handleChange('smoking', value)}
             />
