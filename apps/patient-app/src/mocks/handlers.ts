@@ -26,7 +26,6 @@ const MOCK_USER: Patient = {
   addressDetail: 'Apt 101',
   postalCode: '12345',
   profileImageUrl: undefined,
-  allergies: 'Penicillin',
   grade: 'NORMAL',
   marketingConsent: true,
   dataSharingConsent: true,

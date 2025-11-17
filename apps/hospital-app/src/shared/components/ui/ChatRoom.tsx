@@ -7,6 +7,8 @@ import userIcon from '@/shared/assets/icons/ic_user.svg';
 import backIcon from '@/shared/assets/icons/ic_back.svg';
 import chatReadIcon from '@/shared/assets/icons/ic_chat_read.svg';
 import logoutIcon from '@/shared/assets/icons/ic_logout_error.svg';
+import { getMessages, sendMessage, markAsRead, getUnreadCount } from '@/services/chatService';
+import { useChatStore } from '@/shared/store/chatStore';
 // import { ChatEventType } from '@/services/chatEvent'; // 추후 SSE 이벤트 타입 사용 시 활성화
 
 interface ChatRoomProps {
@@ -75,72 +77,92 @@ export function ChatRoom({
 
 	// Get user ID from localStorage or use default for staff
 	const userId = `staff-${localStorage.getItem('userId') || '1'}`;
+	const { setUnreadCount } = useChatStore();
 
-	// Mock messages for demo
+	// Load messages from API
 	useEffect(() => {
-		const mockMessages: Message[] = [
-			{
-				id: '0',
-				type: 'system',
-				content: '', // 렌더링 시 번역됨
-				systemMessageType: 'channelCreated',
-				time: '09:28',
-				timestamp: Date.now() - 3720000,
-				date: '2025/10/29',
-			},
-			{
-				id: '1',
-				type: 'received',
-				content: '안녕하세요. 예약 관련 문의드립니다.',
-				time: '09:30',
-				timestamp: Date.now() - 3600000,
-				date: '2025/10/29',
-			},
-			{
-				id: '2',
-				type: 'sent',
-				content: '네, 안녕하세요. 어떤 도움이 필요하신가요?',
-				time: '09:32',
-				timestamp: Date.now() - 3540000,
-				isRead: true,
-			},
-			{
-				id: '3',
-				type: 'received',
-				content: '다음 주 화요일 예약 가능한가요?',
-				time: '09:35',
-				timestamp: Date.now() - 3480000,
-			},
-		];
+		const fetchMessages = async () => {
+			try {
+				const response = await getMessages(channelUrl, 100);
 
-		// Add closed message if channel is closed
-		if (isClosed) {
-			mockMessages.push({
-				id: '999',
-				type: 'system',
-				content: '', // 렌더링 시 번역됨
-				systemMessageType: 'channelClosed',
-				time: new Date().toLocaleTimeString('ko-KR', {
-					hour: '2-digit',
-					minute: '2-digit',
-				}),
-				timestamp: Date.now(),
-			});
-		}
+				const loadedMessages: Message[] = response.messages.map((msg) => {
+					const messageDate = new Date(msg.created_at);
+					const isMyMessage = msg.user?.user_id === userId;
 
-		setMessages(mockMessages);
-	}, [channelUrl, isClosed]);
+					return {
+						id: msg.message_id.toString(),
+						type: isMyMessage ? 'sent' : 'received',
+						content: msg.message,
+						time: messageDate.toLocaleTimeString('ko-KR', {
+							hour: '2-digit',
+							minute: '2-digit',
+						}),
+						timestamp: msg.created_at,
+						isRead: undefined,
+						date: messageDate.toLocaleDateString('ko-KR', {
+							year: 'numeric',
+							month: '2-digit',
+							day: '2-digit',
+						}).replace(/\. /g, '/').replace('.', ''),
+					};
+				});
+
+				// Add channel created system message
+				if (loadedMessages.length > 0) {
+					const firstMessage = loadedMessages[0];
+					loadedMessages.unshift({
+						id: '0',
+						type: 'system',
+						content: '',
+						systemMessageType: 'channelCreated',
+						time: firstMessage.time,
+						timestamp: firstMessage.timestamp - 1000,
+						date: firstMessage.date,
+					});
+				}
+
+				// Add closed message if channel is closed
+				if (isClosed) {
+					loadedMessages.push({
+						id: 'closed',
+						type: 'system',
+						content: '',
+						systemMessageType: 'channelClosed',
+						time: new Date().toLocaleTimeString('ko-KR', {
+							hour: '2-digit',
+							minute: '2-digit',
+						}),
+						timestamp: Date.now(),
+					});
+				}
+
+				setMessages(loadedMessages);
+
+				// Mark messages as read
+				if (!isClosed) {
+					await markAsRead(channelUrl, userId);
+
+					// Update unread count after marking as read
+					try {
+						const unreadResponse = await getUnreadCount(userId);
+						setUnreadCount(unreadResponse.unread_count);
+					} catch (error) {
+						console.error('Failed to update unread count:', error);
+					}
+				}
+			} catch (error) {
+				console.error('Failed to fetch messages:', error);
+			}
+		};
+
+		fetchMessages();
+	}, [channelUrl, userId, isClosed, setUnreadCount]);
 
 	// SSE connection for real-time events
-
 	useEffect(() => {
 		if (!channelUrl || !userId) return;
 
-		// Mock mode에서는 SSE 사용 안 함
-		const useMockData = import.meta.env.VITE_USE_MOCK_DATA === 'true';
-		if (useMockData) return;
-
-		const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:18083';
+		const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:18084';
 		const eventSourceUrl = `${baseUrl}/api/v1/chat/channels/${channelUrl}/stream`;
 
 		console.log('Connecting to SSE:', eventSourceUrl);
@@ -369,6 +391,14 @@ export function ChatRoom({
 			return;
 		}
 
+		const messageText = message.trim();
+		setMessage(''); // 입력창 먼저 비우기
+
+		// Reset textarea height
+		if (textareaRef.current) {
+			textareaRef.current.style.height = 'auto';
+		}
+
 		try {
 			// 종료된 채팅이면 먼저 재개방
 			if (isClosed) {
@@ -378,24 +408,41 @@ export function ChatRoom({
 				setIsReopening(false);
 			}
 
+			// Send message via API
+			const response = await sendMessage(channelUrl, {
+				user_id: userId,
+				message: messageText,
+			});
+
+			// API 응답으로 메시지 추가 (SSE로도 받지만 즉각 반영을 위해)
 			const newMessage: Message = {
-				id: Date.now().toString(),
+				id: response.message_id.toString(),
 				type: 'sent',
-				content: message.trim(),
-				time: new Date().toLocaleTimeString('ko-KR', {
+				content: messageText,
+				time: new Date(response.created_at).toLocaleTimeString('ko-KR', {
 					hour: '2-digit',
 					minute: '2-digit',
 				}),
-				timestamp: Date.now(),
+				timestamp: response.created_at,
+				isRead: false,
 			};
 
-			setMessages([...messages, newMessage]);
-			setMessage('');
+			setMessages((prev) => {
+				// 중복 체크 (SSE로 이미 추가된 경우)
+				if (prev.some((m) => m.id === newMessage.id)) {
+					return prev;
+				}
+				return [...prev, newMessage].sort((a, b) => a.timestamp - b.timestamp);
+			});
 
-			// Reset textarea height
-			if (textareaRef.current) {
-				textareaRef.current.style.height = 'auto';
-			}
+			// Scroll to bottom
+			setTimeout(() => {
+				messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+			}, 100);
+		} catch (error) {
+			console.error('Failed to send message:', error);
+			// 에러 시 메시지 복원
+			setMessage(messageText);
 		} finally {
 			// 전송 플래그 해제
 			isSendingRef.current = false;

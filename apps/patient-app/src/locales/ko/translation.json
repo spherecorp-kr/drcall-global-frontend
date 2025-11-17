@@ -412,7 +412,12 @@
     "closed": "종료됨",
     "closedMessage": "대화가 종료되었습니다. 메시지를 전송할 수 없습니다.",
     "closedPlaceholder": "종료된 대화입니다",
-    "unknownUser": "알 수 없는 사용자"
+    "unknownUser": "알 수 없는 사용자",
+    "system": {
+      "system_created": "채팅방이 생성되었습니다",
+      "system_closed": "대화가 종료되었습니다",
+      "system_reopened": "대화가 재개되었습니다"
+    }
   },
   "mypage": {
     "title": "마이페이지",

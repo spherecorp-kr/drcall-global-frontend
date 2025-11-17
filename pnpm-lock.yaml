@@ -213,6 +213,9 @@ importers:
       recharts:
         specifier: ^3.3.0
         version: 3.3.0(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react-is@19.2.0)(react@19.2.0)(redux@5.0.1)
+      sendbird-calls:
+        specifier: 1.10.20
+        version: 1.10.20
       tailwind-merge:
         specifier: ^2.5.5
         version: 2.6.0
@@ -3023,6 +3026,9 @@ packages:
     resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
     hasBin: true
+
+  sendbird-calls@1.10.20:
+    resolution: {integrity: sha512-qCaHFCzqmccFh1LZT6MEX8uhmSbMABu++v1CLn8xw9UL/yoJUzmfFE6HKnZrugdOktkjO6xn3GT9Rz/tEcfRew==}
 
   set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
@@ -6061,6 +6067,8 @@ snapshots:
   semver@6.3.1: {}
 
   semver@7.7.3: {}
+
+  sendbird-calls@1.10.20: {}
 
   set-blocking@2.0.0:
     optional: true

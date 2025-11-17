@@ -5,7 +5,7 @@ import { logError } from '@utils/errorHandler';
 
 /**
  * Patient interface - 백엔드 patients 테이블과 일치
- * ⚠️ 2025-11-06: firstName/lastName → name 통합, allergies/grade 추가
+ * ⚠️ 2025-11-06: firstName/lastName → name 통합, grade 추가
  */
 export interface Patient {
   id: number;
@@ -22,7 +22,6 @@ export interface Patient {
   emergencyContactName?: string;
   emergencyContactPhone?: string;
   profileImageUrl?: string;
-  allergies?: string; // 알레르기 정보 (추가됨)
   grade?: 'VIP' | 'RISK' | 'NORMAL'; // 환자 등급 (추가됨)
   marketingConsent: boolean;
   dataSharingConsent: boolean;

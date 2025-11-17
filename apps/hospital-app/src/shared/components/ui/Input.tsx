@@ -7,6 +7,7 @@ export type InputState = 'default' | 'focused' | 'error' | 'disabled';
 interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
 	error?: boolean;
 	icon?: ReactNode;
+	onIconClick?: () => void;
 	size?: InputSize;
 	state?: InputState;
 	wrapperClassName?: string;
@@ -51,6 +52,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 			disabled,
 			error = false,
 			icon,
+			onIconClick,
 			placeholder,
 			size = 'medium',
 			wrapperClassName,
@@ -98,7 +100,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 						{...props}
 					/>
 				</div>
-				{icon && <div className="pr-2">{icon}</div>}
+				{icon && (
+					<div
+						className={cn("pr-2", onIconClick && "cursor-pointer")}
+						onClick={onIconClick}
+					>
+						{icon}
+					</div>
+				)}
 			</div>
 		);
 	},

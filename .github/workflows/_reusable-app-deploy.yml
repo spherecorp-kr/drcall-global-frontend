@@ -81,7 +81,22 @@ jobs:
           fi
 
       - name: Build application
-        run: pnpm ${{ inputs.build-command }}
+        run: |
+          ENV="${{ inputs.environment }}"
+          APP="${{ inputs.app-name }}"
+          
+          # Map environment names
+          if [ "$ENV" == "staging" ]; then
+            ENV_FILE="stg"
+          else
+            ENV_FILE="$ENV"
+          fi
+          
+          echo "🔍 Building ${APP} for ${ENV} environment"
+          echo "📁 Using .env.${ENV_FILE} file"
+          
+          # Vite automatically loads .env file from the app directory
+          pnpm ${{ inputs.build-command }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
