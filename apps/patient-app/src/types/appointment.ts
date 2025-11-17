@@ -29,27 +29,31 @@ export interface PatientBasicInfo {
   phoneNumber: string;
 }
 
-// 음주량 ENUM (백엔드와 매핑)
-export enum AlcoholConsumption {
-  ZERO = 'ZERO',           // "0"
-  ONE_TO_TWO = 'ONE_TO_TWO', // "1~2"
-  THREE_PLUS = 'THREE_PLUS'  // "3+"
-}
+// 음주량 타입 (백엔드와 매핑)
+export type AlcoholConsumption = 'ZERO' | 'ONE_TO_TWO' | 'THREE_PLUS';
 
-// 흡연량 ENUM (백엔드와 매핑)
-export enum SmokingStatus {
-  ZERO = 'ZERO',           // "0"
-  ONE_TO_FIVE = 'ONE_TO_FIVE', // "1~5"
-  SIX_PLUS = 'SIX_PLUS'   // "6+"
-}
+export const AlcoholConsumption = {
+  ZERO: 'ZERO' as AlcoholConsumption,
+  ONE_TO_TWO: 'ONE_TO_TWO' as AlcoholConsumption,
+  THREE_PLUS: 'THREE_PLUS' as AlcoholConsumption,
+};
+
+// 흡연량 타입 (백엔드와 매핑)
+export type SmokingStatus = 'ZERO' | 'ONE_TO_FIVE' | 'SIX_PLUS';
+
+export const SmokingStatus = {
+  ZERO: 'ZERO' as SmokingStatus,
+  ONE_TO_FIVE: 'ONE_TO_FIVE' as SmokingStatus,
+  SIX_PLUS: 'SIX_PLUS' as SmokingStatus,
+};
 
 // 환자 상세 정보
 export interface PatientDetailInfo {
   height?: string;
   weight?: string;
   bloodType?: 'A' | 'B' | 'O' | 'AB';
-  alcohol?: AlcoholConsumption;  // ENUM으로 변경 (다국어 처리용)
-  smoking?: SmokingStatus;        // ENUM으로 변경 (다국어 처리용)
+  alcohol?: AlcoholConsumption | string;  // ENUM 또는 표시값
+  smoking?: SmokingStatus | string;        // ENUM 또는 표시값
   medications?: string;
   personalHistory?: string;
   familyHistory?: string;

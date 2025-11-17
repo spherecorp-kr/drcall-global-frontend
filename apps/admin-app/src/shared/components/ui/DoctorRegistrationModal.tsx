@@ -39,6 +39,7 @@ export function DoctorRegistrationModal({
 
 	const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
 	const [idCheckStatus, setIdCheckStatus] = useState<IdCheckStatus>('idle');
+	const [isUploading, setIsUploading] = useState(false);
 
 	const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { Button, Input, Select } from '@/shared/components/ui';
 import { onboardingService } from '@/services/onboardingService';
 import type {
@@ -114,7 +115,11 @@ export default function HospitalOnboarding() {
 			setCurrentStep('complete');
 		} catch (error) {
 			console.error('Onboarding failed:', error);
-			alert(error.response?.data?.message || '온보딩에 실패했습니다.');
+			let errorMessage = '온보딩에 실패했습니다.';
+			if (error instanceof AxiosError) {
+				errorMessage = error.response?.data?.message || errorMessage;
+			}
+			alert(errorMessage);
 		} finally {
 			setIsSubmitting(false);
 		}
