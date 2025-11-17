@@ -14,6 +14,7 @@ const ReactQueryDevtoolsLazy = import.meta.env.DEV
     )
   : () => null
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import ChannelValidator from './components/auth/ChannelValidator'
 import { AuthProvider } from './contexts/AuthContext'
 import { ToastProvider } from './contexts/ToastContext'
 import PhoneVerification from './pages/auth/PhoneVerification'
@@ -59,7 +60,8 @@ function App() {
       <ToastProvider>
         <AuthProvider>
           <BrowserRouter>
-            <ScrollToTop />
+            <ChannelValidator>
+              <ScrollToTop />
         <Routes>
         {/* Auth Routes - Public */}
         <Route path="/" element={<Navigate to="/auth/phone-verification" replace />} />
@@ -178,6 +180,7 @@ function App() {
         <Route path="/error/expired" element={<ErrorExpired />} />
         <Route path="*" element={<Error404 />} />
         </Routes>
+            </ChannelValidator>
       </BrowserRouter>
     </AuthProvider>
 
