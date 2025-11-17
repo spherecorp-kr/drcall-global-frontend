@@ -1,4 +1,4 @@
-import { useCallback, useState, FormEvent } from 'react';
+import { useCallback, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { Button, Input } from '@/shared/components/ui';

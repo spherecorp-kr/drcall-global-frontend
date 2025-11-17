@@ -138,7 +138,7 @@ const TEXTAREA_CLASS = 'flex-1 self-stretch px-4 py-2.5 bg-bg-disabled rounded-l
 
 // 환자 등급 뱃지 컴포넌트
 function PatientGradeBadge({ grade }: { grade: PatientGrade }) {
-	if (grade === 'normal') {
+	if (grade === 'NORMAL') {
 		return null;
 	}
 
@@ -581,7 +581,7 @@ const PatientDetailPage = () => {
 											({patient.birthDateDisplay} /
 										</span>
 										<img
-											src={patient.gender === 'female' ? genderFemaleIcon : genderMaleIcon}
+											src={patient.gender === 'FEMALE' ? genderFemaleIcon : genderMaleIcon}
 											alt={patient.genderDisplay}
 											className="w-4 h-4"
 										/>

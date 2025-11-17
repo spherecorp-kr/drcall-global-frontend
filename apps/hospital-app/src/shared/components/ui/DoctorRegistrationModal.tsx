@@ -39,6 +39,7 @@ export function DoctorRegistrationModal({
 
 	const [profileImagePreview, setProfileImagePreview] = useState<string | null>(null);
 	const [idCheckStatus, setIdCheckStatus] = useState<IdCheckStatus>('idle');
+	const [isUploading, setIsUploading] = useState(false);
 
 	const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -279,13 +280,13 @@ export function DoctorRegistrationModal({
 			>
 				<button
 					onClick={handleSubmit}
-					disabled={!isFormValid}
+					disabled={!isFormValid || isUploading}
 					className={cn(
 						'text-20 font-semibold text-white transition-opacity',
-						isFormValid ? 'hover:opacity-90 cursor-pointer' : 'cursor-not-allowed',
+						(isFormValid && !isUploading) ? 'hover:opacity-90 cursor-pointer' : 'cursor-not-allowed',
 					)}
 				>
-					확인
+					{isUploading ? '업로드 중...' : '확인'}
 				</button>
 			</div>
 		</Modal>

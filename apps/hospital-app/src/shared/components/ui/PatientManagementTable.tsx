@@ -15,7 +15,7 @@ interface PatientManagementTableProps {
 
 // 환자 등급 뱃지 컴포넌트
 function PatientGradeBadge({ grade }: { grade: PatientGrade }) {
-	if (grade === 'normal') {
+	if (grade === 'NORMAL') {
 		return null;
 	}
 

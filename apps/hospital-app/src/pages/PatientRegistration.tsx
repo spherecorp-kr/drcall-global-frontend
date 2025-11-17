@@ -99,7 +99,7 @@ export function PatientRegistration() {
 				phone: formData.phoneNumber,
 				phoneCountryCode: '+66',
 				birthDate,
-				gender: formData.gender === 'male' ? 'MALE' : formData.gender === 'female' ? 'FEMALE' : undefined,
+				gender: formData.gender === 'MALE' ? 'MALE' : formData.gender === 'FEMALE' ? 'FEMALE' : undefined,
 				thaiId: formData.thaiId,
 				address: formData.address,
 				addressDetail: formData.detailAddress,
