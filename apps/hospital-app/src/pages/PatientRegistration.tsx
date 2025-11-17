@@ -14,6 +14,7 @@ export function PatientRegistration() {
 		gender: '',
 		thaiId: '',
 		phoneNumber: '',
+		phoneCountryCode: '+66',
 		postalCode: '',
 		address: '',
 		detailAddress: '',

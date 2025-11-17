@@ -16,7 +16,7 @@ interface MainLayoutProps {
 	showBackButton?: boolean;
 	userAvatar?: string;
 	userName: string;
-	userRole: 'admin';
+	userRole: 'admin' | 'ADMIN' | 'SUPER_ADMIN' | 'SYSTEM_ADMIN' | 'USER_ADMIN' | 'VIEW_ONLY';
 }
 
 const MainLayout = ({

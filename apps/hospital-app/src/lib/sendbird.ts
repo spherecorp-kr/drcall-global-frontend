@@ -62,10 +62,10 @@ export async function connectWebSocket(): Promise<void> {
  */
 export function disconnectWebSocket(): void {
   try {
-    SendBirdCall.disconnectWebSocket();
-    console.log('[Sendbird] WebSocket disconnected');
+    SendBirdCall.deauthenticate();
+    console.log('[Sendbird] Deauthenticated');
   } catch (error) {
-    console.error('[Sendbird] WebSocket disconnection failed:', error);
+    console.error('[Sendbird] Deauthentication failed:', error);
   }
 }
 

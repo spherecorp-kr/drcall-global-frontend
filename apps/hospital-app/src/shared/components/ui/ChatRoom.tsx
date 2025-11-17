@@ -98,7 +98,7 @@ export function ChatRoom({
 							minute: '2-digit',
 						}),
 						timestamp: msg.created_at,
-						isRead: isMyMessage ? msg.message_id <= response.last_read_message_id : undefined,
+						isRead: undefined,
 						date: messageDate.toLocaleDateString('ko-KR', {
 							year: 'numeric',
 							month: '2-digit',
@@ -409,7 +409,10 @@ export function ChatRoom({
 			}
 
 			// Send message via API
-			const response = await sendMessage(channelUrl, userId, messageText);
+			const response = await sendMessage(channelUrl, {
+				user_id: userId,
+				message: messageText,
+			});
 
 			// API 응답으로 메시지 추가 (SSE로도 받지만 즉각 반영을 위해)
 			const newMessage: Message = {
