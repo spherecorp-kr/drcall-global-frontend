@@ -15,7 +15,7 @@ interface LayoutProps {
 const Layout = ({ appointment }: LayoutProps) => {
 	return (
 		<>
-			<TopButtons />
+			<TopButtons appointment={appointment} />
 			<PatientInfoTable isEditable />
 			<ReadOnlyTreatmentInfo />
 			<div className='flex gap-4 items-center self-stretch'>
