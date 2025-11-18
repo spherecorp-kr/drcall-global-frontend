@@ -1,26 +1,18 @@
 import TopButtons from './TopButtons';
 import {
-	Memo,
-	PatientHealthInfo,
 	PatientInfoTable,
 	ReadOnlyTreatmentInfo,
 	TreatmentHistory,
 } from '@/shared/components/ui/appointmentDetail';
-import type { Appointment } from '@/services/appointmentService';
 
-interface LayoutProps {
-	appointment: Appointment;
-}
-
-const Layout = ({ appointment }: LayoutProps) => {
+const Layout = () => {
 	return (
 		<>
-			<TopButtons appointment={appointment} />
-			<PatientInfoTable isEditable />
+			<TopButtons />
+			<PatientInfoTable />
 			<ReadOnlyTreatmentInfo />
 			<div className='flex gap-4 items-center self-stretch'>
-				<Memo />
-				<PatientHealthInfo />
+				
 			</div>
 			<TreatmentHistory />
 		</>
