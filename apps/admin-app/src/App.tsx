@@ -3,8 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
 import { MainLayout } from '@/shared/components/layout';
 import TextLogo from '@/assets/logo_drcall.svg';
+import { PrivateRoute } from '@/components/auth/PrivateRoute';
+import { useAuth } from '@/contexts/AuthContext';
 import {
 	DashboardPage,
+	HospitalOnboardingPage,
+	LoginPage,
 	MyInfoPage,
 } from '@/pages';
 
@@ -12,6 +16,7 @@ import {
 const ROUTE_CONFIGS = [
 	{ pattern: /^\/hospitals\/\d+$/, showBackButton: true }, // 병원 상세
 	{ pattern: /^\/hospitals\/new$/, showBackButton: true }, // 병원 등록
+	{ pattern: /^\/hospitals\/onboarding$/, showBackButton: true }, // 병원 온보딩
 	{ pattern: /^\/users\/\d+$/, showBackButton: true }, // 사용자 상세
 	{ pattern: /^\/monitoring\/services\/.*$/, showBackButton: true }, // 서비스 상세
 	{ pattern: /^\/content\/announcements\/\d+$/, showBackButton: true }, // 공지사항 상세
@@ -21,6 +26,7 @@ const ROUTE_CONFIGS = [
 function AppContent() {
 	const navigate = useNavigate();
 	const location = useLocation();
+	const { user, logout: authLogout } = useAuth();
 
 	const { t } = useTranslation();
 
@@ -55,26 +61,39 @@ function AppContent() {
 		navigate(-1);
 	}, [navigate]);
 
+	// 로그아웃 핸들러
+	const handleLogout = useCallback(async () => {
+		await authLogout();
+		navigate('/login');
+	}, [authLogout, navigate]);
+
 	return (
 		<Routes>
+			{/* 로그인 페이지 - 인증 불필요 */}
+			<Route path="/login" element={<LoginPage />} />
+			
+			{/* 보호된 라우트 - 인증 필요 */}
 			<Route
 				path="/"
 				element={
-					<MainLayout
-						logo={<img src={TextLogo} alt="Dr.Call" className="w-[164px] h-[42px]" />}
-						onBack={handleBack}
-						onLogout={() => console.log('Logout clicked')}
-						onMenuClick={handleMenuClick}
-						pageTitle={pageTitle}
-						showBackButton={shouldShowBackButton}
-						userName="관리자"
-						userRole="admin"
-					/>
+					<PrivateRoute>
+						<MainLayout
+							logo={<img src={TextLogo} alt="Dr.Call" className="w-[164px] h-[42px]" />}
+							onBack={handleBack}
+							onLogout={handleLogout}
+							onMenuClick={handleMenuClick}
+							pageTitle={pageTitle}
+							showBackButton={shouldShowBackButton}
+							userName={user?.name || '관리자'}
+							userRole={user?.role || 'admin'}
+						/>
+					</PrivateRoute>
 				}
 			>
 				<Route index element={<Navigate to="/dashboard" replace />} />
 				<Route path="dashboard" element={<DashboardPage />} />
 				<Route path="hospitals" element={<DashboardPage />} />
+				<Route path="hospitals/onboarding" element={<HospitalOnboardingPage />} />
 				<Route path="users" element={<DashboardPage />} />
 				<Route path="monitoring" element={<DashboardPage />} />
 				<Route path="content" element={<DashboardPage />} />

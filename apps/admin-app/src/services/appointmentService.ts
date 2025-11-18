@@ -90,6 +90,35 @@ export interface CompleteAppointmentRequest {
   };
 }
 
+export interface CreateAppointmentRequest {
+  // 환자 식별: patientId가 있으면 기존 환자, 없으면 phone/thaiId/name으로 검색/등록
+  patientId?: number;
+  
+  // 환자 검색 정보 (patientId가 없을 때 사용)
+  phone?: string;
+  phoneCountryCode?: string;
+  thaiId?: string;
+  name?: string; // 신규 환자 등록 시 필요
+  
+  doctorId: number;
+  appointmentType: 'STANDARD' | 'QUICK';
+  consultationType?: 'VIDEO_CALL' | 'CHAT' | 'PHONE';
+  scheduledAt: string; // ISO 8601 string
+  symptoms?: string;
+  symptomImages?: string[];
+  patientNote?: string;
+  // Health Questionnaire (optional - can be extracted from patient profile)
+  height?: string;
+  weight?: string;
+  bloodType?: string;
+  alcoholConsumption?: string;
+  smokingStatus?: string;
+  medications?: string;
+  personalHistory?: string;
+  familyHistory?: string;
+  currency?: string; // default: THB
+}
+
 /**
  * Appointment API Service for Hospital App
  */
@@ -191,6 +220,27 @@ export const appointmentService = {
    */
   getPatientAppointments: async (patientId: number): Promise<Appointment[]> => {
     const response = await apiClient.get<Appointment[]>(`/api/v1/appointments/patient/${patientId}`);
+    return response.data;
+  },
+
+  /**
+   * Create new appointment
+   * Hospital staff can create appointments for patients
+   * 
+   * 화면 플로우:
+   * 1. 환자 등록 페이지 (/patient/new) → POST /api/v1/patients (환자 등록만)
+   * 2. 환자 상세 페이지 (/patient/:id) → POST /api/v1/appointments (예약 생성)
+   * 
+   * 이벤트 기반 구조:
+   * - CreateAppointmentCommand 이벤트 발행
+   * - appointment-service가 이벤트 구독하여 예약 생성
+   * - AppointmentCreatedEvent 발행
+   * - AppointmentCreatedNotificationConsumer가 구독 상태 확인:
+   *   - 구독 안됨 → SMS로 가입 URL 전송
+   *   - 구독됨 → LINE 메시지로 예약 정보 전송
+   */
+  createAppointment: async (data: CreateAppointmentRequest): Promise<{ message: string; patientId: number; hospitalId: number; status: string }> => {
+    const response = await apiClient.post<{ message: string; patientId: number; hospitalId: number; status: string }>('/api/v1/appointments', data);
     return response.data;
   },
 };

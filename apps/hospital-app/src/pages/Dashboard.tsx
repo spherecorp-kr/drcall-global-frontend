@@ -1,8 +1,10 @@
-import { useState, useCallback, useMemo } from 'react';
-import { StatsSummary } from '@/shared/components/ui/StatsSummary';
-import { PatientChart } from '@/shared/components/ui/PatientChart';
-import { AppointmentTable } from '@/shared/components/ui/AppointmentTable';
-import { DoctorListTable } from '@/shared/components/ui/DoctorListTable';
+import { useCallback, useMemo, useState } from 'react';
+import {
+	AppointmentTable,
+	DoctorListTable,
+	PatientChart,
+	StatsSummary,
+} from '@/shared/components/ui';
 
 // Sample data
 const sampleAppointments = [
@@ -214,12 +216,9 @@ const Dashboard = () => {
 	const [activeSection, setActiveSection] = useState<SectionId | null>(null);
 	const isExpandOpen = useMemo(() => activeSection !== null, [activeSection]);
 
-	const toggleExpand = useCallback(
-		(sectionId: SectionId) => {
-			setActiveSection((current) => (current === sectionId ? null : sectionId));
-		},
-		[setActiveSection],
-	);
+	const toggleExpand = useCallback((sectionId: SectionId) => {
+		setActiveSection((current) => (current === sectionId ? null : sectionId));
+	}, [setActiveSection]);
 
 	const shouldHideSection = (sectionId: SectionId) => activeSection === sectionId;
 

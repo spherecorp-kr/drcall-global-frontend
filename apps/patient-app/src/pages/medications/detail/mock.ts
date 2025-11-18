@@ -10,13 +10,14 @@
 //      리스트 아이템 id와 매핑됩니다. (delivery-1 / quick-1 / intl-1 / pickup-1)
 
 export type ReceiptMethod = 'delivery' | 'quick' | 'international' | 'pickup';
+export type MedicationType = 'delivery' | 'pickup';
 
 export type MedicationDetailMock = {
   id: string;
   receipt: {
     method: ReceiptMethod;
     statusStep: number; // 현재 단계 (1-base). labels의 인덱스+1과 동일한 범위여야 함
-    labels: string[]; // 단계 라벨. 배송형은 보통 4단계, 직접 수령은 3단계
+    medicationType: MedicationType; // 조제 유형 (배송/직접 수령)
     estimatedDate?: string; // 배송형: 예상 도착일(상단 보조 정보)
     deadlineDate?: string; // 직접 수령: 수령 기한(상단 보조 정보)
   };
@@ -48,7 +49,7 @@ export const MOCKS: Record<string, MedicationDetailMock> = {
     receipt: {
       method: 'delivery',
       statusStep: 3,
-      labels: ['조제 중', '조제 완료', '배송 중', '수령 완료'],
+      medicationType: 'delivery',
       estimatedDate: '14/09/2025',
     },
     deliveryInfo: {
@@ -69,7 +70,7 @@ export const MOCKS: Record<string, MedicationDetailMock> = {
     receipt: {
       method: 'quick',
       statusStep: 2,
-      labels: ['조제 중', '조제 완료', '배송 중', '수령 완료'],
+      medicationType: 'delivery',
       estimatedDate: '14/09/2025',
     },
     deliveryInfo: {
@@ -89,7 +90,7 @@ export const MOCKS: Record<string, MedicationDetailMock> = {
     receipt: {
       method: 'international',
       statusStep: 2,
-      labels: ['조제 중', '조제 완료', '배송 중', '수령 완료'],
+      medicationType: 'delivery',
       estimatedDate: '14/09/2025',
     },
     deliveryInfo: {
@@ -109,7 +110,7 @@ export const MOCKS: Record<string, MedicationDetailMock> = {
     receipt: {
       method: 'pickup',
       statusStep: 2,
-      labels: ['조제 중', '조제 완료', '수령 완료'],
+      medicationType: 'pickup',
       deadlineDate: '14/09/2025 까지',
     },
     pickupInfo: {

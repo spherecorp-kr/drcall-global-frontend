@@ -112,7 +112,6 @@ export const mockCompletedConsultationDetails: Record<
       bloodType: 'B',
       medications: '200mL 1 week, 1~2',
       personalHistory: '없음, 1 day, 1~5',
-      allergies: '3개월 전부터 알 수 약을 복용 중입니다.'
     }
   },
   '8': {
@@ -166,7 +165,6 @@ export const mockCompletedConsultationDetails: Record<
       bloodType: 'B',
       medications: '200mL 1 week, 1~2',
       personalHistory: '없음, 1 day, 1~5',
-      allergies: '3개월 전부터 알 수 약을 복용 중입니다.'
     }
   },
   '14': {
@@ -211,7 +209,6 @@ export const mockCompletedConsultationDetails: Record<
       bloodType: 'B',
       medications: '200mL 1 week, 1~2',
       personalHistory: '없음, 1 day, 1~5',
-      allergies: '3개월 전부터 알 수 약을 복용 중입니다.'
     }
   },
   '15': {
@@ -273,7 +270,6 @@ export const mockCompletedConsultationDetails: Record<
       bloodType: 'B',
       medications: '안약 점안',
       personalHistory: '없음',
-      allergies: '특이사항 없음'
     }
   }
 };

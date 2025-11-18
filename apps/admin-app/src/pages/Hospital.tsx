@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Button from '@/shared/components/ui/Button';
 import { Input } from '@/shared/components/ui/Input';
 import icEdit from '@/shared/assets/icons/ic_edit.svg';
@@ -9,6 +10,7 @@ import icCancel from '@/shared/assets/icons/ic_cancel.svg';
 import icSave from '@/shared/assets/icons/ic_register.svg';
 import TextLogo from '@/assets/logo_drcall.svg';
 import CircleLogo from '@/assets/logo_circle.png';
+import { uploadFile } from '@/services/storageService';
 
 // Mock data
 const mockHospital = {
@@ -25,6 +27,7 @@ const mockHospital = {
 	postalCode: '192-458',
 	addressDetail: 'Building 103, Raemian Apartment',
 	phone: '01-123-456',
+	phoneCountryCode: '+66',
 };
 
 interface ValidationErrors {
@@ -41,13 +44,20 @@ interface ValidationErrors {
 }
 
 export function Hospital() {
+	const navigate = useNavigate();
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [formData, setFormData] = useState(mockHospital);
 	const [errors, setErrors] = useState<ValidationErrors>({});
 	const [webBiPreview, setWebBiPreview] = useState<string | null>(null);
 	const [mobileBiPreview, setMobileBiPreview] = useState<string | null>(null);
+	const [webBiFileId, setWebBiFileId] = useState<number | null>(null);
+	const [mobileBiFileId, setMobileBiFileId] = useState<number | null>(null);
 	const webBiInputRef = useRef<HTMLInputElement>(null);
 	const mobileBiInputRef = useRef<HTMLInputElement>(null);
+
+	const handleNewHospital = () => {
+		navigate('/hospitals/onboarding');
+	};
 
 	const handleEditClick = () => {
 		setIsEditMode(true);
@@ -59,6 +69,8 @@ export function Hospital() {
 		setErrors({});
 		setWebBiPreview(null);
 		setMobileBiPreview(null);
+		setWebBiFileId(null);
+		setMobileBiFileId(null);
 	};
 
 	const handleSaveEdit = () => {
@@ -103,8 +115,8 @@ export function Hospital() {
 
 		// TODO: API 호출
 		console.log('Save hospital info', formData);
-		console.log('Web BI preview:', webBiPreview);
-		console.log('Mobile BI preview:', mobileBiPreview);
+		console.log('Web BI fileId:', webBiFileId);
+		console.log('Mobile BI fileId:', mobileBiFileId);
 		setIsEditMode(false);
 		setErrors({});
 	};
@@ -117,13 +129,13 @@ export function Hospital() {
 		}
 	};
 
-	// 이미지 리사이징 유틸리티
-	const resizeImage = (
+	// 이미지 리사이징 및 Blob 변환 유틸리티
+	const resizeImageToBlob = (
 		file: File,
 		maxWidth: number,
 		maxHeight: number,
 		isSquare: boolean = false,
-	): Promise<string> => {
+	): Promise<{ blob: Blob; preview: string }> => {
 		return new Promise((resolve, reject) => {
 			// 파일 크기 체크 (5MB)
 			if (file.size > 5 * 1024 * 1024) {
@@ -173,8 +185,20 @@ export function Hospital() {
 						ctx.drawImage(img, 0, 0, width, height);
 					}
 
-					// 최적화된 이미지를 base64로 변환 (quality: 0.9)
-					resolve(canvas.toDataURL('image/jpeg', 0.9));
+					// Blob으로 변환 (Storage Service 업로드용)
+					canvas.toBlob(
+						(blob) => {
+							if (!blob) {
+								reject(new Error('이미지 변환에 실패했습니다.'));
+								return;
+							}
+							// 미리보기용 base64
+							const preview = canvas.toDataURL('image/jpeg', 0.9);
+							resolve({ blob, preview });
+						},
+						'image/jpeg',
+						0.9
+					);
 				};
 				img.onerror = () => reject(new Error('이미지를 불러올 수 없습니다.'));
 				img.src = e.target?.result as string;
@@ -186,65 +210,109 @@ export function Hospital() {
 
 	const handleWebBiChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (file) {
-			try {
-				// 웹 BI: 최대 500px 너비/높이, 비율 유지
-				const resizedImage = await resizeImage(file, 500, 500, false);
-				setWebBiPreview(resizedImage);
-			} catch (error) {
-				console.error('웹 BI 업로드 실패:', error);
-				alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
-			}
+		if (!file) return;
+
+		try {
+			// 웹 BI: 최대 500px 너비/높이, 비율 유지
+			const { blob, preview } = await resizeImageToBlob(file, 500, 500, false);
+			
+			// 미리보기 설정
+			setWebBiPreview(preview);
+
+			// Storage Service에 업로드
+			// TODO: 실제 hospitalId는 인증된 사용자 정보에서 가져와야 함
+			const fileId = await uploadFile(blob, {
+				category: 'LOGO',
+				ownerId: 1, // TODO: 실제 hospital ID
+				ownerType: 'HOSPITAL',
+				hospitalId: 1, // TODO: 실제 hospital ID
+				accessLevel: 'PUBLIC',
+			});
+
+			setWebBiFileId(fileId);
+		} catch (error) {
+			console.error('웹 BI 업로드 실패:', error);
+			alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
+			setWebBiPreview(null);
+			setWebBiFileId(null);
 		}
 	};
 
 	const handleMobileBiChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
-		if (file) {
-			try {
-				// 모바일 BI: 200x200px 정사각형으로 크롭
-				const resizedImage = await resizeImage(file, 200, 200, true);
-				setMobileBiPreview(resizedImage);
-			} catch (error) {
-				console.error('모바일 BI 업로드 실패:', error);
-				alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
-			}
+		if (!file) return;
+
+		try {
+			// 모바일 BI: 200x200px 정사각형으로 크롭
+			const { blob, preview } = await resizeImageToBlob(file, 200, 200, true);
+			
+			// 미리보기 설정
+			setMobileBiPreview(preview);
+
+			// Storage Service에 업로드
+			// TODO: 실제 hospitalId는 인증된 사용자 정보에서 가져와야 함
+			const fileId = await uploadFile(blob, {
+				category: 'LOGO',
+				ownerId: 1, // TODO: 실제 hospital ID
+				ownerType: 'HOSPITAL',
+				hospitalId: 1, // TODO: 실제 hospital ID
+				accessLevel: 'PUBLIC',
+			});
+
+			setMobileBiFileId(fileId);
+		} catch (error) {
+			console.error('모바일 BI 업로드 실패:', error);
+			alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
+			setMobileBiPreview(null);
+			setMobileBiFileId(null);
 		}
 	};
 
 	return (
 		<div className="h-full bg-bg-gray flex flex-col overflow-hidden">
 			{/* 버튼 영역 */}
-			<div className="px-5 pt-4 pb-3 flex justify-end items-center gap-2.5 flex-shrink-0">
-				{isEditMode ? (
-					<>
-						<Button
-							variant="outline"
-							size="default"
-							icon={<img src={icCancel} alt="취소" className="w-5 h-5" />}
-							onClick={handleCancelEdit}
-						>
-							취소하기
-						</Button>
-						<Button
-							variant="primary"
-							size="default"
-							icon={<img src={icSave} alt="저장" className="w-5 h-5" />}
-							onClick={handleSaveEdit}
-						>
-							저장하기
-						</Button>
-					</>
-				) : (
+			<div className="px-5 pt-4 pb-3 flex justify-between items-center gap-2.5 flex-shrink-0">
+				{!isEditMode && (
 					<Button
 						variant="primary"
 						size="default"
-						icon={<img src={icEdit} alt="edit" className="w-5 h-5" />}
-						onClick={handleEditClick}
+						icon={<img src={icSave} alt="새 병원 등록" className="w-5 h-5" />}
+						onClick={handleNewHospital}
 					>
-						정보 수정하기
+						새 병원 등록
 					</Button>
 				)}
+				<div className="flex gap-2.5 ml-auto">
+					{isEditMode ? (
+						<>
+							<Button
+								variant="outline"
+								size="default"
+								icon={<img src={icCancel} alt="취소" className="w-5 h-5" />}
+								onClick={handleCancelEdit}
+							>
+								취소하기
+							</Button>
+							<Button
+								variant="primary"
+								size="default"
+								icon={<img src={icSave} alt="저장" className="w-5 h-5" />}
+								onClick={handleSaveEdit}
+							>
+								저장하기
+							</Button>
+						</>
+					) : (
+						<Button
+							variant="primary"
+							size="default"
+							icon={<img src={icEdit} alt="edit" className="w-5 h-5" />}
+							onClick={handleEditClick}
+						>
+							정보 수정하기
+						</Button>
+					)}
+				</div>
 			</div>
 
 			{/* 병원 정보 영역 */}
@@ -529,19 +597,30 @@ export function Hospital() {
 							</div>
 							{isEditMode ? (
 								<div className="flex-1 flex flex-col gap-1.5">
-									<Input
-										value={formData.phone}
-										onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phone', e.target.value)}
-										placeholder="병원 연락처를 입력해 주세요."
-										size="small"
-										error={!!errors.phone}
-									/>
+									<div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+										<Input
+											value={formData.phoneCountryCode || '+66'}
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phoneCountryCode', e.target.value)}
+											placeholder="+66"
+											size="small"
+											style={{ width: '100px', flexShrink: 0 }}
+										/>
+										<div style={{ width: '1px', height: '1.5rem', background: '#d9d9d9' }} />
+										<Input
+											value={formData.phone}
+											onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleInputChange('phone', e.target.value)}
+											placeholder="병원 연락처를 입력해 주세요."
+											size="small"
+											error={!!errors.phone}
+											style={{ flex: 1 }}
+										/>
+									</div>
 									{errors.phone && (
 										<span className="text-system-error text-14">{errors.phone}</span>
 									)}
 								</div>
 							) : (
-								<div className="flex-1 text-text-100 text-16">{formData.phone}</div>
+								<div className="flex-1 text-text-100 text-16">{formData.phoneCountryCode ? `${formData.phoneCountryCode} ${formData.phone}` : formData.phone}</div>
 							)}
 						</div>
 					</div>

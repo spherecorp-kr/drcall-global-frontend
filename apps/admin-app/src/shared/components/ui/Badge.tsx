@@ -133,7 +133,7 @@ export const RoleBadge = ({
 	role,
 	children,
 }: {
-	role: 'admin' | 'coordinator' | 'doctor' | 'patient';
+	role: 'admin' | 'coordinator' | 'doctor' | 'patient' | 'ADMIN' | 'SUPER_ADMIN' | 'SYSTEM_ADMIN' | 'USER_ADMIN' | 'VIEW_ONLY';
 	children: ReactNode;
 }) => {
 	const variantMap = {
@@ -141,6 +141,11 @@ export const RoleBadge = ({
 		coordinator: 'role-coordinator' as const,
 		doctor: 'role-doctor' as const,
 		patient: 'role-patient' as const,
+		ADMIN: 'role-admin' as const,
+		SUPER_ADMIN: 'role-admin' as const,
+		SYSTEM_ADMIN: 'role-admin' as const,
+		USER_ADMIN: 'role-admin' as const,
+		VIEW_ONLY: 'role-admin' as const,
 	};
 	return (
 		<Badge variant={variantMap[role]} size="small">

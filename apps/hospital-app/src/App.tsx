@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo } from 'react';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { MainLayout } from '@/shared/components/layout';
 import TextLogo from '@/assets/logo_drcall.svg';
 import {
@@ -18,6 +19,7 @@ import {
 	PaymentPage,
 	AppointmentEditPage,
 	LoginPage,
+	ConsultationDetailPage,
 } from '@/pages';
 
 // 라우트 설정 정의 (확장 시 여기에 추가)
@@ -85,7 +87,7 @@ return (
 					pageTitle={pageTitle}
 					showBackButton={shouldShowBackButton}
 					userName="홍길동"
-					userRole="coordinator"
+					userRole="doctor"
 				/>
 			}
 		>
@@ -101,6 +103,7 @@ return (
 			<Route path="/doctor/:id" element={<DoctorDetailPage />} />
 			<Route path="/hospital" element={<HospitalPage />} />
 			<Route path="/myinfo" element={<MyInfoPage />} />
+			<Route path="/consultation/:appointmentSequence" element={<ConsultationDetailPage />} />
 			<Route path="/consultation" element={<ConsultationPage />} />
 			<Route path="*" element={<Navigate to="/dashboard" replace />} />
 		</Route>
@@ -110,9 +113,11 @@ return (
 
 function App() {
 	return (
-		<BrowserRouter>
-			<AppContent />
-		</BrowserRouter>
+		<AuthProvider>
+			<BrowserRouter>
+				<AppContent />
+			</BrowserRouter>
+		</AuthProvider>
 	);
 }
 
