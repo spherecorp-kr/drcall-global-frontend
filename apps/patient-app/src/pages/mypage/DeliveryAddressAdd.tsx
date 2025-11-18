@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
 import AddressSearchModal from '@components/address/modals/AddressSearchModal';
+import CountryCodeSelector from '@ui/inputs/CountryCodeSelector';
 import { useErrorHandler } from '@hooks/useErrorHandler';
 import { validateRequired, validatePhone } from '@utils/validation';
+import { getDefaultCountryByLocale, type Country } from '@utils/countryCode';
 
 interface DeliveryAddressAddProps {
   isOpen: boolean;
@@ -41,12 +43,15 @@ export default function DeliveryAddressAdd({
   onSave,
   editingAddress
 }: DeliveryAddressAddProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { handleValidationError } = useErrorHandler();
   const [title, setTitle] = useState('');
   const [recipientName, setRecipientName] = useState('');
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState<Country>(() =>
+    getDefaultCountryByLocale(i18n.language)
+  );
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isDefault, setIsDefault] = useState(false);
   const [isAddressSearchOpen, setIsAddressSearchOpen] = useState(false);
@@ -80,12 +85,14 @@ export default function DeliveryAddressAdd({
 
       setPhoneNumber(editingAddress.phoneNumber);
       setIsDefault(editingAddress.isDefault);
+      // TODO: editingAddress에서 phoneCountryCode를 받아서 selectedCountry 설정
     } else {
       // 추가 모드일 때는 초기화
       setTitle('');
       setRecipientName('');
       setAddress('');
       setDetailAddress('');
+      setSelectedCountry(getDefaultCountryByLocale(i18n.language));
       setPhoneNumber('');
       setIsDefault(false);
     }
@@ -148,6 +155,7 @@ export default function DeliveryAddressAdd({
       address: detailAddress ? `${address}\n${detailAddress}` : address,
       detailAddress,
       phoneNumber,
+      phoneCountryCode: selectedCountry.dialCode,
       isDefault
     };
 
@@ -159,6 +167,7 @@ export default function DeliveryAddressAdd({
       setRecipientName('');
       setAddress('');
       setDetailAddress('');
+      setSelectedCountry(getDefaultCountryByLocale(i18n.language));
       setPhoneNumber('');
       setIsDefault(false);
     }
@@ -530,23 +539,31 @@ export default function DeliveryAddressAdd({
                 gap: '0.5rem'
               }}
             >
-              <input
-                type="text"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                placeholder={t('delivery.phoneNumberPlaceholder')}
-                style={{
-                  padding: '0.5rem 0',
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid #E0E0E0',
-                  color: '#1F1F1F',
-                  fontSize: '1rem',
-                  fontWeight: '400',
-                  fontFamily: 'Pretendard',
-                  outline: 'none'
-                }}
-              />
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                <CountryCodeSelector
+                  selectedCountry={selectedCountry}
+                  onSelect={setSelectedCountry}
+                />
+                <div style={{ width: '1px', height: '1.5rem', background: '#d9d9d9' }} />
+                <input
+                  type="text"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ''))}
+                  placeholder={t('delivery.phoneNumberPlaceholder')}
+                  style={{
+                    flex: 1,
+                    padding: '0.5rem 0',
+                    background: 'transparent',
+                    border: 'none',
+                    borderBottom: '1px solid #E0E0E0',
+                    color: '#1F1F1F',
+                    fontSize: '1rem',
+                    fontWeight: '400',
+                    fontFamily: 'Pretendard',
+                    outline: 'none'
+                  }}
+                />
+              </div>
             </div>
           </div>
 

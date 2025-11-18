@@ -31,7 +31,7 @@ export default function DoctorAdviceSection({
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <img
-            src="/assets/icons/ic_clipboard.svg"
+            src="/assets/icons/ic_doctorcomment.svg"
             alt=""
             style={{ width: '1.375rem', height: '1.375rem' }}
           />

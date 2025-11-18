@@ -108,7 +108,7 @@ const todaySales: string = 'dashboard.section.summary.card.todaySales';
 const monthlyCount: string = 'dashboard.section.summary.card.monthlyCount';
 const monthlyNewPatient: string = 'dashboard.section.summary.card.monthlyNewPatient';
 
-export function StatsSummary() {
+const StatsSummary = () => {
 	const { t } = useTranslation();
 	const [lastUpdated, setLastUpdated] = useState<string>(() => formatDDMMYYYYHHMMSS(new Date()));
 
@@ -177,3 +177,5 @@ export function StatsSummary() {
 		</div>
 	);
 }
+
+export default StatsSummary;

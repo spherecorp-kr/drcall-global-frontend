@@ -8,6 +8,8 @@ import PrescriptionEdit from './PrescriptionEdit';
 import PrescriptionRegistration from './PrescriptionRegistration';
 import type { BottomButtonProps } from '@/shared/types/dialog';
 import ReAppointmentDialog from './ReAppointmentDialog';
+import type { Appointment } from '@/services/appointmentService';
+import paymentService from '@/services/paymentService';
 
 interface Fee {
 	treatmentFee: number,
@@ -15,13 +17,18 @@ interface Fee {
 	tip: number
 }
 
-const TopButtons = () => {
+interface TopButtonsProps {
+	appointment: Appointment;
+}
+
+const TopButtons = ({ appointment }: TopButtonsProps) => {
 	const { closeDialog, openDialog } = useDialog();
 	const { setDialog } = useDialogStore();
 
 	const [cost, setCost] = useState<string>('0');
 	const [payCheckAvailable, setPayCheckAvailable] = useState<boolean>(true);
 	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
+	const [isApproving, setIsApproving] = useState<boolean>(false);
 
 	const handleCostChange = useCallback(({ treatmentFee, dispensingFee, tip }: Fee) => {
 		const total = treatmentFee + dispensingFee + tip;
@@ -117,6 +124,50 @@ const TopButtons = () => {
 		});
 	}, [closeDialog, openDialog]);
 
+	/**
+	 * 입금 완료 버튼 클릭 핸들러
+	 * 병원이 환자 결제를 확인하고 승인 처리
+	 * 승인 후 배송 시작됨 (처방전이 있는 경우)
+	 */
+	const handleApprovePayment = useCallback(async () => {
+		try {
+			setIsApproving(true);
+
+			// 1. appointmentId로 payment 조회
+			const payment = await paymentService.getPaymentByAppointment(appointment.id);
+
+			if (!payment) {
+				alert('결제 정보를 찾을 수 없습니다.');
+				return;
+			}
+
+			if (payment.status !== 'SUCCESS') {
+				alert('결제가 완료되지 않았습니다. 환자 결제 완료 후 승인 가능합니다.');
+				return;
+			}
+
+			if (payment.approvedAt) {
+				alert('이미 승인된 결제입니다.');
+				return;
+			}
+
+			// 2. 결제 승인
+			await paymentService.approvePayment(payment.id);
+
+			// 3. 성공 메시지
+			alert('입금 확인이 완료되었습니다.');
+
+			// 4. 상태 업데이트
+			setPayCheckAvailable(false);
+
+		} catch (error) {
+			console.error('[TopButtons] Failed to approve payment:', error);
+			alert('입금 확인 처리에 실패했습니다. 다시 시도해주세요.');
+		} finally {
+			setIsApproving(false);
+		}
+	}, [appointment.id]);
+
 	// TODO FIXME 아래 useEffect 삭제
 	useEffect(() => {
 		setPayCheckAvailable(true);
@@ -171,7 +222,8 @@ const TopButtons = () => {
 				<Button
 					variant='outline'
 					size='default'
-					disabled={!payCheckAvailable}
+					disabled={!payCheckAvailable || isApproving}
+					onClick={handleApprovePayment}
 					icon={
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +238,7 @@ const TopButtons = () => {
 							/>
 						</svg>
 					}
-				>입금 완료</Button>
+				>{isApproving ? '처리 중...' : '입금 완료'}</Button>
 				<Button
 					onClick={openReAppointmentDialog}
 					icon={

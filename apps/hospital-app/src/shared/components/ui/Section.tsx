@@ -130,7 +130,7 @@ export function Section({
 					{(filters || searchPlaceholder) && (
 						<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 md:gap-5">
 							{filters && (
-								<div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+								<div className="flex flex-1 flex-wrap items-center gap-2 sm:gap-3">
 									{filters}
 								</div>
 							)}

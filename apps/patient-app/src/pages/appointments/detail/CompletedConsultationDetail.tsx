@@ -46,7 +46,18 @@ const handleDownloadPrescription = () => {
 };
 
   const handlePayment = () => {
-    navigate(`/appointments/${id}/payment`);
+    // 처방전 유무에 따라 결제 페이지 분기
+    const hasPrescription =
+      consultationData?.prescription?.status !== 'not_issued' &&
+      consultationData?.prescription?.status !== undefined;
+
+    if (hasPrescription) {
+      // 처방전 있음: 배송 정보 입력 포함 결제
+      navigate(`/appointments/${id}/payment-with-prescription`);
+    } else {
+      // 처방전 없음: 결제만
+      navigate(`/appointments/${id}/payment`);
+    }
   };
 
   if (!consultationData) {

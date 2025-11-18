@@ -84,7 +84,6 @@ export interface CompletedConsultationDetail {
     bloodType?: string;
     medications?: string;
     personalHistory?: string;
-    allergies?: string;
   };
 }
 

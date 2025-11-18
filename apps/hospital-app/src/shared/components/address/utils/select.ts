@@ -56,12 +56,72 @@ export async function finalizePlaceSelection(
     detail: s.detail || '',
     postalCode: s.postalCode || '',
     latitude: typeof s.latitude === 'number' ? s.latitude : '',
-    longitude: typeof s.longitude === 'number' ? s.longitude : ''
+    longitude: typeof s.longitude === 'number' ? s.longitude : '',
+    placeId: s.placeId
   };
 
   const legacy = (object.postalCode ? object.postalCode + '\n' : '') + (object.displayAddress || '');
 
   return { object, legacy };
+}
+
+/**
+ * Address VO 형식 (백엔드 Address Value Object)
+ * 백엔드 Address VO와 일치하는 구조
+ */
+export interface AddressVO {
+  countryCode: string;        // 국가 코드 (예: 'TH', 'KR')
+  street: string;             // 주소 (displayAddress)
+  detail: string;             // 상세 주소
+  postalCode: string;         // 우편번호
+  googlePlaceId: string;      // Google Place ID
+  latitude: number | null;    // 위도
+  longitude: number | null;   // 경도
+}
+
+interface GooglePlaceComponent {
+  types: string[];
+  shortText?: string;
+}
+
+interface GooglePlace {
+  addressComponents?: GooglePlaceComponent[];
+}
+
+/**
+ * Google Place에서 국가 코드 추출
+ * @param place - Google Maps Place 객체
+ * @returns 국가 코드 (ISO 3166-1 alpha-2, 예: 'TH', 'KR')
+ */
+export function extractCountryCodeFromPlace(place: GooglePlace): string {
+  if (!place?.addressComponents) return 'TH'; // 기본값: 태국
+
+  const components = place.addressComponents;
+  const countryComponent = components.find((c) =>
+    Array.isArray(c.types) && c.types.includes('country')
+  );
+
+  return countryComponent?.shortText || 'TH'; // 기본값: 태국
+}
+
+/**
+ * SelectedAddress를 Address VO 형식으로 변환
+ * @param selected - 선택된 주소 객체
+ * @param place - Google Maps Place 객체 (선택적, 국가 코드 추출용)
+ * @returns Address VO 형식의 객체
+ */
+export function toAddressVO(selected: SelectedAddress, place?: GooglePlace): AddressVO {
+  const countryCode = place ? extractCountryCodeFromPlace(place) : 'TH';
+  
+  return {
+    countryCode,
+    street: selected.displayAddress || '',
+    detail: selected.detail || '',
+    postalCode: selected.postalCode || '',
+    googlePlaceId: selected.placeId || '',
+    latitude: typeof selected.latitude === 'number' ? selected.latitude : null,
+    longitude: typeof selected.longitude === 'number' ? selected.longitude : null
+  };
 }
 
 

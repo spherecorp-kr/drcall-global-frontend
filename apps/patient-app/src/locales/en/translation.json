@@ -84,6 +84,12 @@
     "methodStandard": "Standard Delivery",
     "methodExpress": "Express Delivery",
     "methodInternational": "International Delivery",
+    "progressSteps": {
+      "statusPreparing": "Preparing",
+      "statusPrepared": "Prepared",
+      "statusShipping": "Shipping",
+      "statusReceived": "Received"
+    },
     "detail": {
       "pageTitle": "Medication & Delivery Detail",
       "title": "Check your medicine pickup progress.",
@@ -373,7 +379,11 @@
       "modifyInProcess": "You can modify/cancel appointments in 'Consultation Process'.",
       "modifyAfterConfirm": "After confirmation, modifications can only be made by calling the hospital",
       "profileEdit": "Name, date of birth, gender, and phone number can be changed in 'My Page > Edit Profile'."
-    }
+    },
+    "errorNotLoggedIn": "Login is required.",
+    "errorMissingDateTime": "Please select date, doctor, and time.",
+    "createSuccess": "Appointment has been created.",
+    "createError": "Failed to create appointment."
   },
 	"calendar": {
 		"week": {
@@ -406,7 +416,12 @@
     "closed": "Closed",
     "closedMessage": "This conversation has been closed. You cannot send messages.",
     "closedPlaceholder": "This conversation is closed",
-    "unknownUser": "Unknown User"
+    "unknownUser": "Unknown User",
+    "system": {
+      "system_created": "Chat room has been created",
+      "system_closed": "Conversation has been closed",
+      "system_reopened": "Conversation has been reopened"
+    }
   },
   "mypage": {
     "title": "My Page",
