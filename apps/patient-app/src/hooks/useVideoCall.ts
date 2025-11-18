@@ -103,7 +103,6 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
       await room.enter({
         audioEnabled: true,
         videoEnabled: true,
-        localMediaView: null, // video element는 컴포넌트에서 설정
       });
 
       roomRef.current = room;
@@ -227,8 +226,7 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
         await videoCallService.endSession(sessionRef.current.id);
       }
 
-      const SendBirdCall = getSendBirdCall();
-      SendBirdCall.disconnectWebSocket();
+      // WebSocket은 room.exit()에서 자동으로 정리됨
 
       setIsConnected(false);
       setParticipants([]);

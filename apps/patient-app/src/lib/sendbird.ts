@@ -59,14 +59,10 @@ export async function connectWebSocket(): Promise<void> {
 
 /**
  * Sendbird 연결 해제
+ * Note: Room.exit()에서 자동으로 처리되므로 명시적 호출 불필요
  */
 export function disconnectWebSocket(): void {
-  try {
-    SendBirdCall.disconnectWebSocket();
-    console.log('[Sendbird] WebSocket disconnected');
-  } catch (error) {
-    console.error('[Sendbird] WebSocket disconnection failed:', error);
-  }
+  console.log('[Sendbird] WebSocket will be disconnected automatically on room exit');
 }
 
 /**

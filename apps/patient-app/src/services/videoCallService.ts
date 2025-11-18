@@ -2,7 +2,7 @@
  * Video Call Service API
  * Backend video-call-service (포트: 18089)와 통신
  */
-import apiClient from './api';
+import { apiClient } from './api';
 
 export interface CreateSessionRequest {
   appointmentId: number;
@@ -29,6 +29,13 @@ export interface ParticipantResponse {
   isVideoEnabled: boolean;
   joinedAt: string;
   leftAt?: string;
+}
+
+export interface JoinSessionResponse {
+  sendbirdUserId: string;
+  sendbirdAccessToken: string;
+  sendbirdRoomId: string;
+  session: VideoCallSessionResponse;
 }
 
 export interface VideoCallSessionResponse {
@@ -74,8 +81,8 @@ export const videoCallService = {
   joinSession: async (
     sessionId: number,
     request: JoinSessionRequest
-  ): Promise<VideoCallSessionResponse> => {
-    const response = await apiClient.post<VideoCallSessionResponse>(
+  ): Promise<JoinSessionResponse> => {
+    const response = await apiClient.post<JoinSessionResponse>(
       `${VIDEO_CALL_BASE_URL}/${sessionId}/join`,
       request
     );

@@ -1,8 +1,8 @@
-import { Client, IMessage } from '@stomp/stompjs';
+import { Client, type IMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 /**
- * É 8X Ý1 ”­
+ * ï¿½ï¿½ 8X ï¿½1 ï¿½ï¿½
  */
 export interface CreateSubtitleSessionRequest {
   videoCallSessionId: number;
@@ -11,7 +11,7 @@ export interface CreateSubtitleSessionRequest {
 }
 
 /**
- * É 8X Qõ
+ * ï¿½ï¿½ 8X Qï¿½
  */
 export interface SubtitleSession {
   id: number;
@@ -26,7 +26,7 @@ export interface SubtitleSession {
 }
 
 /**
- * É TÜ
+ * ï¿½ï¿½ Tï¿½
  */
 export interface SubtitleRecord {
   id: number;
@@ -43,7 +43,7 @@ export interface SubtitleRecord {
 }
 
 /**
- * $$ ­l TÜÀ
+ * $$ ï¿½l Tï¿½ï¿½
  */
 export interface AudioChunkMessage {
   speakerId: number;
@@ -53,7 +53,7 @@ export interface AudioChunkMessage {
 /**
  * Subtitle WebSocket Service
  *
- * translation-service@ WebSocket ð°Xì äÜ ÉD ¡àiÈä.
+ * translation-service@ WebSocket ï¿½Xï¿½ ï¿½ï¿½ ï¿½ï¿½D ï¿½ï¿½iï¿½ï¿½.
  */
 class SubtitleWebSocketService {
   private client: Client | null = null;
@@ -61,7 +61,7 @@ class SubtitleWebSocketService {
   private onSubtitleCallback: ((subtitle: SubtitleRecord) => void) | null = null;
 
   /**
-   * WebSocket ð°  lÅ
+   * WebSocket ï¿½  lï¿½
    */
   connect(
     sessionId: string,
@@ -71,10 +71,10 @@ class SubtitleWebSocketService {
     this.sessionId = sessionId;
     this.onSubtitleCallback = onSubtitle;
 
-    // STOMP Client Ý1
+    // STOMP Client ï¿½1
     this.client = new Client({
       webSocketFactory: () => {
-        // translation-service WebSocket ÔÜìx¸
+        // translation-service WebSocket ï¿½ï¿½ï¿½xï¿½
         const translationServiceUrl = import.meta.env.VITE_TRANSLATION_SERVICE_URL || 'http://localhost:18088';
         return new SockJS(`${translationServiceUrl}/ws/subtitle`) as any;
       },
@@ -86,11 +86,11 @@ class SubtitleWebSocketService {
       heartbeatOutgoing: 4000,
     });
 
-    // ð° 1õ Ü
+    // ï¿½ 1ï¿½ ï¿½
     this.client.onConnect = () => {
       console.log('[Subtitle WebSocket] Connected');
 
-      // É  = lÅ
+      // ï¿½ï¿½ ï¿½= lï¿½
       this.client?.subscribe(`/topic/subtitle/${sessionId}`, (message: IMessage) => {
         const subtitle: SubtitleRecord = JSON.parse(message.body);
         console.log('[Subtitle WebSocket] Received subtitle:', subtitle);
@@ -101,7 +101,7 @@ class SubtitleWebSocketService {
       });
     };
 
-    // Ðì Ý Ü
+    // ï¿½ï¿½ ï¿½ ï¿½
     this.client.onStompError = (frame) => {
       console.error('[Subtitle WebSocket] STOMP error:', frame);
       if (onError) {
@@ -109,7 +109,7 @@ class SubtitleWebSocketService {
       }
     };
 
-    // WebSocket Ðì
+    // WebSocket ï¿½ï¿½
     this.client.onWebSocketError = (event) => {
       console.error('[Subtitle WebSocket] WebSocket error:', event);
       if (onError) {
@@ -117,12 +117,12 @@ class SubtitleWebSocketService {
       }
     };
 
-    // ð° \1T
+    // ï¿½ \1T
     this.client.activate();
   }
 
   /**
-   * $$ ­l ¡
+   * $$ ï¿½l ï¿½
    */
   sendAudio(speakerId: number, audioData: string): void {
     if (!this.client || !this.sessionId) {
@@ -144,7 +144,7 @@ class SubtitleWebSocketService {
   }
 
   /**
-   * 8X |ÜÀ
+   * 8X |ï¿½ï¿½
    */
   pause(): void {
     if (!this.client || !this.sessionId) {
@@ -161,7 +161,7 @@ class SubtitleWebSocketService {
   }
 
   /**
-   * 8X ¬
+   * 8X ï¿½
    */
   resume(): void {
     if (!this.client || !this.sessionId) {
@@ -178,7 +178,7 @@ class SubtitleWebSocketService {
   }
 
   /**
-   * 8X …Ì
+   * 8X ï¿½ï¿½
    */
   end(): void {
     if (!this.client || !this.sessionId) {
@@ -195,7 +195,7 @@ class SubtitleWebSocketService {
   }
 
   /**
-   * WebSocket ð° …Ì
+   * WebSocket ï¿½ ï¿½ï¿½
    */
   disconnect(): void {
     if (this.client) {
@@ -208,7 +208,7 @@ class SubtitleWebSocketService {
   }
 
   /**
-   * ð° ÁÜ Ux
+   * ï¿½ ï¿½ï¿½ Ux
    */
   isConnected(): boolean {
     return this.client?.connected || false;
