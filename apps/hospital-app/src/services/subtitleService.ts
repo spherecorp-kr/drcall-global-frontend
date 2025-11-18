@@ -66,7 +66,7 @@ class SubtitleWebSocketService {
   connect(
     sessionId: string,
     onSubtitle: (subtitle: SubtitleRecord) => void,
-    onError?: (error: any) => void
+    onError?: (error: unknown) => void
   ): void {
     this.sessionId = sessionId;
     this.onSubtitleCallback = onSubtitle;
@@ -76,7 +76,7 @@ class SubtitleWebSocketService {
       webSocketFactory: () => {
         // translation-service WebSocket ���x�
         const translationServiceUrl = import.meta.env.VITE_TRANSLATION_SERVICE_URL || 'http://localhost:18088';
-        return new SockJS(`${translationServiceUrl}/ws/subtitle`) as any;
+        return new SockJS(`${translationServiceUrl}/ws/subtitle`) as WebSocket;
       },
       debug: (str: string) => {
         console.log('[Subtitle WebSocket]', str);

@@ -36,7 +36,7 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
 
-  const roomRef = useRef<any>(null);
+  const roomRef = useRef<unknown>(null);
   const sessionRef = useRef<VideoCallSessionResponse | null>(null);
 
   /**
@@ -124,56 +124,58 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
   /**
    * Room 이벤트 리스너 설정
    */
-  const setupRoomEventListeners = (room: any) => {
+  const setupRoomEventListeners = (room: {on: (event: string, handler: (data: unknown) => void) => void}) => {
     // 원격 참가자 스트림 시작
-    room.on('remoteParticipantStreamStarted', (participant: any) => {
-      console.log('[VideoCall] Remote participant joined:', participant.participantId);
+    room.on('remoteParticipantStreamStarted', (participant: unknown) => {
+      const p = participant as {participantId: string; user: {userId: string}; videoView?: {srcObject: MediaStream}; isAudioEnabled: boolean; isVideoEnabled: boolean; on: (event: string, handler: (level: number) => void) => void};
+      console.log('[VideoCall] Remote participant joined:', p.participantId);
 
       const newParticipant: Participant = {
-        participantId: participant.participantId,
-        userId: participant.user.userId,
-        userType: participant.user.userId.split('_')[0] as any, // DOCTOR_123 → DOCTOR
-        stream: participant.videoView?.srcObject || null,
-        isAudioEnabled: participant.isAudioEnabled,
-        isVideoEnabled: participant.isVideoEnabled,
+        participantId: p.participantId,
+        userId: p.user.userId,
+        userType: p.user.userId.split('_')[0] as 'DOCTOR' | 'PATIENT' | 'COORDINATOR',
+        stream: p.videoView?.srcObject || null,
+        isAudioEnabled: p.isAudioEnabled,
+        isVideoEnabled: p.isVideoEnabled,
         audioLevel: 0,
       };
 
       setParticipants((prev) => [...prev, newParticipant]);
 
       // 오디오 레벨 모니터링 (Active Speaker Detection)
-      participant.on('audioLevelChanged', (level: number) => {
+      p.on('audioLevelChanged', (level: number) => {
         setParticipants((prev) =>
-          prev.map((p) =>
-            p.participantId === participant.participantId
-              ? { ...p, audioLevel: level }
-              : p
+          prev.map((item) =>
+            item.participantId === p.participantId
+              ? { ...item, audioLevel: level }
+              : item
           )
         );
 
         // 일정 threshold 이상이면 Active Speaker로 설정
         if (level > 30) {
-          setActiveSpeakerId(participant.participantId);
+          setActiveSpeakerId(p.participantId);
         }
       });
     });
 
     // 원격 참가자 퇴장
-    room.on('remoteParticipantExited', (participant: any) => {
-      console.log('[VideoCall] Remote participant left:', participant.participantId);
+    room.on('remoteParticipantExited', (participant: unknown) => {
+      const p = participant as {participantId: string};
+      console.log('[VideoCall] Remote participant left:', p.participantId);
       setParticipants((prev) =>
-        prev.filter((p) => p.participantId !== participant.participantId)
+        prev.filter((item) => item.participantId !== p.participantId)
       );
 
-      if (activeSpeakerId === participant.participantId) {
+      if (activeSpeakerId === p.participantId) {
         setActiveSpeakerId(null);
       }
     });
 
     // Room 에러
-    room.on('error', (error: any) => {
+    room.on('error', (error: unknown) => {
       console.error('[VideoCall] Room error:', error);
-      onError?.(error);
+      onError?.(error as Error);
     });
   };
 
