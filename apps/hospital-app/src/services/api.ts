@@ -67,12 +67,10 @@ function getSubdomain(): string | null {
 // Request interceptor
 apiClient.interceptors.request.use(
 	(config) => {
-		// Only add Bearer token for temp authentication (during OTP flow)
-		// After registration, cookies handle authentication automatically
-		const tempJwt = localStorage.getItem('tempJwt');
-		if (tempJwt && !config.headers.Authorization) {
-			// Only set if not already set (some requests set it explicitly)
-			config.headers.Authorization = `Bearer ${tempJwt}`;
+		// JWT Bearer Token 인증 (hospital-app)
+		const accessToken = localStorage.getItem('accessToken');
+		if (accessToken && !config.headers.Authorization) {
+			config.headers.Authorization = `Bearer ${accessToken}`;
 		}
 
 		// Add X-Channel-Id header for multi-tenancy
@@ -118,10 +116,15 @@ apiClient.interceptors.response.use(
 
 		// Handle authentication errors
 		if (status === 401) {
-			// Clear temp JWT and redirect to login
-			localStorage.removeItem('tempJwt');
-			// Cookies are automatically cleared by backend or expired
-			window.location.href = '/auth/phone-verification';
+			// 로그인 API 호출 시에는 리다이렉트하지 않음 (Login.tsx에서 에러 처리)
+			const isLoginRequest = error.config?.url?.includes('/auth/login');
+			
+			if (!isLoginRequest) {
+				// Clear token and redirect to login
+				localStorage.removeItem('accessToken');
+				localStorage.removeItem('user');
+				window.location.href = '/login';
+			}
 			return Promise.reject(error);
 		}
 
@@ -159,3 +162,6 @@ apiClient.interceptors.response.use(
 		return Promise.reject(error);
 	},
 );
+
+
+export default apiClient;

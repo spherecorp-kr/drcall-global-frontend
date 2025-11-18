@@ -1,0 +1,70 @@
+{
+	"name": "admin-app",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc -b && vite build",
+		"lint": "eslint .",
+		"preview": "vite preview",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"prepare": "husky install"
+	},
+	"dependencies": {
+		"@drcall/shared-lib": "workspace:*",
+		"@tanstack/react-query": "^5.90.5",
+		"@tanstack/react-table": "^8.21.3",
+		"@types/d3-shape": "^3.1.7",
+		"axios": "^1.12.2",
+		"clsx": "^2.1.1",
+		"d3-shape": "^3.2.0",
+		"date-fns": "^4.1.0",
+		"framer-motion": "^12.23.24",
+		"i18next": "^25.6.0",
+		"react": "^19.1.1",
+		"react-datepicker": "^8.8.0",
+		"react-dom": "^19.1.1",
+		"react-hook-form": "^7.65.0",
+		"react-i18next": "^16.2.0",
+		"react-router-dom": "^7.9.4",
+		"react-zoom-pan-pinch": "^3.7.0",
+		"recharts": "^3.3.0",
+		"tailwind-merge": "^2.5.5",
+		"zod": "^4.1.12",
+		"zustand": "^5.0.8"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.36.0",
+		"@playwright/test": "^1.56.1",
+		"@tanstack/react-query-devtools": "^5.90.2",
+		"@types/node": "^24.6.0",
+		"@types/react": "^19.1.16",
+		"@types/react-datepicker": "^7.0.0",
+		"@types/react-dom": "^19.1.9",
+		"@vitejs/plugin-react": "^5.0.4",
+		"autoprefixer": "^10.4.21",
+		"eslint": "^9.36.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-react-hooks": "^5.2.0",
+		"eslint-plugin-react-refresh": "^0.4.22",
+		"globals": "^16.4.0",
+		"husky": "^9.1.6",
+		"lint-staged": "^15.2.10",
+		"postcss": "^8.4.49",
+		"prettier": "^3.3.3",
+		"tailwindcss": "^3.4.17",
+		"typescript": "~5.9.3",
+		"typescript-eslint": "^8.45.0",
+		"vite": "^7.1.7",
+		"vite-plugin-svgr": "^4.5.0"
+	},
+	"lint-staged": {
+		"*.{ts,tsx,js,jsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,css,md,html}": "prettier --write"
+	}
+}

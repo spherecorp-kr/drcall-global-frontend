@@ -1,18 +1,27 @@
+import DeliveryInfo from './DeliveryInfo';
+import PaymentInfo from './PaymentInfo';
 import TopButtons from './TopButtons';
 import {
 	Memo,
 	PatientHealthInfo,
 	PatientInfoTable,
+	ReadOnlyTreatmentInfo,
 	TreatmentHistory,
-	TreatmentInfo,
 } from '@/shared/components/ui/appointmentDetail';
+import type { Appointment } from '@/services/appointmentService';
 
-const Layout = () => {
+interface LayoutProps {
+	appointment: Appointment;
+}
+
+const Layout = ({ appointment }: LayoutProps) => {
 	return (
 		<>
-			<TopButtons />
+			<TopButtons appointment={appointment} />
 			<PatientInfoTable />
-			<TreatmentInfo />
+			<ReadOnlyTreatmentInfo />
+			<PaymentInfo />
+			<DeliveryInfo />
 			<div className='flex gap-4 items-center self-stretch'>
 				<Memo />
 				<PatientHealthInfo />

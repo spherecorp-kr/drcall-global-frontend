@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
@@ -8,6 +8,7 @@ import DirectPickupInfoSection from '@appointment/shared/payment/DirectPickupInf
 import PaymentAmountDisplay from '@appointment/shared/payment/PaymentAmountDisplay';
 import PaymentMethodSelector, { type PaymentMethod } from '@appointment/shared/payment/PaymentMethodSelector';
 import DeliveryAddressSelection from './DeliveryAddressSelection';
+import { shippingService } from '@services/shippingService';
 
 /**
  * 처방전이 있는 경우 결제 페이지
@@ -29,13 +30,21 @@ export default function PaymentWithPrescription() {
   const [selectedAddressId, setSelectedAddressId] = useState<string>('1');
   const [deliverySource, setDeliverySource] = useState<'my-info' | 'address-list'>('address-list');
 
+  // 배송비 관련 상태
+  const [shippingFee, setShippingFee] = useState<number>(0);
+  const [isLoadingShippingFee, setIsLoadingShippingFee] = useState<boolean>(false);
+  const [shippingFeeError, setShippingFeeError] = useState<string | null>(null);
+
   // TODO: API에서 결제 정보 가져오기
+  const baseAmount = 300 + 50 + 50; // consultationFee + prescriptionFee + serviceFee
+  const actualDeliveryFee = deliveryMethod && deliveryMethod !== 'direct' ? shippingFee : 0;
+
   const paymentData = {
-    totalAmount: deliveryMethod === 'direct' ? 400 : 450,
+    totalAmount: baseAmount + actualDeliveryFee,
     consultationFee: 300,
     prescriptionFee: 50,
     serviceFee: 50,
-    deliveryFee: deliveryMethod && deliveryMethod !== 'direct' ? 50 : 0
+    deliveryFee: actualDeliveryFee
   };
 
   // TODO: API에서 배송지 목록 가져오기
@@ -143,7 +152,64 @@ export default function PaymentWithPrescription() {
     // TODO: 선택된 배송지로 deliveryInfo 업데이트
   };
 
-  const isPaymentEnabled = deliveryMethod && paymentMethod;
+  /**
+   * 배송비 계산 함수
+   * 배송지가 선택되고 배송 방법이 선택되면 SHIPPOP API를 통해 실제 배송비를 조회합니다.
+   */
+  const calculateShippingFee = async () => {
+    // 직접 수령인 경우 배송비 0
+    if (deliveryMethod === 'direct' || !deliveryMethod) {
+      setShippingFee(0);
+      return;
+    }
+
+    setIsLoadingShippingFee(true);
+    setShippingFeeError(null);
+
+    try {
+      // 주소 파싱 (실제로는 더 정교한 파싱이 필요할 수 있음)
+      // 현재는 Mock 데이터로 태국 주소 형식 가정
+      const address = deliveryInfo.address;
+
+      // TODO: 실제 주소 파싱 로직 필요
+      // 예: "1902, Building 103, Raemian Apartment, 162 Baumoe-ro, Seocho-gu, Seoul, Republic of Korea"
+      // → toProvince: "Seoul", toDistrict: "Seocho-gu" 등으로 파싱
+
+      // 현재는 Mock으로 방콕 가정
+      const response = await shippingService.calculateFee({
+        fromProvince: 'กรุงเทพมหานคร', // Bangkok
+        fromDistrict: 'ห้วยขวาง', // Huai Khwang (병원 위치 예시)
+        toProvince: 'กรุงเทพมหานคร', // Bangkok
+        toDistrict: 'บางรัก', // Bang Rak (환자 주소 예시)
+        parcelWeight: 0.5,
+        parcelValue: 100
+      });
+
+      setShippingFee(response.shippingFee);
+
+      // Fallback 사용 시 사용자에게 알림
+      if (response.fallback) {
+        console.warn('Using fallback shipping fee');
+      }
+    } catch (error) {
+      console.error('Failed to calculate shipping fee:', error);
+      setShippingFeeError('배송비 조회에 실패했습니다. 기본 배송비가 적용됩니다.');
+      setShippingFee(50); // Fallback to default
+    } finally {
+      setIsLoadingShippingFee(false);
+    }
+  };
+
+  // 배송지 또는 배송 방법 변경 시 배송비 재계산
+  useEffect(() => {
+    if (deliveryMethod && deliveryMethod !== 'direct') {
+      calculateShippingFee();
+    } else {
+      setShippingFee(0);
+    }
+  }, [deliveryMethod, selectedAddressId, deliverySource]);
+
+  const isPaymentEnabled = deliveryMethod && paymentMethod && !isLoadingShippingFee;
 
   return (
     <>

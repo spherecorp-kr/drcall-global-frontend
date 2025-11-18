@@ -100,9 +100,30 @@ git push origin main
 | **STG** | patient.stg.drcall.global | hospital.stg.drcall.global |
 | **PROD** | patient.drcall.global | hospital.drcall.global |
 
+### 환경 변수 설정
+
+API URL은 각 앱의 `.env.{env}` 파일에 설정되어 있습니다:
+
+```bash
+# Patient App
+apps/patient-app/.env.dev    # VITE_API_BASE_URL=https://api.patients.dev.drcall.global
+apps/patient-app/.env.stg    # VITE_API_BASE_URL=https://api.patients.stg.drcall.global
+apps/patient-app/.env.prod   # VITE_API_BASE_URL=https://api.patients.drcall.global
+
+# Hospital App
+apps/hospital-app/.env.dev    # VITE_API_BASE_URL=https://api.hospitals.dev.drcall.global
+apps/hospital-app/.env.stg   # VITE_API_BASE_URL=https://api.hospitals.stg.drcall.global
+apps/hospital-app/.env.prod  # VITE_API_BASE_URL=https://api.hospitals.drcall.global
+
+# Admin App
+apps/admin-app/.env.dev       # VITE_API_BASE_URL=https://api.admin.dev.drcall.global
+apps/admin-app/.env.stg       # VITE_API_BASE_URL=https://api.admin.stg.drcall.global
+apps/admin-app/.env.prod      # VITE_API_BASE_URL=https://api.admin.drcall.global
+```
+
 ### GitHub Secrets 설정
 
-다음 시크릿이 설정되어 있어야 합니다:
+CloudFront Distribution ID만 GitHub Secrets에 설정하면 됩니다:
 
 ```bash
 # AWS 인증
@@ -110,14 +131,13 @@ AWS_ACCESS_KEY_ID
 AWS_SECRET_ACCESS_KEY
 
 # Patient App ({ENV} = DEV, STG, PROD)
-PATIENT_APP_{ENV}_API_URL
 PATIENT_APP_{ENV}_CLOUDFRONT_ID
-PATIENT_APP_{ENV}_S3_BUCKET
 
 # Hospital App
-HOSPITAL_APP_{ENV}_API_URL
 HOSPITAL_APP_{ENV}_CLOUDFRONT_ID
-HOSPITAL_APP_{ENV}_S3_BUCKET
+
+# Admin App
+ADMIN_APP_{ENV}_CLOUDFRONT_ID
 ```
 
 ### 배포 프로세스

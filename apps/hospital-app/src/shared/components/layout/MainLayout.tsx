@@ -1,11 +1,13 @@
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useState, useEffect } from 'react';
 import { useLayoutStore } from '@/shared/store/layoutStore';
+import { useChatStore } from '@/shared/store/chatStore';
 import { Outlet, useLocation } from 'react-router-dom';
 import { getMenuByRole } from '@/shared/config/menuConfig';
 import { SideNavigation, TopNavigation } from '@/shared/components/layout';
 import { ChatFloatingButton, ChatWindow } from '@/shared/components/ui';
 import { Dialog } from '@/shared/components/ui/dialog';
 import { useDialogProps } from '@/shared/store/dialogStore';
+import { getUnreadCount } from '@/services/chatService';
 
 interface MainLayoutProps {
 	logo: ReactNode;
@@ -33,11 +35,34 @@ const MainLayout = ({
 	const location = useLocation();
 
 	const { isSideNavExpanded, toggleSideNav } = useLayoutStore();
+	const { isChatOpen, unreadCount, toggleChat, setUnreadCount } = useChatStore();
 
 	const dialogProps = useDialogProps();
 
-	const [isChatOpen, setIsChatOpen] = useState(false);
 	const [buttonPosition, setButtonPosition] = useState({ x: 32, y: 32 });
+
+	// Get user ID from localStorage or use default for staff
+	const userId = `staff-${localStorage.getItem('userId') || '1'}`;
+
+	// Poll unread count every 30 seconds
+	useEffect(() => {
+		const fetchUnreadCount = async () => {
+			try {
+				const response = await getUnreadCount(userId);
+				setUnreadCount(response.unread_count);
+			} catch (error) {
+				console.error('Failed to fetch unread count:', error);
+			}
+		};
+
+		// Fetch immediately on mount
+		fetchUnreadCount();
+
+		// Then poll every 30 seconds
+		const interval = setInterval(fetchUnreadCount, 30000);
+
+		return () => clearInterval(interval);
+	}, [userId, setUnreadCount]);
 
 	// Get menu items based on user role and set active based on current route
 	const menuItems = getMenuByRole(userRole).map((item) => ({
@@ -79,16 +104,16 @@ const MainLayout = ({
 
 			{/* Chat Floating Button */}
 			<ChatFloatingButton
-				unreadCount={3}
+				unreadCount={unreadCount}
 				isOpen={isChatOpen}
-				onClick={() => setIsChatOpen(!isChatOpen)}
+				onClick={toggleChat}
 				onPositionChange={setButtonPosition}
 			/>
 
 			{/* Chat Window */}
 			<ChatWindow
 				isOpen={isChatOpen}
-				onClose={() => setIsChatOpen(false)}
+				onClose={() => useChatStore.getState().closeChat()}
 				buttonPosition={buttonPosition}
 			/>
 

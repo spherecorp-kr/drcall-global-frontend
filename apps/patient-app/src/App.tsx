@@ -14,6 +14,7 @@ const ReactQueryDevtoolsLazy = import.meta.env.DEV
     )
   : () => null
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import ChannelValidator from './components/auth/ChannelValidator'
 import { AuthProvider } from './contexts/AuthContext'
 import { ToastProvider } from './contexts/ToastContext'
 import PhoneVerification from './pages/auth/PhoneVerification'
@@ -28,6 +29,10 @@ import AppointmentEditComplete from './pages/appointments/edit/AppointmentEditCo
 import Payment from './pages/appointments/payment/Payment'
 import PaymentWithPrescription from './pages/appointments/payment/PaymentWithPrescription'
 import PaymentComplete from './pages/appointments/payment/PaymentComplete'
+import MedicationList from './pages/medications/list/MedicationList'
+import MedicationDetail from './pages/medications/detail/MedicationDetail'
+import DeliveryTracking from './pages/medications/delivery-tracking/DeliveryTracking'
+import LiveDeliveryTracking from './pages/medications/live-delivery-tracking/LiveDeliveryTracking'
 import ConsultationRoom from './pages/consultation/ConsultationRoom'
 import PhrDashboard from './pages/phr/PhrDashboard'
 import PhrDetail from './pages/phr/PhrDetail'
@@ -55,7 +60,8 @@ function App() {
       <ToastProvider>
         <AuthProvider>
           <BrowserRouter>
-            <ScrollToTop />
+            <ChannelValidator>
+              <ScrollToTop />
         <Routes>
         {/* Auth Routes - Public */}
         <Route path="/" element={<Navigate to="/auth/phone-verification" replace />} />
@@ -98,6 +104,20 @@ function App() {
         } />
         <Route path="/appointments/payment/complete" element={
           <ProtectedRoute><PaymentComplete /></ProtectedRoute>
+        } />
+
+        {/* Medication Routes - Protected */}
+        <Route path="/medications" element={
+          <ProtectedRoute><MedicationList /></ProtectedRoute>
+        } />
+        <Route path="/medications/:id" element={
+          <ProtectedRoute><MedicationDetail /></ProtectedRoute>
+        } />
+        <Route path="/medications/delivery-tracking" element={
+          <ProtectedRoute><DeliveryTracking /></ProtectedRoute>
+        } />
+        <Route path="/medications/live-delivery-tracking" element={
+          <ProtectedRoute><LiveDeliveryTracking /></ProtectedRoute>
         } />
 
         {/* Consultation Routes - Protected */}
@@ -149,6 +169,9 @@ function App() {
         <Route path="/chat" element={
           <ProtectedRoute><ChatList /></ProtectedRoute>
         } />
+        <Route path="/chat/:channelUrl" element={
+          <ProtectedRoute><ChatRoom /></ProtectedRoute>
+        } />
 
         {/* Error Routes */}
         <Route path="/error/403" element={<Error403 />} />
@@ -157,6 +180,7 @@ function App() {
         <Route path="/error/expired" element={<ErrorExpired />} />
         <Route path="*" element={<Error404 />} />
         </Routes>
+            </ChannelValidator>
       </BrowserRouter>
     </AuthProvider>
 

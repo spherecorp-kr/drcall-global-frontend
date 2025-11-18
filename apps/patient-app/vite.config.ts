@@ -22,11 +22,21 @@ export default defineConfig({
       '@mocks': path.resolve(__dirname, './src/mocks'),
     },
   },
-  server: {
-    host: true, // Allow external access
-    allowedHosts: [
-      'nitric-noncorporately-andrea.ngrok-free.dev',
-      '.ngrok-free.dev', // Allow all ngrok hosts
-    ],
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn'],
+      },
+      mangle: {
+        toplevel: true,
+        safari10: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
   },
 })

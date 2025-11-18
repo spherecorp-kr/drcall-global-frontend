@@ -1,17 +1,176 @@
+import { useCallback, useEffect, useState } from 'react';
 import chatIcon from '@/assets/icons/ic_chat.svg';
 import { Button } from '@/shared/components/ui';
-import { useEffect, useState } from 'react';
+import { useDialog } from '@/shared/hooks/useDialog';
+import { useDialogStore } from '@/shared/store/dialogStore';
+import { DoubleDialogBottomButton, SingleDialogBottomButton } from '@/shared/components/ui/dialog';
+import PrescriptionEdit from './PrescriptionEdit';
+import PrescriptionRegistration from './PrescriptionRegistration';
+import type { BottomButtonProps } from '@/shared/types/dialog';
+import ReAppointmentDialog from './ReAppointmentDialog';
+import type { Appointment } from '@/services/appointmentService';
+import paymentService from '@/services/paymentService';
 
-const TopButtons = () => {
-	const [editable, setEditable] = useState(true);
+interface Fee {
+	treatmentFee: number,
+	dispensingFee: number,
+	tip: number
+}
+
+interface TopButtonsProps {
+	appointment: Appointment;
+}
+
+const TopButtons = ({ appointment }: TopButtonsProps) => {
+	const { closeDialog, openDialog } = useDialog();
+	const { setDialog } = useDialogStore();
+
+	const [cost, setCost] = useState<string>('0');
 	const [payCheckAvailable, setPayCheckAvailable] = useState<boolean>(true);
-	const [reAppointmentAvailable, setReAppointmentAvailable] = useState<boolean>(true);
+	const [buttonDisabled, setButtonDisabled] = useState<boolean>(true);
+	const [isApproving, setIsApproving] = useState<boolean>(false);
+
+	const handleCostChange = useCallback(({ treatmentFee, dispensingFee, tip }: Fee) => {
+		const total = treatmentFee + dispensingFee + tip;
+		const formattedTotal = total.toLocaleString();
+		setCost(formattedTotal);
+		
+		// 다이얼로그 버튼 실시간 업데이트
+		setDialog({
+			dialogButtons: (
+				<SingleDialogBottomButton
+					disabled={buttonDisabled}
+					onClick={() => {}}
+					text={`${formattedTotal}THB 청구`}
+				/>
+			),
+			dialogId: 'prescriptionRegistrationDialog',
+			isOpen: true,
+		});
+	}, [buttonDisabled, setDialog]);
+
+	const handleDisabledChange = useCallback((disabled: boolean) => {
+		setButtonDisabled(disabled);
+		// 다이얼로그 버튼 실시간 업데이트
+		setDialog({
+			dialogButtons: (
+				<SingleDialogBottomButton
+					disabled={disabled}
+					onClick={() => {}}
+					text={`${cost}THB 청구`}
+				/>
+			),
+			dialogId: 'prescriptionRegistrationDialog',
+			isOpen: true,
+		});
+	}, [cost, setDialog]);
+
+	const openPrescriptionDialog = useCallback(() => {
+		// 다이얼로그 열 때 초기 상태로 리셋
+		setButtonDisabled(true);
+		openDialog({
+			dialogButtons: (
+				<SingleDialogBottomButton
+					disabled={true}
+					onClick={() => {}}
+					text={`${cost}THB 청구`}
+				/>
+			),
+			dialogClass: 'w-[36.25rem]',
+			dialogContents: (
+				<PrescriptionRegistration
+					handleChange={handleCostChange}
+					onDisabledChange={handleDisabledChange}
+				/>
+			),
+			dialogId: 'prescriptionRegistrationDialog',
+			dialogTitle: '처방전·진료비 등록',
+			hasCloseButton: true
+		});
+	}, [cost, handleCostChange, handleDisabledChange, openDialog]);
+
+	const openPrescriptionEditDialog = useCallback(() => {
+		openDialog({
+			dialogButtons: (
+				<SingleDialogBottomButton
+					onClick={() => {}}
+					text='완료'
+				/>
+			),
+			dialogClass: 'w-[36.25rem]',
+			dialogContents: (
+				<PrescriptionEdit
+				/>
+			),
+			dialogId: 'prescriptionEditDialog',
+			dialogTitle: '처방전 수정',
+			hasCloseButton: true
+		});
+	}, [openDialog]);
+
+	const openReAppointmentDialog = useCallback(() => {
+		const actions: BottomButtonProps[] = [
+			{ onClick: () => closeDialog('reappointmentDialog'), text: '취소' },
+			{ onClick: () => {}, text: '완료' },
+		];
+
+		openDialog({
+			dialogButtons: <DoubleDialogBottomButton actions={actions} />,
+			dialogClass: 'w-[36.25rem]',
+			dialogContents: <ReAppointmentDialog />,
+			dialogId: 'reappointmentDialog',
+			dialogTitle: '예약',
+			hasCloseButton: true
+		});
+	}, [closeDialog, openDialog]);
+
+	/**
+	 * 입금 완료 버튼 클릭 핸들러
+	 * 병원이 환자 결제를 확인하고 승인 처리
+	 * 승인 후 배송 시작됨 (처방전이 있는 경우)
+	 */
+	const handleApprovePayment = useCallback(async () => {
+		try {
+			setIsApproving(true);
+
+			// 1. appointmentId로 payment 조회
+			const payment = await paymentService.getPaymentByAppointment(appointment.id);
+
+			if (!payment) {
+				alert('결제 정보를 찾을 수 없습니다.');
+				return;
+			}
+
+			if (payment.status !== 'SUCCESS') {
+				alert('결제가 완료되지 않았습니다. 환자 결제 완료 후 승인 가능합니다.');
+				return;
+			}
+
+			if (payment.approvedAt) {
+				alert('이미 승인된 결제입니다.');
+				return;
+			}
+
+			// 2. 결제 승인
+			await paymentService.approvePayment(payment.id);
+
+			// 3. 성공 메시지
+			alert('입금 확인이 완료되었습니다.');
+
+			// 4. 상태 업데이트
+			setPayCheckAvailable(false);
+
+		} catch (error) {
+			console.error('[TopButtons] Failed to approve payment:', error);
+			alert('입금 확인 처리에 실패했습니다. 다시 시도해주세요.');
+		} finally {
+			setIsApproving(false);
+		}
+	}, [appointment.id]);
 
 	// TODO FIXME 아래 useEffect 삭제
 	useEffect(() => {
-		setEditable(true);
 		setPayCheckAvailable(true);
-		setReAppointmentAvailable(false);
 	}, []);
 
 	return (
@@ -23,9 +182,6 @@ const TopButtons = () => {
 			>Chat</Button>
 			<div className="flex gap-2.5 items-center">
 				<Button
-					variant='outline'
-					size='default'
-					disabled={!editable}
 					icon={
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -40,11 +196,34 @@ const TopButtons = () => {
 							/>
 						</svg>
 					}
-				>처방전&middot;비용 수정</Button>
+					onClick={openPrescriptionDialog}
+					size='default'
+					variant='outline'
+				>처방전&middot;진료비 등록</Button>
+				<Button
+					icon={
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							width="20"
+							height="20"
+							viewBox="0 0 20 20"
+							fill="none"
+						>
+							<path
+								d="M1.14062 16.0291V6.33473C1.14088 4.6781 2.48393 3.33473 4.14062 3.33473H8.9873C9.53943 3.33473 9.98705 3.78267 9.9873 4.33473C9.9873 4.88702 9.53959 5.33473 8.9873 5.33473H4.14062C3.5885 5.33473 3.14088 5.78267 3.14062 6.33473V16.0291C3.14062 16.5814 3.58834 17.0291 4.14062 17.0291H13.2871C13.8393 17.029 14.2871 16.5813 14.2871 16.0291V10.6345H16.2871V16.0291C16.2871 17.6859 14.9439 19.029 13.2871 19.0291H4.14062C2.48377 19.0291 1.14062 17.6859 1.14062 16.0291ZM14.1172 2.1443C14.8982 1.36341 16.1643 1.36331 16.9453 2.1443L17.8545 3.05348C18.6355 3.83453 18.6355 5.10154 17.8545 5.88259L9.86719 13.8699C9.58805 14.1489 9.23271 14.3393 8.8457 14.4168L7.70801 14.6443C6.30876 14.9238 5.07564 13.6901 5.35547 12.2908L5.58203 11.1531C5.6595 10.766 5.85075 10.4107 6.12988 10.1316L14.1172 2.1443ZM7.54395 11.5457L7.31641 12.6834L8.45312 12.4558L16.4404 4.46852L15.5312 3.55837L7.54395 11.5457Z"
+								fill="currentColor"
+							/>
+						</svg>
+					}
+					onClick={openPrescriptionEditDialog}
+					size='default'
+					variant='outline'
+				>처방전 수정</Button>
 				<Button
 					variant='outline'
 					size='default'
-					disabled={!payCheckAvailable}
+					disabled={!payCheckAvailable || isApproving}
+					onClick={handleApprovePayment}
 					icon={
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -59,11 +238,9 @@ const TopButtons = () => {
 							/>
 						</svg>
 					}
-				>입금 확인</Button>
+				>{isApproving ? '처리 중...' : '입금 완료'}</Button>
 				<Button
-					variant='outline'
-					size='default'
-					disabled={!reAppointmentAvailable}
+					onClick={openReAppointmentDialog}
 					icon={
 						<svg
 							fill="none"
@@ -81,6 +258,8 @@ const TopButtons = () => {
 							/>
 						</svg>
 					}
+					size='default'
+					variant='outline'
 				>재예약</Button>
 			</div>
 		</div>

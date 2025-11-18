@@ -1,101 +1,66 @@
 import { apiClient } from './api';
+import { AlcoholConsumption, SmokingStatus, mapAlcoholToEnum, mapSmokingToEnum } from '@/types/appointment';
 
 /**
- * Appointment types (matches backend AppointmentResponse)
+ * Appointment types
  */
 export interface Appointment {
-  // IDs
-  id: number;
-  externalId: string;
-  patientId: number;
-  hospitalId: number;
-  doctorId: number;
-
-  // Nested objects (병원/의사 정보)
-  hospital?: {
-    id: number;
-    nameEn: string;
-    nameLocal: string;
-    phone: string;
-    logoUrl: string;
-  };
-  doctor?: {
-    id: number;
+  id: string;
+  appointmentNumber: string;
+  appointmentType: 'standard' | 'quick';
+  status: 'pending_confirmation' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+  hospital: {
     name: string;
     nameEn: string;
-    specialty: string;
-    profileImageUrl?: string;
+    phone: string;
   };
-
-  // Type & Status
-  appointmentType: 'STANDARD' | 'QUICK';
-  consultationType: 'VIDEO_CALL' | 'CHAT' | 'PHONE';
-  status: 'PENDING' | 'CONFIRMED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'NO_SHOW';
-
-  // Schedule
-  scheduledAt: string | null;
-  startedAt: string | null;
-  endedAt: string | null;
-  durationMinutes: number | null;
-
-  // Cancellation
-  cancelledAt: string | null;
-  cancelledBy: string | null;
-  cancellationReason: string | null;
-
-  // Symptoms & Notes
+  dateTime: string;
+  doctor: {
+    name: string;
+    nameEn: string;
+    photo: string;
+    specialty: string;
+  };
   symptoms: string;
   symptomImages: string[];
-  patientNote: string | null;
-  doctorNote: string | null;
-
-  // Fees
-  consultationFee: number | null;
-  medicationFee: number | null;
-  totalFee: number | null;
-  currency: string;
-
-  // Payment
-  paymentStatus: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'REFUNDED' | null;
-  paymentId: number | null;
-
-  // Prescription
-  hasPrescription: boolean | null;
-  prescriptionUploadedAt: string | null;
-
-  // Audit
-  createdAt: string;
-  updatedAt: string;
+  paymentStatus?: 'pending_payment' | 'payment_complete';
 }
 
 export interface CreateAppointmentRequest {
-  patientId: number;
-  hospitalId: number;
-  doctorId: number;
-  appointmentType: 'STANDARD' | 'QUICK';
-  consultationType?: 'VIDEO_CALL' | 'CHAT' | 'PHONE';
-  scheduledAt?: string; // ISO 8601 datetime string for STANDARD appointments
+  // patientId는 patient-service에서 세션에서 자동으로 추가됨 (보안)
+  appointmentType: 'standard' | 'quick';
+  hospitalId?: string;
+  doctorId?: string;
+  dateTime?: string;
   symptoms: string;
   symptomImages?: string[];
-  patientNote?: string;
-  // Health Questionnaire (flat structure matching backend)
-  height: string;
-  weight: string;
-  bloodType: string;
-  alcohol: string;
-  smoking: string;
-  medications: string;
-  personalHistory: string;
-  familyHistory: string;
-  currency?: string; // Default: "THB"
+  questionnaireAnswers: {
+    height: string;
+    weight: string;
+    bloodType?: 'A' | 'B' | 'O' | 'AB';
+    alcohol?: string;
+    smoking?: string;
+    medications: string;
+    personalHistory: string;
+    familyHistory: string;
+  };
 }
 
 export interface UpdateAppointmentRequest {
-  scheduledAt?: string; // ISO 8601 datetime string
+  doctorId?: string;
+  dateTime?: string;
   symptoms?: string;
   symptomImages?: string[];
-  patientNote?: string;
-  doctorNote?: string;
+  questionnaireAnswers?: {
+    height?: string;
+    weight?: string;
+    bloodType?: string;
+    alcohol?: string;
+    smoking?: string;
+    medications?: string;
+    personalHistory?: string;
+    familyHistory?: string;
+  };
 }
 
 export interface AppointmentListResponse {
@@ -105,49 +70,20 @@ export interface AppointmentListResponse {
 }
 
 /**
- * Paginated Appointment Response (matches backend PageResponse)
- */
-export interface PaginatedAppointmentResponse {
-  content: Appointment[];
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  first: boolean;
-  last: boolean;
-  empty: boolean;
-}
-
-/**
- * Appointment Query Parameters
- */
-export interface AppointmentQueryParams {
-  page?: number;
-  size?: number;
-  sort?: string;
-  status?: string;
-}
-
-/**
  * Appointment API Service
  */
 export const appointmentService = {
   /**
-   * Get appointments with pagination (RESTful)
-   * Backend supports: page, size, sort, status
-   *
-   * @param params - Query parameters for pagination and filtering
-   * @returns PaginatedAppointmentResponse with metadata
-   *
-   * Examples:
-   * - getAppointments({ page: 0, size: 20 })
-   * - getAppointments({ page: 0, size: 20, status: 'CONFIRMED' })
-   * - getAppointments({ page: 1, size: 10, sort: 'scheduledAt,asc' })
+   * Get all appointments with filters
    */
   getAppointments: async (
-    params?: AppointmentQueryParams
-  ): Promise<PaginatedAppointmentResponse> => {
-    const response = await apiClient.get<PaginatedAppointmentResponse>('/api/v1/appointments', { params });
+      status?: string,
+      page = 1,
+      limit = 20
+  ): Promise<AppointmentListResponse> => {
+    const response = await apiClient.get<AppointmentListResponse>('/api/v1/appointments', {
+      params: { status, page, limit },
+    });
     return response.data;
   },
 
@@ -161,15 +97,54 @@ export const appointmentService = {
 
   /**
    * Create new appointment
+   * 프론트엔드 표시값("0", "1~2" 등)을 ENUM으로 변환하여 전송
+   * 백엔드 DTO 구조에 맞게 flat하게 변환
    */
   createAppointment: async (data: CreateAppointmentRequest): Promise<Appointment> => {
-    const response = await apiClient.post<Appointment>('/api/v1/appointments', data);
+    // questionnaireAnswers의 alcohol, smoking을 ENUM으로 변환
+    const alcoholEnum = typeof data.questionnaireAnswers.alcohol === 'string' &&
+    ['0', '1~2', '3+'].includes(data.questionnaireAnswers.alcohol)
+        ? mapAlcoholToEnum(data.questionnaireAnswers.alcohol)!
+        : data.questionnaireAnswers.alcohol;
+
+    const smokingEnum = typeof data.questionnaireAnswers.smoking === 'string' &&
+    ['0', '1~5', '6+'].includes(data.questionnaireAnswers.smoking)
+        ? mapSmokingToEnum(data.questionnaireAnswers.smoking)!
+        : data.questionnaireAnswers.smoking;
+
+    // 백엔드 DTO 구조에 맞게 변환 (flat structure)
+    // QUICK 타입: doctorId와 scheduledAt 제외 (병원이 나중에 할당)
+    // STANDARD 타입: doctorId와 scheduledAt 필수
+    // patientId는 patient-service에서 세션에서 자동으로 추가됨 (보안)
+    const requestData: any = {
+      hospitalId: data.hospitalId ? Number(data.hospitalId) : undefined,
+      appointmentType: data.appointmentType.toUpperCase(), // 'standard' -> 'STANDARD', 'quick' -> 'QUICK'
+      symptoms: data.symptoms,
+      symptomImages: data.symptomImages,
+      // Health questionnaire (flat structure)
+      height: data.questionnaireAnswers.height,
+      weight: data.questionnaireAnswers.weight,
+      bloodType: data.questionnaireAnswers.bloodType,
+      alcoholConsumption: alcoholEnum,
+      smokingStatus: smokingEnum,
+      medications: data.questionnaireAnswers.medications,
+      personalHistory: data.questionnaireAnswers.personalHistory,
+      familyHistory: data.questionnaireAnswers.familyHistory,
+    };
+
+    // STANDARD 타입일 때만 doctorId와 scheduledAt 추가
+    if (data.appointmentType === 'standard') {
+      requestData.doctorId = data.doctorId ? Number(data.doctorId) : undefined;
+      requestData.scheduledAt = data.dateTime; // ISO 8601 string, 백엔드에서 Instant로 변환
+    }
+    // QUICK 타입: doctorId와 scheduledAt은 보내지 않음 (병원이 나중에 할당)
+
+    const response = await apiClient.post<Appointment>('/api/v1/appointments', requestData);
     return response.data;
   },
 
   /**
    * Update appointment by ID
-   * TODO: Backend endpoint not available yet in Patient Service
    */
   updateAppointment: async (id: string, data: UpdateAppointmentRequest): Promise<Appointment> => {
     const response = await apiClient.put<Appointment>(`/api/v1/appointments/${id}`, data);
@@ -178,13 +153,11 @@ export const appointmentService = {
 
   /**
    * Cancel appointment by ID
-   * Fixed: Use POST /cancel endpoint instead of DELETE
    */
-  cancelAppointment: async (id: string, reason?: string): Promise<Appointment> => {
-    const response = await apiClient.post<Appointment>(`/api/v1/appointments/${id}/cancel`, {
-      reason,
+  cancelAppointment: async (id: string, reason?: string): Promise<void> => {
+    await apiClient.delete(`/api/v1/appointments/${id}`, {
+      data: { reason },
     });
-    return response.data;
   },
 };
 

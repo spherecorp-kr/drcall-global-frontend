@@ -3,12 +3,13 @@ name: 🚀 Deploy Patient App
 on:
   push:
     branches:
-      - main
       - staging
       - develop
     paths:
       - 'apps/patient-app/**'
       - 'packages/**'
+      - '.github/workflows/deploy-patient-app.yml'
+      - '.github/workflows/_reusable-app-deploy.yml'
   workflow_dispatch:
     inputs:
       environment:
@@ -19,6 +20,10 @@ on:
           - dev
           - staging
           - prod
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
   # Determine environment from branch or input
@@ -53,11 +58,6 @@ jobs:
       app-name: patient-app
       build-command: build:patient
       environment: dev
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      API_URL: ${{ secrets.PATIENT_APP_DEV_API_URL }}
-      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_DEV_CLOUDFRONT_ID }}
 
   deploy-staging:
     name: 🚀 Deploy to STAGING
@@ -68,11 +68,6 @@ jobs:
       app-name: patient-app
       build-command: build:patient
       environment: staging
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      API_URL: ${{ secrets.PATIENT_APP_STAGING_API_URL }}
-      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_STAGING_CLOUDFRONT_ID }}
 
   deploy-prod:
     name: 🚀 Deploy to PRODUCTION
@@ -83,8 +78,3 @@ jobs:
       app-name: patient-app
       build-command: build:patient
       environment: prod
-    secrets:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      API_URL: ${{ secrets.PATIENT_APP_PROD_API_URL }}
-      CLOUDFRONT_ID: ${{ secrets.PATIENT_APP_PROD_CLOUDFRONT_ID }}

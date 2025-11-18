@@ -1,16 +1,18 @@
 import type { PhrType } from '@/shared/types/phr';
 import { type JSX, useEffect, useState } from 'react';
 import {
-	sampleWeeklyPressureData,
-	sampleWeeklySugarData,
-	sampleWeeklyTempData,
-	sampleWeeklyWeightData,
 	WeeklyPressure,
 	WeeklySugar,
 	WeeklyTemp,
 	WeeklyWeight,
 } from '@/shared/components/ui/patient/phr/week';
 import { usePhrChartStore } from '@/shared/store/phrChartStore';
+import {
+	mockWeeklyPressureData,
+	mockWeeklySugarData,
+	mockWeeklyTempData,
+	mockWeeklyWeightData,
+} from '@/mocks/weeklyPhrData';
 
 interface Props {
 	patientkey: number;
@@ -40,16 +42,16 @@ const Weekly = ({ patientkey, phrType }: Props) => {
 			// TODO 월요일을 시작 날짜, 일요일을 끝 날짜로 지정. API에 맞춰 날짜 포맷. API 조회 후 setContent
 			switch (phrType) {
 				case 'weight':
-					setContent(<WeeklyWeight {...sampleWeeklyWeightData} />);
+					setContent(<WeeklyWeight {...mockWeeklyWeightData} />);
 					break;
 				case 'pressure':
-					setContent(<WeeklyPressure {...sampleWeeklyPressureData} />);
+					setContent(<WeeklyPressure {...mockWeeklyPressureData} />);
 					break;
 				case 'sugar':
-					setContent(<WeeklySugar {...sampleWeeklySugarData} />);
+					setContent(<WeeklySugar {...mockWeeklySugarData} />);
 					break;
 				case 'temp':
-					setContent(<WeeklyTemp {...sampleWeeklyTempData} />);
+					setContent(<WeeklyTemp {...mockWeeklyTempData} />);
 					break;
 			}
 		}, 100);

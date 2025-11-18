@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { COLORS, SPACING, FONT_SIZE, FONT_WEIGHT } from '@/constants';
+import { useTranslation } from 'react-i18next';
 
 interface BottomSheetModalProps {
   isOpen: boolean;
@@ -18,6 +19,8 @@ export default function BottomSheetModal({
   confirmText = '확인',
   onConfirm
 }: BottomSheetModalProps) {
+  const { t } = useTranslation();
+
   if (!isOpen) return null;
 
   const handleConfirm = () => {
@@ -143,7 +146,7 @@ export default function BottomSheetModal({
               flexDirection: 'column'
             }}
           >
-            {confirmText}
+            {confirmText === '확인' ? t('common.confirm') : confirmText}
           </button>
         </div>
       </div>
