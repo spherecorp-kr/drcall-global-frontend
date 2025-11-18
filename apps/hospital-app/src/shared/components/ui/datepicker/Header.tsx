@@ -3,13 +3,16 @@ import type { YearMonth } from '@/shared/types/common';
 import { doubleDigit } from '@/shared/utils/commonScripts.ts';
 import { Button } from '@/shared/components/ui';
 
-type DatePickerHeaderProps = ReactDatePickerCustomHeaderProps & YearMonth;
+type DatePickerHeaderProps = ReactDatePickerCustomHeaderProps & YearMonth & {
+	onDateClick?: () => void;
+};
 
 const Header = ({
 	decreaseMonth,
 	increaseMonth,
 	month,
 	nextMonthButtonDisabled,
+	onDateClick,
 	prevMonthButtonDisabled,
 	year,
 }: DatePickerHeaderProps) => {
@@ -30,7 +33,12 @@ const Header = ({
 					/>
 				</svg>
 			</Button>
-			<p className='font-semibold leading-[1.375rem] text-[1.375rem] text-text-100'>{doubleDigit(month)}/{year}</p>
+			<p 
+				className='cursor-pointer font-semibold leading-[1.375rem] text-[1.375rem] text-text-100' 
+				onClick={onDateClick}
+			>
+				{doubleDigit(month)}/{year}
+			</p>
 			<Button
 				className='!bg-white h-5 px-0 w-5'
 				disabled={nextMonthButtonDisabled}

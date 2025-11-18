@@ -1,0 +1,347 @@
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import MainLayout from '@layouts/MainLayout';
+import PageContainer from '@ui/layout/PageContainer';
+import PageSection from '@ui/layout/PageSection';
+import { loadGoogle } from '@/lib/googleMapsLoader';
+
+/**
+ * 실시간 배송 조회 페이지 (퀵 배송일 때 '실시간 배송 조회' 버튼 클릭 시 이동)
+ */
+export default function LiveDeliveryTracking() {
+  const navigate = useNavigate();
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const serverMarkersRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const userMarkerRef = useRef<google.maps.marker.AdvancedMarkerElement | null>(null);
+  const [geoMessage, setGeoMessage] = useState<string | null>(null);
+  const overlayCardRef = useRef<HTMLDivElement | null>(null);
+
+  const { t } = useTranslation();
+  const [etaMinutes, setEtaMinutes] = useState<number>(15);
+  const [etaTimeText, setEtaTimeText] = useState<string>('');
+
+  const HEADER_HEIGHT_REM = 3.5; // 3.5rem = 56px
+  const NAV_BAR_HEIGHT_PX = 56; // 네비게이션바 없으면 0으로 유지
+
+  const handleBack = () => navigate(-1);
+  const handleClose = () => {
+    navigate(-1);
+  };
+
+  useEffect(() => {
+    // ETA 텍스트 초기화(모의: 현재로부터 etaMinutes 분 후)
+    const minutes = etaMinutes;
+    const arrival = new Date(Date.now() + minutes * 60_000);
+    const hh = String(arrival.getHours()).padStart(2, '0');
+    const mm = String(arrival.getMinutes()).padStart(2, '0');
+    setEtaTimeText(`${hh}:${mm}`);
+  }, [etaMinutes]);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      try {
+        const g = await loadGoogle();
+        const { Map: GoogleMap } = await g.maps.importLibrary('maps') as google.maps.MapsLibrary;
+        if (!isMounted || !mapContainerRef.current) return;
+        
+        mapInstanceRef.current = new GoogleMap(mapContainerRef.current, {
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+          zoomControl: true,
+          gestureHandling: 'greedy',
+          mapId: import.meta.env.VITE_GOOGLE_MAPS_ID || 'DEMO_MAP_ID',
+        });
+
+        // Advanced Marker 라이브러리 보장
+        await g.maps.importLibrary('marker');
+
+        // Mock 서버 좌표 2쌍 (예: 방콕 중심 인근) - 차량 타입 기반
+        type VehicleType = 'motorcycle' | 'truck';
+        const getIconUrl = (type: VehicleType) =>
+          type === 'motorcycle'
+            ? '/assets/icons/ic_delivery_motorcycle.svg'
+            : '/assets/icons/ic_delivery_truck.svg';
+        const mockLocations: Array<{ lat: number; lng: number; type: VehicleType }> = [
+          { lat: 13.7563, lng: 100.5018, type: 'motorcycle' },
+          { lat: 13.7463, lng: 100.5118, type: 'truck' },
+        ];
+
+        // 커스텀 마커 콘텐츠(HTML Element) 생성
+        const createContent = (url: string) => {
+          const img = document.createElement('img');
+          img.src = url;
+          img.alt = 'marker';
+          img.style.width = '36px';
+          img.style.height = '36px';
+          img.style.objectFit = 'contain';
+          img.style.touchAction = 'none';       // 터치 제스처(스크롤/줌) 기본 동작 차단
+          img.draggable = false;                // 드래그 이미지 고스트 방지
+          return img;
+        };
+
+        // 마커 생성
+        const created: google.maps.marker.AdvancedMarkerElement[] = mockLocations.map((loc) => (
+          new g.maps.marker.AdvancedMarkerElement({
+            map: mapInstanceRef.current!,
+            position: { lat: loc.lat, lng: loc.lng },
+            content: createContent(getIconUrl(loc.type)),
+          })
+        ));
+        serverMarkersRef.current = created;
+
+        // 초기 bounds: 서버 마커 기준
+        const bounds = new g.maps.LatLngBounds();
+        created.forEach((m) => {
+          const pos = m.position;
+          if (pos instanceof g.maps.LatLng) {
+            bounds.extend(pos);
+          } else if (pos) {
+            bounds.extend(new g.maps.LatLng(pos as google.maps.LatLngLiteral));
+          }
+        });
+        if (!bounds.isEmpty()) {
+          const overlayHeight = overlayCardRef.current?.offsetHeight ?? 0;
+          const bottomPadding = Math.max(overlayHeight + 16, 12);
+          mapInstanceRef.current!.fitBounds(bounds, {
+            top: 12,
+            left: 12,
+            right: 12,
+            bottom: bottomPadding,
+          });
+        }
+
+        // 사용자 배송지 위치 (서버 응답 대체 Mock)로 주소 마커 표시
+        // 예시: 방콕 시내 좌표 (실서버에서는 API 응답 값을 사용)
+        const deliveryLat = 13.7568;
+        const deliveryLng = 100.5022;
+        const deliveryHere = new g.maps.LatLng(deliveryLat, deliveryLng);
+        userMarkerRef.current = new g.maps.marker.AdvancedMarkerElement({
+          map: mapInstanceRef.current,
+          position: deliveryHere,
+          content: createContent('/assets/icons/ic_delivery_address.svg'),
+        });
+        // 배송지 근처로 서버 마커 재배치 (실제 배송 상황처럼 근접 좌표로 지정)
+        // 1도(lat) ≈ 111,320m, lng는 위도에 따라 보정
+        const degLatPerM = 1 / 111320;
+        const degLngPerM = 1 / (111320 * Math.cos((deliveryLat * Math.PI) / 180));
+        const motorcyclePos = {
+          lat: deliveryLat + 120 * degLatPerM, // 북쪽 120m
+          lng: deliveryLng + 120 * degLngPerM, // 동쪽 120m
+        };
+        const truckPos = {
+          lat: deliveryLat - 80 * degLatPerM, // 남쪽 80m
+          lng: deliveryLng + 180 * degLngPerM, // 동쪽 180m
+        };
+        // 기존 서버 마커 제거
+        serverMarkersRef.current.forEach((m) => {
+          (m as any).map = null;
+        });
+        // 근접 좌표로 서버 마커 재생성
+        serverMarkersRef.current = [
+          new g.maps.marker.AdvancedMarkerElement({
+            map: mapInstanceRef.current,
+            position: motorcyclePos,
+            content: createContent(getIconUrl('motorcycle')),
+          }),
+          new g.maps.marker.AdvancedMarkerElement({
+            map: mapInstanceRef.current,
+            position: truckPos,
+            content: createContent(getIconUrl('truck')),
+          }),
+        ];
+        // 서버 마커 + 배송지 위치로 bounds 업데이트
+        const allBounds = new g.maps.LatLngBounds();
+        serverMarkersRef.current.forEach((m) => {
+          const pos2 = m.position;
+          if (pos2 instanceof g.maps.LatLng) {
+            allBounds.extend(pos2);
+          } else if (pos2) {
+            allBounds.extend(new g.maps.LatLng(pos2 as google.maps.LatLngLiteral));
+          }
+        });
+        allBounds.extend(deliveryHere);
+        {
+          const overlayHeight = overlayCardRef.current?.offsetHeight ?? 0;
+          const bottomPadding = Math.max(overlayHeight + 16, 12);
+          mapInstanceRef.current.fitBounds(allBounds, {
+            top: 12,
+            left: 12,
+            right: 12,
+            bottom: bottomPadding,
+          });
+        }
+        setGeoMessage(null);
+      } catch (e) {
+        setLoadError(
+          '지도를 불러올 수 없습니다. VITE_GOOGLE_MAPS_API_KEY 환경변수를 확인해주세요.'
+        );
+        console.error(e);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  return (
+    <MainLayout 
+      title={t('medication.liveTracking.pageTitle')} 
+      onBack={handleBack} 
+      onClose={handleClose}
+    >
+      <PageContainer
+        style={{
+          paddingBottom: 0,
+          minHeight: 'auto',
+          overflow: 'hidden',
+        }}
+      >
+        <PageSection padding={false}>
+          <div
+            style={{
+              position: 'relative',
+              width: '100%',
+              height: `calc(100dvh - ${HEADER_HEIGHT_REM}rem - ${NAV_BAR_HEIGHT_PX}px)`, // 브라우저 UI 제외한 실측 뷰포트 기준
+              backgroundColor: '#F0F0F0',
+              overflow: 'hidden',
+              touchAction: 'none',
+              overscrollBehavior: 'contain'
+            }}
+          >
+            <div
+              ref={mapContainerRef}
+              style={{
+                position: 'absolute',
+                inset: 0,
+              }}
+            />
+            {loadError ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#B00020',
+                  background: 'rgba(255,255,255,0.9)',
+                  fontSize: '0.875rem',
+                  textAlign: 'center',
+                  padding: '1rem',
+                }}
+              >
+                {loadError}
+              </div>
+            ) : null}
+            {!loadError && geoMessage ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  bottom: '1rem',
+                  background: '#FFFFFF',
+                  color: '#1F1F1F',
+                  border: '1px solid #E0E0E0',
+                  borderRadius: '8px',
+                  padding: '0.5rem 0.75rem',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.12)',
+                  fontSize: '0.75rem',
+                }}
+              >
+                {geoMessage}
+              </div>
+            ) : null}
+            {/* 하단 오버레이 (Figma 요건 반영, 인라인 스타일만 사용) */}
+            <div
+              style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 2,
+                pointerEvents: 'none',
+                // 상단 그라데이션로 지도와 자연스럽게 겹침
+                background:
+                  'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.04) 24%, rgba(255,255,255,0.92) 56%, #FFFFFF 100%)',
+                // 화면 하단에 겹치지 않게 내부 여백으로 처리
+                padding: '0 1.25rem calc(env(safe-area-inset-bottom) + 1.25rem) 1.25rem',
+                boxSizing: 'border-box',
+              }}
+            >
+              <div
+                style={{
+                  margin: '0 auto',
+                  maxWidth: '640px',
+                  background: '#FFFFFF',
+                  border: '1px solid #E6E6E6',
+                  borderRadius: '12px',
+                  boxShadow: '0 6px 18px rgba(0,0,0,0.12)',
+                  padding: '1rem 1.25rem',
+                  pointerEvents: 'auto',
+                }}
+                ref={overlayCardRef}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '0.375rem',
+                  }}
+                >
+                  <div
+                    style={{
+                      color: '#1F1F1F',
+                      fontSize: '1.5rem',
+                      fontWeight: '600',
+                      lineHeight: 1.1,
+                    }}
+                  >
+                    {t('medication.liveTracking.etaMinutes', { minutes: etaMinutes })}
+                  </div>
+                  <div
+                    style={{
+                      color: '#1F1F1F',
+                      fontSize: '1rem',
+                      fontWeight: '400',
+                    }}
+                  >
+                    {t('medication.liveTracking.etaArrivalAt', { time: etaTimeText })}
+                  </div>
+                </div>
+                <div style={{ marginTop: '0.75rem' }}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // TODO: 전화번호 데이터 연동 시 tel: 링크 적용
+                      console.log('Call button clicked');
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '3rem',
+                      background: '#00A0D2',
+                      borderRadius: '1.5rem',
+                      border: 'none',
+                      color: 'white',
+                      fontSize: '1rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {t('medication.liveTracking.actions.callNow')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </PageSection>
+      </PageContainer>
+    </MainLayout>
+  );
+}

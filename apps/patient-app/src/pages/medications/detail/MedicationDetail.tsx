@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
@@ -10,6 +11,7 @@ import ActionButtons from './components/ActionButtons';
 import Divider from '@ui/layout/Divider';
 import PageContainer from '@ui/layout/PageContainer';
 import PageSection from '@ui/layout/PageSection';
+import PrescriptionViewerModal from '@pages/appointments/detail/PrescriptionViewerModal';
 import { MOCKS } from './mock';
 
 /**
@@ -22,6 +24,8 @@ export default function MedicationDetail() {
   const { id } = useParams<{ id: string }>();
 
   const handleBack = () => navigate(-1);
+
+  const [isPrescriptionOpen, setIsPrescriptionOpen] = useState(false);
 
   // 리스트의 mock id를 상세 mock 시나리오에 매핑
   const resolveScenarioKey = (listId?: string | null) => {
@@ -38,6 +42,26 @@ export default function MedicationDetail() {
     return 'delivery-1';
   };
 
+  const handleViewPrescription = () => {
+    // TODO: 처방전 모달 또는 페이지로 이동
+    setIsPrescriptionOpen(true);
+  };
+
+  // 모달 닫기 핸들러
+  const handleClosePrescription = () => {
+    setIsPrescriptionOpen(false);
+  };
+
+  // 다운로드 핸들러 (필요 시 구현)
+  const handleDownloadPrescription = () => {
+    // TODO: 파일 저장/공유 로직 또는 새 창 다운로드 링크 트리거
+  };
+
+  // 진료 완료 상세 페이지로 이동
+  const handleViewCompletedConsultation = (id: string) => {
+    navigate(`/appointments/${id}`);
+  };
+
   // 목데이터 선택
   const scenarioKey = resolveScenarioKey(id);
   const data = MOCKS[scenarioKey];
@@ -49,95 +73,107 @@ export default function MedicationDetail() {
     : data.receipt.estimatedDate;
 
   return (
-    <MainLayout
-      title={t('medication.detail.pageTitle')}
-      headerBackground='white'
-      onBack={handleBack}
-      fullWidth
-      contentClassName="p-0"
-    >
-      <PageContainer>
-        {/* 상단 설명/수령방법/서브정보 (섹션 패딩으로 통일) */}
-        <PageSection style={{ padding: '0 1.25rem 1.25rem 1.25rem' }}>
-          <DetailHeader
-            method={isPickup ? 'pickup' : (data.receipt.method as any)}
-            subTitle={subTitle}
-            orderNumber={isPickup ? data.orderInfo?.orderNumber : undefined}
-            padding={false}
-          />
-        </PageSection>
-
-        {/* 진행 단계 표시 */}
-        <div>
-          <ProgressSteps
-            currentStep={data.receipt.statusStep}
-            totalSteps={data.receipt.labels.length}
-            labels={data.receipt.labels}
-          />
-        </div>
-        {/* 배송형: 실시간 배송 조회 버튼을 단계 아래에 배치
-            - quick: 배치만 하고 클릭 시 로그만 출력
-            - 그 외: 배송 조회 화면으로 이동
-        */}
-        {!isPickup && (
-          <PageSection padding>
-            <ActionButtons
-              onTrackNow={() => {
-                if (data.receipt.method === 'quick') {
-                  console.log('Track delivery clicked (quick): navigation disabled');
-                } else {
-                  navigate('/medications/delivery-tracking');
-                }
-              }}
+    <>
+      <MainLayout
+        title={t('medication.detail.pageTitle')}
+        headerBackground='white'
+        onBack={handleBack}
+        fullWidth
+        contentClassName="p-0"
+      >
+        <PageContainer>
+          {/* 상단 설명/수령방법/서브정보 (섹션 패딩으로 통일) */}
+          <PageSection style={{ padding: '0 1.25rem 1.25rem 1.25rem' }}>
+            <DetailHeader
+              method={isPickup ? 'pickup' : (data.receipt.method as any)}
+              subTitle={subTitle}
+              orderNumber={isPickup ? data.orderInfo?.orderNumber : undefined}
+              padding={false}
             />
           </PageSection>
-        )}
 
-        {/* 섹션 시작 구분선(공통 Divider 컴포넌트) */}
-        <Divider />
-
-        {/* 배송형 섹션 */}
-        {!isPickup && data.deliveryInfo && (
-          <>
+          {/* 진행 단계 표시 */}
+          <div>
+            <ProgressSteps
+              currentStep={data.receipt.statusStep}
+              totalSteps={data.receipt.medicationType === 'pickup' ? 3 : 4}
+              labels={data.receipt.medicationType === 'pickup' ? [
+                t('medication.progressSteps.statusPreparing'),
+                t('medication.progressSteps.statusPrepared'),
+                t('medication.progressSteps.statusReceived')
+              ] : [
+                t('medication.progressSteps.statusPreparing'),
+                t('medication.progressSteps.statusPrepared'),
+                t('medication.progressSteps.statusShipping'),
+                t('medication.progressSteps.statusReceived')
+              ]}
+            />
+          </div>
+          {/* 배송형: 실시간 배송 조회 버튼을 단계 아래에 배치
+              - quick: 배치만 하고 클릭 시 로그만 출력
+              - 그 외: 배송 조회 화면으로 이동
+          */}
+          {!isPickup && (
             <PageSection padding>
-              <DeliveryInfoSection info={data.deliveryInfo} />
-            </PageSection>
-            <Divider />
-            <PageSection padding>
-              <OrderInfoSection
-                info={data.orderInfo}
-                onOpenPrescription={() => {
-                  console.log('Open prescription clicked');
-                }}
-                onOpenConsultation={() => {
-                  console.log('Open consultation detail clicked');
+              <ActionButtons
+                onTrackNow={() => {
+                  if (data.receipt.method === 'quick') {
+                    navigate('/medications/live-delivery-tracking');
+                  } else {
+                    navigate('/medications/delivery-tracking');
+                  }
                 }}
               />
             </PageSection>
-          </>
-        )}
+          )}
 
-        {/* 직접 수령 섹션 */}
-        {isPickup && data.pickupInfo && (
-          <>
-            <PageSection padding>
-              <PickupInfoSection info={data.pickupInfo} />
-            </PageSection>
-            <Divider />
-            <PageSection padding>
-              <OrderInfoSection
-                info={data.orderInfo}
-                onOpenPrescription={() => {
-                  console.log('Open prescription clicked');
-                }}
-                onOpenConsultation={() => {
-                  console.log('Open consultation detail clicked');
-                }}
-              />
-            </PageSection>
-          </>
-        )}
-      </PageContainer>
-    </MainLayout>
+          {/* 섹션 시작 구분선(공통 Divider 컴포넌트) */}
+          <Divider />
+
+          {/* 배송형 섹션 */}
+          {!isPickup && data.deliveryInfo && (
+            <>
+              <PageSection padding>
+                <DeliveryInfoSection info={data.deliveryInfo} />
+              </PageSection>
+              <Divider />
+              <PageSection padding>
+                <OrderInfoSection
+                  info={data.orderInfo}
+                  onOpenPrescription={handleViewPrescription}
+                  onOpenConsultation={() => handleViewCompletedConsultation('14')}
+                />
+              </PageSection>
+            </>
+          )}
+
+          {/* 직접 수령 섹션 */}
+          {isPickup && data.pickupInfo && (
+            <>
+              <PageSection padding>
+                <PickupInfoSection info={data.pickupInfo} />
+              </PageSection>
+              <Divider />
+              <PageSection padding>
+                <OrderInfoSection
+                  info={data.orderInfo}
+                  onOpenPrescription={handleViewPrescription}
+                  onOpenConsultation={() => handleViewCompletedConsultation('14')}
+                />
+              </PageSection>
+            </>
+          )}
+        </PageContainer>
+      </MainLayout>
+      {isPrescriptionOpen && (
+        <PrescriptionViewerModal
+          isOpen={isPrescriptionOpen}
+          title={t('appointment.prescription') || 'Prescription'}
+          fileUrl={'/prescription_2.pdf'}
+          onClose={handleClosePrescription}
+          onDownload={handleDownloadPrescription}
+        />
+      )}
+    </>
   );
 }

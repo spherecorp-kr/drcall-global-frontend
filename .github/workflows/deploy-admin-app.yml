@@ -1,0 +1,80 @@
+name: 🚀 Deploy Admin App
+
+on:
+  push:
+    branches:
+      - staging
+      - develop
+    paths:
+      - 'apps/admin-app/**'
+      - 'packages/**'
+      - '.github/workflows/deploy-admin-app.yml'
+      - '.github/workflows/_reusable-app-deploy.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
+jobs:
+  # Determine environment from branch or input
+  determine-env:
+    name: 🎯 Determine Environment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
+    steps:
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            ENV="${{ inputs.environment }}"
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            ENV="prod"
+          elif [ "${{ github.ref }}" == "refs/heads/staging" ]; then
+            ENV="staging"
+          else
+            ENV="dev"
+          fi
+
+          echo "environment=${ENV}" >> $GITHUB_OUTPUT
+          echo "📍 Deploying to: ${ENV}"
+
+  deploy-dev:
+    name: 🚀 Deploy to DEV
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'dev'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: admin-app
+      build-command: build:admin
+      environment: dev
+
+  deploy-staging:
+    name: 🚀 Deploy to STAGING
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'staging'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: admin-app
+      build-command: build:admin
+      environment: staging
+
+  deploy-prod:
+    name: 🚀 Deploy to PRODUCTION
+    needs: determine-env
+    if: needs.determine-env.outputs.environment == 'prod'
+    uses: ./.github/workflows/_reusable-app-deploy.yml
+    with:
+      app-name: admin-app
+      build-command: build:admin
+      environment: prod

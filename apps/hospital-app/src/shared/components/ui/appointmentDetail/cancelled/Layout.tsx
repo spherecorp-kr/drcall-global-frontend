@@ -1,16 +1,17 @@
+import CancelInfo from './CancelInfo';
 import {
 	Memo,
 	PatientHealthInfo,
 	PatientInfoTable,
+	ReadOnlyTreatmentInfo,
 	TreatmentHistory,
-	TreatmentInfo,
 } from '@/shared/components/ui/appointmentDetail';
-
 const Layout = () => {
 	return (
 		<>
+			<CancelInfo />
 			<PatientInfoTable />
-			<TreatmentInfo />
+			<ReadOnlyTreatmentInfo />
 			<div className='flex gap-4 items-center self-stretch'>
 				<Memo />
 				<PatientHealthInfo />

@@ -34,30 +34,36 @@ Navigate to your GitHub repository → Settings → Secrets and variables → Ac
 aws iam create-access-key --user-name terraform-deploy
 ```
 
-### Environment-Specific Secrets
+### Environment Configuration Files
 
-For each environment (DEV, STG, PROD), configure:
+API URL은 각 앱의 `.env.{env}` 파일에 설정되어 있습니다:
 
 #### Patient App
-
-| Secret Name | Environment | Description | Example Value |
-|------------|-------------|-------------|---------------|
-| `PATIENT_APP_DEV_API_URL` | DEV | Backend API URL | `https://api.dev.drcall.global` |
-| `PATIENT_APP_DEV_CLOUDFRONT_ID` | DEV | CloudFront Distribution ID | `E3H7FZ2DSAAT1` |
-| `PATIENT_APP_STG_API_URL` | STG | Backend API URL | `https://api.stg.drcall.global` |
-| `PATIENT_APP_STG_CLOUDFRONT_ID` | STG | CloudFront Distribution ID | `E2XXXXXXXXXXX` |
-| `PATIENT_APP_PROD_API_URL` | PROD | Backend API URL | `https://api.prod.drcall.global` |
-| `PATIENT_APP_PROD_CLOUDFRONT_ID` | PROD | CloudFront Distribution ID | `E1XXXXXXXXXXX` |
+- `apps/patient-app/.env.dev` - `VITE_API_BASE_URL=https://api.patients.dev.drcall.global`
+- `apps/patient-app/.env.stg` - `VITE_API_BASE_URL=https://api.patients.stg.drcall.global`
+- `apps/patient-app/.env.prod` - `VITE_API_BASE_URL=https://api.patients.drcall.global`
 
 #### Hospital App
+- `apps/hospital-app/.env.dev` - `VITE_API_BASE_URL=https://api.hospitals.dev.drcall.global`
+- `apps/hospital-app/.env.stg` - `VITE_API_BASE_URL=https://api.hospitals.stg.drcall.global`
+- `apps/hospital-app/.env.prod` - `VITE_API_BASE_URL=https://api.hospitals.drcall.global`
+
+#### Admin App
+- `apps/admin-app/.env.dev` - `VITE_API_BASE_URL=https://api.admin.dev.drcall.global`
+- `apps/admin-app/.env.stg` - `VITE_API_BASE_URL=https://api.admin.stg.drcall.global`
+- `apps/admin-app/.env.prod` - `VITE_API_BASE_URL=https://api.admin.drcall.global`
+
+### GitHub Secrets (CloudFront만 필요)
+
+CloudFront Distribution ID만 GitHub Secrets에 설정하면 됩니다:
 
 | Secret Name | Environment | Description | Example Value |
 |------------|-------------|-------------|---------------|
-| `HOSPITAL_APP_DEV_API_URL` | DEV | Backend API URL | `https://api.dev.drcall.global` |
+| `PATIENT_APP_DEV_CLOUDFRONT_ID` | DEV | CloudFront Distribution ID | `E3H7FZ2DSAAT1` |
+| `PATIENT_APP_STG_CLOUDFRONT_ID` | STG | CloudFront Distribution ID | `E2XXXXXXXXXXX` |
+| `PATIENT_APP_PROD_CLOUDFRONT_ID` | PROD | CloudFront Distribution ID | `E1XXXXXXXXXXX` |
 | `HOSPITAL_APP_DEV_CLOUDFRONT_ID` | DEV | CloudFront Distribution ID | `E738FDGXZ1WIZ` |
-| `HOSPITAL_APP_STG_API_URL` | STG | Backend API URL | `https://api.stg.drcall.global` |
 | `HOSPITAL_APP_STG_CLOUDFRONT_ID` | STG | CloudFront Distribution ID | `E2XXXXXXXXXXX` |
-| `HOSPITAL_APP_PROD_API_URL` | PROD | Backend API URL | `https://api.prod.drcall.global` |
 | `HOSPITAL_APP_PROD_CLOUDFRONT_ID` | PROD | CloudFront Distribution ID | `E1XXXXXXXXXXX` |
 
 ## Getting CloudFront Distribution IDs
@@ -90,23 +96,28 @@ aws cloudfront list-distributions \
   --output text
 ```
 
-## Current DEV Environment Values
+## Environment Files
 
-Based on the deployed infrastructure:
+각 앱의 `.env.{env}` 파일에 API URL이 설정되어 있습니다:
 
 ```bash
-# Patient App - DEV
-PATIENT_APP_DEV_API_URL=https://api.dev.drcall.global
-PATIENT_APP_DEV_CLOUDFRONT_ID=E3H7FZ2DSAAT1
+# Patient App
+apps/patient-app/.env.dev    # VITE_API_BASE_URL=https://api.patients.dev.drcall.global
+apps/patient-app/.env.stg    # VITE_API_BASE_URL=https://api.patients.stg.drcall.global
+apps/patient-app/.env.prod   # VITE_API_BASE_URL=https://api.patients.drcall.global
 
-# Hospital App - DEV
-HOSPITAL_APP_DEV_API_URL=https://api.dev.drcall.global
-HOSPITAL_APP_DEV_CLOUDFRONT_ID=E738FDGXZ1WIZ
+# Hospital App
+apps/hospital-app/.env.dev    # VITE_API_BASE_URL=https://api.hospitals.dev.drcall.global
+apps/hospital-app/.env.stg   # VITE_API_BASE_URL=https://api.hospitals.stg.drcall.global
+apps/hospital-app/.env.prod  # VITE_API_BASE_URL=https://api.hospitals.drcall.global
 
-# Admin App - DEV (will be added later)
-# ADMIN_APP_DEV_API_URL=https://api.dev.drcall.global
-# ADMIN_APP_DEV_CLOUDFRONT_ID=EBCW8ATZRVIHV
+# Admin App
+apps/admin-app/.env.dev       # VITE_API_BASE_URL=https://api.admin.dev.drcall.global
+apps/admin-app/.env.stg       # VITE_API_BASE_URL=https://api.admin.stg.drcall.global
+apps/admin-app/.env.prod      # VITE_API_BASE_URL=https://api.admin.drcall.global
 ```
+
+**참고**: `.env` 파일들은 `.gitignore`에 포함되어 있지 않으므로 Git에 커밋됩니다.
 
 ## Deployment Workflow
 

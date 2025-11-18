@@ -1,0 +1,14 @@
+export { default as AppointmentDetailPage } from './AppointmentDetail';
+export { default as AppointmentPage } from './Appointment';
+export { default as ConsultationPage } from './Consultation';
+export { default as DashboardPage } from './Dashboard';
+export { default as DoctorPage } from './Doctor';
+export { default as DoctorDetailPage } from './DoctorDetail';
+export { default as HospitalPage } from './Hospital';
+export { default as HospitalOnboardingPage } from './HospitalOnboarding';
+export { default as LoginPage } from './Login';
+export { default as MyInfoPage } from './MyInfo';
+export { default as PatientPage } from './Patient';
+export { default as PatientDetailPage } from './PatientDetail';
+export { default as PatientRegistrationPage } from './PatientRegistration';
+export { default as PaymentPage } from './Payment';

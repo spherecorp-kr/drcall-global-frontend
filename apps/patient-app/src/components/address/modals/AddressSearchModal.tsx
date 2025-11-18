@@ -112,7 +112,7 @@ export default function AddressSearchModal({ isOpen, onClose, onDetailAddressRes
 
   // 주소 선택 처리 함수
   const handleSelect = async (s: AddressSuggestion) => {
-    const { object, legacy } = await finalizePlaceSelection(s, { ensureDetails: true });
+    const { object } = await finalizePlaceSelection(s, { ensureDetails: true });
 
     onDetailAddressReset && onDetailAddressReset();
     onSelect && onSelect(object);

@@ -15,20 +15,15 @@ on:
         required: true
         type: string
         description: 'Deployment environment (dev, staging, prod)'
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
-      API_URL:
-        required: true
-      CLOUDFRONT_ID:
-        required: true
 
 env:
   PNPM_VERSION: '9.0.0'
   NODE_VERSION: '20'
   AWS_REGION: 'ap-northeast-2'
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
   validate:
@@ -66,11 +61,42 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Copy environment file
+        run: |
+          ENV="${{ inputs.environment }}"
+          APP="${{ inputs.app-name }}"
+
+          # Map environment names
+          if [ "$ENV" == "staging" ]; then
+            ENV_FILE="stg"
+          else
+            ENV_FILE="$ENV"
+          fi
+
+          if [ -f "apps/${APP}/.env.${ENV_FILE}" ]; then
+            cp "apps/${APP}/.env.${ENV_FILE}" "apps/${APP}/.env"
+            echo "✅ Copied .env.${ENV_FILE} to .env"
+          else
+            echo "⚠️ .env.${ENV_FILE} not found, using default .env"
+          fi
+
       - name: Build application
-        env:
-          VITE_API_BASE_URL: ${{ secrets.API_URL }}
-          VITE_ENVIRONMENT: ${{ inputs.environment }}
-        run: pnpm ${{ inputs.build-command }}
+        run: |
+          ENV="${{ inputs.environment }}"
+          APP="${{ inputs.app-name }}"
+          
+          # Map environment names
+          if [ "$ENV" == "staging" ]; then
+            ENV_FILE="stg"
+          else
+            ENV_FILE="$ENV"
+          fi
+          
+          echo "🔍 Building ${APP} for ${ENV} environment"
+          echo "📁 Using .env.${ENV_FILE} file"
+          
+          # Vite automatically loads .env file from the app directory
+          pnpm ${{ inputs.build-command }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -93,11 +119,11 @@ jobs:
           name: ${{ inputs.app-name }}-dist
           path: dist
 
-      - name: Configure AWS credentials
+      - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::665321880316:role/drcall-global-prod-github-actions-role
+          role-session-name: github-actions-frontend-deploy
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Deploy to S3
@@ -106,7 +132,14 @@ jobs:
           ENV="${{ inputs.environment }}"
           APP="${{ inputs.app-name }}"
 
-          BUCKET="${ENV}-${APP}-frontend"
+          # Map environment names
+          if [ "$ENV" == "staging" ]; then
+            ENV_NAME="stg"
+          else
+            ENV_NAME="$ENV"
+          fi
+
+          BUCKET="drcall-global-${ENV_NAME}-${APP}-frontend"
 
           echo "🪣 Deploying to S3 bucket: ${BUCKET}"
 
@@ -121,9 +154,38 @@ jobs:
 
           echo "✅ Files uploaded to S3"
 
+      - name: Get CloudFront Distribution ID
+        id: cloudfront
+        run: |
+          ENV="${{ inputs.environment }}"
+          APP="${{ inputs.app-name }}"
+
+          # Map environment names
+          if [ "$ENV" == "staging" ]; then
+            ENV_NAME="stg"
+          else
+            ENV_NAME="$ENV"
+          fi
+
+          BUCKET_NAME="drcall-global-${ENV_NAME}-${APP}-frontend"
+
+          echo "🔍 Looking for CloudFront Distribution for bucket: ${BUCKET_NAME}"
+
+          CLOUDFRONT_ID=$(aws cloudfront list-distributions \
+            --query "DistributionList.Items[?contains(Origins.Items[0].DomainName, '${BUCKET_NAME}')].Id" \
+            --output text)
+
+          if [ -z "$CLOUDFRONT_ID" ]; then
+            echo "❌ CloudFront Distribution not found for bucket: ${BUCKET_NAME}"
+            exit 1
+          fi
+
+          echo "cloudfront_id=${CLOUDFRONT_ID}" >> $GITHUB_OUTPUT
+          echo "✅ Found CloudFront Distribution ID: ${CLOUDFRONT_ID}"
+
       - name: Invalidate CloudFront cache
         run: |
-          DISTRIBUTION_ID="${{ secrets.CLOUDFRONT_ID }}"
+          DISTRIBUTION_ID="${{ steps.cloudfront.outputs.cloudfront_id }}"
 
           echo "🔄 Invalidating CloudFront distribution: ${DISTRIBUTION_ID}"
 
@@ -144,6 +206,6 @@ jobs:
           echo "| **Application** | \`${{ inputs.app-name }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Environment** | \`${{ inputs.environment }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **URL** | https://${{ inputs.app-name }}.${{ inputs.environment }}.drcall.global |" >> $GITHUB_STEP_SUMMARY
-          echo "| **Bucket** | \`${{ inputs.environment }}-${{ inputs.app-name }}-frontend\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Bucket** | \`drcall-global-${{ inputs.environment }}-${{ inputs.app-name }}-frontend\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
           echo "| **Triggered by** | @${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY

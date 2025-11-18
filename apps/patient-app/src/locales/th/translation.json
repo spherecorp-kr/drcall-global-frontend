@@ -84,6 +84,12 @@
     "methodStandard": "จัดส่งทั่วไป",
     "methodExpress": "จัดส่งด่วน",
     "methodInternational": "จัดส่งระหว่างประเทศ",
+    "progressSteps": {
+      "statusPreparing": "กำลังจ่ายยา",
+      "statusPrepared": "จ่ายยาเสร็จ",
+      "statusShipping": "กำลังจัดส่ง",
+      "statusReceived": "รับแล้ว"
+    },
     "detail": {
       "pageTitle": "รายละเอียดการจ่ายยาและจัดส่ง",
       "title": "ตรวจสอบความคืบหน้าการรับยา",
@@ -111,6 +117,14 @@
         "trackNow": "ติดตามการจัดส่ง",
         "viewPrescription": "ดูใบสั่งยา",
         "viewConsultation": "รายละเอียดการรักษา"
+      }
+    },
+    "liveTracking": {
+      "pageTitle": "ติดตามการจัดส่ง",
+      "etaMinutes": "{{minutes}} นาที",
+      "etaArrivalAt": "ถึงประมาณ {{time}}",
+      "actions": {
+        "callNow": "เรียก"
       }
     }
   },
@@ -365,7 +379,11 @@
       "modifyInProcess": "คุณสามารถแก้ไข/ยกเลิกการนัดหมายใน 'กระบวนการรักษา'",
       "modifyAfterConfirm": "หลังจากยืนยัน การแก้ไขจะทำได้โดยโทรติดต่อโรงพยาบาลเท่านั้น",
       "profileEdit": "ชื่อ วันเกิด เพศ และเบอร์โทรศัพท์สามารถเปลี่ยนได้ใน 'ข้อมูลของฉัน > แก้ไขข้อมูล'"
-    }
+    },
+    "errorNotLoggedIn": "การเข้าสู่ระบบจำเป็น",
+    "errorMissingDateTime": "กรุณาเลือกวันที่, แพทย์, และเวลา",
+    "createSuccess": "การนัดหมายถูกสร้างแล้ว",
+    "createError": "การสร้างการนัดหมายล้มเหลว"
   },
 	"calendar": {
 		"week": {
@@ -398,7 +416,12 @@
     "closed": "ปิดแล้ว",
     "closedMessage": "การสนทนานี้ถูกปิดแล้ว ไม่สามารถส่งข้อความได้",
     "closedPlaceholder": "การสนทนานี้ถูกปิดแล้ว",
-    "unknownUser": "ผู้ใช้ที่ไม่รู้จัก"
+    "unknownUser": "ผู้ใช้ที่ไม่รู้จัก",
+    "system": {
+      "system_created": "สร้างห้องแชทแล้ว",
+      "system_closed": "การสนทนาถูกปิดแล้ว",
+      "system_reopened": "การสนทนาถูกเปิดใหม่แล้ว"
+    }
   },
   "mypage": {
     "title": "ข้อมูลของฉัน",
