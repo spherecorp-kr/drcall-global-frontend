@@ -8,11 +8,16 @@ import {
 	ReadOnlyTreatmentInfo,
 	TreatmentHistory,
 } from '@/shared/components/ui/appointmentDetail';
+import type { Appointment } from '@/services/appointmentService';
 
-const Layout = () => {
+interface LayoutProps {
+	appointment: Appointment;
+}
+
+const Layout = ({ appointment }: LayoutProps) => {
 	return (
 		<>
-			<TopButtons />
+			<TopButtons appointment={appointment} />
 			<PatientInfoTable />
 			<ReadOnlyTreatmentInfo />
 			<PaymentInfo />

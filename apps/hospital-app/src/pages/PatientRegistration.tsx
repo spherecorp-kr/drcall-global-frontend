@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { Button } from '@/shared/components/ui';
 import { PatientForm, type PatientFormData, type ValidationErrors } from '@/shared/components/ui/PatientForm';
+import { patientService } from '@/services/patientService';
 import icCancel from '@/shared/assets/icons/ic_cancel.svg';
 import icRegister from '@/shared/assets/icons/ic_register.svg';
 
@@ -12,6 +14,7 @@ export function PatientRegistration() {
 		gender: '',
 		thaiId: '',
 		phoneNumber: '',
+		phoneCountryCode: '+66',
 		postalCode: '',
 		address: '',
 		detailAddress: '',
@@ -80,14 +83,48 @@ export function PatientRegistration() {
 		return Object.keys(newErrors).length === 0;
 	};
 
-	const handleSubmit = () => {
+	const handleSubmit = async () => {
 		if (!validateForm()) {
 			return;
 		}
 
-		// TODO: 실제 API 호출
-		console.log('환자 등록:', formData);
-		navigate(-1);
+		try {
+			// 날짜 형식 변환 (YYYY-MM-DD)
+			const birthDate = formData.birthDate 
+				? formData.birthDate.split('/').reverse().join('-') // DD/MM/YYYY -> YYYY-MM-DD
+				: undefined;
+
+			// API 호출
+			await patientService.registerPatient({
+				name: formData.name,
+				phone: formData.phoneNumber,
+				phoneCountryCode: '+66',
+				birthDate,
+				gender: formData.gender === 'MALE' ? 'MALE' : formData.gender === 'FEMALE' ? 'FEMALE' : undefined,
+				thaiId: formData.thaiId,
+				address: formData.address,
+				addressDetail: formData.detailAddress,
+				postalCode: formData.postalCode,
+				height: formData.height,
+				weight: formData.weight,
+				bloodType: formData.bloodType,
+				drinkingHabit: formData.drinkingHabit,
+				smokingHabit: formData.smokingHabit,
+				currentMedications: formData.currentMedications,
+				personalHistory: formData.personalHistory,
+				familyHistory: formData.familyHistory,
+			});
+
+			// 성공 시 이전 페이지로 이동
+			navigate(-1);
+		} catch (error) {
+			console.error('환자 등록 실패:', error);
+			let errorMessage = '환자 등록에 실패했습니다.';
+			if (error instanceof AxiosError) {
+				errorMessage = error.response?.data?.message || errorMessage;
+			}
+			alert(errorMessage);
+		}
 	};
 
 	return (

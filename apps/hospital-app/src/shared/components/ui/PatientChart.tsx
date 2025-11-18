@@ -41,7 +41,7 @@ const monthlyData = [
 	{ date: '08/25', 신규: 10, 재진: 8 },
 ];
 
-export function PatientChart({ className, onExpand, isExpanded }: PatientChartProps) {
+const PatientChart = ({ className, onExpand, isExpanded }: PatientChartProps) => {
 	const { t } = useTranslation();
 	const viewMode = useLayoutStore((state) => state.patientChartViewMode);
 	const setViewMode = useLayoutStore((state) => state.setPatientChartViewMode);
@@ -202,3 +202,5 @@ export function PatientChart({ className, onExpand, isExpanded }: PatientChartPr
 		</Section>
 	);
 }
+
+export default PatientChart;

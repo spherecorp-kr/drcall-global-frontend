@@ -22,12 +22,12 @@ interface DoctorListTableProps {
 	isExpanded?: boolean;
 }
 
-export function DoctorListTable({
+const DoctorListTable = ({
 	doctors,
 	className,
 	onExpand,
 	isExpanded,
-}: DoctorListTableProps) {
+}: DoctorListTableProps) => {
 	const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
 
 	const doctorListTableHeaderFixed = useLayoutStore((state) => state.doctorListTableHeaderFixed);
@@ -109,3 +109,5 @@ export function DoctorListTable({
 		</Section>
 	);
 }
+
+export default DoctorListTable;

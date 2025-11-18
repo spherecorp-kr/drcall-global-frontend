@@ -4,9 +4,10 @@ import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';
 
 interface PatientFormData {
 	name: string;
-	gender: 'male' | 'female' | '';
+	gender: 'MALE' | 'FEMALE' | '';
 	thaiId: string;
 	phoneNumber: string;
+	phoneCountryCode: string;
 	postalCode: string;
 	address: string;
 	detailAddress: string;
@@ -57,21 +58,21 @@ export function PatientForm({ formData, errors, onInputChange }: PatientFormProp
 	};
 
 	const patientGradeOptions = [
-		{ value: 'normal', label: '일반환자' },
-		{ value: 'vip', label: 'VIP' },
-		{ value: 'risk', label: 'Risk' },
+		{ value: 'NORMAL', label: '일반환자' },
+		{ value: 'VIP', label: 'VIP' },
+		{ value: 'RISK', label: 'Risk' },
 	];
 
 	const drinkingOptions = [
-		{ value: '1', label: '1' },
-		{ value: '1-2', label: '1~2' },
-		{ value: '3+', label: '3+' },
+		{ value: 'ZERO', label: '0' },
+		{ value: 'ONE_TO_TWO', label: '1~2' },
+		{ value: 'THREE_PLUS', label: '3+' },
 	];
 
 	const smokingOptions = [
-		{ value: '1', label: '1' },
-		{ value: '1-5', label: '1~5' },
-		{ value: '6+', label: '6+' },
+		{ value: 'ZERO', label: '0' },
+		{ value: 'ONE_TO_FIVE', label: '1~5' },
+		{ value: 'SIX_PLUS', label: '6+' },
 	];
 
 	const handleDrinkingChange = (value: string) => {
@@ -170,13 +171,13 @@ export function PatientForm({ formData, errors, onInputChange }: PatientFormProp
 							<div className="flex items-center gap-5">
 								<Radio
 									label="남자"
-									checked={formData.gender === 'male'}
-									onChange={() => onInputChange('gender', 'male')}
+									checked={formData.gender === 'MALE'}
+									onChange={() => onInputChange('gender', 'MALE')}
 								/>
 								<Radio
 									label="여자"
-									checked={formData.gender === 'female'}
-									onChange={() => onInputChange('gender', 'female')}
+									checked={formData.gender === 'FEMALE'}
+									onChange={() => onInputChange('gender', 'FEMALE')}
 								/>
 							</div>
 							{errors.gender && (
@@ -192,13 +193,24 @@ export function PatientForm({ formData, errors, onInputChange }: PatientFormProp
 							<span className="text-system-error text-16">*</span>
 						</div>
 						<div className="flex flex-col gap-1.5">
-							<Input
-								value={formData.phoneNumber}
-								onChange={(e) => onInputChange('phoneNumber', e.target.value)}
-								placeholder="'-'없이 숫자만 입력해 주세요."
-								size="small"
-								error={!!errors.phoneNumber}
-							/>
+							<div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+								<Input
+									value={formData.phoneCountryCode || '+66'}
+									onChange={(e) => onInputChange('phoneCountryCode', e.target.value)}
+									placeholder="+66"
+									size="small"
+									style={{ width: '100px', flexShrink: 0 }}
+								/>
+								<div style={{ width: '1px', height: '1.5rem', background: '#d9d9d9' }} />
+								<Input
+									value={formData.phoneNumber}
+									onChange={(e) => onInputChange('phoneNumber', e.target.value)}
+									placeholder="'-'없이 숫자만 입력해 주세요."
+									size="small"
+									error={!!errors.phoneNumber}
+									style={{ flex: 1 }}
+								/>
+							</div>
 							{errors.phoneNumber && (
 								<span className="text-system-error text-14">{errors.phoneNumber}</span>
 							)}

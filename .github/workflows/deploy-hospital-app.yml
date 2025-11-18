@@ -3,12 +3,13 @@ name: 🚀 Deploy Hospital App
 on:
   push:
     branches:
-      - main
       - staging
       - develop
     paths:
       - 'apps/hospital-app/**'
       - 'packages/**'
+      - '.github/workflows/deploy-hospital-app.yml'
+      - '.github/workflows/_reusable-app-deploy.yml'
   workflow_dispatch:
     inputs:
       environment:
@@ -57,8 +58,6 @@ jobs:
       app-name: hospital-app
       build-command: build:hospital
       environment: dev
-    secrets:
-      CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_DEV_CLOUDFRONT_ID }}
 
   deploy-staging:
     name: 🚀 Deploy to STAGING
@@ -69,8 +68,6 @@ jobs:
       app-name: hospital-app
       build-command: build:hospital
       environment: staging
-    secrets:
-      CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_STAGING_CLOUDFRONT_ID }}
 
   deploy-prod:
     name: 🚀 Deploy to PRODUCTION
@@ -81,5 +78,3 @@ jobs:
       app-name: hospital-app
       build-command: build:hospital
       environment: prod
-    secrets:
-      CLOUDFRONT_ID: ${{ secrets.HOSPITAL_APP_PROD_CLOUDFRONT_ID }}

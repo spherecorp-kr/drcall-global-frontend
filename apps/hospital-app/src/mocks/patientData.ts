@@ -40,8 +40,8 @@ const generatePatientData = (count: number): PatientManagement[] => {
 		'한소희',
 	];
 
-	const genders: Gender[] = ['male', 'female'];
-	const grades: PatientGrade[] = ['vip', 'risk', 'normal'];
+	const genders: Gender[] = ['MALE', 'FEMALE'];
+	const grades: PatientGrade[] = ['VIP', 'RISK', 'NORMAL'];
 
 	const patients: PatientManagement[] = [];
 
