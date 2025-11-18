@@ -23,21 +23,15 @@ interface Participant {
 
 interface UseVideoCallProps {
   appointmentId: number;
-  patientId: number;
+  patientId?: number;
+  doctorId?: number;
   onError?: (error: Error) => void;
 }
 
-interface Room {
-  enter: (params: {audioEnabled: boolean; videoEnabled: boolean}) => Promise<void>;
-  on: (event: string, handler: (data: unknown) => void) => void;
-  startVideo: () => void;
-  stopVideo: () => void;
-  startAudio: () => void;
-  stopAudio: () => void;
-  exit: () => Promise<void>;
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type SendBirdRoom = any;
 
-export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCallProps) {
+export function useVideoCall({ appointmentId, patientId, doctorId, onError }: UseVideoCallProps) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -46,7 +40,7 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
 
-  const roomRef = useRef<Room | null>(null);
+  const roomRef = useRef<SendBirdRoom>(null);
   const sessionRef = useRef<VideoCallSessionResponse | null>(null);
 
   /**
@@ -67,8 +61,8 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
         // 세션이 없으면 생성
         session = await videoCallService.createSession({
           appointmentId,
-          patientId,
-          doctorId: 0, // TODO: 실제 doctorId 전달
+          patientId: patientId || 0,
+          doctorId: doctorId || 0,
           isVideoEnabled: true,
           autoCreateRoom: true,
         });
@@ -77,9 +71,13 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
       sessionRef.current = session;
 
       // 2. 세션 참여 (Access Token 발급)
+      // hospital-app이므로 doctorId 사용
+      const userId = doctorId || patientId || 0;
+      const userType = doctorId ? 'DOCTOR' : 'PATIENT';
+
       const joinResponse = await videoCallService.joinSession(session.id, {
-        userId: patientId,
-        userType: 'PATIENT',
+        userId,
+        userType,
         isAudioEnabled: true,
         isVideoEnabled: true,
       });
@@ -134,7 +132,7 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
   /**
    * Room 이벤트 리스너 설정
    */
-  const setupRoomEventListeners = (room: Room) => {
+  const setupRoomEventListeners = (room: SendBirdRoom) => {
     // 원격 참가자 스트림 시작
     room.on('remoteParticipantStreamStarted', (participant: unknown) => {
       const p = participant as {participantId: string; user: {userId: string}; videoView?: {srcObject: MediaStream}; isAudioEnabled: boolean; isVideoEnabled: boolean; on: (event: string, handler: (level: number) => void) => void};
