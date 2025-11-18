@@ -166,7 +166,7 @@ export default function HealthRecordCard({
       <img
         src={icon}
         alt={title}
-        className="absolute left-[1.4375rem] top-[1.375rem] w-[1.125rem] h-[1.25rem]"
+        className="absolute left-[1.4375rem] top-[1.375rem] w-[1.5rem] h-[1.5rem]"
       />
 
       {/* Title - left: 52px from card (72-20), top: 21px from card (209-188), fontSize: 18px */}
