@@ -27,6 +27,16 @@ interface UseVideoCallProps {
   onError?: (error: Error) => void;
 }
 
+interface Room {
+  enter: (params: {audioEnabled: boolean; videoEnabled: boolean}) => Promise<void>;
+  on: (event: string, handler: (data: unknown) => void) => void;
+  startVideo: () => void;
+  stopVideo: () => void;
+  startAudio: () => void;
+  stopAudio: () => void;
+  exit: () => Promise<void>;
+}
+
 export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCallProps) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -36,7 +46,7 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(true);
 
-  const roomRef = useRef<unknown>(null);
+  const roomRef = useRef<Room | null>(null);
   const sessionRef = useRef<VideoCallSessionResponse | null>(null);
 
   /**
@@ -124,7 +134,7 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
   /**
    * Room 이벤트 리스너 설정
    */
-  const setupRoomEventListeners = (room: {on: (event: string, handler: (data: unknown) => void) => void}) => {
+  const setupRoomEventListeners = (room: Room) => {
     // 원격 참가자 스트림 시작
     room.on('remoteParticipantStreamStarted', (participant: unknown) => {
       const p = participant as {participantId: string; user: {userId: string}; videoView?: {srcObject: MediaStream}; isAudioEnabled: boolean; isVideoEnabled: boolean; on: (event: string, handler: (level: number) => void) => void};
