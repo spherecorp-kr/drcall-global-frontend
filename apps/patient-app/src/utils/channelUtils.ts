@@ -162,27 +162,60 @@ const generateUUID = (): string => {
 
 /**
  * Get subdomain from current hostname
- * Returns null if no subdomain or localhost
+ *
+ * Supports:
+ * - localhost subdomain: line.localhost, samsung.localhost
+ * - DEV: line.patient.dev.drcall.global
+ * - STG: samsung.patient.stg.drcall.global
+ * - PROD: telegram.patient.drcall.global
+ *
+ * Returns null if:
+ * - No subdomain (e.g., localhost, patient.dev.drcall.global)
+ * - IP address
+ * - Reserved subdomains (patient, hospital, admin, api)
  */
 export const getSubdomain = (): string | null => {
   if (typeof window === 'undefined') return null;
 
   const hostname = window.location.hostname;
 
-  // Ignore localhost and IPs
-  if (hostname === 'localhost' || /^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
+  // IP addresses are not supported
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(hostname)) {
     return null;
   }
 
   const parts = hostname.split('.');
 
+  // localhost subdomain support: line.localhost, samsung.localhost
+  if (parts.length === 2 && parts[1] === 'localhost') {
+    const subdomain = parts[0];
+    // Ignore reserved subdomains
+    if (subdomain === 'patient' || subdomain === 'hospital' || subdomain === 'admin' || subdomain === 'api') {
+      return null;
+    }
+    return subdomain;
+  }
+
+  // Single localhost (no subdomain)
+  if (hostname === 'localhost') {
+    return null;
+  }
+
+  // Domain subdomain: line.patient.dev.drcall.global
   // Need at least 3 parts: subdomain.domain.tld
   if (parts.length < 3) {
     return null;
   }
 
   // Return first part as subdomain
-  return parts[0];
+  const subdomain = parts[0];
+
+  // Ignore reserved subdomains
+  if (subdomain === 'patient' || subdomain === 'hospital' || subdomain === 'admin' || subdomain === 'api') {
+    return null;
+  }
+
+  return subdomain;
 };
 
 // TypeScript global type extensions

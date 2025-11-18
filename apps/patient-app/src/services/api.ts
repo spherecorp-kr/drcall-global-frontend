@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { logError } from '@utils/errorHandler';
 import i18n from '../lib/i18n';
+import { getSubdomain } from '@/utils/channelUtils';
 
 /**
  * Validates and returns the API base URL
@@ -49,13 +50,28 @@ export const apiClient = axios.create({
 // Request interceptor
 apiClient.interceptors.request.use(
   (config) => {
-    // Only add Bearer token for temp authentication (during OTP flow)
+    // 1. Add Bearer token for temp authentication (during OTP flow)
     // After registration, cookies handle authentication automatically
     const tempJwt = localStorage.getItem('tempJwt');
     if (tempJwt && !config.headers.Authorization) {
       // Only set if not already set (some requests set it explicitly)
       config.headers.Authorization = `Bearer ${tempJwt}`;
     }
+
+    // 2. Add X-Channel-Id header from subdomain
+    // Supports: line.localhost, samsung.patient.dev.drcall.global, etc.
+    // NO DEFAULT VALUE - subdomain is required for multi-tenancy
+    const subdomain = getSubdomain();
+    if (subdomain) {
+      config.headers['X-Channel-Id'] = subdomain;
+      // eslint-disable-next-line no-console
+      console.log(`[API] X-Channel-Id: ${subdomain}`);
+    } else {
+      // No subdomain detected - backend will reject request if channel is required
+      // eslint-disable-next-line no-console
+      console.warn('[API] No subdomain detected - X-Channel-Id header not added. Use {channel}.localhost or {channel}.patient.{env}.drcall.global');
+    }
+
     return config;
   },
   (error) => {
