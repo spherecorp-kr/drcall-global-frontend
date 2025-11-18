@@ -1,5 +1,5 @@
 /**
- * Video Call Hook - Sendbird Calls 연동 (Hospital App)
+ * Video Call Hook - Sendbird Calls 연동
  *
  * 기능:
  * - Sendbird Room 참여
@@ -23,11 +23,11 @@ interface Participant {
 
 interface UseVideoCallProps {
   appointmentId: number;
-  doctorId: number;
+  patientId: number;
   onError?: (error: Error) => void;
 }
 
-export function useVideoCall({ appointmentId, doctorId, onError }: UseVideoCallProps) {
+export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCallProps) {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
@@ -57,8 +57,8 @@ export function useVideoCall({ appointmentId, doctorId, onError }: UseVideoCallP
         // 세션이 없으면 생성
         session = await videoCallService.createSession({
           appointmentId,
-          patientId: 0, // TODO: 실제 patientId 전달
-          doctorId,
+          patientId,
+          doctorId: 0, // TODO: 실제 doctorId 전달
           isVideoEnabled: true,
           autoCreateRoom: true,
         });
@@ -68,8 +68,8 @@ export function useVideoCall({ appointmentId, doctorId, onError }: UseVideoCallP
 
       // 2. 세션 참여 (Access Token 발급)
       const joinResponse = await videoCallService.joinSession(session.id, {
-        userId: doctorId,
-        userType: 'DOCTOR',
+        userId: patientId,
+        userType: 'PATIENT',
         isAudioEnabled: true,
         isVideoEnabled: true,
       });
@@ -103,7 +103,6 @@ export function useVideoCall({ appointmentId, doctorId, onError }: UseVideoCallP
       await room.enter({
         audioEnabled: true,
         videoEnabled: true,
-        localMediaView: null, // video element는 컴포넌트에서 설정
       });
 
       roomRef.current = room;
@@ -120,7 +119,7 @@ export function useVideoCall({ appointmentId, doctorId, onError }: UseVideoCallP
       setIsConnecting(false);
       onError?.(error as Error);
     }
-  }, [appointmentId, doctorId, isConnecting, isConnected, onError]);
+  }, [appointmentId, patientId, isConnecting, isConnected, onError]);
 
   /**
    * Room 이벤트 리스너 설정
@@ -227,8 +226,7 @@ export function useVideoCall({ appointmentId, doctorId, onError }: UseVideoCallP
         await videoCallService.endSession(sessionRef.current.id);
       }
 
-      const SendBirdCall = getSendBirdCall();
-      SendBirdCall.disconnectWebSocket();
+      // WebSocket은 room.exit()에서 자동으로 정리됨
 
       setIsConnected(false);
       setParticipants([]);
