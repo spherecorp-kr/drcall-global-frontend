@@ -260,3 +260,25 @@ export const NumberBadge = ({
 		</div>
 	);
 };
+
+const MEDICINE_BADGE_THEME = {
+	gray: 'bg-badge-8 text-text-50',
+	green: 'bg-badge-7 text-system-successful2'
+};
+
+export const MedicineBadge = ({
+	children,
+	theme,
+}: {
+	children: string;
+	theme: 'gray' | 'green';
+}) => {
+	return (
+		<span className={cn(
+			MEDICINE_BADGE_THEME[theme],
+			'font-semibold px-5 rounded-[0.75rem] text-[0.8125rem]'
+		)} style={{ lineHeight: '1.5rem' }}>
+			{children}
+		</span>
+	);
+}

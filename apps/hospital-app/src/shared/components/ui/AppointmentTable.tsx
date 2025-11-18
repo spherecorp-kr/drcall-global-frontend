@@ -46,12 +46,12 @@ const statusOptions: DropdownOption[] = [
 	{ value: '예약 취소', label: '예약 취소' },
 ];
 
-export function AppointmentTable({
+const AppointmentTable = ({
 	appointments,
 	className,
 	onExpand,
 	isExpanded,
-}: AppointmentTableProps) {
+}: AppointmentTableProps) => {
 	const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
 
 	const appointmentTableHeaderFixed = useLayoutStore(
@@ -221,3 +221,5 @@ export function AppointmentTable({
 		</Section>
 	);
 }
+
+export default AppointmentTable;
