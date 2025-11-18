@@ -3,18 +3,11 @@ import { Button } from '@/shared/components/ui';
 import { useDialog } from '@/shared/hooks/useDialog';
 import { SingleDialogBottomButton } from '@/shared/components/ui/dialog';
 import { EditPatientInfoForm } from '@/shared/components/ui/appointmentDetail';
-import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
+import { AppointmentBadge, MedicineBadge, PatientBadge } from '@/shared/components/ui/Badge.tsx';
 
 const TH_CLASS: string = 'font-normal leading-[normal] min-w-[12.5rem] text-base text-text-70';
 const TD_CLASS: string = 'font-normal leading-[normal] text-base text-text-100';
 const TEXTAREA_CLASS: string = 'border border-stroke-input flex-1 font-normal leading-[normal] px-4 py-2.5 resize-none rounded text-base text-text-100';
-const BADGE_CLASS: string = 'font-semibold h-5 px-2.5 rounded-xl text-[0.8125rem]';
-
-// 뱃지
-const Aptmt = () => <span className={`${BADGE_CLASS} bg-badge-7 text-system-successful`}>일반 진료</span>;
-const Risk = () => <span className={`${BADGE_CLASS} bg-badge-6 text-system-error`}>Risk</span>;
-const Sdn = () => <span className={`${BADGE_CLASS} bg-badge-2 text-system-caution`}>빠른 진료</span>;
-const Vip = () => <span className={`${BADGE_CLASS} bg-badge-5 text-primary-70`}>VIP</span>
 
 // 남자 아이콘
 const Male = () => (
@@ -34,9 +27,12 @@ const Female = () => (
 	</svg>
 );
 
-const PatientInfoTable = () => {
+interface Props {
+	isEditable?: boolean;
+}
+
+const PatientInfoTable = ({ isEditable = false }: Props) => {
 	const { openDialog } = useDialog();
-	const { appointmentTab } = useAppointmentTabStore();
 
 	const openEditPatientInfoDialog = useCallback(() => {
 		openDialog({
@@ -54,12 +50,14 @@ const PatientInfoTable = () => {
 			<div className="flex flex-col gap-2.5">
 				<div className='flex items-center justify-between'>
 					<div className='flex gap-2 items-center justify-start'>
-						<Aptmt />
-						<Sdn />
-						<Risk />
-						<Vip />
+						<AppointmentBadge type='regular'>일반 진료</AppointmentBadge>
+						<AppointmentBadge type='quick'>빠른 진료</AppointmentBadge>
+						<PatientBadge level='risk'>Risk</PatientBadge>
+						<PatientBadge level='vip'>VIP</PatientBadge>
+						<MedicineBadge theme='gray'>결제 완료</MedicineBadge>
+						<MedicineBadge theme='green'>배송중</MedicineBadge>
 					</div>
-					{!(appointmentTab === 'completed' || appointmentTab === 'cancelled') && (
+					{isEditable && (
 						<Button
 							className='rounded-sm !text-text-70'
 							onClick={openEditPatientInfoDialog}
@@ -92,6 +90,10 @@ const PatientInfoTable = () => {
 					<div className="flex gap-2.5 items-center justify-start">
 						<p className={TH_CLASS}>음주 습관(200ml, 1W)</p>
 						<p className={TD_CLASS}>1~5</p>
+					</div>
+					<div className="flex gap-2.5 items-center justify-start">
+						<p className={TH_CLASS}>흡연(개비)</p>
+						<p className={TD_CLASS}>6+</p>
 					</div>
 				</div>
 				<div className="flex flex-1 flex-col gap-4 items-start">

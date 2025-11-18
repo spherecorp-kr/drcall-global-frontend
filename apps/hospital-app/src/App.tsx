@@ -18,6 +18,7 @@ import {
 	PaymentPage,
 	AppointmentEditPage,
 	LoginPage,
+	ConsultationDetailPage,
 } from '@/pages';
 
 // 라우트 설정 정의 (확장 시 여기에 추가)
@@ -101,6 +102,7 @@ return (
 			<Route path="/doctor/:id" element={<DoctorDetailPage />} />
 			<Route path="/hospital" element={<HospitalPage />} />
 			<Route path="/myinfo" element={<MyInfoPage />} />
+			<Route path="/consultation/:appointmentSequence" element={<ConsultationDetailPage />} />
 			<Route path="/consultation" element={<ConsultationPage />} />
 			<Route path="*" element={<Navigate to="/dashboard" replace />} />
 		</Route>

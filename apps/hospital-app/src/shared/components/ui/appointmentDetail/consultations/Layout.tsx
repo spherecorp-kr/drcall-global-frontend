@@ -1,7 +1,5 @@
 import TopButtons from './TopButtons';
 import {
-	Memo,
-	PatientHealthInfo,
 	PatientInfoTable,
 	ReadOnlyTreatmentInfo,
 	TreatmentHistory,
@@ -11,11 +9,10 @@ const Layout = () => {
 	return (
 		<>
 			<TopButtons />
-			<PatientInfoTable isEditable />
+			<PatientInfoTable />
 			<ReadOnlyTreatmentInfo />
 			<div className='flex gap-4 items-center self-stretch'>
-				<Memo />
-				<PatientHealthInfo />
+				
 			</div>
 			<TreatmentHistory />
 		</>
