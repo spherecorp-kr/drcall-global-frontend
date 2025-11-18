@@ -57,6 +57,11 @@ export default function MedicationDetail() {
     // TODO: 파일 저장/공유 로직 또는 새 창 다운로드 링크 트리거
   };
 
+  // 진료 완료 상세 페이지로 이동
+  const handleViewCompletedConsultation = (id: string) => {
+    navigate(`/appointments/${id}`);
+  };
+
   // 목데이터 선택
   const scenarioKey = resolveScenarioKey(id);
   const data = MOCKS[scenarioKey];
@@ -136,9 +141,7 @@ export default function MedicationDetail() {
                 <OrderInfoSection
                   info={data.orderInfo}
                   onOpenPrescription={handleViewPrescription}
-                  onOpenConsultation={() => {
-                    console.log('Open consultation detail clicked');
-                  }}
+                  onOpenConsultation={() => handleViewCompletedConsultation('14')}
                 />
               </PageSection>
             </>
@@ -155,9 +158,7 @@ export default function MedicationDetail() {
                 <OrderInfoSection
                   info={data.orderInfo}
                   onOpenPrescription={handleViewPrescription}
-                  onOpenConsultation={() => {
-                    console.log('Open consultation detail clicked');
-                  }}
+                  onOpenConsultation={() => handleViewCompletedConsultation('14')}
                 />
               </PageSection>
             </>
