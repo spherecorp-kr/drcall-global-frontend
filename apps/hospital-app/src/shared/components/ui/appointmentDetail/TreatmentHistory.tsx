@@ -148,7 +148,7 @@ const TreatmentHistory = () => {
 	}, [openDialog]);
 
 	return (
-		<div className='flex flex-col gap-2.5 items-start self-stretch'>
+		<div className='flex flex-1 flex-col gap-2.5 items-start self-stretch'>
 			<h2 className='font-semibold leading-[normal] text-text-100 text-xl'>과거 진료 내역</h2>
 			<div className='bg-white border border-stroke-input flex flex-1 flex-col gap-4 rounded-[0.625rem] w-full'>
 				<Table
