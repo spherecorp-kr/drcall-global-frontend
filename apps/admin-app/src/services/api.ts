@@ -17,80 +17,41 @@ function getApiBaseUrl(): string {
 		throw error;
 	}
 
-	// In development, allow localhost fallback
+	// In development, allow localhost fallback (admin-service default port: 18080)
 	if (isDevelopment && !apiUrl) {
-		console.warn('VITE_API_BASE_URL not set, using localhost:8080 as fallback');
-		return 'http://localhost:8080';
+		console.warn('VITE_API_BASE_URL not set, using localhost:18080 as fallback');
+		return 'http://localhost:18080';
 	}
 
-	return apiUrl || 'http://localhost:8080';
+	return apiUrl || 'http://localhost:18080';
 }
 
 const API_BASE_URL = getApiBaseUrl();
 
 /**
- * Axios client with cookie-based authentication
+ * Axios client with JWT Bearer token authentication
  *
  * Authentication strategy:
- * 1. OTP flow: Uses tempJwt (Bearer token) in localStorage
- * 2. After registration: Uses HTTP-only cookies (sid, ctx-{subdomain})
- * 3. Protected routes: Automatic cookie authentication
+ * 1. Login: POST /api/v1/auth/login → receive accessToken
+ * 2. Store token in localStorage
+ * 3. Include token in Authorization header for all API requests
  */
 export const apiClient = axios.create({
 	baseURL: API_BASE_URL,
 	headers: {
 		'Content-Type': 'application/json',
 	},
-	withCredentials: true, // Include cookies in all requests
+	withCredentials: false, // JWT token-based auth, no cookies needed
 });
 
-/**
- * Extract subdomain from hostname for channel identification
- * Examples:
- * - Production: samsung-line.dev.drcall.global → samsung-line
- * - Development: samsung-line.localhost:3000 → samsung-line
- */
-function getSubdomain(): string | null {
-	const hostname = window.location.hostname;
-	const parts = hostname.split('.');
-
-	if (parts.length >= 2) {
-		const subdomain = parts[0];
-		if (subdomain !== 'localhost' && !/^\d+$/.test(subdomain)) {
-			return subdomain;
-		}
-	}
-
-	return null;
-}
 
 // Request interceptor
 apiClient.interceptors.request.use(
 	(config) => {
-		// Only add Bearer token for temp authentication (during OTP flow)
-		// After registration, cookies handle authentication automatically
-		const tempJwt = localStorage.getItem('tempJwt');
-		if (tempJwt && !config.headers.Authorization) {
-			// Only set if not already set (some requests set it explicitly)
-			config.headers.Authorization = `Bearer ${tempJwt}`;
-		}
-
-		// Add X-Channel-Id header for multi-tenancy
-		// Backend uses this to identify which hospital channel this request belongs to
-		const channelId = sessionStorage.getItem('channel_id');
-		if (channelId) {
-			config.headers['X-Channel-Id'] = channelId;
-		} else {
-			// If channel ID not set, try to extract subdomain and lookup channel
-			const subdomain = getSubdomain();
-			if (subdomain) {
-				// Store subdomain for debugging/logging
-				sessionStorage.setItem('channel_subdomain', subdomain);
-
-				// Note: Channel ID should be fetched from backend API on app initialization
-				// For now, we log a warning if channel ID is not set
-				console.warn('[API] X-Channel-Id not set. Subdomain:', subdomain);
-			}
+		// Add JWT Bearer token to Authorization header
+		const accessToken = localStorage.getItem('accessToken');
+		if (accessToken && !config.headers.Authorization) {
+			config.headers.Authorization = `Bearer ${accessToken}`;
 		}
 
 		return config;
@@ -118,10 +79,13 @@ apiClient.interceptors.response.use(
 
 		// Handle authentication errors
 		if (status === 401) {
-			// Clear temp JWT and redirect to login
-			localStorage.removeItem('tempJwt');
-			// Cookies are automatically cleared by backend or expired
-			window.location.href = '/auth/phone-verification';
+			// Clear access token and redirect to login
+			localStorage.removeItem('accessToken');
+			localStorage.removeItem('user');
+			// Only redirect if not already on login page
+			if (!window.location.pathname.includes('/login')) {
+				window.location.href = '/login';
+			}
 			return Promise.reject(error);
 		}
 

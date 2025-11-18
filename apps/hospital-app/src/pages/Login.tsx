@@ -1,6 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 import { Button, Input } from '@/shared/components/ui';
+import { authService } from '@/services/authService';
+import { useAuth } from '@/contexts/AuthContext';
 import BigLogo from '@/assets/big_logo_drcall.svg';
 
 const EyeOff = () => (
@@ -11,13 +14,64 @@ const EyeOff = () => (
 	</div>
 );
 
+const Eye = () => (
+	<div className='flex items-center justify-center mr-[-0.5rem]'>
+		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+			<path d="M2 12C2 12 5 5 12 5C19 5 22 12 22 12C22 12 19 19 12 19C5 19 2 12 2 12Z" stroke="#00A0D2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+			<circle cx="12" cy="12" r="3" stroke="#00A0D2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+		</svg>
+	</div>
+);
+
 const Login = () => {
 	const navigate = useNavigate();
+	const { login: authLogin } = useAuth();
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
+	const [rememberMe, setRememberMe] = useState(false);
+	const [error, setError] = useState('');
+	const [isLoading, setIsLoading] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 
-	const handleLogin = useCallback(() => {
-		// TODO 로그인 로직 추가. 지금은 일단 대시보드로 이동
-		navigate('/dashboard');
-	}, [navigate]);
+	const handleLogin = useCallback(async (e: FormEvent) => {
+		e.preventDefault();
+
+		// 에러 초기화
+		setError('');
+
+		// 유효성 검증
+		if (!username.trim() || !password.trim()) {
+			setError('아이디와 비밀번호를 입력해주세요.');
+			return;
+		}
+
+		setIsLoading(true);
+
+		try {
+			const response = await authService.login({
+				username,
+				password,
+				rememberMe,
+			});
+
+			// 성공: AuthContext에 로그인 정보 저장
+			authLogin(response.accessToken, response.user);
+
+			// 대시보드로 이동
+			navigate('/dashboard');
+		} catch (err) {
+			// 실패: 에러 메시지 표시
+			let errorMessage = '아이디 또는 비밀번호가 올바르지 않습니다.';
+			if (err instanceof AxiosError) {
+				errorMessage = err.response?.data?.error?.message ||
+					err.response?.data?.message ||
+					errorMessage;
+			}
+			setError(errorMessage);
+		} finally {
+			setIsLoading(false);
+		}
+	}, [username, password, rememberMe, authLogin, navigate]);
 
 	return (
 		<div className='bg-bg-gray flex justify-center min-h-screen'>
@@ -26,7 +80,7 @@ const Login = () => {
 					<img alt='Dr.Call' src={BigLogo} />
 					<span className='bg-primary-70 leading-[2.1875rem] px-4 rounded-[2.1875rem] text-base text-center text-white w-fit'>병원</span>
 				</div>
-				<form className='flex flex-col gap-10 items-center justify-center w-full'>
+				<form className='flex flex-col gap-10 items-center justify-center w-full' onSubmit={handleLogin}>
 					<div className='flex flex-col gap-5 w-full'>
 						<div className='flex flex-col gap-4'>
 							<label className='font-semibold leading-[normal] text-text-100 text-xl' htmlFor='username'>아이디</label>
@@ -34,6 +88,8 @@ const Login = () => {
 								id='username'
 								placeholder='아이디를 입력해주세요.'
 								type='text'
+								value={username}
+								onChange={(e) => setUsername(e.target.value)}
 								wrapperClassName='rounded'
 							/>
 						</div>
@@ -44,25 +100,34 @@ const Login = () => {
 							</div>
 							<div className='flex flex-col gap-1.5'>
 								<Input
-									icon={<EyeOff />}
+									icon={showPassword ? <Eye /> : <EyeOff />}
+									onIconClick={() => setShowPassword(!showPassword)}
 									id='password'
 									placeholder='비밀번호를 입력해주세요.'
-									type='password'
-									wrapperClassName='outline-system-error rounded'
+									type={showPassword ? 'text' : 'password'}
+									value={password}
+									onChange={(e) => setPassword(e.target.value)}
+									wrapperClassName={error ? 'outline-system-error rounded' : 'rounded'}
 								/>
-								<p className='leading-[normal] text-sm text-system-error'>아이디 또는 비밀번호가 올바르지 않습니다.</p>
+								{error && (
+									<p className='leading-[normal] text-sm text-system-error'>{error}</p>
+								)}
 							</div>
 							<div className='flex gap-2 items-center justify-start'>
 								<input
 									className='cursor-pointer'
 									id='stayLogin'
 									type='checkbox'
+									checked={rememberMe}
+									onChange={(e) => setRememberMe(e.target.checked)}
 								/>
 								<label className='cursor-pointer leading-[normal] text-base text-text-100' htmlFor='stayLogin'>로그인 상태 유지</label>
 							</div>
 						</div>
 					</div>
-					<Button className='cursor-pointer w-full' onClick={handleLogin} type='submit'>로그인</Button>
+					<Button className='cursor-pointer w-full' type='submit' disabled={isLoading}>
+						{isLoading ? '로그인 중...' : '로그인'}
+					</Button>
 				</form>
 			</div>
 		</div>

@@ -9,6 +9,8 @@ import resetIcon from '@/shared/assets/icons/ic_reset.svg';
 import { SearchInput } from '@/shared/components/ui';
 import { ChatRoom } from './ChatRoom';
 import { Badge } from './Badge';
+import { listUserChannels, closeChannel, type ChatChannel } from '@/services/chatService';
+import { useChatStore } from '@/shared/store/chatStore';
 
 interface ChatWindowProps {
 	isOpen: boolean;
@@ -17,80 +19,48 @@ interface ChatWindowProps {
 	buttonPosition?: { x: number; y: number };
 }
 
-interface ChatItem {
-	id: string;
-	name: string;
-	userType: 'patient' | 'doctor' | 'coordinator';
-	lastMessage: string;
-	time: string;
-	unreadCount?: number;
-	avatar?: string;
-}
-
-// Mock data
-const mockChats: ChatItem[] = [
-	{
-		id: '1',
-		name: '김환자',
-		userType: 'patient',
-		lastMessage: '입금 부탁드립니다',
-		time: '16:22',
-		unreadCount: 1,
-	},
-	{
-		id: '2',
-		name: '이환자',
-		userType: 'patient',
-		lastMessage: '입금 부탁드립니다',
-		time: '13:22',
-	},
-	{
-		id: '3',
-		name: '박환자',
-		userType: 'patient',
-		lastMessage: '입금 부탁드립니다 입금 부탁드립니다 입...',
-		time: '09:22',
-		unreadCount: 3,
-	},
-	{
-		id: '4',
-		name: '김철수 의사',
-		userType: 'doctor',
-		lastMessage: '환자 차트 확인 부탁드립니다',
-		time: '12/09/2025',
-	},
-	{
-		id: '5',
-		name: '박영희 코디',
-		userType: 'coordinator',
-		lastMessage: '예약 확인 부탁드립니다',
-		time: '12/09/2025',
-	},
-	{
-		id: '6',
-		name: '최환자',
-		userType: 'patient',
-		lastMessage: '입금 부탁드립니다 입금 부탁드립니다 입...',
-		time: '11/09/2025',
-	},
-	{
-		id: '7',
-		name: '정민수 의사',
-		userType: 'doctor',
-		lastMessage: '수술 일정 조율 필요합니다',
-		time: '09/09/2025',
-	},
-];
 
 const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowProps) => {
 	const { t } = useTranslation();
+	const { currentChannel } = useChatStore();
 	const [searchQuery, setSearchQuery] = useState('');
 	const [selectedChat, setSelectedChat] = useState<string | null>(null);
 	const [showFilterMenu, setShowFilterMenu] = useState(false);
 	const [selectedFilters, setSelectedFilters] = useState<
 		('patient' | 'doctor' | 'coordinator')[]
 	>([]);
+	const [channels, setChannels] = useState<ChatChannel[]>([]);
+	const [isLoading, setIsLoading] = useState(false);
 	const filterMenuRef = useRef<HTMLDivElement>(null);
+
+	// TODO: Get current user ID from auth context/store
+	const currentUserId = 'staff_1'; // Temporary
+
+	// Fetch channels when window opens
+	useEffect(() => {
+		if (isOpen && currentUserId) {
+			fetchChannels();
+		}
+	}, [isOpen, currentUserId]);
+
+	// Open channel directly if passed from TopButtons
+	useEffect(() => {
+		if (isOpen && currentChannel) {
+			setSelectedChat(currentChannel.channel_url);
+		}
+	}, [isOpen, currentChannel]);
+
+	const fetchChannels = async () => {
+		try {
+			setIsLoading(true);
+			const response = await listUserChannels(currentUserId, 50);
+			setChannels(response.channels || []);
+		} catch (error) {
+			console.error('Failed to fetch channels:', error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	// 외부 클릭 감지
 	useEffect(() => {
@@ -112,24 +82,40 @@ const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowPr
 	if (!isOpen) return null;
 
 	const handleEndChat = async () => {
-		// TODO: Call API to end chat
-		// await chatService.closeChannel(selectedChat);
-		// 채팅방에 그대로 머물러서 "대화가 종료되었습니다" 시스템 메시지를 볼 수 있도록 함
-		// 실제로는 SSE를 통해 CHANNEL_CLOSED 이벤트를 받아서 UI 업데이트
+		if (!selectedChat) return;
+
+		try {
+			await closeChannel(selectedChat, currentUserId);
+			// 채팅방에 그대로 머물러서 "대화가 종료되었습니다" 시스템 메시지를 볼 수 있도록 함
+			// SSE를 통해 CHANNEL_CLOSED 이벤트를 받아서 UI 업데이트됨
+		} catch (error) {
+			console.error('Failed to close channel:', error);
+		}
 	};
 
 	// Show ChatRoom when a chat is selected
 	if (selectedChat) {
-		const chat = mockChats.find((c) => c.id === selectedChat);
-		if (chat) {
+		const channel = channels.find((c) => c.channel_url === selectedChat);
+		if (channel) {
+			// Get other member (not current user)
+			const otherMember = channel.members?.find((m) => m.user_id !== currentUserId);
+			const patientName = otherMember?.nickname || 'Unknown';
+
+			// 임직원끼리 채팅 시 대화 종료 버튼 숨기기 (channel custom_type이 INTERNAL인 경우)
+			const isStaffToStaffChat = channel.custom_type === 'INTERNAL';
+			const isClosed = channel.metadata?.status === 'closed';
+
 			return (
 				<ChatRoom
-					channelUrl={chat.id}
-					patientName={chat.name}
-					isClosed={false}
+					channelUrl={channel.channel_url}
+					patientName={patientName}
+					isClosed={isClosed}
 					onClose={onClose}
-					onBack={() => setSelectedChat(null)}
-					onEndChat={handleEndChat}
+					onBack={() => {
+						setSelectedChat(null);
+						fetchChannels(); // Refresh channel list
+					}}
+					onEndChat={isStaffToStaffChat ? undefined : handleEndChat}
 					className={className}
 					buttonPosition={buttonPosition}
 				/>
@@ -146,17 +132,47 @@ const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowPr
 		);
 	};
 
+	// Helper: Determine user type from channel members
+	const getUserType = (channel: ChatChannel): 'patient' | 'doctor' | 'coordinator' => {
+		// INTERNAL = staff-to-staff
+		if (channel.custom_type === 'INTERNAL') {
+			// Check member nicknames or metadata to determine if doctor or coordinator
+			// For now, default to coordinator for staff
+			return 'coordinator';
+		}
+		// STAFF_INITIATED = patient
+		return 'patient';
+	};
+
+	// Format timestamp to time/date string
+	const formatTime = (timestamp: number): string => {
+		const date = new Date(timestamp);
+		const now = new Date();
+		const isToday = date.toDateString() === now.toDateString();
+
+		if (isToday) {
+			return date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+		} else {
+			return date.toLocaleDateString('ko-KR', { month: '2-digit', day: '2-digit', year: 'numeric' });
+		}
+	};
+
 	// 검색 및 필터링
-	const filteredChats = mockChats.filter((chat) => {
+	const filteredChats = channels.filter((channel) => {
+		const otherMember = channel.members?.find((m) => m.user_id !== currentUserId);
+		const name = otherMember?.nickname || '';
+		const lastMessage = channel.last_message?.message || '';
+		const userType = getUserType(channel);
+
 		// 검색 필터
 		const matchesSearch =
 			!searchQuery ||
-			chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			chat.lastMessage.toLowerCase().includes(searchQuery.toLowerCase());
+			name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+			lastMessage.toLowerCase().includes(searchQuery.toLowerCase());
 
 		// 사용자 타입 필터
 		const matchesFilter =
-			selectedFilters.length === 0 || selectedFilters.includes(chat.userType);
+			selectedFilters.length === 0 || selectedFilters.includes(userType);
 
 		return matchesSearch && matchesFilter;
 	});
@@ -509,7 +525,13 @@ const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowPr
 
 				{/* Chat List */}
 				<div className="flex-1 overflow-y-auto overflow-x-hidden">
-					{filteredChats.length === 0 ? (
+					{isLoading ? (
+						<div className="h-full flex items-center justify-center">
+							<div className="text-text-40 text-16 font-medium">
+								{t('common.loading', 'Loading...')}
+							</div>
+						</div>
+					) : filteredChats.length === 0 ? (
 						<div className="h-full px-5 pt-4 pb-5">
 							<div className="h-full bg-bg-gray rounded-[10px] flex items-center justify-center gap-[6px]">
 								<div className="w-6 h-6 relative overflow-hidden flex-shrink-0">
@@ -528,12 +550,21 @@ const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowPr
 						</div>
 					) : (
 						<div className="flex flex-col gap-3 px-5 py-3">
-							{filteredChats.map((chat, index) => (
-								<div key={chat.id} className="flex flex-col gap-3">
-									<div
-										className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-100 transition-colors px-5 py-3 -mx-5 -my-3"
-										onClick={() => setSelectedChat(chat.id)}
-									>
+							{filteredChats.map((channel, index) => {
+								const otherMember = channel.members?.find((m) => m.user_id !== currentUserId);
+								const name = otherMember?.nickname || 'Unknown';
+								const lastMessage = channel.last_message?.message || '';
+								const time = channel.last_message?.created_at
+									? formatTime(channel.last_message.created_at)
+									: '';
+								const unreadCount = channel.unread_message_count || 0;
+
+								return (
+									<div key={channel.channel_url} className="flex flex-col gap-3">
+										<div
+											className="flex items-center gap-2.5 cursor-pointer hover:bg-gray-100 transition-colors px-5 py-3 -mx-5 -my-3"
+											onClick={() => setSelectedChat(channel.channel_url)}
+										>
 										{/* Avatar */}
 										<div className="flex-shrink-0 relative">
 											<div className="w-10 h-10 relative">
@@ -553,20 +584,20 @@ const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowPr
 										{/* Content */}
 										<div className="w-[220px] flex flex-col gap-1">
 											<div className="text-text-100 text-16 font-normal font-pretendard truncate">
-												{chat.name}
+												{name}
 											</div>
 											<div className="text-text-70 text-14 font-normal font-pretendard truncate">
-												{chat.lastMessage}
+												{lastMessage}
 											</div>
 										</div>
 
 										{/* Time & Unread Count */}
 										<div className="w-[74px] flex flex-col items-end gap-1">
 											<div className="text-right text-text-100 text-12 font-medium font-pretendard leading-[14.4px]">
-												{chat.time}
+												{time}
 											</div>
 											{/* Unread Count Badge */}
-											{chat.unreadCount && chat.unreadCount > 0 && (
+											{unreadCount > 0 && (
 												<div
 													style={{
 														padding: 1,
@@ -603,9 +634,7 @@ const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowPr
 																wordWrap: 'break-word',
 															}}
 														>
-															{chat.unreadCount > 99
-																? '99+'
-																: chat.unreadCount}
+															{unreadCount > 99 ? '99+' : unreadCount}
 														</div>
 													</div>
 												</div>
@@ -617,7 +646,8 @@ const ChatWindow = ({ isOpen, onClose, className, buttonPosition }: ChatWindowPr
 										<div className="w-full h-0 border-t border-stroke-input" />
 									)}
 								</div>
-							))}
+							);
+							})}
 						</div>
 					)}
 				</div>

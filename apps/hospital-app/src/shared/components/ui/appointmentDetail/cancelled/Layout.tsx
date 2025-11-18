@@ -6,7 +6,6 @@ import {
 	ReadOnlyTreatmentInfo,
 	TreatmentHistory,
 } from '@/shared/components/ui/appointmentDetail';
-
 const Layout = () => {
 	return (
 		<>
