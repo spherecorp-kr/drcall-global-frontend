@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ConfirmModal from '@ui/modals/ConfirmModal';
 import LanguageSelectionModal from '@components/consultation/modals/LanguageSelectionModal';
 import { usePIPDrag } from '@/hooks/usePIPDrag';
+import { useVideoCall } from '@/hooks/useVideoCall';
+import { useSubtitle } from '@/hooks/useSubtitle';
 
 /**
  * 진료실 화면 (비디오 콜)
@@ -15,9 +17,29 @@ import { usePIPDrag } from '@/hooks/usePIPDrag';
 export default function ConsultationRoom() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [isCameraOn, setIsCameraOn] = useState(true);
-  const [isMicOn, setIsMicOn] = useState(true);
+  const [searchParams] = useSearchParams();
   const [isTranslationOn, setIsTranslationOn] = useState(true);
+
+  // URL에서 appointmentId, patientId 가져오기
+  const appointmentId = Number(searchParams.get('appointmentId')) || 1;
+  const patientId = Number(searchParams.get('patientId')) || 1;
+
+  // Video Call Hook
+  const videoCall = useVideoCall({
+    appointmentId,
+    patientId,
+    onError: (error) => {
+      console.error('[ConsultationRoom] Video call error:', error);
+      alert('영상 통화 연결에 실패했습니다: ' + error.message);
+    },
+  });
+
+  // Subtitle Hook
+  const subtitle = useSubtitle(appointmentId);
+
+  // Video elements refs
+  const localVideoRef = useRef<HTMLVideoElement>(null);
+  const remoteVideoRef = useRef<HTMLVideoElement>(null);
 
   // PIP drag logic extracted to custom hook
   const pip = usePIPDrag({
@@ -33,9 +55,8 @@ export default function ConsultationRoom() {
   const [isEndCallModalOpen, setIsEndCallModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('ko');
 
-  // TODO: 실제 WebRTC 연결 구현
-  const translatedText =
-    '안녕하세요 배가 아프고 머리가 어지러워요 열이 조금 있고 어제 저녁부터 몸이 많이 안좋았어요\n안녕하세요 배가 아프고 머리가 어지러워요 열이 조금';
+  // 현재 표시할 자막 텍스트
+  const translatedText = subtitle.currentSubtitle?.translatedText || '';
 
   const handleClose = () => navigate('/appointments');
 
@@ -43,14 +64,22 @@ export default function ConsultationRoom() {
     setIsEndCallModalOpen(true);
   };
 
-  const handleEndCallConfirm = () => {
+  const handleEndCallConfirm = async () => {
+    await videoCall.endCall();
+    subtitle.endSession();
     setIsEndCallModalOpen(false);
     navigate('/appointments');
   };
 
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
-    // TODO: 실제 번역 언어 변경 로직
+    // 자막 세션 재생성 (언어 변경)
+    if (subtitle.sessionId) {
+      subtitle.endSession();
+    }
+    // 새로운 언어로 자막 세션 생성
+    const sourceLanguage = 'th'; // 의사는 태국어 사용
+    subtitle.createSession(sourceLanguage, language);
   };
 
   const getLanguageDisplayName = () => {
@@ -62,20 +91,45 @@ export default function ConsultationRoom() {
     return languageNames[selectedLanguage] || '한국어';
   };
 
-  const toggleCamera = () => {
-    setIsCameraOn(!isCameraOn);
-    // TODO: 실제 카메라 on/off 로직
-  };
-
-  const toggleMic = () => {
-    setIsMicOn(!isMicOn);
-    // TODO: 실제 마이크 on/off 로직
-  };
-
   const toggleTranslation = () => {
     setIsTranslationOn(!isTranslationOn);
-    // TODO: 실제 번역 on/off 로직
+    subtitle.toggleTranslation();
   };
+
+  // Video call connection on mount
+  useEffect(() => {
+    videoCall.joinVideoCall();
+
+    // 자막 세션 생성 (의사: 태국어 → 환자: 한국어)
+    subtitle.createSession('th', 'ko');
+  }, []);
+
+  // Attach local stream to video element
+  useEffect(() => {
+    if (localVideoRef.current && videoCall.localStream) {
+      localVideoRef.current.srcObject = videoCall.localStream;
+      localVideoRef.current.play().catch(err =>
+        console.error('[ConsultationRoom] Failed to play local video:', err)
+      );
+    }
+  }, [videoCall.localStream]);
+
+  // Attach remote stream (doctor/coordinator) - switch based on active speaker
+  useEffect(() => {
+    if (remoteVideoRef.current && videoCall.participants.length > 0) {
+      // Find active speaker or first participant
+      const activeParticipant = videoCall.participants.find(
+        p => p.participantId === videoCall.activeSpeakerId
+      ) || videoCall.participants[0];
+
+      if (activeParticipant?.stream) {
+        remoteVideoRef.current.srcObject = activeParticipant.stream;
+        remoteVideoRef.current.play().catch(err =>
+          console.error('[ConsultationRoom] Failed to play remote video:', err)
+        );
+      }
+    }
+  }, [videoCall.participants, videoCall.activeSpeakerId]);
 
   return (
     <div
@@ -111,8 +165,10 @@ export default function ConsultationRoom() {
             pointerEvents: 'none'
           }}
         >
-          {/* TODO: 실제 비디오 엘리먼트로 교체 */}
-          <img
+          <video
+            ref={remoteVideoRef}
+            autoPlay
+            playsInline
             style={{
               width: '100%',
               height: '100%',
@@ -120,8 +176,6 @@ export default function ConsultationRoom() {
               objectFit: 'cover',
               objectPosition: 'center'
             }}
-            src="/assets/images/doctor.png"
-            alt="Doctor"
           />
         </div>
 
@@ -145,8 +199,11 @@ export default function ConsultationRoom() {
         onMouseDown={pip.handleMouseDown}
         onTouchStart={pip.handleTouchStart}
       >
-        {/* TODO: 실제 비디오 엘리먼트로 교체 */}
-        <img
+        <video
+          ref={localVideoRef}
+          autoPlay
+          playsInline
+          muted
           style={{
             width: '100%',
             height: '100%',
@@ -156,8 +213,6 @@ export default function ConsultationRoom() {
             objectPosition: 'center',
             pointerEvents: 'none'
           }}
-          src="/assets/images/covid-health-concept-young-asian-woman-medical-face-mask-feels-sick-unwell-catching-flu-p.jpg"
-          alt={t('consultation.patientVideo')}
         />
       </div>
 
@@ -259,7 +314,7 @@ export default function ConsultationRoom() {
       >
         {/* 카메라 토글 */}
         <button
-          onClick={toggleCamera}
+          onClick={videoCall.toggleCamera}
           style={{
             width: 64,
             height: 64,
@@ -273,7 +328,7 @@ export default function ConsultationRoom() {
           }}
         >
           <img
-            src={isCameraOn ? '/assets/icons/ic_video.svg' : '/assets/icons/ic_video-off.svg'}
+            src={videoCall.isCameraOn ? '/assets/icons/ic_video.svg' : '/assets/icons/ic_video-off.svg'}
             alt={t('consultation.camera')}
             style={{ width: 24, height: 24 }}
           />
@@ -281,7 +336,7 @@ export default function ConsultationRoom() {
 
         {/* 마이크 토글 */}
         <button
-          onClick={toggleMic}
+          onClick={videoCall.toggleMic}
           style={{
             width: 64,
             height: 64,
@@ -295,7 +350,7 @@ export default function ConsultationRoom() {
           }}
         >
           <img
-            src={isMicOn ? '/assets/icons/ic_mic.svg' : '/assets/icons/ic_mic-off.svg'}
+            src={videoCall.isMicOn ? '/assets/icons/ic_mic.svg' : '/assets/icons/ic_mic-off.svg'}
             alt={t('consultation.microphone')}
             style={{ width: 24, height: 24 }}
           />
