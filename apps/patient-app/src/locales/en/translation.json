@@ -379,7 +379,11 @@
       "modifyInProcess": "You can modify/cancel appointments in 'Consultation Process'.",
       "modifyAfterConfirm": "After confirmation, modifications can only be made by calling the hospital",
       "profileEdit": "Name, date of birth, gender, and phone number can be changed in 'My Page > Edit Profile'."
-    }
+    },
+    "errorNotLoggedIn": "Login is required.",
+    "errorMissingDateTime": "Please select date, doctor, and time.",
+    "createSuccess": "Appointment has been created.",
+    "createError": "Failed to create appointment."
   },
 	"calendar": {
 		"week": {
