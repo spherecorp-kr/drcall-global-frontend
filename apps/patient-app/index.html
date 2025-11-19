@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>patient-app</title>
 
+    <script>
+      if (typeof global === 'undefined') {
+        window.global = window;
+      }
+    </script>
     <!-- OMISE.js for Payment Tokenization -->
     <script src="https://cdn.omise.co/omise.js"></script>
   </head>
