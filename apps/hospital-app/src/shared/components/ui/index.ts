@@ -16,6 +16,7 @@ export { PatientForm } from './PatientForm';
 export { PatientManagementTable } from './PatientManagementTable';
 export { Radio } from './Radio';
 export { Select } from './Select';
+export { default as ScheduleTimeTable } from './ScheduleTimeTable';
 export { default as SearchIcon } from './SearchIcon';
 export { default as SearchInput } from './SearchInput';
 export { default as SegmentedControl } from './SegmentedControl';
