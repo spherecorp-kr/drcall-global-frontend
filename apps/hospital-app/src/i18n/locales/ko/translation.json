@@ -233,5 +233,331 @@
 			"userType": "사용자 유형",
 			"reset": "필터 초기화"
 		}
+	},
+	"common": {
+		"doctor": {
+			"register": "의사 등록",
+			"detail": "의사 계정 상세"
+		},
+		"patient": {
+			"register": "환자 등록",
+			"detail": "환자 상세"
+		},
+		"buttons": {
+			"confirm": "확인",
+			"complete": "완료",
+			"cancel": "취소",
+			"save": "저장",
+			"edit": "수정",
+			"reset": "초기화",
+			"undo": "되돌리기",
+			"add": "추가"
+		},
+		"labels": {
+			"account": "계정",
+			"id": "아이디",
+			"name": "이름",
+			"englishName": "이름(영문명)",
+			"email": "이메일",
+			"specialty": "전공",
+			"introduction": "자기소개",
+			"experience": "경력&학력",
+			"password": "비밀번호",
+			"inactive": "비활성화"
+		},
+		"placeholders": {
+			"enterName": "이름을 입력해 주세요.",
+			"enterEnglishName": "영문명을 입력해 주세요.",
+			"enterSpecialty": "전공을 입력해 주세요.",
+			"enterIntroduction": "환자에게 표시될 자기소개를 입력해주세요.\n(최대 50자 입력 가능)",
+			"enterExperience": "환자에게 표시될 경력&학력을 입력해주세요.\n(최대 50자 입력 가능)"
+		},
+		"errors": {
+			"enterName": "이름을 입력해주세요.",
+			"enterEnglishName": "영문명을 입력해주세요.",
+			"enterSpecialty": "전공을 입력해주세요.",
+			"enterIntroduction": "자기소개를 입력해주세요.",
+			"enterExperience": "경력&학력을 입력해주세요.",
+			"fileSize": "파일 크기는 5MB 이하여야 합니다.",
+			"fileFormat": "JPG, PNG 형식만 업로드 가능합니다.",
+			"canvasError": "Canvas를 생성할 수 없습니다.",
+			"imageLoadError": "이미지를 불러올 수 없습니다.",
+			"fileReadError": "파일을 읽을 수 없습니다.",
+			"uploadFailed": "이미지 업로드에 실패했습니다.",
+			"uploadError": "프로필 이미지 업로드 실패:",
+			"selectDay": "요일을 선택해주세요.",
+			"startTimeBeforeEnd": "시작 시간은 종료 시간보다 빨라야 합니다."
+		}
+	},
+	"myInfo": {
+		"title": "내 정보 관리",
+		"accountDeactivate": "계정 비활성화",
+		"passwordChange": "비밀번호 변경",
+		"emailChange": "이메일 변경",
+		"infoEdit": "정보 수정",
+		"editComplete": "수정 완료",
+		"availableTime": "진료 가능 시간",
+		"schedule": "진료 시간표",
+		"scheduleInfo": "블록(30분)을 클릭해 진료 가능 시간을 추가/제거하세요.",
+		"addTime": "시간 추가",
+		"addTimeDialog": {
+			"title": "시간 추가",
+			"dayAndTime": "요일 & 시간 추가",
+			"addedSections": "추가된 구간",
+			"autoMerge": "중복된 시간은 자동으로 통합됩니다.",
+			"noTimeSlots": "추가된 시간대가 없습니다."
+		},
+		"accountDialog": {
+			"title": "계정 비활성화",
+			"scheduledAppointments": "예정된 진료 예약",
+			"scheduledAppointmentsCount": "예정된 진료 예약 {{count}}건",
+			"cannotDeactivate": "예정된 진료 예약이 있을 경우 계정을 비활성화할 수 없어요.",
+			"noScheduledAppointments": "예정된 진료 예약이 없습니다."
+		}
+	},
+	"appointment": {
+		"statusTab": {
+			"waiting": "예약 대기",
+			"confirmed": "예약 확정",
+			"completed": "진료 완료",
+			"cancelled": "예약 취소"
+		},
+		"search": {
+			"all": "전체",
+			"allGrade": "전체 등급",
+			"appointmentType": {
+				"fast": "빠른 진료",
+				"regular": "일반 진료",
+				"scheduled": "예약 진료"
+			},
+			"sort": {
+				"newest": "최신순",
+				"oldest": "오래된 순",
+				"requestOldest": "예약 신청 일시 오래된 순",
+				"datetimeNearest": "진료 희망 일시 가까운 순",
+				"scheduledDate": "진료 예정일 순",
+				"confirmedDate": "예약 확정일 순"
+			},
+			"prescriptionStatus": {
+				"all": "처방전 상태: 전체",
+				"uploadWaiting": "업로드 대기",
+				"completed": "완료",
+				"notIssued": "미발급"
+			},
+			"paymentStatus": {
+				"all": "결제 상태: 전체",
+				"scheduled": "청구 예정",
+				"waiting": "결제 대기",
+				"completed": "완료"
+			},
+			"deliveryStatus": {
+				"preparing": "조제중",
+				"prepared": "조제 완료",
+				"delivering": "배송중",
+				"delivered": "수령 완료",
+				"none": "약 없음"
+			},
+			"placeholders": {
+				"patientName": "환자명을 입력해주세요.",
+				"appointmentOrPatient": "예약 번호 또는 환자명을 입력해주세요."
+			}
+		},
+		"table": {
+			"columns": {
+				"appointmentType": "예약 유형",
+				"appointmentNumber": "예약 번호",
+				"appointmentDatetime": "진료 희망 일시",
+				"completedDatetime": "진료 완료 일시",
+				"cancelledDatetime": "예약 취소 일시",
+				"doctor": "의사",
+				"patientName": "환자명",
+				"patientLevel": "환자 등급",
+				"symptom": "증상",
+				"requestTime": "예약 신청 일시",
+				"canceler": "취소자",
+				"prescriptionStatus": "처방전 상태",
+				"paymentStatus": "결제 상태",
+				"deliveryStatus": "배송 상태"
+			}
+		},
+		"calendar": {
+			"patientName": "환자 이름",
+			"doctorName": "의사 이름"
+		},
+		"detail": {
+			"common": {
+				"doctor": "의사",
+				"patient": "환자",
+				"symptom": "증상"
+			},
+			"history": {
+				"title": "과거 진료 내역",
+				"empty": "과거 진료 기록이 없습니다.",
+				"preview": "처방전 미리보기",
+				"table": {
+					"completedDate": "진료 완료 일시",
+					"doctor": "담당 의사",
+					"symptom": "증상",
+					"action": "액션"
+				},
+				"dialog": {
+					"title": "과거 진료 내역",
+					"mainSymptom": "주요 증상",
+					"doctorAdvice": "의사 조언",
+					"aiSummary": "AI 진료 요약"
+				}
+			},
+			"phr": {
+				"title": "환자 건강 정보",
+				"heightWeightBmi": "키/몸무게/BMI",
+				"more": "자세히 보기"
+			},
+			"patientInfo": {
+				"title": "환자 정보",
+				"edit": "환자 정보 수정",
+				"thaiId": "Thai ID Number",
+				"phone": "휴대폰 번호",
+				"address": "주소",
+				"physical": "키/체중/혈액형",
+				"drinking": "음주 습관(200ml, 1W)",
+				"smoking": "흡연(개비)",
+				"medication": "복용 중인 약물",
+				"personalHistory": "개인력",
+				"familyHistory": "가족력",
+				"gender": {
+					"male": "남자",
+					"female": "여자"
+				},
+				"editDialog": {
+					"title": "환자 정보 수정",
+					"name": "이름",
+					"birthday": "생년월일 (dd/mm/yyyy)",
+					"gender": "성별",
+					"phone": "휴대폰 번호",
+					"address": "주소",
+					"physical": "키/체중/혈액형",
+					"drinking": "음주 습관(200ml, 1W)",
+					"smoking": "흡연(개비)",
+					"level": "환자 등급",
+					"medication": "복용 중인 약물",
+					"personalHistory": "개인력",
+					"familyHistory": "가족력"
+				}
+			},
+			"treatmentInfo": {
+				"title": "진료 정보",
+				"doctor": "의사",
+				"symptom": "증상",
+				"symptomImages": "증상 이미지",
+				"preferredTime": "진료 희망 일시",
+				"doctorAdvice": "의사 조언",
+				"aiSummary": "AI 진료 요약",
+				"doctorSelect": "의사를 선택해주세요.",
+				"timeSelect": "진료 희망 일시를 선택해주세요.",
+				"timeSelectAlert": "의사 선택 후 진료 시간 선택이 가능해요.",
+				"dialog": {
+					"title": "진료 일시 변경",
+					"cancel": "취소",
+					"confirm": "변경 완료"
+				}
+			},
+			"memo": {
+				"title": "메모",
+				"placeholder": "의료진 또는 코디네이터가 숙지해야 할 특이 사항이 있다면 적어주세요.",
+				"save": "저장"
+			},
+			"cancel": {
+				"title": "예약 취소 정보",
+				"reason": "취소 사유",
+				"canceler": "취소자",
+				"date": "예약 취소 일시",
+				"number": "예약 번호",
+				"hospital": "병원",
+				"patient": "환자",
+				"dialog": {
+					"hospitalCancel": "병원 취소",
+					"patientCancel": "환자 취소",
+					"placeholder": "예약 취소 사유를 입력해 주세요.\n(최대 50자 입력 가능)"
+				}
+			},
+			"payment": {
+				"title": "결제 정보",
+				"status": "결제 상태",
+				"method": "결제 방법",
+				"amount": "결제 금액",
+				"date": "결제 완료 일시",
+				"breakdown": {
+					"treatment": "진료비",
+					"dispensing": "조제비",
+					"service": "서비스비",
+					"delivery": "배송비",
+					"total": "총"
+				},
+				"warn": "입력된 진료비가 환자에게 청구되었습니다."
+			},
+			"delivery": {
+				"title": "약 배송 정보",
+				"tracking": "배송 조회",
+				"steps": {
+					"preparing": "조제 중",
+					"prepared": "조제 완료",
+					"delivering": "배송 중",
+					"delivered": "수령 완료"
+				},
+				"info": {
+					"number": "조제 번호",
+					"recipient": "수령인",
+					"address": "배송지",
+					"courier": "배달원 정보",
+					"method": "수령 방법",
+					"phone": "휴대폰 번호",
+					"request": "배송 요청 사항"
+				},
+				"trackingDialog": {
+					"title": "배송 조회",
+					"info": "기본 정보",
+					"invoice": "송장번호",
+					"courier": "택배사",
+					"date": "처리 일시",
+					"step": "배송 단계",
+					"location": "처리 장소"
+				}
+			},
+			"prescription": {
+				"edit": "처방전 수정",
+				"register": "처방전·진료비 등록",
+				"download": "처방전 다운로드",
+				"file": "파일명",
+				"upload": "업로드",
+				"include": "처방전 포함",
+				"exclude": "처방전 미포함",
+				"placeholder": "환자가 숙지해야 할 특이사항이 있다면 적어주세요.\n(최대 500자 입력 가능)",
+				"dialog": {
+					"registerTitle": "처방전·진료비 등록",
+					"editTitle": "처방전 수정",
+					"warn": "입력된 진료비가 환자에게 청구됩니다.",
+					"charge": "{{amount}}THB 청구"
+				}
+			},
+			"buttons": {
+				"chat": "Chat",
+				"videoCall": "Video Call",
+				"cancel": "예약 취소",
+				"cancelTreatment": "진료 취소",
+				"startTreatment": "진료 시작",
+				"confirm": "예약 확정",
+				"reappoint": "재예약",
+				"edit": "예약 수정",
+				"paymentConfirm": "입금 완료",
+				"processing": "처리 중...",
+				"complete": "완료",
+				"editComplete": "수정 완료"
+			},
+			"reappointment": {
+				"title": "예약",
+				"doctorSelect": "의사 선택",
+				"dateSelect": "진료 희망 날짜 & 시간 선택"
+			}
+		}
 	}
 }

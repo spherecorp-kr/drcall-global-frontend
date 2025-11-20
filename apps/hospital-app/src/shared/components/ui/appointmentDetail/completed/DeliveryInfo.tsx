@@ -4,8 +4,9 @@ import Prev from '@/shared/components/ui/icon/progress/Prev';
 import { Button } from '@/shared/components/ui';
 import { useDialog } from '@/shared/hooks/useDialog';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
-const DELIVERY_STEPS: string[] = ['조제 중', '조제 완료', '배송 중', '수령 완료'];
+const DELIVERY_STEPS: string[] = ['preparing', 'prepared', 'delivering', 'delivered'];
 const TH_CLASS: string = 'font-normal leading-[normal] min-w-[12.5rem] text-base text-text-70';
 const TD_CLASS: string = 'leading-[normal] text-base text-text-100';
 type StepStatus = 'current' | 'next' | 'prev';
@@ -46,15 +47,16 @@ const DIALOG_TH_CLASS: string = 'font-semibold py-2.5 text-center text-sm text-t
 const DIALOG_TD_CLASS: string = 'font-normal py-2.5 text-center text-xs text-text-100';
 
 const TrackingDialogContents = () => {
+	const { t } = useTranslation();
 	return (
 		<div className="flex flex-col gap-5 items-start">
-			<h3 className="font-bold leading-[normal] text-text-100 text-xl">기본 정보</h3>
+			<h3 className="font-bold leading-[normal] text-text-100 text-xl">{t('appointment.detail.delivery.trackingDialog.info')}</h3>
 			<div className="flex flex-col gap-2.5 items-start">
-				<p className="font-medium leading-[normal] text-base text-text-50">송장번호</p>
+				<p className="font-medium leading-[normal] text-base text-text-50">{t('appointment.detail.delivery.trackingDialog.invoice')}</p>
 				<p className="leading-[normal] text-base text-text-100">송장번호</p>
 			</div>
 			<div className="flex flex-col gap-2.5 items-start">
-				<p className="font-medium leading-[normal] text-base text-text-50">택배사</p>
+				<p className="font-medium leading-[normal] text-base text-text-50">{t('appointment.detail.delivery.trackingDialog.courier')}</p>
 				<p className="leading-[normal] text-base text-text-100">택배사 이름</p>
 			</div>
 			<table className="border-collapse w-full">
@@ -65,9 +67,9 @@ const TrackingDialogContents = () => {
 				</colgroup>
 				<thead>
 					<tr className={`bg-text-10 ${DIALOG_BORDER_Y}`}>
-						<th className={DIALOG_TH_CLASS}>처리 일시</th>
-						<th className={`${DIALOG_BORDER_X} ${DIALOG_TH_CLASS}`}>배송 단계</th>
-						<th className={DIALOG_TH_CLASS}>처리 장소</th>
+						<th className={DIALOG_TH_CLASS}>{t('appointment.detail.delivery.trackingDialog.date')}</th>
+						<th className={`${DIALOG_BORDER_X} ${DIALOG_TH_CLASS}`}>{t('appointment.detail.delivery.trackingDialog.step')}</th>
+						<th className={DIALOG_TH_CLASS}>{t('appointment.detail.delivery.trackingDialog.location')}</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -88,6 +90,7 @@ const TrackingDialogContents = () => {
 const currentStepIndex: number = 0;
 
 const DeliveryInfo = () => {
+	const { t } = useTranslation();
 	const { openDialog } = useDialog();
 
 	const handleOpenTrackingDialog = useCallback(() => {
@@ -95,16 +98,16 @@ const DeliveryInfo = () => {
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <TrackingDialogContents />,
 			dialogId: 'trackingDialog',
-			dialogTitle: '배송 조회',
+			dialogTitle: t('appointment.detail.delivery.trackingDialog.title'),
 			hasCloseButton: true,
 		});
-	}, [openDialog]);
+	}, [openDialog, t]);
 
 	return (
 		<div className="flex flex-col gap-2.5">
 			<div className='flex items-end justify-between'>
-				<h2 className="font-semibold leading-[normal] text-text-100 text-xl">약 배송 정보</h2>
-				<Button onClick={handleOpenTrackingDialog}>배송 조회</Button>
+				<h2 className="font-semibold leading-[normal] text-text-100 text-xl">{t('appointment.detail.delivery.title')}</h2>
+				<Button onClick={handleOpenTrackingDialog}>{t('appointment.detail.delivery.tracking')}</Button>
 			</div>
 			<div className='bg-white border border-stroke-input flex flex-col gap-5 p-5 rounded-[0.625rem]'>
 				<div className='flex flex-col gap-2 px-6'>
@@ -144,7 +147,7 @@ const DeliveryInfo = () => {
 							return (
 								<div className={`flex flex-col gap-1 w-[5.625rem] ${labelAlignmentClass}`} key={`${step}-label`}>
 									<p className={`font-semibold leading-4 text-[0.8125rem] ${status === 'current' ? 'text-primary-70' : 'text-text-100'}`}>
-										{step}
+										{t(`appointment.detail.delivery.steps.${step}`)}
 									</p>
 								</div>
 							);
@@ -154,33 +157,33 @@ const DeliveryInfo = () => {
 				<div className="flex gap-5 items-start self-stretch">
 					<div className="flex flex-1 flex-col gap-4 items-start">
 						<div className="flex gap-2.5 items-center justify-start w-full">
-							<p className={TH_CLASS}>조제 번호</p>
+							<p className={TH_CLASS}>{t('appointment.detail.delivery.info.number')}</p>
 							<p className={TD_CLASS}>2025111-111</p>
 						</div>
 						<div className="flex gap-2.5 items-center justify-start w-full">
-							<p className={TH_CLASS}>수령인</p>
+							<p className={TH_CLASS}>{t('appointment.detail.delivery.info.recipient')}</p>
 							<p className={TD_CLASS}>김환자</p>
 						</div>
 						<div className="flex gap-2.5 items-start justify-start w-full">
-							<p className={TH_CLASS}>배송지</p>
+							<p className={TH_CLASS}>{t('appointment.detail.delivery.info.address')}</p>
 							<p className={TD_CLASS}>Seocho-gu, Seoul, Republic of Korea 162, Baumoe-ro 1902, Building 103, Raemian Apartment, 192-458</p>
 						</div>
 						<div className="flex gap-2.5 items-center justify-start w-full">
-							<p className={TH_CLASS}>배달원 정보</p>
+							<p className={TH_CLASS}>{t('appointment.detail.delivery.info.courier')}</p>
 							<p className={TD_CLASS}>김배달 / 010-1111-1111</p>
 						</div>
 					</div>
 					<div className="flex flex-1 flex-col gap-4 items-start">
 						<div className="flex gap-2.5 items-center justify-start w-full">
-							<p className={TH_CLASS}>수령 방법</p>
+							<p className={TH_CLASS}>{t('appointment.detail.delivery.info.method')}</p>
 							<p className={TD_CLASS}>일반 택배</p>
 						</div>
 						<div className="flex gap-2.5 items-center justify-start w-full">
-							<p className={TH_CLASS}>휴대폰 번호</p>
+							<p className={TH_CLASS}>{t('appointment.detail.delivery.info.phone')}</p>
 							<p className={TD_CLASS}>000-0000-0000</p>
 						</div>
 						<div className="flex gap-2.5 items-start justify-start w-full">
-							<p className={TH_CLASS}>배송 요청 사항</p>
+							<p className={TH_CLASS}>{t('appointment.detail.delivery.info.request')}</p>
 							<textarea
 								className='border border-stroke-input flex-1 min-h-20 px-4 py-2.5 resize-none rounded'
 								disabled

@@ -1,8 +1,10 @@
 import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
 import { cn } from '@/shared/utils/cn.ts';
+import { useTranslation } from 'react-i18next';
 
 const AppointmentStatusTab = () => {
 	const { appointmentTab, setAppointmentTab } = useAppointmentTabStore();
+	const { t } = useTranslation();
 	return (
 		<div className="flex gap-10 h-12 items-start px-5 self-stretch shrink-0">
 			<div
@@ -17,7 +19,7 @@ const AppointmentStatusTab = () => {
 							: 'font-normal text-text-100',
 					)}
 				>
-					예약 대기(30)
+					{t('appointment.statusTab.waiting')}(30)
 				</h2>
 				{appointmentTab === 'waiting' && <div className="bg-primary-70 h-1 w-full" />}
 			</div>
@@ -33,7 +35,7 @@ const AppointmentStatusTab = () => {
 							: 'font-normal text-text-100',
 					)}
 				>
-					예약 확정(20)
+					{t('appointment.statusTab.confirmed')}(20)
 				</h2>
 				{appointmentTab === 'confirmed' && <div className="bg-primary-70 h-1 w-full" />}
 			</div>
@@ -49,7 +51,7 @@ const AppointmentStatusTab = () => {
 							: 'font-normal text-text-100',
 					)}
 				>
-					진료 완료(40)
+					{t('appointment.statusTab.completed')}(40)
 				</h2>
 				{appointmentTab === 'completed' && <div className="bg-primary-70 h-1 w-full" />}
 			</div>
@@ -65,7 +67,7 @@ const AppointmentStatusTab = () => {
 							: 'font-normal text-text-100',
 					)}
 				>
-					예약 취소(10)
+					{t('appointment.statusTab.cancelled')}(10)
 				</h2>
 				{appointmentTab === 'cancelled' && <div className="bg-primary-70 h-1 w-full" />}
 			</div>

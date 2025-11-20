@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react';
 import type { ColumnDef, Row } from '@tanstack/react-table';
 import type { CompletedTableColumnProps } from '@/shared/types/appointment';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const sampleData: CompletedTableColumnProps[] = [
 	{
@@ -93,58 +94,59 @@ const ColGroup = () => (
 
 const CompletedTable = () => {
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	const columns = useMemo<ColumnDef<CompletedTableColumnProps>[]>(() => [
 		{
 			accessorKey: 'appointmentNumber',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '예약 번호',
+			header: t('appointment.table.columns.appointmentNumber'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'completedDatetime',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '진료 완료 일시',
+			header: t('appointment.table.columns.completedDatetime'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'doctorName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '의사',
+			header: t('appointment.table.columns.doctor'),
 			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'patientName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '환자명',
+			header: t('appointment.table.columns.patientName'),
 			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'prescriptionStatus',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '처방전 상태',
+			header: t('appointment.table.columns.prescriptionStatus'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'paymentStatus',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '결제 상태',
+			header: t('appointment.table.columns.paymentStatus'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'deliveryStatus',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '배송 상태',
+			header: t('appointment.table.columns.deliveryStatus'),
 			minSize: 100
 		},
-	], []);
+	], [t]);
 
 	// 상세 페이지로 이동
 	const navigateToDetails = useCallback((row: Row<CompletedTableColumnProps>) => {

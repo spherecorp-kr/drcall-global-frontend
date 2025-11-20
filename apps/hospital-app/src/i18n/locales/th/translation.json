@@ -232,5 +232,331 @@
 			"userType": "ประเภทผู้ใช้",
 			"reset": "รีเซ็ตฟิลเตอร์"
 		}
+	},
+	"common": {
+		"doctor": {
+			"register": "ลงทะเบียนแพทย์",
+			"detail": "รายละเอียดบัญชีแพทย์"
+		},
+		"patient": {
+			"register": "ลงทะเบียนผู้ป่วย",
+			"detail": "รายละเอียดผู้ป่วย"
+		},
+		"buttons": {
+			"confirm": "ยืนยัน",
+			"complete": "เสร็จสิ้น",
+			"cancel": "ยกเลิก",
+			"save": "บันทึก",
+			"edit": "แก้ไข",
+			"reset": "รีเซ็ต",
+			"undo": "ย้อนกลับ",
+			"add": "เพิ่ม"
+		},
+		"labels": {
+			"account": "บัญชี",
+			"id": "รหัสผู้ใช้",
+			"name": "ชื่อ",
+			"englishName": "ชื่อ (ภาษาอังกฤษ)",
+			"email": "อีเมล",
+			"specialty": "ความเชี่ยวชาญ",
+			"introduction": "แนะนำตัว",
+			"experience": "ประสบการณ์ & การศึกษา",
+			"password": "รหัสผ่าน",
+			"inactive": "ไม่ใช้งาน"
+		},
+		"placeholders": {
+			"enterName": "กรุณากรอกชื่อ",
+			"enterEnglishName": "กรุณากรอกชื่อภาษาอังกฤษ",
+			"enterSpecialty": "กรุณากรอกความเชี่ยวชาญ",
+			"enterIntroduction": "กรอกข้อมูลแนะนำตัวที่จะแสดงให้ผู้ป่วยเห็น\n(สูงสุด 50 ตัวอักษร)",
+			"enterExperience": "กรอกข้อมูลประสบการณ์ & การศึกษาที่จะแสดงให้ผู้ป่วยเห็น\n(สูงสุด 50 ตัวอักษร)"
+		},
+		"errors": {
+			"enterName": "กรุณากรอกชื่อ",
+			"enterEnglishName": "กรุณากรอกชื่อภาษาอังกฤษ",
+			"enterSpecialty": "กรุณากรอกความเชี่ยวชาญ",
+			"enterIntroduction": "กรุณากรอกข้อมูลแนะนำตัว",
+			"enterExperience": "กรุณากรอกข้อมูลประสบการณ์ & การศึกษา",
+			"fileSize": "ขนาดไฟล์ต้องไม่เกิน 5MB",
+			"fileFormat": "รองรับเฉพาะรูปแบบ JPG และ PNG เท่านั้น",
+			"canvasError": "ไม่สามารถสร้าง Canvas ได้",
+			"imageLoadError": "ไม่สามารถโหลดภาพได้",
+			"fileReadError": "ไม่สามารถอ่านไฟล์ได้",
+			"uploadFailed": "การอัปโหลดภาพล้มเหลว",
+			"uploadError": "การอัปโหลดภาพโปรไฟล์ล้มเหลว:",
+			"selectDay": "กรุณาเลือกวัน",
+			"startTimeBeforeEnd": "เวลาเริ่มต้นต้องเร็วกว่าเวลาสิ้นสุด"
+		}
+	},
+	"myInfo": {
+		"title": "การจัดการข้อมูลของฉัน",
+		"accountDeactivate": "ปิดการใช้งานบัญชี",
+		"passwordChange": "เปลี่ยนรหัสผ่าน",
+		"emailChange": "เปลี่ยนอีเมล",
+		"infoEdit": "แก้ไขข้อมูล",
+		"editComplete": "แก้ไขเสร็จสิ้น",
+		"availableTime": "เวลาที่สามารถให้คำปรึกษาได้",
+		"schedule": "ตารางการให้คำปรึกษา",
+		"scheduleInfo": "คลิกบล็อก (30 นาที) เพื่อเพิ่ม/ลบเวลาที่สามารถให้คำปรึกษาได้",
+		"addTime": "เพิ่มเวลา",
+		"addTimeDialog": {
+			"title": "เพิ่มเวลา",
+			"dayAndTime": "เพิ่มวัน & เวลา",
+			"addedSections": "ส่วนที่เพิ่มแล้ว",
+			"autoMerge": "เวลาที่ซ้อนทับกันจะถูกรวมเข้าด้วยกันโดยอัตโนมัติ",
+			"noTimeSlots": "ไม่มีช่วงเวลาเพิ่ม"
+		},
+		"accountDialog": {
+			"title": "ปิดการใช้งานบัญชี",
+			"scheduledAppointments": "การนัดหมายที่กำหนดไว้",
+			"scheduledAppointmentsCount": "การนัดหมายที่กำหนดไว้ {{count}} รายการ",
+			"cannotDeactivate": "คุณไม่สามารถปิดการใช้งานบัญชีได้เมื่อมีการนัดหมายที่กำหนดไว้",
+			"noScheduledAppointments": "ไม่มี scheduled appointments"
+		}
+	},
+	"appointment": {
+		"statusTab": {
+			"waiting": "รอการนัดหมาย",
+			"confirmed": "ยืนยันการนัดหมาย",
+			"completed": "รักษาเสร็จสิ้น",
+			"cancelled": "ยกเลิกการนัดหมาย"
+		},
+		"search": {
+			"all": "ทั้งหมด",
+			"allGrade": "ทุกระดับ",
+			"appointmentType": {
+				"fast": "การปรึกษาแบบด่วน",
+				"regular": "การปรึกษาปกติ",
+				"scheduled": "การปรึกษาตามนัดหมาย"
+			},
+			"sort": {
+				"newest": "ใหม่ล่าสุด",
+				"oldest": "เก่าที่สุด",
+				"requestOldest": "วันที่ขอใช้บริการเก่าที่สุด",
+				"datetimeNearest": "วันที่ปรึกษาใกล้ที่สุด",
+				"scheduledDate": "วันที่นัดหมาย",
+				"confirmedDate": "วันที่ยืนยัน"
+			},
+			"prescriptionStatus": {
+				"all": "สถานะใบสั่งยา: ทั้งหมด",
+				"uploadWaiting": "รอการอัปโหลด",
+				"completed": "เสร็จสิ้น",
+				"notIssued": "ไม่ได้ออก"
+			},
+			"paymentStatus": {
+				"all": "สถานะการชำระเงิน: ทั้งหมด",
+				"scheduled": "กำหนดการเรียกเก็บ",
+				"waiting": "รอการชำระเงิน",
+				"completed": "เสร็จสิ้น"
+			},
+			"deliveryStatus": {
+				"preparing": "กำลังเตรียม",
+				"prepared": "เตรียมเสร็จแล้ว",
+				"delivering": "กำลังจัดส่ง",
+				"delivered": "รับแล้ว",
+				"none": "ไม่มียา"
+			},
+			"placeholders": {
+				"patientName": "กรุณากรอกชื่อผู้ป่วย",
+				"appointmentOrPatient": "กรุณากรอกหมายเลขการนัดหมายหรือชื่อผู้ป่วย"
+			}
+		},
+		"table": {
+			"columns": {
+				"appointmentType": "ประเภทการนัดหมาย",
+				"appointmentNumber": "หมายเลขการนัดหมาย",
+				"appointmentDatetime": "วันที่ปรึกษาที่ต้องการ",
+				"completedDatetime": "วันที่เสร็จสิ้น",
+				"cancelledDatetime": "วันที่ยกเลิก",
+				"doctor": "แพทย์",
+				"patientName": "ชื่อผู้ป่วย",
+				"patientLevel": "ระดับผู้ป่วย",
+				"symptom": "อาการ",
+				"requestTime": "วันที่ขอใช้บริการ",
+				"canceler": "ผู้ยกเลิก",
+				"prescriptionStatus": "สถานะใบสั่งยา",
+				"paymentStatus": "สถานะการชำระเงิน",
+				"deliveryStatus": "สถานะการจัดส่ง"
+			}
+		},
+		"calendar": {
+			"patientName": "ชื่อผู้ป่วย",
+			"doctorName": "ชื่อแพทย์"
+		},
+		"detail": {
+			"common": {
+				"doctor": "แพทย์",
+				"patient": "ผู้ป่วย",
+				"symptom": "อาการ"
+			},
+			"history": {
+				"title": "ประวัติการรักษา",
+				"empty": "ไม่มีประวัติการรักษา",
+				"preview": "ดูตัวอย่างใบสั่งยา",
+				"table": {
+					"completedDate": "วันที่เสร็จสิ้น",
+					"doctor": "แพทย์เจ้าของไข้",
+					"symptom": "อาการ",
+					"action": "ดำเนินการ"
+				},
+				"dialog": {
+					"title": "ประวัติการรักษา",
+					"mainSymptom": "อาการหลัก",
+					"doctorAdvice": "คำแนะนำจากแพทย์",
+					"aiSummary": "สรุปผล AI"
+				}
+			},
+			"phr": {
+				"title": "ข้อมูลสุขภาพผู้ป่วย",
+				"heightWeightBmi": "ส่วนสูง/น้ำหนัก/BMI",
+				"more": "ดูเพิ่มเติม"
+			},
+			"patientInfo": {
+				"title": "ข้อมูลผู้ป่วย",
+				"edit": "แก้ไขข้อมูลผู้ป่วย",
+				"thaiId": "เลขบัตรประชาชนไทย",
+				"phone": "เบอร์โทรศัพท์",
+				"address": "ที่อยู่",
+				"physical": "ส่วนสูง/น้ำหนัก/กรุ๊ปเลือด",
+				"drinking": "การดื่มแอลกอฮอล์ (200ml, 1W)",
+				"smoking": "การสูบบุหรี่ (มวน)",
+				"medication": "ยาที่รับประทานปัจจุบัน",
+				"personalHistory": "ประวัติส่วนตัว",
+				"familyHistory": "ประวัติครอบครัว",
+				"gender": {
+					"male": "ชาย",
+					"female": "หญิง"
+				},
+				"editDialog": {
+					"title": "แก้ไขข้อมูลผู้ป่วย",
+					"name": "ชื่อ",
+					"birthday": "วันเกิด (dd/mm/yyyy)",
+					"gender": "เพศ",
+					"phone": "เบอร์โทรศัพท์",
+					"address": "ที่อยู่",
+					"physical": "ส่วนสูง/น้ำหนัก/กรุ๊ปเลือด",
+					"drinking": "การดื่มแอลกอฮอล์ (200ml, 1W)",
+					"smoking": "การสูบบุหรี่ (มวน)",
+					"level": "ระดับผู้ป่วย",
+					"medication": "ยาที่รับประทานปัจจุบัน",
+					"personalHistory": "ประวัติส่วนตัว",
+					"familyHistory": "ประวัติครอบครัว"
+				}
+			},
+			"treatmentInfo": {
+				"title": "ข้อมูลการรักษา",
+				"doctor": "แพทย์",
+				"symptom": "อาการ",
+				"symptomImages": "รูปภาพอาการ",
+				"preferredTime": "วันและเวลาที่ต้องการ",
+				"doctorAdvice": "คำแนะนำจากแพทย์",
+				"aiSummary": "สรุปผล AI",
+				"doctorSelect": "กรุณาเลือกแพทย์",
+				"timeSelect": "กรุณาเลือกวันและเวลา",
+				"timeSelectAlert": "คุณสามารถเลือกเวลาได้หลังจากเลือกแพทย์แล้ว",
+				"dialog": {
+					"title": "เปลี่ยนวันและเวลา",
+					"cancel": "ยกเลิก",
+					"confirm": "เสร็จสิ้น"
+				}
+			},
+			"memo": {
+				"title": "บันทึก",
+				"placeholder": "กรุณาระบุข้อควรระวังสำหรับแพทย์หรือผู้ประสานงาน",
+				"save": "บันทึก"
+			},
+			"cancel": {
+				"title": "ข้อมูลการยกเลิก",
+				"reason": "สาเหตุ",
+				"canceler": "ผู้ยกเลิก",
+				"date": "วันที่ยกเลิก",
+				"number": "หมายเลขการนัดหมาย",
+				"hospital": "โรงพยาบาล",
+				"patient": "ผู้ป่วย",
+				"dialog": {
+					"hospitalCancel": "โรงพยาบาลยกเลิก",
+					"patientCancel": "ผู้ป่วยยกเลิก",
+					"placeholder": "กรุณาระบุสาเหตุการยกเลิก\n(สูงสุด 50 ตัวอักษร)"
+				}
+			},
+			"payment": {
+				"title": "ข้อมูลการชำระเงิน",
+				"status": "สถานะ",
+				"method": "วิธีการ",
+				"amount": "จำนวนเงิน",
+				"date": "วันที่",
+				"breakdown": {
+					"treatment": "ค่ารักษา",
+					"dispensing": "ค่าจัดยา",
+					"service": "ค่าบริการ",
+					"delivery": "ค่าจัดส่ง",
+					"total": "รวม"
+				},
+				"warn": "ค่าใช้จ่ายที่ระบุถูกเรียกเก็บจากผู้ป่วยแล้ว"
+			},
+			"delivery": {
+				"title": "ข้อมูลการจัดส่งยา",
+				"tracking": "ติดตามพัสดุ",
+				"steps": {
+					"preparing": "กำลังจัดยา",
+					"prepared": "จัดยาเสร็จแล้ว",
+					"delivering": "กำลังจัดส่ง",
+					"delivered": "ได้รับแล้ว"
+				},
+				"info": {
+					"number": "เลขที่ใบสั่งยา",
+					"recipient": "ผู้รับ",
+					"address": "ที่อยู่",
+					"courier": "ข้อมูลผู้จัดส่ง",
+					"method": "วิธีการ",
+					"phone": "เบอร์โทรศัพท์",
+					"request": "คำขอ"
+				},
+				"trackingDialog": {
+					"title": "ติดตามพัสดุ",
+					"info": "ข้อมูลพื้นฐาน",
+					"invoice": "เลขพัสดุ",
+					"courier": "บริษัทขนส่ง",
+					"date": "วันที่",
+					"step": "ขั้นตอน",
+					"location": "สถานที่"
+				}
+			},
+			"prescription": {
+				"edit": "แก้ไขใบสั่งยา",
+				"register": "ลงทะเบียนใบสั่งยา/ค่าใช้จ่าย",
+				"download": "ดาวน์โหลดใบสั่งยา",
+				"file": "ชื่อไฟล์",
+				"upload": "อัปโหลด",
+				"include": "รวมใบสั่งยา",
+				"exclude": "ไม่รวมใบสั่งยา",
+				"placeholder": "กรุณาระบุข้อควรระวังสำหรับผู้ป่วย\n(สูงสุด 500 ตัวอักษร)",
+				"dialog": {
+					"registerTitle": "ลงทะเบียนใบสั่งยา/ค่าใช้จ่าย",
+					"editTitle": "แก้ไขใบสั่งยา",
+					"warn": "ค่าใช้จ่ายที่ระบุจะถูกเรียกเก็บจากผู้ป่วย",
+					"charge": "เรียกเก็บ {{amount}}THB"
+				}
+			},
+			"buttons": {
+				"chat": "แชท",
+				"videoCall": "วิดีโอคอล",
+				"cancel": "ยกเลิกนัดหมาย",
+				"cancelTreatment": "ยกเลิกการรักษา",
+				"startTreatment": "เริ่มการรักษา",
+				"confirm": "ยืนยัน",
+				"reappoint": "นัดหมายใหม่",
+				"edit": "แก้ไข",
+				"paymentConfirm": "ยืนยันการชำระเงิน",
+				"processing": "กำลังดำเนินการ...",
+				"complete": "เสร็จสิ้น",
+				"editComplete": "แก้ไขเสร็จสิ้น"
+			},
+			"reappointment": {
+				"title": "การนัดหมาย",
+				"doctorSelect": "เลือกแพทย์",
+				"dateSelect": "เลือกวันและเวลา"
+			}
+		}
 	}
 }

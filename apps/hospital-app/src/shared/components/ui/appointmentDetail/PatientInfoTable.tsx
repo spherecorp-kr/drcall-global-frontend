@@ -4,6 +4,7 @@ import { useDialog } from '@/shared/hooks/useDialog';
 import { SingleDialogBottomButton } from '@/shared/components/ui/dialog';
 import { EditPatientInfoForm } from '@/shared/components/ui/appointmentDetail';
 import { AppointmentBadge, MedicineBadge, PatientBadge } from '@/shared/components/ui/Badge.tsx';
+import { useTranslation } from 'react-i18next';
 
 const TH_CLASS: string = 'font-normal leading-[normal] min-w-[12.5rem] text-base text-text-70';
 const TD_CLASS: string = 'font-normal leading-[normal] text-base text-text-100';
@@ -32,36 +33,37 @@ interface Props {
 }
 
 const PatientInfoTable = ({ isEditable = false }: Props) => {
+	const { t } = useTranslation();
 	const { openDialog } = useDialog();
 
 	const openEditPatientInfoDialog = useCallback(() => {
 		openDialog({
-			dialogButtons: <SingleDialogBottomButton onClick={() => {}} text='저장' />,
+			dialogButtons: <SingleDialogBottomButton onClick={() => {}} text={t('common.buttons.save')} />,
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <EditPatientInfoForm />,
 			dialogId: 'editPatientInfoDialog',
-			dialogTitle: '환자 정보 수정',
+			dialogTitle: t('appointment.detail.patientInfo.edit'),
 			hasCloseButton: true
 		});
-	}, [openDialog]);
+	}, [openDialog, t]);
 
 	return (
 		<div className="bg-white border border-stroke-input flex flex-col gap-5 p-5 rounded-[0.625rem]">
 			<div className="flex flex-col gap-2.5">
 				<div className='flex items-center justify-between'>
 					<div className='flex gap-2 items-center justify-start'>
-						<AppointmentBadge type='regular'>일반 진료</AppointmentBadge>
-						<AppointmentBadge type='quick'>빠른 진료</AppointmentBadge>
+						<AppointmentBadge type='regular'>{t('appointment.search.appointmentType.regular')}</AppointmentBadge>
+						<AppointmentBadge type='quick'>{t('appointment.search.appointmentType.fast')}</AppointmentBadge>
 						<PatientBadge level='risk'>Risk</PatientBadge>
 						<PatientBadge level='vip'>VIP</PatientBadge>
-						<MedicineBadge theme='gray'>결제 완료</MedicineBadge>
-						<MedicineBadge theme='green'>배송중</MedicineBadge>
+						<MedicineBadge theme='gray'>{t('appointment.search.paymentStatus.completed')}</MedicineBadge>
+						<MedicineBadge theme='green'>{t('appointment.search.deliveryStatus.delivering')}</MedicineBadge>
 					</div>
 					{isEditable && (
 						<Button
 							className='rounded-sm !text-text-70'
 							onClick={openEditPatientInfoDialog}
-							variant='ghost'>환자 정보 수정</Button>
+							variant='ghost'>{t('appointment.detail.patientInfo.edit')}</Button>
 					)}
 				</div>
 				<div className='flex gap-2 items-center justify-start'>
@@ -72,41 +74,41 @@ const PatientInfoTable = ({ isEditable = false }: Props) => {
 			<div className="flex gap-5 items-start self-stretch">
 				<div className="flex flex-1 flex-col h-full items-start justify-between">
 					<div className="flex gap-2.5 items-center justify-start">
-						<p className={TH_CLASS}>Thai ID Number</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.thaiId')}</p>
 						<p className={TD_CLASS}>0-1234-56789-01-2</p>
 					</div>
 					<div className="flex gap-2.5 items-center justify-start">
-						<p className={TH_CLASS}>휴대폰 번호</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.phone')}</p>
 						<p className={TD_CLASS}>010-1234-5678</p>
 					</div>
 					<div className="flex gap-2.5 items-start justify-start">
-						<p className={TH_CLASS}>주소</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.address')}</p>
 						<p className={`${TD_CLASS} break-words`}>Seocho-gu, Seoul, Republic of Korea 162, Baumoe-ro 1902, Building 103, Raemian Apartment, 192-458</p>
 					</div>
 					<div className="flex gap-2.5 items-center justify-start">
-						<p className={TH_CLASS}>키/체중/혈액형</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.physical')}</p>
 						<p className={TD_CLASS}>167/55/A(RH+)</p>
 					</div>
 					<div className="flex gap-2.5 items-center justify-start">
-						<p className={TH_CLASS}>음주 습관(200ml, 1W)</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.drinking')}</p>
 						<p className={TD_CLASS}>1~5</p>
 					</div>
 					<div className="flex gap-2.5 items-center justify-start">
-						<p className={TH_CLASS}>흡연(개비)</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.smoking')}</p>
 						<p className={TD_CLASS}>6+</p>
 					</div>
 				</div>
 				<div className="flex flex-1 flex-col gap-4 items-start">
 					<div className="flex gap-2.5 items-start justify-start w-full">
-						<p className={TH_CLASS}>복용 중인 약물</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.medication')}</p>
 						<textarea className={TEXTAREA_CLASS} disabled></textarea>
 					</div>
 					<div className="flex gap-2.5 items-start justify-start w-full">
-						<p className={TH_CLASS}>개인력</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.personalHistory')}</p>
 						<textarea className={TEXTAREA_CLASS} disabled></textarea>
 					</div>
 					<div className="flex gap-2.5 items-start justify-start w-full">
-						<p className={TH_CLASS}>가족력</p>
+						<p className={TH_CLASS}>{t('appointment.detail.patientInfo.familyHistory')}</p>
 						<textarea className={TEXTAREA_CLASS} disabled></textarea>
 					</div>
 				</div>

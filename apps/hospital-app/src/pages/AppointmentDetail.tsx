@@ -42,7 +42,7 @@ const AppointmentDetail = () => {
 		}
 
 		if (!appointment) {
-			return <div>예약 정보를 찾을 수 없습니다.</div>;
+			return <div>No Data.</div>;
 		}
 
 		switch (appointmentTab) {

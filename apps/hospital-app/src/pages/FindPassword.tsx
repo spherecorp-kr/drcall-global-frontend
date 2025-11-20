@@ -277,7 +277,7 @@ const FindPassword = () => {
 									value={verificationCode}
 									wrapperClassName={errors.verification ? 'outline-system-error rounded' : 'rounded'}
 								/>
-								<Button className='break-keep' disabled={isLoading} onClick={handleResendCode} type='button'>
+								<Button className='w-24' disabled={isLoading} onClick={handleResendCode} type='button'>
 									{t('findPassword.verificationStep.resend')}
 								</Button>
 							</div>

@@ -45,13 +45,13 @@ const PatientHealthInfo = ({ height, weight, bmi, bloodPressure, bloodSugar, tem
 
 	return (
 		<div className="flex flex-1 flex-col gap-2.5 items-start self-stretch">
-			<h2 className="font-semibold leading-[normal] text-text-100 text-xl">환자 건강 정보</h2>
+			<h2 className="font-semibold leading-[normal] text-text-100 text-xl">{t('appointment.detail.phr.title')}</h2>
 			<div className="bg-white border border-stroke-input flex flex-col gap-2 h-full items-start p-5 rounded-[0.625rem] w-full">
 				{/* 키/몸무게/BMI */}
 				<div className="flex gap-2.5 items-start self-stretch">
 					<div className="flex gap-2 items-center w-[12.5rem]">
 						<img alt="weight" className="h-6 w-6" src={icWeight} />
-						<p className="flex-1 font-normal text-base text-text-70">키/몸무게/BMI</p>
+						<p className="flex-1 font-normal text-base text-text-70">{t('appointment.detail.phr.heightWeightBmi')}</p>
 					</div>
 					<div className="flex flex-1 gap-2.5 items-start">
 						<div className="flex flex-1 flex-col gap-1 items-start">
@@ -64,7 +64,7 @@ const PatientHealthInfo = ({ height, weight, bmi, bloodPressure, bloodSugar, tem
 							onClick={() => openDetailDialog('info', 1, 'weight')}
 							size="small"
 							variant="ghost"
-						>자세히 보기</Button>
+						>{t('appointment.detail.phr.more')}</Button>
 					</div>
 				</div>
 				{/* 혈압 */}
@@ -84,7 +84,7 @@ const PatientHealthInfo = ({ height, weight, bmi, bloodPressure, bloodSugar, tem
 							onClick={() => openDetailDialog('bp', 1, 'pressure')}
 							size="small"
 							variant="ghost"
-						>자세히 보기</Button>
+						>{t('appointment.detail.phr.more')}</Button>
 					</div>
 				</div>
 				{/* 혈당 */}
@@ -104,7 +104,7 @@ const PatientHealthInfo = ({ height, weight, bmi, bloodPressure, bloodSugar, tem
 							onClick={() => openDetailDialog('bs', 1, 'sugar')}
 							size="small"
 							variant="ghost"
-						>자세히 보기</Button>
+						>{t('appointment.detail.phr.more')}</Button>
 					</div>
 				</div>
 				{/* 체온 */}
@@ -124,7 +124,7 @@ const PatientHealthInfo = ({ height, weight, bmi, bloodPressure, bloodSugar, tem
 							onClick={() => openDetailDialog('bt', 1, 'temp')}
 							size="small"
 							variant="ghost"
-						>자세히 보기</Button>
+						>{t('appointment.detail.phr.more')}</Button>
 					</div>
 				</div>
 			</div>
