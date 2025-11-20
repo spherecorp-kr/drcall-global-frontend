@@ -6,6 +6,7 @@ export { default as ConsultationDetailPage } from './ConsultationDetail';
 export { default as DashboardPage } from './Dashboard';
 export { default as DoctorPage } from './Doctor';
 export { default as DoctorDetailPage } from './DoctorDetail';
+export { default as FindPasswordPage } from './FindPassword';
 export { default as HospitalPage } from './Hospital';
 export { default as LoginPage } from './Login';
 export { default as MyInfoPage } from './MyInfo';

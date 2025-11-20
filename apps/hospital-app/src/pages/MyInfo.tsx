@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Button, Input, ScheduleTimeTable } from '@/shared/components/ui';
 import PasswordChangeModal from '@/shared/components/ui/PasswordChangeModal';
+import icAccount from '@/shared/assets/icons/btn_account.svg';
 import icEdit from '@/shared/assets/icons/ic_edit.svg';
 import icEditSmall from '@/shared/assets/icons/ic_edit_small.svg';
 import icEditBg from '@/shared/assets/icons/ic_edit_bg.svg';
@@ -17,6 +18,7 @@ import icReset from '@/shared/assets/icons/ic_reset.png';
 import icArrowUp from '@/shared/assets/icons/ic_arrow_up.svg';
 import icArrowDown from '@/shared/assets/icons/ic_arrow_down.svg';
 import closeCircle from '@/shared/assets/icons/close_circle.svg';
+import grayWarning from '@/shared/assets/icons/ic_circle_warning_grey.svg';
 import { useDialog } from '@/shared/hooks/useDialog.ts';
 import { SingleDialogBottomButton } from '@/shared/components/ui/dialog';
 import { useTranslation } from 'react-i18next';
@@ -57,6 +59,52 @@ interface TimeSlot {
 	startHour: string;
 	startMinute: string;
 }
+
+// 이미지 리사이징 유틸리티 (컴포넌트 외부로 이동하여 재생성 방지)
+const resizeImage = (file: File, size: number): Promise<string> => {
+	return new Promise((resolve, reject) => {
+		// 파일 크기 체크 (5MB)
+		if (file.size > 5 * 1024 * 1024) {
+			reject(new Error('파일 크기는 5MB 이하여야 합니다.'));
+			return;
+		}
+
+		// 파일 형식 체크
+		if (!file.type.match(/image\/(jpeg|jpg|png)/)) {
+			reject(new Error('JPG, PNG 형식만 업로드 가능합니다.'));
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = (e) => {
+			const img = new Image();
+			img.onload = () => {
+				const canvas = document.createElement('canvas');
+				const ctx = canvas.getContext('2d');
+				if (!ctx) {
+					reject(new Error('Canvas를 생성할 수 없습니다.'));
+					return;
+				}
+
+				// 정사각형으로 크롭
+				const minSize = Math.min(img.width, img.height);
+				const x = (img.width - minSize) / 2;
+				const y = (img.height - minSize) / 2;
+
+				canvas.width = size;
+				canvas.height = size;
+				ctx.drawImage(img, x, y, minSize, minSize, 0, 0, size, size);
+
+				// 최적화된 이미지를 base64로 변환 (quality: 0.9)
+				resolve(canvas.toDataURL('image/jpeg', 0.9));
+			};
+			img.onerror = () => reject(new Error('이미지를 불러올 수 없습니다.'));
+			img.src = e.target?.result as string;
+		};
+		reader.onerror = () => reject(new Error('파일을 읽을 수 없습니다.'));
+		reader.readAsDataURL(file);
+	});
+};
 
 // 시간을 분 단위로 변환 (비교를 위해)
 const timeToMinutes = (hour: string, minute: string, amPm: string): number => {
@@ -216,52 +264,7 @@ const TimePicker = ({ displayValue, hour, minute, amPm, isOpen, onHourChange, on
 	);
 };
 
-// 이미지 리사이징 유틸리티 (컴포넌트 외부로 이동하여 재생성 방지)
-const resizeImage = (file: File, size: number): Promise<string> => {
-	return new Promise((resolve, reject) => {
-		// 파일 크기 체크 (5MB)
-		if (file.size > 5 * 1024 * 1024) {
-			reject(new Error('파일 크기는 5MB 이하여야 합니다.'));
-			return;
-		}
-
-		// 파일 형식 체크
-		if (!file.type.match(/image\/(jpeg|jpg|png)/)) {
-			reject(new Error('JPG, PNG 형식만 업로드 가능합니다.'));
-			return;
-		}
-
-		const reader = new FileReader();
-		reader.onload = (e) => {
-			const img = new Image();
-			img.onload = () => {
-				const canvas = document.createElement('canvas');
-				const ctx = canvas.getContext('2d');
-				if (!ctx) {
-					reject(new Error('Canvas를 생성할 수 없습니다.'));
-					return;
-				}
-
-				// 정사각형으로 크롭
-				const minSize = Math.min(img.width, img.height);
-				const x = (img.width - minSize) / 2;
-				const y = (img.height - minSize) / 2;
-
-				canvas.width = size;
-				canvas.height = size;
-				ctx.drawImage(img, x, y, minSize, minSize, 0, 0, size, size);
-
-				// 최적화된 이미지를 base64로 변환 (quality: 0.9)
-				resolve(canvas.toDataURL('image/jpeg', 0.9));
-			};
-			img.onerror = () => reject(new Error('이미지를 불러올 수 없습니다.'));
-			img.src = e.target?.result as string;
-		};
-		reader.onerror = () => reject(new Error('파일을 읽을 수 없습니다.'));
-		reader.readAsDataURL(file);
-	});
-};
-
+// 시간 추가 다이얼로그 내용
 const AddTimeDialogContents = () => {
 	const { t } = useTranslation();
 	const [selectedDays, setSelectedDays] = useState<Set<DayOfWeek>>(new Set());
@@ -508,6 +511,82 @@ const AddTimeDialogContents = () => {
 	);
 }
 
+// 예정된 진료 예약 타입 정의
+interface ScheduledAppointment {
+	appointmentNumber: string;
+	endDateTime: string;
+	id: string;
+	patientName: string;
+	startDateTime: string;
+}
+
+// 계정 비활성화 다이얼로그 내용
+const AccountDialogContents = () => {
+	// TODO: API로 대체 예정
+	const [scheduledAppointments] = useState<ScheduledAppointment[]>([]);
+	// const [scheduledAppointments] = useState<ScheduledAppointment[]>([
+	// 	{
+	// 		appointmentNumber: 'APT-001',
+	// 		endDateTime: '15/01/2024 14:00',
+	// 		id: '1',
+	// 		patientName: '환자 이름',
+	// 		startDateTime: '15/01/2024 13:00',
+	// 	},
+	// ]);
+
+	const hasAppointments = scheduledAppointments.length > 0;
+	const appointmentCount = scheduledAppointments.length;
+
+	return (
+		<div className='flex flex-col gap-4 h-[37rem] items-start overflow-y-auto w-full'>
+			<div className='flex gap-5 w-full'>
+				<img alt='profile' className='h-[7.5rem] object-contain object-top rounded-sm w-24' src={imgBlankProfile} />
+				<div className='flex flex-1 flex-col gap-4 items-start'>
+					<div className='flex gap-2.5 items-center'>
+						<p className='font-semibold leading-[normal] text-sm text-text-70'>이름</p>
+						<p className='font-semibold leading-[normal] text-sm text-text-100'>asdfzxcvqwer</p>
+					</div>
+					<div className='flex gap-2.5 items-center'>
+						<p className='font-semibold leading-[normal] text-sm text-text-70'>아이디</p>
+						<p className='font-semibold leading-[normal] text-sm text-text-100'>asdfzxcvqwer</p>
+					</div>
+				</div>
+			</div>
+			<div className='flex flex-1 flex-col gap-1 w-full'>
+				<div className='flex flex-col gap-1'>
+					<p className='font-semibold leading-[normal] text-sm text-text-70'>
+						예정된 진료 예약 {appointmentCount}건
+					</p>
+					{hasAppointments && (
+						<div className='flex gap-1 items-center'>
+							<img alt='info' src={icValidationInfo} />
+							<p className='leading-[normal] text-primary-70 text-sm'>예정된 진료 예약이 있을 경우 계정을 비활성화할 수 없어요.</p>
+						</div>
+					)}
+				</div>
+				<div className='flex-1'>
+					{hasAppointments ? (
+						<div className='flex flex-col gap-1'>
+							{scheduledAppointments.map((appointment) => (
+								<div className='bg-white border border-stroke-segmented gap-0.5 px-4 py-2 rounded' key={appointment.id}>
+									<p className='leading-[normal] text-sm text-text-70'>{appointment.patientName}</p>
+									<p className='leading-[normal] text-text-40 text-xs'>{appointment.appointmentNumber}</p>
+									<p className='leading-[normal] text-text-100 text-xs'>{appointment.startDateTime} ~ {appointment.endDateTime}</p>
+								</div>
+							))}
+						</div>
+					) : (
+						<div className='bg-bg-gray border border-stroke-segmented flex gap-1.5 h-full items-center justify-center rounded-[0.625rem] w-full'>
+							<img alt='warn' className='h-6 w-6' src={grayWarning} />
+							<p className='text-text-40'>예정된 진료 예약이 없습니다.</p>
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+}
+
 const MyInfo = () => {
 	const { openDialog } = useDialog();
 
@@ -630,6 +709,18 @@ const MyInfo = () => {
 		handleInputChange('experience', e.target.value);
 	}, [handleInputChange]);
 
+	// 계정 비활성화 다이얼로그 열기
+	const openAccountDialog = useCallback(() => {
+		openDialog({
+			dialogButtons: <SingleDialogBottomButton onClick={() => {alert('todo')}} text='확인' />,
+			dialogClass: 'w-[36.25rem]',
+			dialogContents: <AccountDialogContents />,
+			dialogId: 'accountDialog',
+			dialogTitle: '계정 비활성화',
+			hasCloseButton: true
+		});
+	}, [openDialog]);
+
 	// 시간 추가 다이얼로그 열기
 	const openAddTimeDialog = useCallback(() => {
 		openDialog({
@@ -674,27 +765,11 @@ const MyInfo = () => {
 					) : (
 						<>
 							<Button
-								icon={
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="20"
-										height="20"
-										viewBox="0 0 20 20"
-										fill="none"
-									>
-										<path
-											d="M14.1667 17.5C14.1667 15.1988 12.3012 13.3333 10 13.3333C7.69881 13.3333 5.83333 15.1988 5.83333 17.5M14.1667 17.5H14.8359C15.7675 17.5 16.2333 17.5 16.5895 17.3185C16.9031 17.1587 17.1587 16.9031 17.3185 16.5895C17.5 16.2333 17.5 15.7675 17.5 14.8359V5.16409C17.5 4.23249 17.5 3.766 17.3185 3.40983C17.1587 3.09623 16.9031 2.84144 16.5895 2.68166C16.233 2.5 15.7669 2.5 14.8335 2.5H5.16683C4.23341 2.5 3.76635 2.5 3.40983 2.68166C3.09623 2.84144 2.84144 3.09623 2.68166 3.40983C2.5 3.76635 2.5 4.23341 2.5 5.16683V14.8335C2.5 15.7669 2.5 16.233 2.68166 16.5895C2.84144 16.9031 3.09623 17.1587 3.40983 17.3185C3.766 17.5 4.23249 17.5 5.16409 17.5H5.83333M14.1667 17.5H5.83333M10 10.8333C8.61929 10.8333 7.5 9.71405 7.5 8.33333C7.5 6.95262 8.61929 5.83333 10 5.83333C11.3807 5.83333 12.5 6.95262 12.5 8.33333C12.5 9.71405 11.3807 10.8333 10 10.8333Z"
-											stroke="#00A0D2"
-											strokeWidth="2"
-											strokeLinecap="round"
-											strokeLinejoin="round"
-										/>
-									</svg>
-								}
+								icon={<img src={icAccount} alt='계정' className='w-5 h-5' />}
+								onClick={openAccountDialog}
 								size="default"
 								variant="outline"
-							>
-								계정 비활성화
+							>계정 비활성화
 							</Button>
 							<Button
 								icon={<img src={icLock} alt="비밀번호" className="w-5 h-5" />}
