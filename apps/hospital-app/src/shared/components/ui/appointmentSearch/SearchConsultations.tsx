@@ -1,8 +1,10 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import type { DropdownOption } from '@/shared/types/dropdown';
 import { Dropdown, Input, SearchIcon } from '@/shared/components/ui';
+import { useTranslation } from 'react-i18next';
 
 const SearchConsultations = () => {
+	const { t } = useTranslation();
 	const [keyword, setKeyword] = useState<string>('');
 
 	// 각 Select의 상태 관리
@@ -10,15 +12,15 @@ const SearchConsultations = () => {
 	const [sort, setSort] = useState<string>('0');
 
 	const gradeOptions: DropdownOption[] = useMemo(() => [
-		{ label: '전체 등급', value: 'all' },
+		{ label: t('appointment.search.allGrade'), value: 'all' },
 		{ label: 'VIP', value: 'VIP' },
 		{ label: 'Risk', value: 'Risk' },
-	], []);
+	], [t]);
 
 	const sortOptions: DropdownOption[] = useMemo(() => [
-		{ label: '진료 예정일 순', value: '0' },
-		{ label: '예약 확정일 순', value: '1' },
-	], []);
+		{ label: t('appointment.search.sort.scheduledDate'), value: '0' },
+		{ label: t('appointment.search.sort.confirmedDate'), value: '1' },
+	], [t]);
 
 	// 각 Select의 변경 이벤트 핸들러
 	const handleGradeChange = useCallback((value: string) => {
@@ -60,7 +62,7 @@ const SearchConsultations = () => {
 				className="px-0"
 				icon={<SearchIcon className="cursor-pointer h-7 w-7" />}
 				onChange={handleKeywordChange}
-				placeholder="예약 번호 또는 환자명을 입력해주세요."
+				placeholder={t('appointment.search.placeholders.appointmentOrPatient')}
 				type="text"
 				value={keyword}
 				wrapperClassName="rounded w-[36.125rem]"

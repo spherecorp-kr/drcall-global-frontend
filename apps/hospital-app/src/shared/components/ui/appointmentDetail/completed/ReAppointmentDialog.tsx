@@ -3,6 +3,7 @@ import type { DropdownOption } from '@/shared/types/dropdown';
 import { useCallback, useState } from 'react';
 import { DateAndTimePicker } from '@/shared/components/ui/datepicker';
 import { useEffectAfterMount } from '@/shared/hooks/useEffectAfterMount';
+import { useTranslation } from 'react-i18next';
 
 const doctorOptions: DropdownOption[] = [
 	{
@@ -28,6 +29,7 @@ const doctorOptions: DropdownOption[] = [
 const Separator = () => <div className='bg-stroke-input h-px w-full' />
 
 const ReAppointmentDialog = () => {
+	const { t } = useTranslation();
 	const [doctor, setDoctor] = useState<string>();
 	const [dateTimeChanged, setDateTimeChanged] = useState<boolean>(false);
 	const [doctorDropdownOutline, setDoctorDropdownOutline] = useState<string>('outline-stroke-input');
@@ -48,7 +50,7 @@ const ReAppointmentDialog = () => {
 	return (
 		<div className='flex flex-col gap-5 items-start'>
 			<div className='flex flex-col gap-5 items-start w-full'>
-				<p className='font-bold leading-[normal] text-text-100 text-xl'>의사 선택</p>
+				<p className='font-bold leading-[normal] text-text-100 text-xl'>{t('appointment.detail.reappointment.doctorSelect')}</p>
 				<Dropdown
 					buttonClassName={doctorDropdownOutline}
 					className="flex-1"
@@ -56,13 +58,13 @@ const ReAppointmentDialog = () => {
 					onChange={handleDoctorChange}
 					optionClassName="h-10 rounded-sm"
 					options={doctorOptions}
-					placeholder="의사를 선택해주세요."
+					placeholder={t('appointment.detail.treatmentInfo.doctorSelect')}
 					value={doctor}
 				/>
 			</div>
 			<Separator />
 			<div className='flex flex-col w-full'>
-				<p className='font-bold leading-[normal] mb-4 text-text-100 text-xl'>진료 희망 날짜 & 시간 선택</p>
+				<p className='font-bold leading-[normal] mb-4 text-text-100 text-xl'>{t('appointment.detail.reappointment.dateSelect')}</p>
 				<DateAndTimePicker onDateTimeChange={handleDateTimeChange} />
 			</div>
 		</div>

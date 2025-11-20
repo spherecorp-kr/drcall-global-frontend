@@ -1,8 +1,10 @@
 import { type ChangeEvent, useCallback, useMemo, useState } from 'react';
 import { Dropdown, Input, SearchIcon } from '@/shared/components/ui';
 import type { DropdownOption } from '@/shared/types/dropdown';
+import { useTranslation } from 'react-i18next';
 
 const SearchWaiting = () => {
+	const { t } = useTranslation();
 	const [keyword, setKeyword] = useState<string>('');
 
 	// 각 Select의 상태 관리
@@ -11,21 +13,21 @@ const SearchWaiting = () => {
 	const [sort, setSort] = useState<string>('0');
 
 	const appointmentTypeOptions: DropdownOption[] = useMemo(() => [
-		{ label: '전체', value: 'all' },
-		{ label: '빠른 진료', value: 'aptmt' },
-		{ label: '예약 진료', value: 'sdn' },
-	], []);
+		{ label: t('appointment.search.all'), value: 'all' },
+		{ label: t('appointment.search.appointmentType.fast'), value: 'aptmt' },
+		{ label: t('appointment.search.appointmentType.scheduled'), value: 'sdn' },
+	], [t]);
 
 	const gradeOptions: DropdownOption[] = useMemo(() => [
-		{ label: '전체 등급', value: 'all' },
+		{ label: t('appointment.search.allGrade'), value: 'all' },
 		{ label: 'VIP', value: 'VIP' },
 		{ label: 'Risk', value: 'Risk' },
-	], []);
+	], [t]);
 
 	const sortOptions: DropdownOption[] = useMemo(() => [
-		{ label: '예약 신청 일시 오래된 순', value: '0' },
-		{ label: '진료 희망 일시 가까운 순', value: '1' },
-	], []);
+		{ label: t('appointment.search.sort.requestOldest'), value: '0' },
+		{ label: t('appointment.search.sort.datetimeNearest'), value: '1' },
+	], [t]);
 
 	// 각 Select의 변경 이벤트 핸들러
 	const handleAppointmentTypeChange = useCallback((value: string) => {
@@ -80,7 +82,7 @@ const SearchWaiting = () => {
 				className="px-0"
 				icon={<SearchIcon className="cursor-pointer h-7 w-7" />}
 				onChange={handleKeywordChange}
-				placeholder="환자명을 입력해주세요."
+				placeholder={t('appointment.search.placeholders.patientName')}
 				type="text"
 				value={keyword}
 				wrapperClassName="w-[36.125rem]"

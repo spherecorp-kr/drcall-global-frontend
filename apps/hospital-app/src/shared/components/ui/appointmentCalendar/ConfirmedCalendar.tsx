@@ -18,6 +18,7 @@ interface WeeklyCalendarProps {
 }
 
 const WeeklyCalendar = ({ searchDate }: WeeklyCalendarProps) => {
+	const { t } = useTranslation();
 	// 오늘 날짜 확인 함수
 	const isToday = useCallback((date: Date): boolean => {
 		const today = new Date();
@@ -71,10 +72,10 @@ const WeeklyCalendar = ({ searchDate }: WeeklyCalendarProps) => {
 					<div className="flex flex-1 flex-col gap-1 items-start">
 						<div className={APTMT_CLASSNAME}>
 							<p className="leading-[normal] text-sm text-text-70">
-								환자 이름
+								{t('appointment.calendar.patientName')}
 							</p>
 							<p className="leading-[normal] text-xs text-text-40">
-								의사 이름
+								{t('appointment.calendar.doctorName')}
 							</p>
 							<p className="leading-[normal] text-xs text-text-100">
 								HH:MM:SS

@@ -14,22 +14,22 @@ const SearchCompleted = () => {
 	const [sort, setSort] = useState<string>('0');
 
 	const prescriptionOptions: DropdownOption[] = useMemo(() => [
-		{ label: '전체', value: 'all' },
-		{ label: '업로드 대기', value: '업로드 대기' },
-		{ label: '완료', value: '완료' },
-	], []);
+		{ label: t('appointment.search.all'), value: 'all' },
+		{ label: t('appointment.search.prescriptionStatus.uploadWaiting'), value: '업로드 대기' },
+		{ label: t('appointment.search.prescriptionStatus.completed'), value: '완료' },
+	], [t]);
 
 	const paymentOptions: DropdownOption[] = useMemo(() => [
-		{ label: '전체', value: 'all' },
-		{ label: '청구 예정', value: '청구 예정' },
-		{ label: '결제 대기', value: '결제 대기' },
-		{ label: '완료', value: '완료' },
-	], []);
+		{ label: t('appointment.search.all'), value: 'all' },
+		{ label: t('appointment.search.paymentStatus.scheduled'), value: '청구 예정' },
+		{ label: t('appointment.search.paymentStatus.waiting'), value: '결제 대기' },
+		{ label: t('appointment.search.paymentStatus.completed'), value: '완료' },
+	], [t]);
 
 	const sortOptions: DropdownOption[] = useMemo(() => [
-		{ label: '최신순', value: '0' },
-		{ label: '오래된 순', value: '1' },
-	], []);
+		{ label: t('appointment.search.sort.newest'), value: '0' },
+		{ label: t('appointment.search.sort.oldest'), value: '1' },
+	], [t]);
 
 	const handlePrescriptionChange = useCallback((value: string) => {
 		setPrescription(value);
@@ -72,7 +72,7 @@ const SearchCompleted = () => {
 					menuClassName="min-w-[9.375rem]"
 					onChange={handlePrescriptionChange}
 					options={prescriptionOptions}
-					placeholder="처방전 상태: 전체"
+					placeholder={t('appointment.search.prescriptionStatus.all')}
 					value={prescription}
 				/>
 				<Dropdown
@@ -80,7 +80,7 @@ const SearchCompleted = () => {
 					menuClassName="min-w-[9.375rem]"
 					onChange={handlePaymentChange}
 					options={paymentOptions}
-					placeholder="결제 상태: 전체"
+					placeholder={t('appointment.search.paymentStatus.all')}
 					value={payment}
 				/>
 				<Dropdown
@@ -88,7 +88,7 @@ const SearchCompleted = () => {
 					menuClassName="min-w-[9.375rem]"
 					onChange={handleSortChange}
 					options={sortOptions}
-					placeholder="최신순"
+					placeholder={t('appointment.search.sort.newest')}
 					value={sort}
 				/>
 			</div>
@@ -96,7 +96,7 @@ const SearchCompleted = () => {
 				className="px-0"
 				icon={<SearchIcon className="cursor-pointer h-7 w-7" />}
 				onChange={handleKeywordChange}
-				placeholder="예약 번호 또는 환자명을 입력해주세요."
+				placeholder={t('appointment.search.placeholders.appointmentOrPatient')}
 				type="text"
 				value={keyword}
 				wrapperClassName="w-[36.125rem]"

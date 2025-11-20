@@ -3,6 +3,7 @@ import icClose from '@/shared/assets/icons/ic_close.svg';
 import icWarn from '@/assets/icons/ic_warn.svg';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useEffectAfterMount } from '@/shared/hooks/useEffectAfterMount';
+import { useTranslation } from 'react-i18next';
 
 interface Fee {
 	treatmentFee: number,
@@ -24,6 +25,7 @@ interface Props {
 const Separator = () => <div className='bg-stroke-input h-px w-full' />
 
 const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => {
+	const { t } = useTranslation();
 	const [fee, setFee] = useState<OptionalFee>({
 		treatmentFee: undefined,
 		dispensingFee: undefined,
@@ -32,7 +34,7 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 	const [prescriptionYN, setPrescriptionYN] = useState<string>('');
 	const [doctorAdvice, setDoctorAdvice] = useState<string>('');
 	const [prescriptionFile, setPrescriptionFile] = useState<File | null>(null);
-	const [fileName, setFileName] = useState<string>('파일 이름은 여기에');
+	const [fileName, setFileName] = useState<string>(t('appointment.detail.prescription.file'));
 
 	const handleFeeChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
@@ -48,9 +50,9 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 		// 처방전 선택이 변경되면 파일 초기화
 		if (e.target.value === 'N') {
 			setPrescriptionFile(null);
-			setFileName('파일 이름은 여기에');
+			setFileName(t('appointment.detail.prescription.file'));
 		}
-	}, []);
+	}, [t]);
 
 	const handleDoctorAdviceChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setDoctorAdvice(e.target.value);
@@ -66,13 +68,13 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 
 	const handleFileDelete = useCallback(() => {
 		setPrescriptionFile(null);
-		setFileName('파일 이름은 여기에');
+		setFileName(t('appointment.detail.prescription.file'));
 		// input 파일 초기화
 		const fileInput = document.getElementById('inputPrescriptionFile') as HTMLInputElement;
 		if (fileInput) {
 			fileInput.value = '';
 		}
-	}, []);
+	}, [t]);
 
 	// disabled 상태 계산
 	const calculateDisabled = useCallback((): boolean => {
@@ -124,27 +126,27 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 	return (
 		<div className="flex flex-col gap-5 items-start">
 			<div className="flex flex-col gap-5 w-full">
-				<p className="font-bold leading-[normal] text-text-100 text-xl">의사 조언</p>
+				<p className="font-bold leading-[normal] text-text-100 text-xl">{t('appointment.detail.treatmentInfo.doctorAdvice')}</p>
 				<textarea
 					className="bg-white border border-stroke-input leading-[normal] min-h-20 placeholder:text-text-30 px-4 py-2.5 text-base text-text-100 resize-none rounded"
 					maxLength={500}
 					onChange={handleDoctorAdviceChange}
-					placeholder="환자가 숙지해야 할 특이사항이 있다면 적어주세요.&#10;(최대 500자 입력 가능)"
+					placeholder={t('appointment.detail.prescription.placeholder')}
 					value={doctorAdvice}
 				></textarea>
 			</div>
 			<div className="flex flex-col gap-5 w-full">
-				<p className="font-bold leading-[normal] text-text-100 text-xl">AI 진료 요약</p>
+				<p className="font-bold leading-[normal] text-text-100 text-xl">{t('appointment.detail.treatmentInfo.aiSummary')}</p>
 				<div className="bg-white border border-stroke-input leading-[normal] min-h-20 px-4 py-2.5 text-base text-text-100 resize-none rounded"></div>
 			</div>
 			<Separator />
 			<div className="flex flex-col gap-5 w-full">
-				<p className="font-bold leading-[normal] text-text-100 text-xl">AI 진료 요약</p>
+				<p className="font-bold leading-[normal] text-text-100 text-xl">{t('appointment.detail.treatmentInfo.aiSummary')}</p>
 				<div className="flex flex-col gap-5">
 					<div className="flex flex-col gap-2.5 w-full">
 						<Radio
 							checked={prescriptionYN === 'Y'}
-							label="처방전 포함"
+							label={t('appointment.detail.prescription.include')}
 							name="prescriptionYN"
 							onChange={handlePrescriptionChange}
 							value="Y"
@@ -172,14 +174,14 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 									className='bg-primary-70 font-medium h-10 leading-10 px-5 rounded-sm text-base text-white'
 									htmlFor='inputPrescriptionFile'
 								>
-									업로드
+									{t('appointment.detail.prescription.upload')}
 								</label>
 							</div>
 						)}
 					</div>
 					<Radio
 						checked={prescriptionYN === 'N'}
-						label="처방전 미포함"
+						label={t('appointment.detail.prescription.exclude')}
 						name="prescriptionYN"
 						onChange={handlePrescriptionChange}
 						value="N"
@@ -189,17 +191,17 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 			<Separator />
 			<div className="flex flex-col gap-5 w-full">
 				<div className="flex flex-col gap-2.5 items-start">
-					<p className="font-bold leading-[normal] text-text-100 text-xl">진료비 청구</p>
+					<p className="font-bold leading-[normal] text-text-100 text-xl">{t('appointment.detail.prescription.dialog.registerTitle')}</p>
 					<div className="flex gap-1 items-center justify-start">
 						<img alt="warn" src={icWarn} />
 						<p className="leading-[normal] text-sm text-system-error">
-							입력된 진료비가 환자에게 청구됩니다.
+							{t('appointment.detail.prescription.dialog.warn')}
 						</p>
 					</div>
 				</div>
 				<div className="flex flex-col gap-5 items-start">
 					<div className="flex flex-col gap-2.5 items-start w-full">
-						<p className="leading-[normal] text-base text-text-50">진료비</p>
+						<p className="leading-[normal] text-base text-text-50">{t('appointment.detail.payment.breakdown.treatment')}</p>
 						<div className="flex gap-3 items-end w-full">
 							<Input
 								name="treatmentFee"
@@ -218,7 +220,7 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 						</div>
 					</div>
 					<div className="flex flex-col gap-2.5 items-start w-full">
-						<p className="leading-[normal] text-base text-text-50">조제비</p>
+						<p className="leading-[normal] text-base text-text-50">{t('appointment.detail.payment.breakdown.dispensing')}</p>
 						<div className="flex gap-3 items-end w-full">
 							<Input
 								name="dispensingFee"
@@ -237,7 +239,7 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 						</div>
 					</div>
 					<div className="flex flex-col gap-2.5 items-start w-full">
-						<p className="leading-[normal] text-base text-text-50">서비스비</p>
+						<p className="leading-[normal] text-base text-text-50">{t('appointment.detail.payment.breakdown.service')}</p>
 						<div className="flex gap-3 items-end w-full">
 							<Input
 								name="tip"
@@ -252,7 +254,7 @@ const PrescriptionRegistration = ({ handleChange, onDisabledChange }: Props) => 
 						</div>
 					</div>
 					<div className="flex items-center justify-between w-full">
-						<p className="leading-[normal] text-base text-text-50">총</p>
+						<p className="leading-[normal] text-base text-text-50">{t('appointment.detail.payment.breakdown.total')}</p>
 						<div className="flex gap-3 items-center justify-end">
 							<p className="font-semibold leading-[normal] text-2xl text-right text-text-100">
 								{totalFee}

@@ -37,14 +37,7 @@ const mockProfile = {
 	experience: '',
 };
 
-// 에러 메시지 상수
-const ERROR_MESSAGES = {
-	name: '이름을 입력해주세요.',
-	englishName: '영문명을 입력해주세요.',
-	specialty: '전공을 입력해주세요.',
-	introduction: '자기소개를 입력해주세요.',
-	experience: '경력&학력을 입력해주세요.',
-} as const;
+// 에러 메시지 상수는 번역 함수로 대체
 
 type DayOfWeek = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
 const WEEKDAYS: DayOfWeek[] = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -63,15 +56,15 @@ interface TimeSlot {
 // 이미지 리사이징 유틸리티 (컴포넌트 외부로 이동하여 재생성 방지)
 const resizeImage = (file: File, size: number): Promise<string> => {
 	return new Promise((resolve, reject) => {
-		// 파일 크기 체크 (5MB)
+		// 파일 크기 체크 (5MB) - 에러 메시지는 호출부에서 번역
 		if (file.size > 5 * 1024 * 1024) {
-			reject(new Error('파일 크기는 5MB 이하여야 합니다.'));
+			reject(new Error('FILE_SIZE_ERROR'));
 			return;
 		}
 
 		// 파일 형식 체크
 		if (!file.type.match(/image\/(jpeg|jpg|png)/)) {
-			reject(new Error('JPG, PNG 형식만 업로드 가능합니다.'));
+			reject(new Error('FILE_FORMAT_ERROR'));
 			return;
 		}
 
@@ -82,7 +75,7 @@ const resizeImage = (file: File, size: number): Promise<string> => {
 				const canvas = document.createElement('canvas');
 				const ctx = canvas.getContext('2d');
 				if (!ctx) {
-					reject(new Error('Canvas를 생성할 수 없습니다.'));
+					reject(new Error('CANVAS_ERROR'));
 					return;
 				}
 
@@ -98,10 +91,10 @@ const resizeImage = (file: File, size: number): Promise<string> => {
 				// 최적화된 이미지를 base64로 변환 (quality: 0.9)
 				resolve(canvas.toDataURL('image/jpeg', 0.9));
 			};
-			img.onerror = () => reject(new Error('이미지를 불러올 수 없습니다.'));
+			img.onerror = () => reject(new Error('IMAGE_LOAD_ERROR'));
 			img.src = e.target?.result as string;
 		};
-		reader.onerror = () => reject(new Error('파일을 읽을 수 없습니다.'));
+		reader.onerror = () => reject(new Error('FILE_READ_ERROR'));
 		reader.readAsDataURL(file);
 	});
 };
@@ -360,15 +353,15 @@ const AddTimeDialogContents = () => {
 	// 시간대 추가 핸들러
 	const handleAddTimeSlot = useCallback(() => {
 		if (selectedDays.size === 0) {
-			alert('요일을 선택해주세요.');
+			alert(t('common.errors.selectDay'));
 			return;
-	}
+		}
 
 		const startMinutes = timeToMinutes(startHour, startMinute, startAmPm);
 		const endMinutes = timeToMinutes(endHour, endMinute, endAmPm);
 
 		if (startMinutes >= endMinutes) {
-			alert('시작 시간은 종료 시간보다 빨라야 합니다.');
+			alert(t('common.errors.startTimeBeforeEnd'));
 			return;
 		}
 
@@ -406,7 +399,7 @@ const AddTimeDialogContents = () => {
 	return (
 		<div className="flex flex-col gap-5 min-h-[20.125rem]">
 			<div className="flex flex-col gap-5 items-start">
-				<p className="leading-[normal] text-base text-text-100">요일 & 시간 추가</p>
+				<p className="leading-[normal] text-base text-text-100">{t('myInfo.addTimeDialog.dayAndTime')}</p>
 				<div className="flex gap-2.5 h-10 items-center w-full">
 					{WEEKDAYS.map((day) => {
 						const isChecked = selectedDays.has(day);
@@ -460,16 +453,16 @@ const AddTimeDialogContents = () => {
 							onToggle={handleEndTimePickerToggle}
 						/>
 					</div>
-					<Button onClick={handleAddTimeSlot}>추가</Button>
+					<Button onClick={handleAddTimeSlot}>{t('common.buttons.add')}</Button>
 				</div>
 			</div>
 			<div className="bg-stroke-input h-px w-full" />
 			<div className="flex flex-col gap-5 items-start">
 				<div className='flex flex-col gap-2'>
-					<p className='font-medium leading-[normal] text-text-100'>추가된 구간</p>
+					<p className='font-medium leading-[normal] text-text-100'>{t('myInfo.addTimeDialog.addedSections')}</p>
 					<div className='flex gap-1 items-center'>
 						<img alt='info' src={icValidationInfo} />
-						<p className='leading-[normal] text-sm text-primary-70'>중복된 시간은 자동으로 통합됩니다.</p>
+						<p className='leading-[normal] text-sm text-primary-70'>{t('myInfo.addTimeDialog.autoMerge')}</p>
 					</div>
 				</div>
 				<ul className='flex flex-col gap-2.5 items-start w-full'>
@@ -503,7 +496,7 @@ const AddTimeDialogContents = () => {
 						);
 					})}
 					{Object.values(timeSlots).every((slots) => slots.length === 0) && (
-						<li className='text-text-50'>추가된 시간대가 없습니다.</li>
+						<li className='text-text-50'>{t('myInfo.addTimeDialog.noTimeSlots')}</li>
 					)}
 				</ul>
 			</div>
@@ -534,6 +527,7 @@ const AccountDialogContents = () => {
 	// 	},
 	// ]);
 
+	const { t } = useTranslation();
 	const hasAppointments = scheduledAppointments.length > 0;
 	const appointmentCount = scheduledAppointments.length;
 
@@ -543,11 +537,11 @@ const AccountDialogContents = () => {
 				<img alt='profile' className='h-[7.5rem] object-contain object-top rounded-sm w-24' src={imgBlankProfile} />
 				<div className='flex flex-1 flex-col gap-4 items-start'>
 					<div className='flex gap-2.5 items-center'>
-						<p className='font-semibold leading-[normal] text-sm text-text-70'>이름</p>
+						<p className='font-semibold leading-[normal] text-sm text-text-70'>{t('common.labels.name')}</p>
 						<p className='font-semibold leading-[normal] text-sm text-text-100'>asdfzxcvqwer</p>
 					</div>
 					<div className='flex gap-2.5 items-center'>
-						<p className='font-semibold leading-[normal] text-sm text-text-70'>아이디</p>
+						<p className='font-semibold leading-[normal] text-sm text-text-70'>{t('common.labels.id')}</p>
 						<p className='font-semibold leading-[normal] text-sm text-text-100'>asdfzxcvqwer</p>
 					</div>
 				</div>
@@ -555,12 +549,12 @@ const AccountDialogContents = () => {
 			<div className='flex flex-1 flex-col gap-1 w-full'>
 				<div className='flex flex-col gap-1'>
 					<p className='font-semibold leading-[normal] text-sm text-text-70'>
-						예정된 진료 예약 {appointmentCount}건
+						{t('myInfo.accountDialog.scheduledAppointmentsCount', { count: appointmentCount })}
 					</p>
 					{hasAppointments && (
 						<div className='flex gap-1 items-center'>
 							<img alt='info' src={icValidationInfo} />
-							<p className='leading-[normal] text-primary-70 text-sm'>예정된 진료 예약이 있을 경우 계정을 비활성화할 수 없어요.</p>
+							<p className='leading-[normal] text-primary-70 text-sm'>{t('myInfo.accountDialog.cannotDeactivate')}</p>
 						</div>
 					)}
 				</div>
@@ -578,7 +572,7 @@ const AccountDialogContents = () => {
 					) : (
 						<div className='bg-bg-gray border border-stroke-segmented flex gap-1.5 h-full items-center justify-center rounded-[0.625rem] w-full'>
 							<img alt='warn' className='h-6 w-6' src={grayWarning} />
-							<p className='text-text-40'>예정된 진료 예약이 없습니다.</p>
+							<p className='text-text-40'>{t('myInfo.accountDialog.noScheduledAppointments')}</p>
 						</div>
 					)}
 				</div>
@@ -589,6 +583,7 @@ const AccountDialogContents = () => {
 
 const MyInfo = () => {
 	const { openDialog } = useDialog();
+	const { t } = useTranslation();
 
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [formData, setFormData] = useState(mockProfile);
@@ -613,24 +608,24 @@ const MyInfo = () => {
 		const newErrors: Record<string, string> = {};
 
 		if (!formData.name.trim()) {
-			newErrors.name = ERROR_MESSAGES.name;
+			newErrors.name = t('common.errors.enterName');
 		}
 		if (!formData.englishName.trim()) {
-			newErrors.englishName = ERROR_MESSAGES.englishName;
+			newErrors.englishName = t('common.errors.enterEnglishName');
 		}
 		if (!formData.specialty.trim()) {
-			newErrors.specialty = ERROR_MESSAGES.specialty;
+			newErrors.specialty = t('common.errors.enterSpecialty');
 		}
 		if (!formData.introduction.trim()) {
-			newErrors.introduction = ERROR_MESSAGES.introduction;
+			newErrors.introduction = t('common.errors.enterIntroduction');
 		}
 		if (!formData.experience.trim()) {
-			newErrors.experience = ERROR_MESSAGES.experience;
+			newErrors.experience = t('common.errors.enterExperience');
 		}
 
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
-	}, [formData]);
+	}, [formData, t]);
 
 	const handleSave = useCallback(() => {
 		if (!validateForm()) {
@@ -674,8 +669,16 @@ const MyInfo = () => {
 				const resizedImage = await resizeImage(file, 200);
 				setProfilePreview(resizedImage);
 			} catch (error) {
-				console.error('프로필 이미지 업로드 실패:', error);
-				alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
+				console.error(t('common.errors.uploadError'), error);
+				const errorMessage = error instanceof Error 
+					? (error.message === 'FILE_SIZE_ERROR' ? t('common.errors.fileSize')
+						: error.message === 'FILE_FORMAT_ERROR' ? t('common.errors.fileFormat')
+						: error.message === 'CANVAS_ERROR' ? t('common.errors.canvasError')
+						: error.message === 'IMAGE_LOAD_ERROR' ? t('common.errors.imageLoadError')
+						: error.message === 'FILE_READ_ERROR' ? t('common.errors.fileReadError')
+						: error.message)
+					: t('common.errors.uploadFailed');
+				alert(errorMessage);
 			}
 		}
 	}, []);
@@ -712,26 +715,26 @@ const MyInfo = () => {
 	// 계정 비활성화 다이얼로그 열기
 	const openAccountDialog = useCallback(() => {
 		openDialog({
-			dialogButtons: <SingleDialogBottomButton onClick={() => {alert('todo')}} text='확인' />,
+			dialogButtons: <SingleDialogBottomButton onClick={() => {alert('todo')}} text={t('common.buttons.confirm')} />,
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <AccountDialogContents />,
 			dialogId: 'accountDialog',
-			dialogTitle: '계정 비활성화',
+			dialogTitle: t('myInfo.accountDialog.title'),
 			hasCloseButton: true
 		});
-	}, [openDialog]);
+	}, [openDialog, t]);
 
 	// 시간 추가 다이얼로그 열기
 	const openAddTimeDialog = useCallback(() => {
 		openDialog({
-			dialogButtons: <SingleDialogBottomButton onClick={() => {alert('todo')}} text='완료' />,
+			dialogButtons: <SingleDialogBottomButton onClick={() => {alert('todo')}} text={t('common.buttons.complete')} />,
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <AddTimeDialogContents />,
 			dialogId: 'addTimeDialog',
-			dialogTitle: '시간 추가',
+			dialogTitle: t('myInfo.addTimeDialog.title'),
 			hasCloseButton: true
 		});
-	}, [openDialog]);
+	}, [openDialog, t]);
 
 	return (
 		<>
@@ -746,53 +749,53 @@ const MyInfo = () => {
 					{isEditMode ? (
 						<>
 							<Button
-								icon={<img src={icCancel} alt="취소" className="w-5 h-5" />}
+								icon={<img src={icCancel} alt={t('common.buttons.cancel')} className="w-5 h-5" />}
 								onClick={handleCancelEdit}
 								size="default"
 								variant="outline"
 							>
-								취소
+								{t('common.buttons.cancel')}
 							</Button>
 							<Button
-								icon={<img src={icSave} alt="저장" className="w-5 h-5" />}
+								icon={<img src={icSave} alt={t('common.buttons.save')} className="w-5 h-5" />}
 								onClick={handleSave}
 								size="default"
 								variant="primary"
 							>
-								수정 완료
+								{t('myInfo.editComplete')}
 							</Button>
 						</>
 					) : (
 						<>
 							<Button
-								icon={<img src={icAccount} alt='계정' className='w-5 h-5' />}
+								icon={<img src={icAccount} alt={t('common.labels.account')} className='w-5 h-5' />}
 								onClick={openAccountDialog}
 								size="default"
 								variant="outline"
-							>계정 비활성화
+							>{t('myInfo.accountDeactivate')}
 							</Button>
 							<Button
-								icon={<img src={icLock} alt="비밀번호" className="w-5 h-5" />}
+								icon={<img src={icLock} alt={t('common.labels.password')} className="w-5 h-5" />}
 								onClick={handlePasswordChange}
 								size="default"
 								variant="outline"
 							>
-								비밀번호 변경
+								{t('myInfo.passwordChange')}
 							</Button>
 							<Button
-								icon={<img src={icMail} alt="이메일" className="w-5 h-5" />}
+								icon={<img src={icMail} alt={t('common.labels.email')} className="w-5 h-5" />}
 								size="default"
 								variant="outline"
 							>
-								이메일 변경
+								{t('myInfo.emailChange')}
 							</Button>
 							<Button
-								icon={<img src={icEdit} alt="수정" className="w-5 h-5" />}
+								icon={<img src={icEdit} alt={t('common.buttons.edit')} className="w-5 h-5" />}
 								onClick={handleEditClick}
 								size="default"
 								variant="primary"
 							>
-								정보 수정
+								{t('myInfo.infoEdit')}
 							</Button>
 						</>
 					)}
@@ -838,7 +841,7 @@ const MyInfo = () => {
 						<div className="flex flex-1 flex-col gap-4 items-start">
 							<div className="flex gap-2.5 items-center min-h-7 w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									계정
+									{t('common.labels.account')}
 								</span>
 								<div className="flex gap-2 items-center">
 									<svg
@@ -851,25 +854,25 @@ const MyInfo = () => {
 										<circle cx="6" cy="6" r="6" fill="#D5D5D5" />
 									</svg>
 									<p className="leading-[normal] text-base text-text-100">
-										비활성화
+										{t('common.labels.inactive')}
 									</p>
 								</div>
 							</div>
 							<div className="flex gap-2.5 items-center min-h-7 w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									아이디
+									{t('common.labels.id')}
 								</span>
 								<p className="leading-[normal] text-base text-text-100">{formData.username}</p>
 							</div>
 							<div className="flex gap-2.5 items-center min-h-7 w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									이름
+									{t('common.labels.name')}
 								</span>
 								{isEditMode ? (
 									<div className="flex flex-1 flex-col gap-1.5 items-start">
 										<Input
 											onChange={handleNameChange}
-											placeholder="이름을 입력해 주세요."
+											placeholder={t('common.placeholders.enterName')}
 											value={formData.name}
 											wrapperClassName={errors.name ? 'outline-system-error rounded' : 'rounded'}
 										/>
@@ -883,13 +886,13 @@ const MyInfo = () => {
 							</div>
 							<div className="flex gap-2.5 items-center min-h-7 w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									이름(영문명)
+									{t('common.labels.englishName')}
 								</span>
 								{isEditMode ? (
 									<div className="flex flex-1 flex-col gap-1.5 items-start">
 										<Input
 											onChange={handleEnglishNameChange}
-											placeholder="영문명을 입력해 주세요."
+											placeholder={t('common.placeholders.enterEnglishName')}
 											value={formData.englishName}
 											wrapperClassName={errors.englishName ? 'outline-system-error rounded' : 'rounded'}
 										/>
@@ -903,19 +906,19 @@ const MyInfo = () => {
 							</div>
 							<div className="flex gap-2.5 items-center min-h-7 w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									이메일
+									{t('common.labels.email')}
 								</span>
 								<p className="leading-[normal] text-base text-text-100">qwe123</p>
 							</div>
 							<div className="flex gap-2.5 items-center min-h-7 w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									전공
+									{t('common.labels.specialty')}
 								</span>
 								{isEditMode ? (
 									<div className="flex flex-1 flex-col gap-1.5 items-start">
 										<Input
 											onChange={handleSpecialtyChange}
-											placeholder="전공을 입력해 주세요."
+											placeholder={t('common.placeholders.enterSpecialty')}
 											value={formData.specialty}
 											wrapperClassName={errors.specialty ? 'outline-system-error rounded' : 'rounded'}
 										/>
@@ -931,7 +934,7 @@ const MyInfo = () => {
 						<div className="flex flex-1 flex-col gap-4 h-full items-start">
 							<div className="flex flex-1 gap-2.5 items-start w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									자기소개
+									{t('common.labels.introduction')}
 								</span>
 								<div className='flex flex-1 flex-col gap-1.5 h-full items-start'>
 									<textarea
@@ -939,7 +942,7 @@ const MyInfo = () => {
 										disabled={!isEditMode}
 										maxLength={50}
 										onChange={handleIntroductionChange}
-										placeholder="환자에게 표시될 자기소개를 입력해주세요.&#10;(최대 50자 입력 가능)"
+										placeholder={t('common.placeholders.enterIntroduction')}
 										value={formData.introduction}
 									></textarea>
 									{errors.introduction && (
@@ -949,7 +952,7 @@ const MyInfo = () => {
 							</div>
 							<div className="flex flex-1 gap-2.5 items-start w-full">
 								<span className="leading-[normal] min-w-[7.5rem] text-base text-text-70">
-									경력&학력
+									{t('common.labels.experience')}
 								</span>
 								<div className='flex flex-1 flex-col gap-1.5 h-full items-start'>
 									<textarea
@@ -957,7 +960,7 @@ const MyInfo = () => {
 										disabled={!isEditMode}
 										maxLength={50}
 										onChange={handleExperienceChange}
-										placeholder="환자에게 표시될 경력&학력을 입력해주세요.&#10;(최대 50자 입력 가능)"
+										placeholder={t('common.placeholders.enterExperience')}
 										value={formData.experience}
 									></textarea>
 									{errors.experience && (
@@ -970,7 +973,7 @@ const MyInfo = () => {
 					{/* 진료 기능 시간 */}
 					<div className="flex flex-col gap-2.5 items-start">
 						<h3 className="font-semibold leading-[normal] text-text-100 text-xl">
-							진료 가능 시간
+							{t('myInfo.availableTime')}
 						</h3>
 						<div className="bg-white border border-stroke-input flex flex-col p-5 rounded-[0.625rem] w-full">
 							<p className="leading-[normal] text-base text-text-100">
@@ -989,7 +992,7 @@ const MyInfo = () => {
 						<div className="flex min-h-10 items-end justify-between w-full">
 							<div className="flex gap-2.5 items-center">
 								<h3 className="font-semibold leading-[normal] text-text-100 text-xl">
-									진료 시간표
+									{t('myInfo.schedule')}
 								</h3>
 								<div className="flex gap-1 items-center justify-start">
 									<img
@@ -998,7 +1001,7 @@ const MyInfo = () => {
 										src={icValidationInfo}
 									/>
 									<p className="leading-[normal] text-primary-70 text-sm">
-										블록(30분)을 클릭해 진료 가능 시간을 추가/제거하세요.
+										{t('myInfo.scheduleInfo')}
 									</p>
 								</div>
 							</div>
@@ -1011,7 +1014,7 @@ const MyInfo = () => {
 										type="button"
 										variant="ghost"
 									>
-										시간 추가
+										{t('myInfo.addTime')}
 									</Button>
 									<Button
 										className="font-medium !text-text-70"
@@ -1021,7 +1024,7 @@ const MyInfo = () => {
 										type="button"
 										variant="ghost"
 									>
-										되돌리기
+										{t('common.buttons.undo')}
 									</Button>
 									<Button
 										className="font-medium !text-text-70"
@@ -1029,7 +1032,7 @@ const MyInfo = () => {
 										type="button"
 										variant="ghost"
 									>
-										초기화
+										{t('common.buttons.reset')}
 									</Button>
 								</div>
 							)}

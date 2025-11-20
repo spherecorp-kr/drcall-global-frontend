@@ -1,5 +1,6 @@
 import { type ChangeEvent, useCallback, useState } from 'react';
 import { Button } from '@/shared/components/ui';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
 	initialValue?: string;
@@ -14,6 +15,7 @@ const Memo = ({
 	onChange,
 	onSave,
 }: Props) => {
+	const { t } = useTranslation();
 	const [value, setValue] = useState(initialValue);
 
 	const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -23,17 +25,17 @@ const Memo = ({
 
 	return (
 		<div className="flex flex-1 flex-col gap-2.5 items-start self-stretch">
-			<h2 className="font-semibold leading-[normal] text-text-100 text-xl">메모</h2>
+			<h2 className="font-semibold leading-[normal] text-text-100 text-xl">{t('appointment.detail.memo.title')}</h2>
 			<div className="bg-white border border-stroke-input flex flex-1 flex-col gap-2.5 p-5 rounded-[0.625rem] w-full">
 				<textarea
 					className="flex-1 outline-0 resize-none w-full"
 					maxLength={maxLength}
 					onChange={handleChange}
-					placeholder='의료진 또는 코디네이터가 숙지해야 할 특이 사항이 있다면 적어주세요.'
+					placeholder={t('appointment.detail.memo.placeholder')}
 					value={value}
 				/>
 				<div className='flex items-center justify-end'>
-					<Button className="h-10 rounded-sm" onClick={onSave} type="button">저장</Button>
+					<Button className="h-10 rounded-sm" onClick={onSave} type="button">{t('appointment.detail.memo.save')}</Button>
 				</div>
 			</div>
 		</div>

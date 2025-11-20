@@ -5,6 +5,7 @@ import type { ColumnDef, Row } from '@tanstack/react-table';
 import { levelBadgeMap } from '@/shared/utils/constants';
 import { PatientBadge } from '@/shared/components/ui/Badge';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const sampleData: ConfirmedTableColumnProps[] = [
 	{
@@ -50,34 +51,35 @@ const ColGroup = () => (
 
 const ConfirmedTable = () => {
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	const columns = useMemo<ColumnDef<ConfirmedTableColumnProps>[]>(() => [
 		{
 			accessorKey: 'appointmentNumber',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '예약 번호',
+			header: t('appointment.table.columns.appointmentNumber'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'appointmentDatetime',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '진료 희망 일시',
+			header: t('appointment.table.columns.appointmentDatetime'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'doctorName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '의사',
+			header: t('appointment.table.columns.doctor'),
 			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'patientName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '환자명',
+			header: t('appointment.table.columns.patientName'),
 			meta: { truncate: true }
 		},
 		{
@@ -91,17 +93,17 @@ const ConfirmedTable = () => {
 				);
 			},
 			enableSorting: false,
-			header: '환자 등급',
+			header: t('appointment.table.columns.patientLevel'),
 			size: 100,
 		},
 		{
 			accessorKey: 'symptom',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '증상',
+			header: t('appointment.table.columns.symptom'),
 			meta: { truncate: true }
 		},
-	], []);
+	], [t]);
 
 	// 상세 페이지로 이동
 	const navigateToDetails = useCallback((row: Row<ConfirmedTableColumnProps>) => {

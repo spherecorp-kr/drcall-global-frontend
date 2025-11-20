@@ -13,16 +13,16 @@ const SearchCancelled = () => {
 	const [sort, setSort] = useState<string>('0');
 
 	const cancelerOptions: DropdownOption[] = useMemo(() => [
-		{ label: '전체', value: 'all' },
-		{ label: '병원', value: 'HOSPITAL' },
-		{ label: '환자', value: 'PATIENT' },
-		{ label: '시스템', value: 'SYSTEM' },
-	], []);
+		{ label: t('appointment.search.all'), value: 'all' },
+		{ label: t('canceler.hospital'), value: 'HOSPITAL' },
+		{ label: t('canceler.patient'), value: 'PATIENT' },
+		{ label: t('canceler.system'), value: 'SYSTEM' },
+	], [t]);
 
 	const sortOptions: DropdownOption[] = useMemo(() => [
-		{ label: '최신순', value: '0' },
-		{ label: '오래된 순', value: '1' },
-	], []);
+		{ label: t('appointment.search.sort.newest'), value: '0' },
+		{ label: t('appointment.search.sort.oldest'), value: '1' },
+	], [t]);
 
 	const handleCancelerChange = useCallback((value: string) => {
 		setCanceler(value);
@@ -59,7 +59,7 @@ const SearchCancelled = () => {
 					menuClassName="min-w-[9.375rem]"
 					onChange={handleCancelerChange}
 					options={cancelerOptions}
-					placeholder="전체"
+					placeholder={t('appointment.search.all')}
 					value={canceler}
 				/>
 				<Dropdown
@@ -67,7 +67,7 @@ const SearchCancelled = () => {
 					menuClassName="min-w-[9.375rem]"
 					onChange={handleSortChange}
 					options={sortOptions}
-					placeholder="최신순"
+					placeholder={t('appointment.search.sort.newest')}
 					value={sort}
 				/>
 			</div>
@@ -75,7 +75,7 @@ const SearchCancelled = () => {
 				className="px-0"
 				icon={<SearchIcon className="cursor-pointer h-7 w-7" />}
 				onChange={handleKeywordChange}
-				placeholder="예약 번호 또는 환자명을 입력해주세요."
+				placeholder={t('appointment.search.placeholders.appointmentOrPatient')}
 				type="text"
 				value={keyword}
 				wrapperClassName="w-[36.125rem]"

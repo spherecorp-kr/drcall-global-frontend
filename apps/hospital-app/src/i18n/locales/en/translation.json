@@ -232,5 +232,331 @@
 			"userType": "User Type",
 			"reset": "Reset Filters"
 		}
+	},
+	"common": {
+		"doctor": {
+			"register": "Doctor Registration",
+			"detail": "Doctor Account Details"
+		},
+		"patient": {
+			"register": "Patient Registration",
+			"detail": "Patient Details"
+		},
+		"buttons": {
+			"confirm": "Confirm",
+			"complete": "Complete",
+			"cancel": "Cancel",
+			"save": "Save",
+			"edit": "Edit",
+			"reset": "Reset",
+			"undo": "Undo",
+			"add": "Add"
+		},
+		"labels": {
+			"account": "Account",
+			"id": "ID",
+			"name": "Name",
+			"englishName": "Name (English)",
+			"email": "Email",
+			"specialty": "Specialty",
+			"introduction": "Introduction",
+			"experience": "Experience & Education",
+			"password": "Password",
+			"inactive": "Inactive"
+		},
+		"placeholders": {
+			"enterName": "Please enter your name.",
+			"enterEnglishName": "Please enter your English name.",
+			"enterSpecialty": "Please enter your specialty.",
+			"enterIntroduction": "Enter your introduction to be displayed to patients.\n(Maximum 50 characters)",
+			"enterExperience": "Enter your experience & education to be displayed to patients.\n(Maximum 50 characters)"
+		},
+		"errors": {
+			"enterName": "Please enter your name.",
+			"enterEnglishName": "Please enter your English name.",
+			"enterSpecialty": "Please enter your specialty.",
+			"enterIntroduction": "Please enter your introduction.",
+			"enterExperience": "Please enter your experience & education.",
+			"fileSize": "File size must be 5MB or less.",
+			"fileFormat": "Only JPG and PNG formats are allowed.",
+			"canvasError": "Cannot create canvas.",
+			"imageLoadError": "Cannot load image.",
+			"fileReadError": "Cannot read file.",
+			"uploadFailed": "Image upload failed.",
+			"uploadError": "Profile image upload failed:",
+			"selectDay": "Please select a day.",
+			"startTimeBeforeEnd": "Start time must be earlier than end time."
+		}
+	},
+	"myInfo": {
+		"title": "My Info Management",
+		"accountDeactivate": "Deactivate Account",
+		"passwordChange": "Change Password",
+		"emailChange": "Change Email",
+		"infoEdit": "Edit Info",
+		"editComplete": "Edit Complete",
+		"availableTime": "Available Consultation Hours",
+		"schedule": "Consultation Schedule",
+		"scheduleInfo": "Click blocks (30 minutes) to add/remove available consultation hours.",
+		"addTime": "Add Time",
+		"addTimeDialog": {
+			"title": "Add Time",
+			"dayAndTime": "Add Day & Time",
+			"addedSections": "Added Sections",
+			"autoMerge": "Overlapping times will be automatically merged.",
+			"noTimeSlots": "No time slots added."
+		},
+		"accountDialog": {
+			"title": "Deactivate Account",
+			"scheduledAppointments": "Scheduled Appointments",
+			"scheduledAppointmentsCount": "Scheduled Appointments: {{count}}",
+			"cannotDeactivate": "You cannot deactivate your account when you have scheduled appointments.",
+			"noScheduledAppointments": "No scheduled appointments."
+		}
+	},
+	"appointment": {
+		"statusTab": {
+			"waiting": "Waiting",
+			"confirmed": "Confirmed",
+			"completed": "Completed",
+			"cancelled": "Cancelled"
+		},
+		"search": {
+			"all": "All",
+			"allGrade": "All Grades",
+			"appointmentType": {
+				"fast": "Fast Consultation",
+				"regular": "Regular Consultation",
+				"scheduled": "Scheduled Consultation"
+			},
+			"sort": {
+				"newest": "Newest",
+				"oldest": "Oldest",
+				"requestOldest": "Oldest Request Date",
+				"datetimeNearest": "Nearest Consultation Date",
+				"scheduledDate": "Scheduled Date",
+				"confirmedDate": "Confirmed Date"
+			},
+			"prescriptionStatus": {
+				"all": "Prescription Status: All",
+				"uploadWaiting": "Upload Pending",
+				"completed": "Completed",
+				"notIssued": "Not Issued"
+			},
+			"paymentStatus": {
+				"all": "Payment Status: All",
+				"scheduled": "Scheduled",
+				"waiting": "Payment Pending",
+				"completed": "Completed"
+			},
+			"deliveryStatus": {
+				"preparing": "Preparing",
+				"prepared": "Prepared",
+				"delivering": "Delivering",
+				"delivered": "Delivered",
+				"none": "No Medication"
+			},
+			"placeholders": {
+				"patientName": "Enter patient name.",
+				"appointmentOrPatient": "Enter appointment number or patient name."
+			}
+		},
+		"table": {
+			"columns": {
+				"appointmentType": "Appointment Type",
+				"appointmentNumber": "Appointment Number",
+				"appointmentDatetime": "Preferred Consultation Date",
+				"completedDatetime": "Completed Date",
+				"cancelledDatetime": "Cancelled Date",
+				"doctor": "Doctor",
+				"patientName": "Patient Name",
+				"patientLevel": "Patient Level",
+				"symptom": "Symptoms",
+				"requestTime": "Request Date",
+				"canceler": "Canceler",
+				"prescriptionStatus": "Prescription Status",
+				"paymentStatus": "Payment Status",
+				"deliveryStatus": "Delivery Status"
+			}
+		},
+		"calendar": {
+			"patientName": "Patient Name",
+			"doctorName": "Doctor Name"
+		},
+		"detail": {
+			"common": {
+				"doctor": "Doctor",
+				"patient": "Patient",
+				"symptom": "Symptoms"
+			},
+			"history": {
+				"title": "Past Treatment History",
+				"empty": "No past treatment history.",
+				"preview": "Prescription Preview",
+				"table": {
+					"completedDate": "Completed Date",
+					"doctor": "Doctor",
+					"symptom": "Symptoms",
+					"action": "Action"
+				},
+				"dialog": {
+					"title": "Past Treatment History",
+					"mainSymptom": "Main Symptoms",
+					"doctorAdvice": "Doctor's Advice",
+					"aiSummary": "AI Summary"
+				}
+			},
+			"phr": {
+				"title": "Patient Health Info",
+				"heightWeightBmi": "Height/Weight/BMI",
+				"more": "More"
+			},
+			"patientInfo": {
+				"title": "Patient Info",
+				"edit": "Edit Patient Info",
+				"thaiId": "Thai ID Number",
+				"phone": "Phone Number",
+				"address": "Address",
+				"physical": "Height/Weight/Blood Type",
+				"drinking": "Drinking (200ml, 1W)",
+				"smoking": "Smoking (Cigarettes)",
+				"medication": "Current Medication",
+				"personalHistory": "Personal History",
+				"familyHistory": "Family History",
+				"gender": {
+					"male": "Male",
+					"female": "Female"
+				},
+				"editDialog": {
+					"title": "Edit Patient Info",
+					"name": "Name",
+					"birthday": "Birthday (dd/mm/yyyy)",
+					"gender": "Gender",
+					"phone": "Phone Number",
+					"address": "Address",
+					"physical": "Height/Weight/Blood Type",
+					"drinking": "Drinking (200ml, 1W)",
+					"smoking": "Smoking (Cigarettes)",
+					"level": "Patient Level",
+					"medication": "Current Medication",
+					"personalHistory": "Personal History",
+					"familyHistory": "Family History"
+				}
+			},
+			"treatmentInfo": {
+				"title": "Treatment Info",
+				"doctor": "Doctor",
+				"symptom": "Symptoms",
+				"symptomImages": "Symptom Images",
+				"preferredTime": "Preferred Date & Time",
+				"doctorAdvice": "Doctor's Advice",
+				"aiSummary": "AI Summary",
+				"doctorSelect": "Please select a doctor.",
+				"timeSelect": "Please select preferred date & time.",
+				"timeSelectAlert": "You can select time after selecting a doctor.",
+				"dialog": {
+					"title": "Change Date & Time",
+					"cancel": "Cancel",
+					"confirm": "Complete"
+				}
+			},
+			"memo": {
+				"title": "Memo",
+				"placeholder": "Please write any special notes for medical staff or coordinators.",
+				"save": "Save"
+			},
+			"cancel": {
+				"title": "Cancellation Info",
+				"reason": "Reason",
+				"canceler": "Canceler",
+				"date": "Cancelled Date",
+				"number": "Appointment Number",
+				"hospital": "Hospital",
+				"patient": "Patient",
+				"dialog": {
+					"hospitalCancel": "Hospital Cancel",
+					"patientCancel": "Patient Cancel",
+					"placeholder": "Please enter cancellation reason.\n(Max 50 characters)"
+				}
+			},
+			"payment": {
+				"title": "Payment Info",
+				"status": "Status",
+				"method": "Method",
+				"amount": "Amount",
+				"date": "Date",
+				"breakdown": {
+					"treatment": "Treatment Fee",
+					"dispensing": "Dispensing Fee",
+					"service": "Service Fee",
+					"delivery": "Delivery Fee",
+					"total": "Total"
+				},
+				"warn": "The entered fee has been charged to the patient."
+			},
+			"delivery": {
+				"title": "Delivery Info",
+				"tracking": "Tracking",
+				"steps": {
+					"preparing": "Preparing",
+					"prepared": "Prepared",
+					"delivering": "Delivering",
+					"delivered": "Delivered"
+				},
+				"info": {
+					"number": "Dispensing No.",
+					"recipient": "Recipient",
+					"address": "Address",
+					"courier": "Courier Info",
+					"method": "Method",
+					"phone": "Phone Number",
+					"request": "Request"
+				},
+				"trackingDialog": {
+					"title": "Tracking",
+					"info": "Basic Info",
+					"invoice": "Tracking No.",
+					"courier": "Courier",
+					"date": "Date",
+					"step": "Step",
+					"location": "Location"
+				}
+			},
+			"prescription": {
+				"edit": "Edit Prescription",
+				"register": "Register Prescription/Fee",
+				"download": "Download Prescription",
+				"file": "File Name",
+				"upload": "Upload",
+				"include": "Include Prescription",
+				"exclude": "No Prescription",
+				"placeholder": "Please write any notes for the patient.\n(Max 500 characters)",
+				"dialog": {
+					"registerTitle": "Register Prescription/Fee",
+					"editTitle": "Edit Prescription",
+					"warn": "The entered fee will be charged to the patient.",
+					"charge": "Charge {{amount}}THB"
+				}
+			},
+			"buttons": {
+				"chat": "Chat",
+				"videoCall": "Video Call",
+				"cancel": "Cancel Appointment",
+				"cancelTreatment": "Cancel Treatment",
+				"startTreatment": "Start Treatment",
+				"confirm": "Confirm",
+				"reappoint": "Re-appoint",
+				"edit": "Edit",
+				"paymentConfirm": "Confirm Payment",
+				"processing": "Processing...",
+				"complete": "Complete",
+				"editComplete": "Edit Complete"
+			},
+			"reappointment": {
+				"title": "Appointment",
+				"doctorSelect": "Select Doctor",
+				"dateSelect": "Select Date & Time"
+			}
+		}
 	}
 }
