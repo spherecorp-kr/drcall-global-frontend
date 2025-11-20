@@ -14,6 +14,46 @@
 		"patient": "Patient",
 		"system": "System"
 	},
+	"login": {
+		"hospital": "Hospital",
+		"id": "ID",
+		"idPlaceholder": "Please enter your ID.",
+		"pw": "Password",
+		"pwPlaceholder": "Please enter your password.",
+		"forget": "Did you forget your password?",
+		"keep": "Keep me logged in",
+		"button": "Login",
+		"ing": "Logging in...",
+		"next": "Next",
+		"emptyFields": "Please enter your ID and password.",
+		"invalidCredentials": "ID or password is incorrect.",
+		"backToLogin": "Login Screen"
+	},
+	"findPassword": {
+		"usernameStep": {
+			"description": "We will send a password reset verification code\nto the email address registered with your ID."
+		},
+		"verificationStep": {
+			"description": "We have sent an email for password reset.\nPlease check your inbox for the verification code.",
+			"codeLabel": "Verification Code",
+			"codePlaceholder": "Please enter the 6-digit verification code.",
+			"resend": "Resend",
+			"codeMismatch": "The verification code does not match.",
+			"codeExpired": "The verification code has expired.",
+			"codeVerified": "The verification code has been verified."
+		},
+		"resetStep": {
+			"description": "Please enter your new password.",
+			"newPasswordLabel": "New Password",
+			"newPasswordPlaceholder": "Please enter your new password.",
+			"passwordRule": "10-16 characters, combination of at least 2 types: letters, numbers, special characters",
+			"passwordFormatError": "Please enter a password that meets the format requirements.",
+			"passwordConfirmLabel": "Confirm New Password",
+			"passwordConfirmPlaceholder": "Please enter your new password again.",
+			"passwordMismatch": "Passwords do not match.",
+			"complete": "Complete"
+		}
+	},
 	"menu": {
 		"appointment": "Appointment",
 		"consultation": "Doctor's office",
