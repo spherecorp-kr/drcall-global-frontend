@@ -34,6 +34,18 @@
 3. OTP 코드 입력 및 검증
 4. 로그인 완료 → 예약 목록으로 이동
 
+#### 병원 등록 환자 (SMS 초대)
+1. 병원에서 환자 등록 (이름, 전화번호 등 입력)
+2. 환자에게 SMS 발송 (가입 URL 포함)
+3. URL 클릭 → 전화번호 입력
+4. OTP 인증 코드 수신 (SMS)
+5. OTP 코드 입력 및 검증
+6. **프로필 등록 화면에 병원에서 입력한 정보가 자동으로 세팅됨**
+   - 이름, 전화번호, 이메일, 생년월일, 성별, 주소, 비상연락처
+   - 모든 필드 수정 가능
+7. 약관 동의 및 정보 확인/수정
+8. 회원가입 완료 → PENDING 예약이 있으면 자동 확정 → 예약 목록으로 이동
+
 ---
 
 ### 1.2 시퀀스 다이어그램
@@ -75,12 +87,24 @@ sequenceDiagram
         AuthAPI-->>PatientApp: 404 Not Found
         PatientApp->>Patient: 프로필 등록 화면 → /auth/service-registration
         
-        %% Step 3: 프로필 등록 (신규 환자만)
-        Patient->>PatientApp: 프로필 정보 입력<br/>(이름, 성별, 생년월일, 약관 동의)
-        PatientApp->>AuthAPI: POST /api/auth/profile/complete<br/>(Header: Bearer tempJwt)
+        %% Step 3-A: 병원 등록 정보 조회 (있는 경우)
+        PatientApp->>AuthAPI: GET /api/auth/profile<br/>(Header: Bearer tempJwt)
+        
+        alt 병원에서 등록한 환자
+            AuthAPI-->>PatientApp: 200 OK + HospitalPatient Info
+            Note left of AuthAPI: {<br/>  name: "홍길동",<br/>  phone: "0812345678",<br/>  email: "hong@example.com",<br/>  dateOfBirth: "1990-01-01",<br/>  gender: "MALE",<br/>  address: "123 Main St"<br/>}
+            PatientApp->>PatientApp: Form 자동 세팅<br/>(모든 필드 수정 가능)
+            Patient->>PatientApp: 정보 확인/수정 + 약관 동의
+        else 완전 신규 환자
+            AuthAPI-->>PatientApp: 404 Not Found
+            Patient->>PatientApp: 프로필 정보 입력<br/>(이름, 성별, 생년월일, 약관 동의)
+        end
+        
+        %% Step 3-B: 프로필 등록 완료
+        PatientApp->>AuthAPI: POST /api/auth/profile<br/>(Header: Bearer tempJwt)
         Note right of AuthAPI: {<br/>  name: "홍길동",<br/>  gender: "MALE",<br/>  birthDate: "1990-01-01",<br/>  termsAgreed: true,<br/>  privacyAgreed: true,<br/>  dataSharingConsent: true<br/>}
         
-        AuthAPI->>AuthAPI: 환자 계정 생성<br/>+ 세션 쿠키 발급 (sid)
+        AuthAPI->>AuthAPI: 환자 계정 생성<br/>+ 세션 쿠키 발급 (sid)<br/>+ PENDING 예약 자동 확정
         AuthAPI-->>PatientApp: 200 OK + Cookies (sid, ctx-{subdomain})
         Note left of AuthAPI: Set-Cookie: sid=xxx; HttpOnly; Secure<br/>Set-Cookie: ctx-th=xxx; HttpOnly; Secure
         

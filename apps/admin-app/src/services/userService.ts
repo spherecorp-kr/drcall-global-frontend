@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api';
+import { apiClient } from "@/services/api";
 
 // =============== 공통 타입 ===============
 export interface PaginatedResponse<T> {

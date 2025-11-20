@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api';
+import { apiClient } from "@/services/api";
 import type { HospitalDto } from '@/shared/types/hospital';
 import type {
   HospitalOnboardingRequest,
