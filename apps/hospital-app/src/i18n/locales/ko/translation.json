@@ -14,6 +14,20 @@
 		"patient": "환자",
 		"system": "시스템"
 	},
+	"login": {
+		"hospital": "병원",
+		"id": "아이디",
+		"idPlaceholder": "아이디를 입력해주세요.",
+		"pw": "비밀번호",
+		"pwPlaceholder": "비밀번호를 입력해주세요.",
+		"forget": "비밀번호를 잊어버리셨나요?",
+		"keep": "로그인 상태 유지",
+		"button": "로그인",
+		"ing": "로그인 중...",
+		"next": "다음",
+		"emptyFields": "아이디와 비밀번호를 입력해주세요.",
+		"invalidCredentials": "아이디 또는 비밀번호가 올바르지 않습니다."
+	},
 	"menu": {
 		"appointment": "예약",
 		"consultation": "진료실",

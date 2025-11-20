@@ -14,6 +14,20 @@
 		"patient": "Patient",
 		"system": "System"
 	},
+	"login": {
+		"hospital": "Hospital",
+		"id": "ID",
+		"idPlaceholder": "Please enter your ID.",
+		"pw": "Password",
+		"pwPlaceholder": "Please enter your password.",
+		"forget": "Did you forget your password?",
+		"keep": "Keep me logged in",
+		"button": "Login",
+		"ing": "Logging in...",
+		"next": "Next",
+		"emptyFields": "Please enter your ID and password.",
+		"invalidCredentials": "ID or password is incorrect."
+	},
 	"menu": {
 		"appointment": "Appointment",
 		"consultation": "Doctor's office",
