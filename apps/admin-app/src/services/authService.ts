@@ -4,7 +4,7 @@ import { apiClient } from './api';
  * 로그인 요청
  */
 export interface LoginRequest {
-  username: string;
+  loginId: string;
   password: string;
   rememberMe?: boolean;
 }
@@ -39,8 +39,25 @@ export const authService = {
    * 로그인
    */
   login: async (data: LoginRequest): Promise<LoginResponse> => {
-    const response = await apiClient.post<LoginResponse>('/api/v1/auth/login', data);
-    return response.data;
+    // 백엔드는 loginId를 요구하므로 변환
+    const requestBody = {
+      loginId: data.loginId,
+      password: data.password,
+    };
+    const response = await apiClient.post<LoginResponse>('/api/v1/auth/login', requestBody);
+    
+    // 응답 데이터 검증: accessToken과 user가 필수
+    const responseData = response.data;
+    if (!responseData?.accessToken || !responseData?.user) {
+      const error = new Error('로그인 응답이 올바르지 않습니다.');
+      (error as any).response = { 
+        status: 400,
+        data: responseData 
+      };
+      throw error;
+    }
+    
+    return responseData;
   },
 
   /**

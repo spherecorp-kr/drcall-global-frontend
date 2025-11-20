@@ -33,7 +33,8 @@
     "searchForAddress": "Search for address",
     "subtitleLanguage": "Subtitle Language",
     "korean": "Korean",
-    "viewMore": "View More"
+    "viewMore": "View More",
+    "checkingChannel": "Checking channel information..."
   },
   "medication": {
     "list": {

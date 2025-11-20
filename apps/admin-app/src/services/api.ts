@@ -67,8 +67,21 @@ apiClient.interceptors.response.use(
 		// Auto-unwrap ApiResponse<T> wrapper from backend
 		// Backend returns: { success: true, data: {...}, message: null, error: null }
 		// Frontend expects: {...}
-		if (response.data?.success !== undefined && response.data?.data !== undefined) {
-			response.data = response.data.data;
+		if (response.data?.success !== undefined) {
+			// success: false인 경우 에러로 처리
+			if (response.data.success === false) {
+				const error = new Error(response.data.error?.message || response.data.message || '요청에 실패했습니다.');
+				(error as any).response = {
+					...response,
+					status: response.data.error?.status || 400,
+					data: response.data,
+				};
+				return Promise.reject(error);
+			}
+			// success: true이고 data가 있으면 unwrap
+			if (response.data.data !== undefined) {
+				response.data = response.data.data;
+			}
 		}
 		return response;
 	},

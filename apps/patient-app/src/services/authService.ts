@@ -27,6 +27,8 @@ export interface VerifyOtpResponse {
 export interface ProfileRequest {
   channelUserId: string;
   name: string;
+  phone: string;
+  phoneCountryCode?: string;
   email: string;
   dateOfBirth: string;
   gender: 'MALE' | 'FEMALE' | 'OTHER';
@@ -34,6 +36,7 @@ export interface ProfileRequest {
   emergencyContactName?: string;
   emergencyContactPhone?: string;
   address?: string;
+  postalCode?: string;
   marketingConsent: boolean;
   dataSharingConsent: boolean;
 }
@@ -43,7 +46,7 @@ export const authService = {
    * OTP 발송 (SMS 인증 코드)
    */
   sendOtp: async (request: SendOtpRequest) => {
-    const response = await apiClient.post('/api/auth/otp/send', {
+    const response = await apiClient.post('/api/v1/auth/otp/send', {
       phone: request.phone,
       phoneCountryCode: request.phoneCountryCode || '+66',
       verificationType: request.verificationType || 'REGISTRATION',
@@ -56,7 +59,7 @@ export const authService = {
    * OTP 검증 및 임시 JWT 발급
    */
   verifyOtp: async (request: VerifyOtpRequest): Promise<VerifyOtpResponse & { existingPatient?: boolean }> => {
-    const response = await apiClient.post<VerifyOtpResponse>('/api/auth/otp/verify', {
+    const response = await apiClient.post<VerifyOtpResponse>('/api/v1/auth/otp/verify', {
       phone: request.phone,
       phoneCountryCode: request.phoneCountryCode || '+66',
       otpCode: request.otpCode,
@@ -68,7 +71,7 @@ export const authService = {
 
       // 프로필 조회로 기존 환자 여부 확인
       try {
-        const profileResponse = await apiClient.get('/api/auth/profile', {
+        const profileResponse = await apiClient.get('/api/v1/auth/profile', {
           headers: { 'Authorization': `Bearer ${response.data.tempToken}` },
           skipErrorToast: true, // 404는 정상 케이스(신규 사용자)이므로 에러 토스트 표시 안 함
         } as any);
@@ -90,7 +93,7 @@ export const authService = {
    */
   getProfile: async () => {
     const tempJwt = localStorage.getItem('tempJwt');
-    const response = await apiClient.get('/api/auth/profile', {
+    const response = await apiClient.get('/api/v1/auth/profile', {
       headers: {
         'Authorization': `Bearer ${tempJwt}`,
       },
@@ -115,7 +118,7 @@ export const authService = {
    */
   completeProfile: async (request: ProfileRequest) => {
     const tempJwt = localStorage.getItem('tempJwt');
-    const response = await apiClient.post('/api/auth/profile', request, {
+    const response = await apiClient.post('/api/v1/auth/profile', request, {
       headers: {
         'Authorization': `Bearer ${tempJwt}`,
       },

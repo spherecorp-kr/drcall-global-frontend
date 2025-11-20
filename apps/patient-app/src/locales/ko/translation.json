@@ -33,7 +33,8 @@
     "searchForAddress": "주소를 검색해 주세요",
     "subtitleLanguage": "자막 언어",
     "korean": "한국어",
-    "viewMore": "더보기"
+    "viewMore": "더보기",
+    "checkingChannel": "채널 정보 확인 중..."
   },
   "medication": {
     "list": {

@@ -52,6 +52,7 @@ import Error403 from './pages/error/Error403'
 import Error404 from './pages/error/Error404'
 import Error500 from './pages/error/Error500'
 import ErrorExpired from './pages/error/ErrorExpired'
+import NoChannel from './pages/error/NoChannel'
 import './App.css'
 
 function App() {
@@ -178,6 +179,7 @@ function App() {
         <Route path="/error/404" element={<Error404 />} />
         <Route path="/error/500" element={<Error500 />} />
         <Route path="/error/expired" element={<ErrorExpired />} />
+        <Route path="/error/no-channel" element={<NoChannel />} />
         <Route path="*" element={<Error404 />} />
         </Routes>
             </ChannelValidator>

@@ -73,7 +73,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
       setError(null);
 
-      const response = await apiClient.get('/api/auth/profile');
+      const response = await apiClient.get('/api/v1/auth/profile');
 
       if (response.data) {
         setUser(response.data);
@@ -117,7 +117,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
 
       // Call backend logout endpoint to clear cookies
-      await apiClient.post('/api/auth/logout');
+      await apiClient.post('/api/v1/auth/logout');
 
       // Clear local storage
       localStorage.removeItem('tempJwt');

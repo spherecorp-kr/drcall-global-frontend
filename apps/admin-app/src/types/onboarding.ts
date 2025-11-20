@@ -12,7 +12,7 @@ export interface LiffConfig {
 }
 
 export interface HospitalFormData {
-	hospitalCode: string;
+	hospitalCode?: string;  // 선택적 - 서버에서 자동 생성
 	nameEn: string;
 	nameLocal?: string;
 	email: string;

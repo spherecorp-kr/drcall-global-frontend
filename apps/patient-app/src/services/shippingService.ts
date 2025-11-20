@@ -97,7 +97,7 @@ export const shippingService = {
     request: ShippingFeeCalculationRequest
   ): Promise<ShippingFeeCalculationResponse> => {
     const response = await apiClient.post<ShippingFeeCalculationResponse>(
-      '/api/v1/shipments/calculate-fee',
+      '/api/v1/shipments/quote',
       {
         ...request,
         parcelWeight: request.parcelWeight ?? 0.5,

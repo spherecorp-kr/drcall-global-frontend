@@ -2,7 +2,11 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 import { Button, Input, Select } from '@/shared/components/ui';
-import { onboardingService } from '@/services/onboardingService';
+import { hospitalService } from '@/services/hospitalService';
+import { AddressSearchModal } from '@/components/address/modals/AddressSearchModal';
+import { COUNTRY_CODES, TIMEZONES, CURRENCIES, DEFAULT_COUNTRY, DEFAULT_TIMEZONE, DEFAULT_CURRENCY } from '@/constants/countries';
+import { toast } from 'react-hot-toast';
+import icSearch from '@/shared/assets/icons/ic_search.svg';
 import type {
 	HospitalFormData,
 	ChannelFormData,
@@ -29,10 +33,11 @@ export default function HospitalOnboarding() {
 	const navigate = useNavigate();
 	const [currentStep, setCurrentStep] = useState<OnboardingStep>('hospital');
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [showAddressSearch, setShowAddressSearch] = useState(false);
 
 	// Form data
 	const [hospitalData, setHospitalData] = useState<HospitalFormData>({
-		hospitalCode: '',
+		hospitalCode: '',  // 자동 생성될 예정
 		nameEn: '',
 		nameLocal: '',
 		email: '',
@@ -42,9 +47,9 @@ export default function HospitalOnboarding() {
 		city: '',
 		state: '',
 		postalCode: '',
-		countryCode: 'TH',
-		timezone: 'Asia/Bangkok',
-		currency: 'THB',
+		countryCode: DEFAULT_COUNTRY,
+		timezone: DEFAULT_TIMEZONE,
+		currency: DEFAULT_CURRENCY,
 	});
 
 	const [channelData, setChannelData] = useState<ChannelFormData>({
@@ -109,21 +114,28 @@ export default function HospitalOnboarding() {
 				shipping: shippingData,
 			};
 
-			await onboardingService.onboardHospital(request);
+			const response = await hospitalService.onboardHospital(request);
+
+			toast.success('병원이 성공적으로 등록되었습니다.');
 
 			// 성공 시 완료 페이지로 이동
 			setCurrentStep('complete');
+
+			// 2초 후 자동으로 병원 목록으로 이동
+			setTimeout(() => {
+				navigate('/hospitals');
+			}, 2000);
 		} catch (error) {
 			console.error('Onboarding failed:', error);
 			let errorMessage = '온보딩에 실패했습니다.';
 			if (error instanceof AxiosError) {
 				errorMessage = error.response?.data?.message || errorMessage;
 			}
-			alert(errorMessage);
+			toast.error(errorMessage);
 		} finally {
 			setIsSubmitting(false);
 		}
-	}, [hospitalData, channelData, messagingData, paymentData, shippingData]);
+	}, [hospitalData, channelData, messagingData, paymentData, shippingData, navigate]);
 
 	const handleComplete = useCallback(() => {
 		navigate('/hospitals');
@@ -137,14 +149,6 @@ export default function HospitalOnboarding() {
 						<h2 className="text-2xl font-bold">병원 정보</h2>
 						<div className="grid grid-cols-2 gap-4">
 							<div>
-								<label className="block mb-2">병원 코드 *</label>
-								<Input
-									value={hospitalData.hospitalCode}
-									onChange={(e) => setHospitalData({ ...hospitalData, hospitalCode: e.target.value })}
-									placeholder="HOSPITAL-001"
-								/>
-							</div>
-							<div>
 								<label className="block mb-2">영문명 *</label>
 								<Input
 									value={hospitalData.nameEn}
@@ -153,11 +157,11 @@ export default function HospitalOnboarding() {
 								/>
 							</div>
 							<div>
-								<label className="block mb-2">로컬명</label>
+								<label className="block mb-2">현지명</label>
 								<Input
 									value={hospitalData.nameLocal || ''}
 									onChange={(e) => setHospitalData({ ...hospitalData, nameLocal: e.target.value })}
-									placeholder="병원명"
+									placeholder="병원명 (현지어)"
 								/>
 							</div>
 							<div>
@@ -185,13 +189,38 @@ export default function HospitalOnboarding() {
 									placeholder="https://hospital.com"
 								/>
 							</div>
+							<div>
+								<label className="block mb-2">국가 *</label>
+								<Select
+									value={hospitalData.countryCode}
+									onChange={(e) => setHospitalData({ ...hospitalData, countryCode: e.target.value })}
+								>
+									{COUNTRY_CODES.map(country => (
+										<option key={country.code} value={country.code}>
+											{country.name} ({country.code})
+										</option>
+									))}
+								</Select>
+							</div>
 							<div className="col-span-2">
 								<label className="block mb-2">주소 *</label>
-								<Input
-									value={hospitalData.address}
-									onChange={(e) => setHospitalData({ ...hospitalData, address: e.target.value })}
-									placeholder="Full address"
-								/>
+								<div className="flex gap-2">
+									<Input
+										value={hospitalData.address}
+										onChange={(e) => setHospitalData({ ...hospitalData, address: e.target.value })}
+										placeholder="주소를 검색하거나 직접 입력하세요"
+										className="flex-1"
+									/>
+									<Button
+										type="button"
+										variant="outline"
+										size="default"
+										onClick={() => setShowAddressSearch(true)}
+										icon={<img src={icSearch} alt="검색" className="w-5 h-5" />}
+									>
+										주소 검색
+									</Button>
+								</div>
 							</div>
 							<div>
 								<label className="block mb-2">도시</label>
@@ -218,22 +247,16 @@ export default function HospitalOnboarding() {
 								/>
 							</div>
 							<div>
-								<label className="block mb-2">국가 코드</label>
-								<Input
-									value={hospitalData.countryCode || 'TH'}
-									onChange={(e) => setHospitalData({ ...hospitalData, countryCode: e.target.value })}
-									placeholder="TH"
-								/>
-							</div>
-							<div>
 								<label className="block mb-2">타임존 *</label>
 								<Select
 									value={hospitalData.timezone}
 									onChange={(e) => setHospitalData({ ...hospitalData, timezone: e.target.value })}
 								>
-									<option value="Asia/Bangkok">Asia/Bangkok</option>
-									<option value="Asia/Seoul">Asia/Seoul</option>
-									<option value="UTC">UTC</option>
+									{TIMEZONES.map(tz => (
+										<option key={tz.value} value={tz.value}>
+											{tz.label}
+										</option>
+									))}
 								</Select>
 							</div>
 							<div>
@@ -242,9 +265,11 @@ export default function HospitalOnboarding() {
 									value={hospitalData.currency}
 									onChange={(e) => setHospitalData({ ...hospitalData, currency: e.target.value })}
 								>
-									<option value="THB">THB (Thai Baht)</option>
-									<option value="USD">USD (US Dollar)</option>
-									<option value="KRW">KRW (Korean Won)</option>
+									{CURRENCIES.map(currency => (
+										<option key={currency.code} value={currency.code}>
+											{currency.code} - {currency.name} ({currency.symbol})
+										</option>
+									))}
 								</Select>
 							</div>
 						</div>
@@ -608,6 +633,22 @@ export default function HospitalOnboarding() {
 					)}
 				</div>
 			)}
+
+			{/* 주소 검색 모달 */}
+			<AddressSearchModal
+				isOpen={showAddressSearch}
+				onClose={() => setShowAddressSearch(false)}
+				onSelect={(address) => {
+					setHospitalData({
+						...hospitalData,
+						address: address.displayAddress,
+						postalCode: address.postalCode,
+						city: address.detail?.split(',')[0] || '',
+						countryCode: address.countryCode || hospitalData.countryCode,
+					});
+					setShowAddressSearch(false);
+				}}
+			/>
 		</div>
 	);
 }
