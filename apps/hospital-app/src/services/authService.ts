@@ -110,6 +110,7 @@ export const authService = {
 	 */
 	findPassword: async (data: FindPasswordRequest): Promise<FindPasswordResponse> => {
 		// TODO: API 구현
+		console.log(data);
 		// const response = await apiClient.post<FindPasswordResponse>('/api/v1/auth/find-password', data);
 		// return response.data;
 		throw new Error('API not implemented');
@@ -121,6 +122,7 @@ export const authService = {
 	 */
 	verifyCode: async (data: VerifyCodeRequest): Promise<VerifyCodeResponse> => {
 		// TODO: API 구현
+		console.log(data);
 		// const response = await apiClient.post<VerifyCodeResponse>('/api/v1/auth/verify-code', data);
 		// return response.data;
 		throw new Error('API not implemented');
@@ -132,6 +134,7 @@ export const authService = {
 	 */
 	resendCode: async (data: ResendCodeRequest): Promise<void> => {
 		// TODO: API 구현
+		console.log(data);
 		// await apiClient.post('/api/v1/auth/resend-code', data);
 		throw new Error('API not implemented');
 	},
@@ -142,6 +145,7 @@ export const authService = {
 	 */
 	resetPassword: async (data: ResetPasswordRequest): Promise<void> => {
 		// TODO: API 구현
+		console.log(data);
 		// await apiClient.post('/api/v1/auth/reset-password', data);
 		throw new Error('API not implemented');
 	},
