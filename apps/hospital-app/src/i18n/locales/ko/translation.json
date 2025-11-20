@@ -26,7 +26,34 @@
 		"ing": "로그인 중...",
 		"next": "다음",
 		"emptyFields": "아이디와 비밀번호를 입력해주세요.",
-		"invalidCredentials": "아이디 또는 비밀번호가 올바르지 않습니다."
+		"invalidCredentials": "아이디 또는 비밀번호가 올바르지 않습니다.",
+		"wrongId": "아이디가 올바르지 않습니다.",
+		"backToLogin": "로그인 화면"
+	},
+	"findPassword": {
+		"usernameStep": {
+			"description": "입력하신 아이디에 등록된 이메일 주소로\n비밀번호 재설정 인증번호를 보내드립니다."
+		},
+		"verificationStep": {
+			"description": "비밀번호 재설정을 위한 이메일을 전송했습니다.\n메일함에서 인증번호를 확인해주세요.",
+			"codeLabel": "인증번호",
+			"codePlaceholder": "인증번호 6자리를 입력해주세요.",
+			"resend": "재발송",
+			"codeMismatch": "인증번호가 일치하지 않습니다.",
+			"codeExpired": "인증번호가 만료되었습니다.",
+			"codeVerified": "인증번호가 확인되었습니다."
+		},
+		"resetStep": {
+			"description": "새로 사용하실 비밀번호를 입력해주세요.",
+			"newPasswordLabel": "새 비밀번호",
+			"newPasswordPlaceholder": "새 비밀번호를 입력해주세요.",
+			"passwordRule": "10자 이상~16자 이하 영문, 숫자, 특수문자 2종 이상의 혼합",
+			"passwordFormatError": "비밀번호 형식에 맞게 입력해주세요.",
+			"passwordConfirmLabel": "새 비밀번호 확인",
+			"passwordConfirmPlaceholder": "새 비밀번호를 다시 입력해주세요.",
+			"passwordMismatch": "비밀번호가 일치하지 않습니다.",
+			"complete": "완료"
+		}
 	},
 	"menu": {
 		"appointment": "예약",

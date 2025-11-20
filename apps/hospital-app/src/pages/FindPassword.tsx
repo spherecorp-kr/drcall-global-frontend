@@ -4,6 +4,8 @@ import { Button, Input } from '@/shared/components/ui';
 import AuthLayout from '@/shared/components/auth/AuthLayout';
 import { Eye, EyeOff } from '@/shared/components/auth/EyeIcon';
 import icValidationInfo from '@/shared/assets/icons/ic_validation_info.svg';
+import { useTranslation } from 'react-i18next';
+import { doubleDigit } from '@/shared/utils/commonScripts.ts';
 // TODO: API 구현 후 주석 해제
 // import { authService } from '@/services/authService';
 
@@ -20,6 +22,9 @@ const VERIFICATION_TIMEOUT = 3 * 60; // 3분 (초 단위)
 
 const FindPassword = () => {
 	const navigate = useNavigate();
+
+	const { t } = useTranslation();
+
 	const [step, setStep] = useState<FindPasswordStep>('username');
 	const [username, setUsername] = useState('');
 	const [verificationCode, setVerificationCode] = useState('');
@@ -37,7 +42,7 @@ const FindPassword = () => {
 	const timerDisplay = useMemo(() => {
 		const minutes = Math.floor(timeRemaining / 60);
 		const seconds = timeRemaining % 60;
-		return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+		return `${doubleDigit(minutes)}:${doubleDigit(seconds)}`;
 	}, [timeRemaining]);
 
 	// 인증번호 입력 단계에서 타이머 실행
@@ -71,7 +76,7 @@ const FindPassword = () => {
 		setErrors({});
 
 		if (!username.trim()) {
-			setErrors({ username: '아이디를 입력해주세요.' });
+			setErrors({ username: t('login.idPlaceholder') });
 			return;
 		}
 
@@ -83,12 +88,12 @@ const FindPassword = () => {
 			setStep('verification');
 			setTimeRemaining(VERIFICATION_TIMEOUT);
 		} catch (error) {
-			setErrors({ username: '아이디가 올바르지 않습니다.' });
+			setErrors({ username: t('login.wrongId') });
 			console.log(error);
 		} finally {
 			setIsLoading(false);
 		}
-	}, [username]);
+	}, [t, username]);
 
 	// 인증번호 확인
 	const handleVerificationSubmit = useCallback(async (e: FormEvent) => {
@@ -211,13 +216,12 @@ const FindPassword = () => {
 		return (
 			<AuthLayout>
 				<form className='flex flex-col gap-10 items-center justify-center w-full' onSubmit={handleUsernameSubmit}>
-					<p className='leading-[normal] text-center text-lg text-text-70'>
-						입력하신 아이디에 등록된 이메일 주소로<br />
-						비밀번호 재설정 인증번호를 보내드립니다.
+					<p className='leading-[normal] text-center text-lg text-text-70 whitespace-pre-line'>
+						{t('findPassword.usernameStep.description')}
 					</p>
 					<div className='flex flex-col gap-4 w-full'>
 						<label className='font-semibold leading-[normal] text-text-100 text-xl' htmlFor='username'>
-							아이디
+							{t('login.id')}
 						</label>
 						<div className='flex flex-col gap-1.5'>
 							<Input
@@ -226,7 +230,7 @@ const FindPassword = () => {
 									setUsername(e.target.value);
 									setErrors((prev) => ({ ...prev, username: undefined }));
 								}}
-								placeholder='아이디를 입력해주세요.'
+								placeholder={t('login.idPlaceholder')}
 								required
 								type='text'
 								value={username}
@@ -238,7 +242,7 @@ const FindPassword = () => {
 						</div>
 					</div>
 					<Button className='cursor-pointer w-full' disabled={isLoading} type='submit'>
-						다음
+						{t('login.next')}
 					</Button>
 				</form>
 			</AuthLayout>
@@ -250,13 +254,12 @@ const FindPassword = () => {
 		return (
 			<AuthLayout>
 				<form className='flex flex-col gap-10 items-center justify-center w-full' onSubmit={handleVerificationSubmit}>
-					<p className='leading-[normal] text-center text-lg text-text-70'>
-						비밀번호 재설정을 위한 이메일을 전송했습니다.<br />
-						메일함에서 인증번호를 확인해주세요.
+					<p className='leading-[normal] text-center text-lg text-text-70 whitespace-pre-line'>
+						{t('findPassword.verificationStep.description')}
 					</p>
 					<div className='flex flex-col gap-4 w-full'>
 						<label className='font-semibold leading-[normal] text-text-100 text-xl' htmlFor='verificationCode'>
-							인증번호
+							{t('findPassword.verificationStep.codeLabel')}
 						</label>
 						<div className='flex flex-col gap-1.5'>
 							<div className='flex gap-2 items-center'>
@@ -268,29 +271,29 @@ const FindPassword = () => {
 										setVerificationCode(e.target.value);
 										setErrors((prev) => ({ ...prev, verification: undefined }));
 									}}
-									placeholder='인증번호 6자리를 입력해주세요.'
+									placeholder={t('findPassword.verificationStep.codePlaceholder')}
 									required
 									type='text'
 									value={verificationCode}
 									wrapperClassName={errors.verification ? 'outline-system-error rounded' : 'rounded'}
 								/>
 								<Button className='break-keep' disabled={isLoading} onClick={handleResendCode} type='button'>
-									재발송
+									{t('findPassword.verificationStep.resend')}
 								</Button>
 							</div>
 							{errors.verification === 'mismatch' && (
-								<p className='leading-[normal] text-sm text-system-error'>인증번호가 일치하지 않습니다.</p>
+								<p className='leading-[normal] text-sm text-system-error'>{t('findPassword.verificationStep.codeMismatch')}</p>
 							)}
 							{errors.verification === 'expired' && (
-								<p className='leading-[normal] text-sm text-system-error'>인증번호가 만료되었습니다.</p>
+								<p className='leading-[normal] text-sm text-system-error'>{t('findPassword.verificationStep.codeExpired')}</p>
 							)}
 							{isCodeVerified && (
-								<p className='leading-[normal] text-sm text-system-successful2'>인증번호가 확인되었습니다.</p>
+								<p className='leading-[normal] text-sm text-system-successful2'>{t('findPassword.verificationStep.codeVerified')}</p>
 							)}
 						</div>
 					</div>
 					<Button className='cursor-pointer w-full' disabled={isLoading} type='submit'>
-						다음
+						{t('login.next')}
 					</Button>
 				</form>
 			</AuthLayout>
@@ -301,10 +304,12 @@ const FindPassword = () => {
 	return (
 		<AuthLayout>
 			<form className='flex flex-col gap-10 items-center justify-center w-full' onSubmit={handleResetPasswordSubmit}>
-				<p className='leading-[normal] text-center text-lg text-text-70'>새로 사용하실 비밀번호를 입력해주세요.</p>
+				<p className='leading-[normal] text-center text-lg text-text-70 whitespace-pre-line'>
+					{t('findPassword.resetStep.description')}
+				</p>
 				<div className='flex flex-col gap-4 w-full'>
 					<label className='font-semibold leading-[normal] text-text-100 text-xl' htmlFor='password'>
-						새 비밀번호
+						{t('findPassword.resetStep.newPasswordLabel')}
 					</label>
 					<div className='flex flex-col gap-1.5'>
 						<Input
@@ -315,7 +320,7 @@ const FindPassword = () => {
 								setErrors((prev) => ({ ...prev, password: undefined }));
 							}}
 							onIconClick={() => setShowPassword(!showPassword)}
-							placeholder='새 비밀번호를 입력해주세요.'
+							placeholder={t('findPassword.resetStep.newPasswordPlaceholder')}
 							required
 							type={showPassword ? 'text' : 'password'}
 							value={password}
@@ -323,16 +328,16 @@ const FindPassword = () => {
 						/>
 						<div className='flex gap-1 items-center text-primary-70 text-14'>
 							<img alt='info' className='h-4 w-4' src={icValidationInfo} />
-							<span>10자 이상~16자 이하 영문, 숫자, 특수문자 2종 이상의 혼합</span>
+							<span>{t('findPassword.resetStep.passwordRule')}</span>
 						</div>
 						{errors.password === 'format' && (
-							<p className='leading-[normal] text-sm text-system-error'>비밀번호 형식에 맞게 입력해주세요.</p>
+							<p className='leading-[normal] text-sm text-system-error'>{t('findPassword.resetStep.passwordFormatError')}</p>
 						)}
 					</div>
 				</div>
 				<div className='flex flex-col gap-4 w-full'>
 					<label className='font-semibold leading-[normal] text-text-100 text-xl' htmlFor='passwordConfirm'>
-						새 비밀번호 확인
+						{t('findPassword.resetStep.passwordConfirmLabel')}
 					</label>
 					<div className='flex flex-col gap-1.5'>
 						<Input
@@ -343,7 +348,7 @@ const FindPassword = () => {
 								setErrors((prev) => ({ ...prev, passwordConfirm: undefined }));
 							}}
 							onIconClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-							placeholder='새 비밀번호를 다시 입력해주세요.'
+							placeholder={t('findPassword.resetStep.passwordConfirmPlaceholder')}
 							required
 							type={showPasswordConfirm ? 'text' : 'password'}
 							value={passwordConfirm}
@@ -351,18 +356,18 @@ const FindPassword = () => {
 						/>
 						<div className='flex gap-1 items-center text-primary-70 text-14'>
 							<img alt='info' className='h-4 w-4' src={icValidationInfo} />
-							<span>10자 이상~16자 이하 영문, 숫자, 특수문자 2종 이상의 혼합</span>
+							<span>{t('findPassword.resetStep.passwordRule')}</span>
 						</div>
 						{errors.passwordConfirm === 'format' && (
-							<p className='leading-[normal] text-sm text-system-error'>비밀번호 형식에 맞게 입력해주세요.</p>
+							<p className='leading-[normal] text-sm text-system-error'>{t('findPassword.resetStep.passwordFormatError')}</p>
 						)}
 						{errors.passwordConfirm === 'mismatch' && (
-							<p className='leading-[normal] text-sm text-system-error'>비밀번호가 일치하지 않습니다.</p>
+							<p className='leading-[normal] text-sm text-system-error'>{t('findPassword.resetStep.passwordMismatch')}</p>
 						)}
 					</div>
 				</div>
 				<Button className='cursor-pointer w-full' disabled={isLoading} type='submit'>
-					완료
+					{t('findPassword.resetStep.complete')}
 				</Button>
 			</form>
 		</AuthLayout>
