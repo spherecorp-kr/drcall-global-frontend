@@ -11,6 +11,7 @@ import {
 	DashboardPage,
 	DoctorPage,
 	DoctorDetailPage,
+	FindPasswordPage,
 	HospitalPage,
 	MyInfoPage,
 	PatientPage,
@@ -76,6 +77,7 @@ function AppContent() {
 return (
 	<Routes>
 		<Route path="/login" element={<LoginPage />} />
+		<Route path="/find-password" element={<FindPasswordPage />} />
 		<Route path="/" element={<Navigate to="/login" replace />} />
 		<Route
 			element={
