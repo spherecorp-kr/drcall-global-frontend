@@ -13,6 +13,7 @@ describe('useDeliveryAddresses', () => {
         initialSelectedId: '1',
     };
 
+    // 초기화 테스트: 기본 배송지 목록과 초기 선택 상태 확인
     it('initializes with default addresses', () => {
         const { result } = renderHook(() => useDeliveryAddresses(defaultOptions));
         
@@ -21,6 +22,7 @@ describe('useDeliveryAddresses', () => {
         expect(result.current.ui.isAddOpen).toBe(false);
     });
 
+    // 배송지 선택 테스트: ID로 배송지 선택 시 상태 변경 확인
     it('selects address', () => {
         const { result } = renderHook(() => useDeliveryAddresses(defaultOptions));
 
@@ -31,6 +33,7 @@ describe('useDeliveryAddresses', () => {
         expect(result.current.selectedId).toBe('2');
     });
 
+    // 추가 모달 열기 테스트: 배송지 추가 버튼 클릭 시 모달 오픈 확인
     it('opens add modal', () => {
         const { result } = renderHook(() => useDeliveryAddresses({ ...defaultOptions, maxAddresses: 10 })); // Set high max to allow add
 
@@ -42,6 +45,7 @@ describe('useDeliveryAddresses', () => {
         expect(result.current.ui.isMaxLimitOpen).toBe(false);
     });
 
+    // 최대 개수 제한 테스트: 최대 개수 도달 시 추가 버튼 클릭하면 제한 모달 오픈 확인
     it('shows max limit modal when full', () => {
         const { result } = renderHook(() => useDeliveryAddresses({ ...defaultOptions, maxAddresses: 0 })); // Force full
 
@@ -53,6 +57,7 @@ describe('useDeliveryAddresses', () => {
         expect(result.current.ui.isMaxLimitOpen).toBe(true);
     });
 
+    // 수정 모달 열기 테스트: 배송지 수정 시 해당 데이터와 함께 모달 오픈 확인
     it('opens edit modal with address data', () => {
         const { result } = renderHook(() => useDeliveryAddresses(defaultOptions));
         const targetId = result.current.addresses[0].id;
@@ -65,6 +70,7 @@ describe('useDeliveryAddresses', () => {
         expect(result.current.ui.editingAddress).toEqual(result.current.addresses[0]);
     });
 
+    // 삭제 프로세스 테스트: 삭제 요청 시 확인 모달 오픈 및 확인 처리
     it('handles delete flow', () => {
         const { result } = renderHook(() => useDeliveryAddresses(defaultOptions));
 
