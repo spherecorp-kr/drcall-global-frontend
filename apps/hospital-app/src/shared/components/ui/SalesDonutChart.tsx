@@ -1,4 +1,5 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { useTranslation } from 'react-i18next';
 import type { PaymentMethodData, SalesItemData } from '@/shared/types/payment';
 import { Section } from './Section';
 import ValidationInfoIcon from '@/shared/assets/icons/ic_validation_info.svg';
@@ -11,6 +12,7 @@ interface SalesDonutChartProps {
 }
 
 export function SalesDonutChart({ data, title, totalAmount, infoText }: SalesDonutChartProps) {
+	const { t } = useTranslation();
 	const isEmpty = data.length === 0 || totalAmount === 0;
 
 	const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: PaymentMethodData | SalesItemData }> }) => {
@@ -66,7 +68,7 @@ export function SalesDonutChart({ data, title, totalAmount, infoText }: SalesDon
 					<h3 className="text-text-100 text-18 font-semibold font-pretendard">{title}</h3>
 					{infoText && (
 						<div className="flex items-center gap-1 text-primary-60 text-14 font-semibold font-pretendard">
-							<img src={ValidationInfoIcon} alt="info" className="w-3.5 h-3.5" />
+							<img src={ValidationInfoIcon} alt={t('common.ariaLabels.info')} className="w-3.5 h-3.5" />
 							<span>{infoText}</span>
 						</div>
 					)}
@@ -77,7 +79,9 @@ export function SalesDonutChart({ data, title, totalAmount, infoText }: SalesDon
 			{isEmpty ? (
 				<div className="flex flex-col items-center justify-center py-20">
 					<div className="text-text-40 text-16 font-normal font-pretendard mb-2">
-						ⓘ {title.includes('방법') ? '결제 방법' : '매출 항목'} 비중 데이터가 없습니다.
+						ⓘ {title === t('payment.charts.paymentMethodShare')
+							? t('payment.charts.empty.paymentMethod')
+							: t('payment.charts.empty.salesItem')}
 					</div>
 				</div>
 			) : (

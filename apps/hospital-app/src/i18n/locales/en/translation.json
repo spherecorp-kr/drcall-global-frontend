@@ -703,7 +703,13 @@
 		"charts": {
 			"infoText": "Amounts by item are based on after fee deduction (Net).",
 			"paymentMethodShare": "Payment Method Share",
-			"salesItemShare": "Sales Item Share"
+			"salesItemShare": "Sales Item Share",
+			"salesTrend": "Sales Trend",
+			"unit": "Unit : THB",
+			"empty": {
+				"paymentMethod": "No payment method share data available.",
+				"salesItem": "No sales item share data available."
+			}
 		},
 		"historyTable": {
 			"title": "Payment History",

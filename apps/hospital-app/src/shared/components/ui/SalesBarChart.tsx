@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import type { SalesChartData } from '@/shared/types/payment';
 import { Section } from './Section';
@@ -12,6 +13,7 @@ interface SalesBarChartProps {
 }
 
 export function SalesBarChart({ data, infoText }: SalesBarChartProps) {
+	const { t } = useTranslation();
 	const scrollContainerRef = useRef<HTMLDivElement>(null);
 	const [canScrollLeft, setCanScrollLeft] = useState(false);
 	const [canScrollRight, setCanScrollRight] = useState(true);
@@ -60,10 +62,10 @@ export function SalesBarChart({ data, infoText }: SalesBarChartProps) {
 		<Section
 			title={
 				<div className="flex items-center gap-2">
-					<h3 className="text-text-100 text-18 font-semibold font-pretendard">매출 추이</h3>
+					<h3 className="text-text-100 text-18 font-semibold font-pretendard">{t('payment.charts.salesTrend')}</h3>
 					{infoText && (
 						<div className="flex items-center gap-1 text-primary-60 text-14 font-semibold font-pretendard">
-							<img src={ValidationInfoIcon} alt="info" className="w-3.5 h-3.5" />
+							<img src={ValidationInfoIcon} alt={t('common.ariaLabels.info')} className="w-3.5 h-3.5" />
 							<span>{infoText}</span>
 						</div>
 					)}
@@ -72,7 +74,7 @@ export function SalesBarChart({ data, infoText }: SalesBarChartProps) {
 			contentClassName="p-5"
 		>
 			<div className="flex justify-end mb-4">
-				<span className="text-text-100 text-14 font-normal font-pretendard">단위 : THB</span>
+				<span className="text-text-100 text-14 font-normal font-pretendard">{t('payment.charts.unit')}</span>
 			</div>
 			<div className="relative">
 				<div

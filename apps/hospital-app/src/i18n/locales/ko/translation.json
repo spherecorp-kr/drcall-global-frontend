@@ -703,7 +703,13 @@
 		"charts": {
 			"infoText": "항목별 금액은 수수료 차감 후(Net)기준 입니다.",
 			"paymentMethodShare": "결제 방법 비중",
-			"salesItemShare": "매출 항목 비중"
+			"salesItemShare": "매출 항목 비중",
+			"salesTrend": "매출 추이",
+			"unit": "단위 : THB",
+			"empty": {
+				"paymentMethod": "결제 방법 비중 데이터가 없습니다.",
+				"salesItem": "매출 항목 비중 데이터가 없습니다."
+			}
 		},
 		"historyTable": {
 			"title": "결제 내역",
