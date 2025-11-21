@@ -4,13 +4,13 @@ import {
 	SearchCancelled,
 	SearchCompleted,
 	SearchConfirmed,
-	SearchWaiting
+	SearchPending
 } from '@/shared/components/ui/appointmentSearch';
 import {
 	CancelledTable,
 	CompletedTable,
 	ConfirmedTable,
-	WaitingTable
+	PendingTable
 } from '@/shared/components/ui/appointmentTables';
 import { ConfirmedCalendar } from '@/shared/components/ui/appointmentCalendar';
 import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore';
@@ -23,11 +23,11 @@ const Appointment = () => {
 	// 상태별 UI 렌더링 함수
 	const renderStatusContent = useCallback(() => {
 		switch (appointmentTab) {
-			case 'waiting':
+			case 'pending':
 				return (
 					<>
-						<SearchWaiting />
-						<WaitingTable />
+						<SearchPending />
+						<PendingTable />
 					</>
 				);
 			case 'confirmed':

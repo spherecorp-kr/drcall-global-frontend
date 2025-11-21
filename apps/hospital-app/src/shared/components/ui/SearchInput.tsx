@@ -1,6 +1,7 @@
 import { cn } from '@/shared/utils/cn';
 import searchIcon from '@/shared/assets/icons/ic_search.svg';
 import closeCircleIcon from '@/shared/assets/icons/ic_close_circle.svg';
+import { useTranslation } from 'react-i18next';
 
 interface SearchInputProps {
 	className?: string;
@@ -10,6 +11,8 @@ interface SearchInputProps {
 }
 
 const SearchInput = ({ className, onChange, placeholder, value }: SearchInputProps) => {
+	const { t } = useTranslation();
+
 	const handleClear = () => {
 		onChange('');
 	};
@@ -32,12 +35,12 @@ const SearchInput = ({ className, onChange, placeholder, value }: SearchInputPro
 				<button
 					onClick={handleClear}
 					className="w-5 h-5 flex-shrink-0 flex items-center justify-center hover:opacity-70 transition-opacity"
-					aria-label="Clear search"
+					aria-label={t('common.ariaLabels.clearSearch')}
 				>
-					<img src={closeCircleIcon} alt="Clear" className="w-full h-full" />
+					<img src={closeCircleIcon} alt={t('common.ariaLabels.clear')} className="w-full h-full" />
 				</button>
 			)}
-			<img src={searchIcon} alt="Search" className="w-7 h-7 flex-shrink-0" />
+			<img src={searchIcon} alt={t('common.ariaLabels.search')} className="w-7 h-7 flex-shrink-0" />
 		</div>
 	);
 }

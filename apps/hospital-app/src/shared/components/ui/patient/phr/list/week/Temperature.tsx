@@ -65,8 +65,7 @@ const Temperature = ({ items }: Props) => {
 							onClick={() => toggleVisibility(i)}>
 							<WeeklyTitle
 								isVisible={visibleDetails[i]}
-								itemDate={item.date}
-								todayText={'오늘'} />
+								itemDate={item.date} />
 							{item.infos
 								? <Detail
 									infos={item.infos}

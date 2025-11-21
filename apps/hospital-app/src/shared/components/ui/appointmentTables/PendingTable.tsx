@@ -94,7 +94,7 @@ const ColGroup = () => (
 	</colgroup>
 );
 
-const WaitingTable = () => {
+const PendingTable = () => {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
 
@@ -103,9 +103,9 @@ const WaitingTable = () => {
 			accessorKey: 'appointmentType',
 			cell: ({ getValue }) => {
 				if (getValue<AppointmentType>() === 'sdn') {
-					return <span className="font-normal leading-[normal] text-base text-primary-70">{t('appointment.search.appointmentType.fast')}</span>;
+					return <span className="font-normal leading-[normal] text-base text-primary-70">{t('appointment.search.appointmentType.quick')}</span>;
 				}
-				return <span className={cellSpanClass}>{t('appointment.search.appointmentType.regular')}</span>;
+				return <span className={cellSpanClass}>{t('appointment.search.appointmentType.general')}</span>;
 			},
 			enableSorting: false,
 			header: t('appointment.table.columns.appointmentType'),
@@ -178,4 +178,4 @@ const WaitingTable = () => {
 	);
 };
 
-export default WaitingTable;
+export default PendingTable;

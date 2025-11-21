@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Dropdown, SearchInput, SegmentedControl } from '@/shared/components/ui';
 import { Tooltip } from './Tooltip';
 import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';
 import helpIcon from '@/shared/assets/icons/btn_circle_help.svg';
 import helpIconBlue from '@/shared/assets/icons/btn_circle_help_blue.svg';
 import RefreshIcon from '@/shared/assets/icons/ic_ reset.svg?react';
+import { useTranslation } from 'react-i18next';
 
 interface PaymentSearchProps {
 	onSearch?: (filters: {
@@ -16,6 +17,7 @@ interface PaymentSearchProps {
 }
 
 export function PaymentSearch({ onSearch }: PaymentSearchProps) {
+	const { t } = useTranslation();
 	const [period, setPeriod] = useState<string>('today');
 	const [dateFrom, setDateFrom] = useState('2025.10.28');
 	const [dateTo, setDateTo] = useState('2025.10.28');
@@ -60,26 +62,35 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
 		calculateDates(value);
 	};
 
-	const periodOptions = [
-		{ value: 'today', label: '오늘' },
-		{ value: '1week', label: '1주일' },
-		{ value: '1month', label: '1개월' },
-		{ value: '3months', label: '3개월' },
-		{ value: '6months', label: '6개월' },
-	];
+	const periodOptions = useMemo(
+		() => [
+			{ value: 'today', label: t('payment.search.period.options.today') },
+			{ value: '1week', label: t('payment.search.period.options.1week') },
+			{ value: '1month', label: t('payment.search.period.options.1month') },
+			{ value: '3months', label: t('payment.search.period.options.3months') },
+			{ value: '6months', label: t('payment.search.period.options.6months') },
+		],
+		[t],
+	);
 
-	const statusOptions = [
-		{ value: 'all', label: '전체' },
-		{ value: 'completed', label: '결제 완료' },
-		{ value: 'pending', label: '결제 대기' },
-	];
+	const statusOptions = useMemo(
+		() => [
+			{ value: 'all', label: t('payment.search.filter.status.all') },
+			{ value: 'completed', label: t('payment.search.filter.status.completed') },
+			{ value: 'pending', label: t('payment.search.filter.status.pending') },
+		],
+		[t],
+	);
 
-	const paymentMethodOptions = [
-		{ value: 'all', label: '모든 결제 수단' },
-		{ value: 'QR', label: 'QR' },
-		{ value: 'card', label: '카드' },
-		{ value: 'bank_transfer', label: '계좌이체' },
-	];
+	const paymentMethodOptions = useMemo(
+		() => [
+			{ value: 'all', label: t('payment.search.filter.paymentMethod.all') },
+			{ value: 'QR', label: t('payment.search.filter.paymentMethod.qr') },
+			{ value: 'card', label: t('payment.search.filter.paymentMethod.card') },
+			{ value: 'bank_transfer', label: t('payment.search.filter.paymentMethod.bankTransfer') },
+		],
+		[t],
+	);
 
 	const handleSearch = () => {
 		onSearch?.({
@@ -103,14 +114,14 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
 			{/* Date Range Section */}
 			<div className="flex items-center gap-[10px]">
 				<div className="w-[100px] flex items-center gap-1">
-					<span className="text-text-100 text-16 font-normal font-pretendard">조회 기간</span>
+					<span className="text-text-100 text-16 font-normal font-pretendard">
+						{t('payment.search.period.label')}
+					</span>
 					<Tooltip
 						content={
-							<>
-								조회 기간은 버튼을 선택하거나 시작일·종료일을 직접 선택하여 설정할 수 있습니다.
-								<br />
-								단, 시작일로부터 최대 1년 이내까지만 조회 가능하며, 오늘을 포함한 과거 날짜만 선택할 수 있습니다.
-							</>
+							<p className="whitespace-pre-line">
+								{t('payment.search.period.tooltip')}
+							</p>
 						}
 						position="bottom"
 						className="w-[400px]"
@@ -131,15 +142,15 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
 						options={periodOptions}
 						value={period}
 						onChange={handlePeriodChange}
-						className="w-[464px] h-10"
+						className="h-10 rounded w-[464px]"
 					/>
 					<div className="flex items-center gap-[6px]">
-						<div className="h-10 px-4 bg-bg-white rounded-lg border border-stroke-input flex items-center gap-2">
+						<div className="h-10 px-4 bg-bg-white rounded border border-stroke-input flex items-center gap-2">
 							<span className="text-text-100 text-16 font-normal font-pretendard">{dateFrom}</span>
 							<CalendarIcon />
 						</div>
 						<span className="text-text-100 text-16 font-normal font-pretendard">~</span>
-						<div className="h-10 px-4 bg-bg-white rounded-lg border border-stroke-input flex items-center gap-2">
+						<div className="h-10 px-4 bg-bg-white rounded border border-stroke-input flex items-center gap-2">
 							<span className="text-text-100 text-16 font-normal font-pretendard">{dateTo}</span>
 							<CalendarIcon />
 						</div>
@@ -151,41 +162,45 @@ export function PaymentSearch({ onSearch }: PaymentSearchProps) {
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-[10px]">
 					<div className="w-[100px]">
-						<span className="text-text-100 text-16 font-normal font-pretendard">검색 필터</span>
+						<span className="text-text-100 text-16 font-normal font-pretendard">
+							{t('payment.search.filter.label')}
+						</span>
 					</div>
 					<SearchInput
 						value={keyword}
 						onChange={setKeyword}
-						placeholder="예약번호 또는 결제번호를 입력해 주세요."
-						className="w-[464px]"
+						placeholder={t('payment.search.filter.placeholder')}
+						className="rounded w-[464px]"
 					/>
 					<Dropdown
 						options={statusOptions}
 						value={status}
 						onChange={setStatus}
-						placeholder="전체"
-						className="w-[130px]"
+						placeholder={t('payment.search.filter.status.all')}
+						className="w-48"
 					/>
 					<Dropdown
 						options={paymentMethodOptions}
 						value={paymentMethod}
 						onChange={setPaymentMethod}
-						placeholder="모든 결제 수단"
-						className="w-[160px]"
+						placeholder={t('payment.search.filter.paymentMethod.all')}
+						className="w-56"
 					/>
 				</div>
 				<div className="flex items-center gap-[10px]">
 					<button
 						onClick={handleReset}
-						className="h-7 px-3 rounded-lg flex items-center gap-2 hover:bg-bg-gray transition-colors"
+						className="h-7 px-3 rounded flex items-center gap-2 hover:bg-bg-gray transition-colors"
 					>
 						<div className="w-5 h-5 text-text-40">
 							<RefreshIcon />
 						</div>
-						<span className="text-text-40 text-14 font-normal font-pretendard">초기화</span>
+						<span className="text-text-40 text-14 font-normal font-pretendard">
+							{t('payment.search.buttons.reset')}
+						</span>
 					</button>
 					<Button variant="primary" size="default" onClick={handleSearch}>
-						검색
+						{t('payment.search.buttons.search')}
 					</Button>
 				</div>
 			</div>

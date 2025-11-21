@@ -8,7 +8,7 @@ export type BadgeVariant =
 	| 'status-progress' // 진행 중
 	| 'status-waiting' // 대기
 	| 'status-complete' // 완료(중립)
-	| 'appointment-regular' // 일반 진료
+	| 'appointment-general' // 일반 진료
 	| 'appointment-quick' // 빠른 진료
 	| 'patient-vip' // VIP
 	| 'patient-risk' // Risk
@@ -35,7 +35,7 @@ const variantStyles: Record<BadgeVariant, string> = {
 	'status-complete': 'bg-badge-8 text-text-70',
 
 	// 진료 예약 뱃지
-	'appointment-regular': 'bg-badge-7 text-system-successful',
+	'appointment-general': 'bg-badge-7 text-system-successful',
 	'appointment-quick': 'bg-badge-2 text-system-caution',
 
 	// 환자 등급 뱃지
@@ -95,11 +95,11 @@ export const AppointmentBadge = ({
 	type,
 	children,
 }: {
-	type: 'regular' | 'quick';
+	type: 'general' | 'quick';
 	children: ReactNode;
 }) => {
 	const variantMap = {
-		regular: 'appointment-regular' as const,
+		general: 'appointment-general' as const,
 		quick: 'appointment-quick' as const,
 	};
 	return (

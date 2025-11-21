@@ -12,7 +12,7 @@ const sampleData: CompletedTableColumnProps[] = [
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
 		patientName: '환자1',
-		prescriptionStatus: '업로드 대기',
+		prescriptionStatus: '예정',
 		paymentStatus: '완료',
 		deliveryStatus: '조제중'
 	},
@@ -22,7 +22,7 @@ const sampleData: CompletedTableColumnProps[] = [
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
 		patientName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
-		prescriptionStatus: '완료',
+		prescriptionStatus: '발급',
 		paymentStatus: '대기',
 		deliveryStatus: '배송중'
 	},
@@ -32,7 +32,7 @@ const sampleData: CompletedTableColumnProps[] = [
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
 		patientName: '환자1',
-		prescriptionStatus: '완료',
+		prescriptionStatus: '발급',
 		paymentStatus: '예정',
 		deliveryStatus: '조제 완료'
 	},
@@ -42,9 +42,9 @@ const sampleData: CompletedTableColumnProps[] = [
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Dr.KR',
 		patientName: '환자1',
-		prescriptionStatus: '업로드 대기',
+		prescriptionStatus: '예정',
 		paymentStatus: '완료',
-		deliveryStatus: '조제 완료'
+		deliveryStatus: '-'
 	},
 	{
 		appointmentSequence: 3,
@@ -52,7 +52,7 @@ const sampleData: CompletedTableColumnProps[] = [
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
 		patientName: '환자1',
-		prescriptionStatus: '완료',
+		prescriptionStatus: '발급',
 		paymentStatus: '완료',
 		deliveryStatus: '수령 완료'
 	},
@@ -62,7 +62,7 @@ const sampleData: CompletedTableColumnProps[] = [
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
 		patientName: '환자1',
-		prescriptionStatus: '완료',
+		prescriptionStatus: '발급',
 		paymentStatus: '완료',
 		deliveryStatus: '배송중'
 	},
@@ -72,13 +72,33 @@ const sampleData: CompletedTableColumnProps[] = [
 		completedDatetime: '30/10/25 14:15',
 		doctorName: 'Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum',
 		patientName: '환자1',
-		prescriptionStatus: '미발급',
+		prescriptionStatus: '없음',
 		paymentStatus: '예정',
-		deliveryStatus: '약 없음'
+		deliveryStatus: '-'
 	},
 ];
 
 const cellSpanClass: string = 'font-normal leading-[normal] text-base text-text-100';
+
+// 상태 값 매핑 객체
+const prescriptionStatusMap: Record<string, string> = {
+	'예정': 'upcoming',
+	'발급': 'issued',
+	'없음': 'none',
+};
+
+const paymentStatusMap: Record<string, string> = {
+	'예정': 'upcoming',
+	'대기': 'waiting',
+	'완료': 'completed',
+};
+
+const deliveryStatusMap: Record<string, string> = {
+	'조제중': 'preparing',
+	'배송중': 'shipping',
+	'조제 완료': 'prepared',
+	'수령 완료': 'delivered',
+};
 
 const ColGroup = () => (
 	<colgroup>
@@ -127,24 +147,52 @@ const CompletedTable = () => {
 		},
 		{
 			accessorKey: 'prescriptionStatus',
-			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => {
+				const value = getValue<string>();
+				const statusKey = prescriptionStatusMap[value];
+				return (
+					<span className={cellSpanClass}>
+						{statusKey ? t(`appointment.table.statusValues.prescriptionStatus.${statusKey}`) : value}
+					</span>
+				);
+			},
 			enableSorting: false,
 			header: t('appointment.table.columns.prescriptionStatus'),
-			minSize: 100
+			minSize: 100,
 		},
 		{
 			accessorKey: 'paymentStatus',
-			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => {
+				const value = getValue<string>();
+				const statusKey = paymentStatusMap[value];
+				return (
+					<span className={cellSpanClass}>
+						{statusKey ? t(`appointment.table.statusValues.paymentStatus.${statusKey}`) : value}
+					</span>
+				);
+			},
 			enableSorting: false,
 			header: t('appointment.table.columns.paymentStatus'),
-			minSize: 100
+			minSize: 100,
 		},
 		{
 			accessorKey: 'deliveryStatus',
-			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
+			cell: ({ getValue }) => {
+				const value = getValue<string>();
+				// '-'는 번역하지 않음
+				if (value === '-') {
+					return <span className={cellSpanClass}>-</span>;
+				}
+				const statusKey = deliveryStatusMap[value];
+				return (
+					<span className={cellSpanClass}>
+						{statusKey ? t(`appointment.table.statusValues.deliveryStatus.${statusKey}`) : value}
+					</span>
+				);
+			},
 			enableSorting: false,
 			header: t('appointment.table.columns.deliveryStatus'),
-			minSize: 100
+			minSize: 100,
 		},
 	], [t]);
 
@@ -161,7 +209,7 @@ const CompletedTable = () => {
 				columns={columns}
 				data={sampleData}
 				disableHorizontalScroll
-				emptyState={<EmptyState message="진료 완료 목록이 없습니다." />}
+				emptyState={<EmptyState message={t('appointment.table.emptyCompleted')} />}
 				enableSelection
 				getRowClassName={(row) => row.index % 2 === 0 ? 'bg-white' : 'bg-bg-gray'}
 				onRowClick={navigateToDetails}

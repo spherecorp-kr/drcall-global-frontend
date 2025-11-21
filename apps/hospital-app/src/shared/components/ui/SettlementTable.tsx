@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SettlementHistoryTable } from './SettlementHistoryTable';
 import { DeliveryFeeTable } from './DeliveryFeeTable';
-import { SettlementSearch } from './SettlementSearch';
 import type { SettlementHistoryItem, DeliveryFeeItem } from '@/shared/types/payment';
+import { SettlementSearch } from '@/shared/components/ui/';
 
 type SettlementTab = 'settlement' | 'delivery';
 
@@ -19,22 +20,29 @@ export function SettlementTable({
 	settlementCount,
 	deliveryCount,
 }: SettlementTableProps) {
+	const { t } = useTranslation();
 	const [activeTab, setActiveTab] = useState<SettlementTab>('settlement');
 	const [searchKey, setSearchKey] = useState(0);
 
-	const settlementStatusOptions = [
-		{ value: 'all', label: '전체' },
-		{ value: 'completed', label: '완료' },
-		{ value: 'scheduled', label: '예정' },
-		{ value: 'onHold', label: '보류' },
-		{ value: 'confirmed', label: '확정' },
-	];
+	const settlementStatusOptions = useMemo(
+		() => [
+			{ value: 'all', label: t('payment.search.filter.status.all') },
+			{ value: 'completed', label: t('payment.search.filter.status.completed') },
+			{ value: 'scheduled', label: t('payment.search.filter.status.scheduled') },
+			{ value: 'onHold', label: t('payment.search.filter.status.onHold') },
+			{ value: 'confirmed', label: t('payment.search.filter.status.confirmed') },
+		],
+		[t],
+	);
 
-	const deliveryStatusOptions = [
-		{ value: 'all', label: '전체' },
-		{ value: 'completed', label: '완료' },
-		{ value: 'scheduled', label: '예정' },
-	];
+	const deliveryStatusOptions = useMemo(
+		() => [
+			{ value: 'all', label: t('payment.search.filter.status.all') },
+			{ value: 'completed', label: t('payment.search.filter.status.completed') },
+			{ value: 'scheduled', label: t('payment.search.filter.status.scheduled') },
+		],
+		[t],
+	);
 
 	useEffect(() => {
 		setSearchKey((prev) => prev + 1);
@@ -60,7 +68,7 @@ export function SettlementTable({
 						}`}
 						onClick={() => setActiveTab('settlement')}
 					>
-						정산내역({settlementCount})
+						{t('payment.settlementTable.tabs.settlement')}({settlementCount})
 					</button>
 					<button
 						type="button"
@@ -71,7 +79,7 @@ export function SettlementTable({
 						}`}
 						onClick={() => setActiveTab('delivery')}
 					>
-						배송 이용 금액({deliveryCount})
+						{t('payment.settlementTable.tabs.delivery')}({deliveryCount})
 					</button>
 				</div>
 

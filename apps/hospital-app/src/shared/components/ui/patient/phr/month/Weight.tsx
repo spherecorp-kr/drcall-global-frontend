@@ -31,7 +31,7 @@ const Weight = ({ items, period }: MonthlyWeightPhrResponse) => {
 			<div className="bg-white border border-stroke-input flex flex-col gap-4 p-5 rounded-[1.25rem]">
 				<MonthlyChartHeader year={period.year} month={period.month} monthName={period.monthName} />
 				<p className="text-base text-center text-text-100" style={{ lineHeight: 'normal' }}>
-					이번 달 평균 체중&BMI : {period.averageWeight ?? 0}kg, {period.averageBmi ?? 0}BMI
+					{t('phr.lbl.awm')} : {period.averageWeight ?? 0}kg, {period.averageBmi ?? 0}BMI
 				</p>
 				{hasNoData
 					? <NoDataChart text={t('phr.nodata.wnbm')} />

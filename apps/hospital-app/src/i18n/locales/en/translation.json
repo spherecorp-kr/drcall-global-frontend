@@ -27,6 +27,7 @@
 		"next": "Next",
 		"emptyFields": "Please enter your ID and password.",
 		"invalidCredentials": "ID or password is incorrect.",
+		"wrongId": "The ID is not valid.",
 		"backToLogin": "Login Screen"
 	},
 	"findPassword": {
@@ -56,29 +57,29 @@
 	},
 	"menu": {
 		"appointment": "Appointment",
-		"consultation": "Doctor's office",
+		"consultation": "Consultation",
 		"dashboard": "Dashboard",
-		"doctor": "Doctor management",
-		"hospital": "Hospital management",
-		"myinfo": "My Info management",
-		"patient": "Patient management",
-		"payment": "Payment management"
+		"doctor": "Doctor",
+		"hospital": "Hospital",
+		"myinfo": "My Info",
+		"patient": "Patient",
+		"payment": "Payment"
 	},
 	"dashboard": {
 		"section": {
 			"summary": {
-				"title": "Status summary",
+				"title": "Summary of Status",
 				"card": {
 					"todayCount": {
-						"description": "Yesterday's appointments: 22",
-						"label": "Today's appointments",
+						"description": "Number of Appointments Yesterday: 22",
+						"label": "Today's Appointment Count",
 						"tooltip": "Total number of appointments received today. You can check the increase or decrease compared to yesterday's appointment count.",
 						"value": "{{value}}"
 					},
 					"todaySales": {
 						"description": "Yesterday's total sales: 48,000 THB",
 						"label": "Today's total sales",
-						"tooltip": "Total sales amount generated today. Shows increase/decrease trend compared to yesterday's sales.",
+						"tooltip": "Total sales amount generated today.\nShows increase/decrease trend compared to yesterday's sales.",
 						"value": "{{value}} THB"
 					},
 					"monthlyCount": {
@@ -90,7 +91,7 @@
 					"monthlyNewPatient": {
 						"description": "July new patients: 1,000",
 						"label": "This month's new patients",
-						"tooltip": "Number of new patients who visited for the first time this month. Shows increase/decrease compared to last month's new patient count.",
+						"tooltip": "Number of new patients who visited for the first time this month.\nShows increase/decrease compared to last month's new patient count.",
 						"value": "{{value}}"
 					}
 				}
@@ -103,7 +104,7 @@
 				},
 				"legend": {
 					"new": "New",
-					"fu": "Follow-up visit"
+					"fu": "Follow-up appointment"
 				}
 			},
 			"appointments": {
@@ -172,7 +173,13 @@
 			"avthu": "Thursday Average",
 			"avfri": "Friday Average",
 			"avsat": "Saturday Average",
-			"avsun": "Sunday Average"
+			"avsun": "Sunday Average",
+			"aww": "This week's average weight",
+			"awm": "This month's average weight",
+			"abw": "This week's average blood pressure & pulse",
+			"abm": "This month's average blood pressure & pulse",
+			"atw": "This week's average body temperature",
+			"atm": "This month's average body temperature"
 		},
 		"nodata": {
 			"wnb": "There are no weight and BMI record.",
@@ -236,7 +243,20 @@
 	"common": {
 		"doctor": {
 			"register": "Doctor Registration",
-			"detail": "Doctor Account Details"
+			"detail": "Doctor Account Details",
+			"table": {
+				"title": "Doctor List",
+				"columns": {
+					"name": "Name",
+					"status": "Status"
+				},
+				"status": {
+					"available": "Available",
+					"unavailable": "Unavailable",
+					"inProgress": "In Consultation"
+				},
+				"empty": "No doctors found."
+			}
 		},
 		"patient": {
 			"register": "Patient Registration",
@@ -269,7 +289,20 @@
 			"enterEnglishName": "Please enter your English name.",
 			"enterSpecialty": "Please enter your specialty.",
 			"enterIntroduction": "Enter your introduction to be displayed to patients.\n(Maximum 50 characters)",
-			"enterExperience": "Enter your experience & education to be displayed to patients.\n(Maximum 50 characters)"
+			"enterExperience": "Enter your experience & education to be displayed to patients.\n(Maximum 50 characters)",
+			"select": "Select"
+		},
+		"ariaLabels": {
+			"clearSearch": "Clear search",
+			"clear": "Clear",
+			"help": "Help",
+			"info": "Info",
+			"search": "Search",
+			"up": "Up",
+			"down": "Down"
+		},
+		"units": {
+			"count": "times"
 		},
 		"errors": {
 			"enterName": "Please enter your name.",
@@ -316,17 +349,17 @@
 	},
 	"appointment": {
 		"statusTab": {
-			"waiting": "Waiting",
-			"confirmed": "Confirmed",
-			"completed": "Completed",
-			"cancelled": "Cancelled"
+			"pending": "Pending",
+			"confirmed": "Appointment Confirmed",
+			"completed": "Consultation Completed",
+			"cancelled": "Cancel Appointment"
 		},
 		"search": {
 			"all": "All",
-			"allGrade": "All Grades",
+			"allGrade": "Overall Rating",
 			"appointmentType": {
-				"fast": "Fast Consultation",
-				"regular": "Regular Consultation",
+				"quick": "Quick Consultation",
+				"general": "General Consultation",
 				"scheduled": "Scheduled Consultation"
 			},
 			"sort": {
@@ -357,26 +390,58 @@
 				"none": "No Medication"
 			},
 			"placeholders": {
-				"patientName": "Enter patient name.",
-				"appointmentOrPatient": "Enter appointment number or patient name."
+				"patientName": "Please enter the patient's name.",
+				"appointmentOrPatient": "Please enter the appointment number or patient name."
 			}
 		},
 		"table": {
+			"title": "Today's Appointments",
 			"columns": {
 				"appointmentType": "Appointment Type",
 				"appointmentNumber": "Appointment Number",
-				"appointmentDatetime": "Preferred Consultation Date",
+				"appointmentDatetime": "Preferred Appointment Date",
 				"completedDatetime": "Completed Date",
 				"cancelledDatetime": "Cancelled Date",
 				"doctor": "Doctor",
+				"doctorInCharge": "Doctor in Charge",
 				"patientName": "Patient Name",
-				"patientLevel": "Patient Level",
+				"patientLevel": "Patient Grade",
 				"symptom": "Symptoms",
-				"requestTime": "Request Date",
+				"requestTime": "Appointment Request Date and Time",
 				"canceler": "Canceler",
 				"prescriptionStatus": "Prescription Status",
 				"paymentStatus": "Payment Status",
-				"deliveryStatus": "Delivery Status"
+				"deliveryStatus": "Delivery Status",
+				"status": "Consultation Status"
+			},
+			"status": {
+				"waiting": "Waiting for Consultation",
+				"inProgress": "In Progress",
+				"completed": "Completed",
+				"cancelled": "Cancelled"
+			},
+			"filters": {
+				"allStatus": "All Status"
+			},
+			"empty": "No appointments scheduled.",
+			"emptyCompleted": "No completed consultations.",
+			"statusValues": {
+				"prescriptionStatus": {
+					"upcoming": "Upcoming",
+					"issued": "Issued",
+					"none": "None"
+				},
+				"paymentStatus": {
+					"upcoming": "Upcoming",
+					"waiting": "Pending",
+					"completed": "Completed"
+				},
+				"deliveryStatus": {
+					"preparing": "Preparing",
+					"shipping": "Shipping",
+					"prepared": "Prepared",
+					"delivered": "Picked up"
+				}
 			}
 		},
 		"calendar": {
@@ -556,6 +621,153 @@
 				"title": "Appointment",
 				"doctorSelect": "Select Doctor",
 				"dateSelect": "Select Date & Time"
+			}
+		}
+	},
+	"consultation": {
+		"table": {
+			"title": "Scheduled Consultations Today",
+			"columns": {
+				"appointmentNumber": "Appointment Number",
+				"scheduledDatetime": "Scheduled Consultation Date",
+				"doctor": "Doctor",
+				"patientName": "Patient Name",
+				"patientLevel": "Patient Grade",
+				"symptom": "Symptoms"
+			},
+			"empty": "No consultations scheduled."
+		}
+	},
+	"payment": {
+		"search": {
+			"period": {
+				"label": "Period",
+				"tooltip": "You can set the search period by selecting a button or directly selecting the start and end dates.\nHowever, you can only search within a maximum of 1 year from the start date, and you can only select past dates including today.",
+				"options": {
+					"today": "Today",
+					"1week": "1 Week",
+					"1month": "1 Month",
+					"3months": "3 Months",
+					"6months": "6 Months"
+				}
+			},
+			"filter": {
+				"label": "Filter",
+				"placeholder": "Please enter the appointment number or payment number.",
+				"status": {
+					"all": "All",
+					"completed": "Completed",
+					"pending": "Pending",
+					"scheduled": "Scheduled",
+					"onHold": "On Hold",
+					"confirmed": "Confirmed"
+				},
+				"paymentMethod": {
+					"all": "All Payment Methods",
+					"qr": "QR",
+					"card": "Credit card",
+					"bankTransfer": "Bank Transfer"
+				}
+			},
+			"buttons": {
+				"reset": "Reset",
+				"search": "Search"
+			}
+		},
+		"tabs": {
+			"history": "History",
+			"settlement": "Settlement",
+			"report": "Report"
+		},
+		"infoBanner": {
+			"history": "Payment history is calculated based on patient payment (Gross), and the actual amount received can be checked in the Settlement tab.",
+			"settlement": "Settlement amounts are calculated based on fee processing and deductions (Net)."
+		},
+		"statCards": {
+			"totalBilled": "Total Billed Amount",
+			"totalCompleted": "Total Completed Payments",
+			"totalPending": "Total Pending Payments",
+			"settlementExpected": "Expected Settlement Amount",
+			"settlementCompleted": "Completed Settlement Amount",
+			"deliveryUsageTotal": "Total Delivery Usage Amount",
+			"deliveryFeeCompleted": "Completed Delivery Fee Amount",
+			"totalSales": "Total Sales Amount",
+			"paymentCount": "Payment Count",
+			"averagePayment": "Average Payment Amount",
+			"tooltips": {
+				"totalBilled": "Total amount billed to patients during the selected period. (Amount excluding fees)",
+				"totalCompleted": "Total amount completed by patients during the selected period. (Amount excluding fees)",
+				"totalPending": "Total amount billed but not yet paid during the selected period. (Amount excluding fees)"
+			}
+		},
+		"charts": {
+			"infoText": "Amounts by item are based on after fee deduction (Net).",
+			"paymentMethodShare": "Payment Method Share",
+			"salesItemShare": "Sales Item Share"
+		},
+		"historyTable": {
+			"title": "Payment History",
+			"columns": {
+				"paymentNumber": "Payment No.",
+				"appointmentNumber": "Appointment No.",
+				"paymentRequestDatetime": "Payment Request Date",
+				"paymentDatetime": "Payment Date",
+				"paymentStatus": "Payment Status",
+				"paymentMethod": "Payment Method",
+				"totalAmount": "Total Amount (A+B+C+D)",
+				"consultationFee": "Consultation Fee (A)",
+				"prescriptionFee": "Dispensing Fee (B)",
+				"serviceFee": "Service Fee (C)",
+				"deliveryFee": "Delivery Fee (D)",
+				"action": "Action"
+			},
+			"buttons": {
+				"viewDetails": "More",
+				"downloadExcel": "Download Excel"
+			}
+		},
+		"settlementTable": {
+			"tabs": {
+				"settlement": "Settlement List",
+				"delivery": "Delivery Usage"
+			},
+			"historyTable": {
+				"columns": {
+					"settlementId": "Settlement ID",
+					"settlementPeriod": "Settlement Period",
+					"expectedAmount": "Expected Settlement Amount",
+					"completedAmount": "Completed Payment Amount",
+					"status": "Settlement Status",
+					"completedDatetime": "Settlement Completion Date",
+					"action": "Action"
+				},
+				"tooltips": {
+					"settlementPeriod": "The settlement period for payments that occurred during this period.",
+					"expectedAmount": "The expected amount (Net) that the hospital will receive after deducting fees.",
+					"completedAmount": "The total amount (Gross) that the patient has completed payment for."
+				},
+				"buttons": {
+					"receiveSettlement": "Receive Settlement"
+				},
+				"empty": "No settlement history available."
+			},
+			"deliveryTable": {
+				"columns": {
+					"deliveryId": "Delivery ID",
+					"settlementPeriod": "Settlement Period",
+					"deliveryUsageAmount": "Delivery Usage Amount",
+					"status": "Settlement Status",
+					"paymentCompletedDate": "Payment Completion Date",
+					"action": "Action"
+				},
+				"tooltips": {
+					"settlementPeriod": "The settlement period for payments that occurred during this period.",
+					"deliveryUsageAmount": "The delivery fee issued by the hospital, calculated based on completed deliveries."
+				},
+				"buttons": {
+					"makePayment": "Make Payment"
+				},
+				"empty": "No delivery usage amount list available."
 			}
 		}
 	}

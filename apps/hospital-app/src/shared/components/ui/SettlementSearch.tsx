@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button, Dropdown, SearchInput, SegmentedControl } from '@/shared/components/ui';
 import { Tooltip } from './Tooltip';
 import CalendarIcon from '@/shared/assets/icons/Calendar_Days.svg?react';
@@ -10,7 +11,8 @@ interface SettlementSearchProps {
 	statusOptions?: Array<{ value: string; label: string }>;
 }
 
-export function SettlementSearch({ statusOptions: customStatusOptions }: SettlementSearchProps = {}) {
+const SettlementSearch = ({ statusOptions: customStatusOptions }: SettlementSearchProps = {}) => {
+	const { t } = useTranslation();
 	const [period, setPeriod] = useState<string>('today');
 	const [dateFrom, setDateFrom] = useState('2025.10.28');
 	const [dateTo, setDateTo] = useState('2025.10.28');
@@ -54,21 +56,27 @@ export function SettlementSearch({ statusOptions: customStatusOptions }: Settlem
 		calculateDates(value);
 	};
 
-	const periodOptions = [
-		{ value: 'today', label: '오늘' },
-		{ value: '1week', label: '1주일' },
-		{ value: '1month', label: '1개월' },
-		{ value: '3months', label: '3개월' },
-		{ value: '6months', label: '6개월' },
-	];
+	const periodOptions = useMemo(
+		() => [
+			{ value: 'today', label: t('payment.search.period.options.today') },
+			{ value: '1week', label: t('payment.search.period.options.1week') },
+			{ value: '1month', label: t('payment.search.period.options.1month') },
+			{ value: '3months', label: t('payment.search.period.options.3months') },
+			{ value: '6months', label: t('payment.search.period.options.6months') },
+		],
+		[t],
+	);
 
-	const defaultStatusOptions = [
-		{ value: 'all', label: '전체' },
-		{ value: 'completed', label: '완료' },
-		{ value: 'scheduled', label: '예정' },
-		{ value: 'onHold', label: '보류' },
-		{ value: 'confirmed', label: '확정' },
-	];
+	const defaultStatusOptions = useMemo(
+		() => [
+			{ value: 'all', label: t('payment.search.filter.status.all') },
+			{ value: 'completed', label: t('payment.search.filter.status.completed') },
+			{ value: 'scheduled', label: t('payment.search.filter.status.scheduled') },
+			{ value: 'onHold', label: t('payment.search.filter.status.onHold') },
+			{ value: 'confirmed', label: t('payment.search.filter.status.confirmed') },
+		],
+		[t],
+	);
 
 	const statusOptions = customStatusOptions || defaultStatusOptions;
 
@@ -84,14 +92,14 @@ export function SettlementSearch({ statusOptions: customStatusOptions }: Settlem
 			{/* Date Range Section */}
 			<div className="flex items-center gap-[10px]">
 				<div className="w-[100px] flex items-center gap-1">
-					<span className="text-text-100 text-16 font-normal font-pretendard">조회 기간</span>
+					<span className="text-text-100 text-16 font-normal font-pretendard">
+						{t('payment.search.period.label')}
+					</span>
 					<Tooltip
 						content={
-							<>
-								조회 기간은 버튼을 선택하거나 시작일·종료일을 직접 선택하여 설정할 수 있습니다.
-								<br />
-								단, 시작일로부터 최대 1년 이내까지만 조회 가능하며, 오늘을 포함한 과거 날짜만 선택할 수 있습니다.
-							</>
+							<p className="whitespace-pre-line">
+								{t('payment.search.period.tooltip')}
+							</p>
 						}
 						position="bottom"
 						className="w-[400px]"
@@ -132,20 +140,22 @@ export function SettlementSearch({ statusOptions: customStatusOptions }: Settlem
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-[10px]">
 					<div className="w-[100px]">
-						<span className="text-text-100 text-16 font-normal font-pretendard">검색 필터</span>
+						<span className="text-text-100 text-16 font-normal font-pretendard">
+							{t('payment.search.filter.label')}
+						</span>
 					</div>
 					<SearchInput
 						value={keyword}
 						onChange={setKeyword}
-						placeholder="예약번호 또는 결제번호를 입력해 주세요."
+						placeholder={t('payment.search.filter.placeholder')}
 						className="w-[464px]"
 					/>
 					<Dropdown
 						options={statusOptions}
 						value={status}
 						onChange={setStatus}
-						placeholder="전체"
-						className="w-[130px]"
+						placeholder={t('payment.search.filter.status.all')}
+						className="w-40"
 					/>
 				</div>
 				<div className="flex items-center gap-[10px]">
@@ -156,10 +166,12 @@ export function SettlementSearch({ statusOptions: customStatusOptions }: Settlem
 						<div className="w-5 h-5 text-text-40">
 							<RefreshIcon />
 						</div>
-						<span className="text-text-40 text-14 font-normal font-pretendard">초기화</span>
+						<span className="text-text-40 text-14 font-normal font-pretendard">
+							{t('payment.search.buttons.reset')}
+						</span>
 					</button>
 					<Button variant="primary" size="default">
-						검색
+						{t('payment.search.buttons.search')}
 					</Button>
 				</div>
 			</div>
