@@ -3,7 +3,7 @@ import { Dropdown, Input, SearchIcon } from '@/shared/components/ui';
 import type { DropdownOption } from '@/shared/types/dropdown';
 import { useTranslation } from 'react-i18next';
 
-const SearchWaiting = () => {
+const SearchPending = () => {
 	const { t } = useTranslation();
 	const [keyword, setKeyword] = useState<string>('');
 
@@ -14,7 +14,7 @@ const SearchWaiting = () => {
 
 	const appointmentTypeOptions: DropdownOption[] = useMemo(() => [
 		{ label: t('appointment.search.all'), value: 'all' },
-		{ label: t('appointment.search.appointmentType.fast'), value: 'aptmt' },
+		{ label: t('appointment.search.appointmentType.quick'), value: 'aptmt' },
 		{ label: t('appointment.search.appointmentType.scheduled'), value: 'sdn' },
 	], [t]);
 
@@ -91,4 +91,4 @@ const SearchWaiting = () => {
 	);
 };
 
-export default SearchWaiting;
+export default SearchPending;

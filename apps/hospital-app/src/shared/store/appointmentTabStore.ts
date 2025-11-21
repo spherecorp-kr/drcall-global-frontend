@@ -11,9 +11,9 @@ interface AppointmentTabState {
 export const useAppointmentTabStore = create<AppointmentTabState>()(
 	persist(
 		(set) => ({
-			appointmentTab: 'waiting',
+			appointmentTab: 'pending',
 			setAppointmentTab: (tab: AppointmentStatus) => set({ appointmentTab: tab }),
-			resetAppointmentTab: () => set({ appointmentTab: 'waiting' })
+			resetAppointmentTab: () => set({ appointmentTab: 'pending' })
 		}),
 		{
 			name: 'appointment-tab-storage'

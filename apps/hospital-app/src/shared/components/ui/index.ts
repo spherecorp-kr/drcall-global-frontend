@@ -20,6 +20,7 @@ export { default as ScheduleTimeTable } from './ScheduleTimeTable';
 export { default as SearchIcon } from './SearchIcon';
 export { default as SearchInput } from './SearchInput';
 export { default as SegmentedControl } from './SegmentedControl';
+export { default as SettlementSearch } from './SettlementSearch';
 export { default as StatsSummary } from './StatsSummary';
 export { default as Table } from './Table';
 export { default as Textarea } from './Textarea';

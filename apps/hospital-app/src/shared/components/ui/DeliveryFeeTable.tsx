@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next';
 import { Button, EmptyState, Pagination, Table, Tooltip } from '@/shared/components/ui';
 import type { DeliveryFeeItem, SettlementStatus } from '@/shared/types/payment';
 import helpIcon from '@/shared/assets/icons/btn_circle_help.svg';
@@ -33,24 +34,25 @@ const formatDatetime = (dateStr?: string) => {
 	return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
 
-const getStatusText = (status: SettlementStatus) => {
+const getStatusText = (status: SettlementStatus, t: (key: string) => string) => {
 	switch (status) {
 		case 'completed':
-			return { text: '완료', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.completed'), color: 'text-text-100' };
 		case 'scheduled':
-			return { text: '예정', color: 'text-[#11AC51]' };
+			return { text: t('payment.search.filter.status.scheduled'), color: 'text-[#11AC51]' };
 		case 'onHold':
-			return { text: '보류', color: 'text-[#F65F06]' };
+			return { text: t('payment.search.filter.status.onHold'), color: 'text-[#F65F06]' };
 		case 'confirmed':
-			return { text: '확정', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.confirmed'), color: 'text-text-100' };
 		case 'pending':
-			return { text: '대기', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.pending'), color: 'text-text-100' };
 		default:
-			return { text: '완료', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.completed'), color: 'text-text-100' };
 	}
 };
 
 export function DeliveryFeeTable({ data }: DeliveryFeeTableProps) {
+	const { t } = useTranslation();
 	const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 10;
@@ -64,7 +66,7 @@ export function DeliveryFeeTable({ data }: DeliveryFeeTableProps) {
 		() => [
 			{
 				accessorKey: 'deliveryId',
-				header: '배송 ID 번호',
+				header: t('payment.settlementTable.deliveryTable.columns.deliveryId'),
 				enableSorting: false,
 				cell: ({ row }) => <div className={cellSpanClass}>{row.original.deliveryId}</div>,
 			},
@@ -72,15 +74,15 @@ export function DeliveryFeeTable({ data }: DeliveryFeeTableProps) {
 				accessorKey: 'settlementPeriod',
 				header: () => (
 					<div className="flex items-center gap-1.5">
-						<span>정산 기간</span>
+						<span>{t('payment.settlementTable.deliveryTable.columns.settlementPeriod')}</span>
 						<Tooltip
-							content="해당 기간 동안 발생한 결제 건의 정산 기준 기간입니다."
+							content={t('payment.settlementTable.deliveryTable.tooltips.settlementPeriod')}
 							position="bottom"
 						>
 							{({ isOpen }) => (
 								<img
 									src={isOpen ? helpIconBlue : helpIcon}
-									alt="help"
+									alt={t('common.ariaLabels.help')}
 									className="w-4 h-4 cursor-pointer"
 								/>
 							)}
@@ -94,15 +96,15 @@ export function DeliveryFeeTable({ data }: DeliveryFeeTableProps) {
 				accessorKey: 'deliveryUsageAmount',
 				header: () => (
 					<div className="flex items-center gap-1.5">
-						<span>배송 이용 금액</span>
+						<span>{t('payment.settlementTable.deliveryTable.columns.deliveryUsageAmount')}</span>
 						<Tooltip
-							content="병원이 발급하는 배송비로, 배송 완료 건 기준으로 산정됩니다."
+							content={t('payment.settlementTable.deliveryTable.tooltips.deliveryUsageAmount')}
 							position="bottom"
 						>
 							{({ isOpen }) => (
 								<img
 									src={isOpen ? helpIconBlue : helpIcon}
-									alt="help"
+									alt={t('common.ariaLabels.help')}
 									className="w-4 h-4 cursor-pointer"
 								/>
 							)}
@@ -119,16 +121,16 @@ export function DeliveryFeeTable({ data }: DeliveryFeeTableProps) {
 			},
 			{
 				accessorKey: 'status',
-				header: '정산 상태',
+				header: t('payment.settlementTable.deliveryTable.columns.status'),
 				enableSorting: false,
 				cell: ({ row }) => {
-					const { text, color } = getStatusText(row.original.status);
+					const { text, color } = getStatusText(row.original.status, t);
 					return <div className={`text-16 font-normal font-pretendard ${color}`}>{text}</div>;
 				},
 			},
 			{
 				accessorKey: 'paymentCompletedDate',
-				header: '지급 완료일',
+				header: t('payment.settlementTable.deliveryTable.columns.paymentCompletedDate'),
 				enableSorting: false,
 				cell: ({ row }) => (
 					<div className={cellSpanClass}>{formatDatetime(row.original.paymentCompletedDate)}</div>
@@ -136,14 +138,14 @@ export function DeliveryFeeTable({ data }: DeliveryFeeTableProps) {
 			},
 			{
 				id: 'action',
-				header: '액션',
+				header: t('payment.settlementTable.deliveryTable.columns.action'),
 				enableSorting: false,
 				meta: { align: 'center' },
 				cell: ({ row }) => {
 					if (row.original.status === 'scheduled') {
 						return (
 							<Button variant="ghost" size="small">
-								지급하기
+								{t('payment.settlementTable.deliveryTable.buttons.makePayment')}
 							</Button>
 						);
 					}
@@ -151,18 +153,18 @@ export function DeliveryFeeTable({ data }: DeliveryFeeTableProps) {
 				},
 			},
 		],
-		[]
+		[t],
 	);
 
 	return (
-		<div className="bg-white border border-stroke-input flex flex-col gap-2.5 h-full rounded-[10px]">
+		<div className="bg-white border border-stroke-input flex flex-col gap-2.5 h-full rounded-b-[0.625rem] rounded-tr-[0.625rem]">
 			<Table
 				className="flex-1 h-auto"
 				colgroup={<ColGroup />}
 				columns={columns}
 				data={currentData}
 				disableHorizontalScroll
-				emptyState={<EmptyState message="배송 이용 금액 목록이 없습니다." />}
+				emptyState={<EmptyState message={t('payment.settlementTable.deliveryTable.empty')} />}
 				enableSelection
 				selectedIds={selectedRowIds}
 				onSelectionChange={setSelectedRowIds}

@@ -1,5 +1,5 @@
-export { default as SearchWaiting } from './SearchWaiting';
 export { default as SearchCancelled } from './SearchCancelled';
 export { default as SearchConfirmed } from './SearchConfirmed';
 export { default as SearchCompleted } from './SearchCompleted';
-export { default as SearchConsultations } from './SearchConsultations.tsx';
+export { default as SearchConsultations } from './SearchConsultations';
+export { default as SearchPending } from './SearchPending';

@@ -7,6 +7,7 @@ import { useLayoutStore } from '@/shared/store/layoutStore';
 import { Dropdown, EmptyState, Table } from '@/shared/components/ui';
 import type { DropdownOption } from '@/shared/types/dropdown';
 import { levelBadgeMap } from '@/shared/utils/constants';
+import { useTranslation } from 'react-i18next';
 
 export interface Appointment {
 	id: string;
@@ -32,19 +33,12 @@ const appointmentStatusColor: Record<Appointment['status'], string> = {
 	'예약 취소': 'text-system-error',
 };
 
-const gradeOptions: DropdownOption[] = [
-	{ value: 'all', label: '전체 등급' },
-	{ value: 'VIP', label: 'VIP' },
-	{ value: 'Risk', label: 'Risk' },
-];
-
-const statusOptions: DropdownOption[] = [
-	{ value: 'all', label: '전체' },
-	{ value: '진료 대기', label: '진료 대기' },
-	{ value: '진료 중', label: '진료 중' },
-	{ value: '진료 완료', label: '진료 완료' },
-	{ value: '예약 취소', label: '예약 취소' },
-];
+const statusKeyMap: Record<Appointment['status'], string> = {
+	'진료 대기': 'waiting',
+	'진료 중': 'inProgress',
+	'진료 완료': 'completed',
+	'예약 취소': 'cancelled',
+};
 
 const AppointmentTable = ({
 	appointments,
@@ -52,6 +46,7 @@ const AppointmentTable = ({
 	onExpand,
 	isExpanded,
 }: AppointmentTableProps) => {
+	const { t } = useTranslation();
 	const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
 
 	const appointmentTableHeaderFixed = useLayoutStore(
@@ -68,6 +63,26 @@ const AppointmentTable = ({
 	const setSearchTerm = useLayoutStore((state) => state.setAppointmentSearchTerm);
 	const sorting = useLayoutStore((state) => state.appointmentTableSorting);
 	const setSorting = useLayoutStore((state) => state.setAppointmentTableSorting);
+
+	const gradeOptions: DropdownOption[] = useMemo(
+		() => [
+			{ value: 'all', label: t('appointment.search.allGrade') },
+			{ value: 'VIP', label: 'VIP' },
+			{ value: 'Risk', label: 'Risk' },
+		],
+		[t],
+	);
+
+	const statusOptions: DropdownOption[] = useMemo(
+		() => [
+			{ value: 'all', label: t('appointment.search.all') },
+			{ value: '진료 대기', label: t('appointment.table.status.waiting') },
+			{ value: '진료 중', label: t('appointment.table.status.inProgress') },
+			{ value: '진료 완료', label: t('appointment.table.status.completed') },
+			{ value: '예약 취소', label: t('appointment.table.status.cancelled') },
+		],
+		[t],
+	);
 
 	const filteredAppointments = useMemo(() => {
 		return appointments.filter((appointment) => {
@@ -86,7 +101,7 @@ const AppointmentTable = ({
 		() => [
 			{
 				accessorKey: 'patientLevel',
-				header: '환자 등급',
+				header: t('appointment.table.columns.patientLevel'),
 				size: 120,
 				minSize: 100,
 				enableSorting: true,
@@ -101,7 +116,7 @@ const AppointmentTable = ({
 			},
 			{
 				accessorKey: 'appointmentNumber',
-				header: '예약번호',
+				header: t('appointment.table.columns.appointmentNumber'),
 				size: 150,
 				minSize: 120,
 				enableSorting: true,
@@ -113,7 +128,7 @@ const AppointmentTable = ({
 			},
 			{
 				accessorKey: 'patientName',
-				header: '환자명',
+				header: t('appointment.table.columns.patientName'),
 				size: 150,
 				minSize: 100,
 				enableSorting: true,
@@ -125,7 +140,7 @@ const AppointmentTable = ({
 			},
 			{
 				accessorKey: 'preferredDateTime',
-				header: '진료 희망 일시',
+				header: t('appointment.table.columns.appointmentDatetime'),
 				size: 180,
 				minSize: 150,
 				enableSorting: true,
@@ -137,7 +152,7 @@ const AppointmentTable = ({
 			},
 			{
 				accessorKey: 'doctor',
-				header: '담당 의사',
+				header: t('appointment.table.columns.doctorInCharge'),
 				size: 150,
 				minSize: 120,
 				enableSorting: true,
@@ -149,12 +164,13 @@ const AppointmentTable = ({
 			},
 			{
 				accessorKey: 'status',
-				header: '진료 상태',
+				header: t('appointment.table.columns.status'),
 				size: 120,
 				minSize: 100,
 				enableSorting: true,
 				cell: ({ getValue }) => {
 					const status = getValue<Appointment['status']>();
+					const statusKey = statusKeyMap[status];
 					return (
 						<span
 							className={cn(
@@ -162,18 +178,18 @@ const AppointmentTable = ({
 								appointmentStatusColor[status],
 							)}
 						>
-							{status}
+							{t(`appointment.table.status.${statusKey}`)}
 						</span>
 					);
 				},
 			},
 		],
-		[],
+		[t],
 	);
 
 	return (
 		<Section
-			title="오늘 진료 예정"
+			title={t('appointment.table.title')}
 			count={filteredAppointments.length}
 			className={className}
 			headerFixed={appointmentTableHeaderFixed}
@@ -184,19 +200,19 @@ const AppointmentTable = ({
 						value={gradeFilter}
 						onChange={(value) => setGradeFilter(value as typeof gradeFilter)}
 						options={gradeOptions}
-						placeholder="전체 등급"
+						placeholder={t('appointment.search.allGrade')}
 						className="w-[150px]"
 					/>
 					<Dropdown
 						value={statusFilter}
 						onChange={(value) => setStatusFilter(value as typeof statusFilter)}
 						options={statusOptions}
-						placeholder="전체 상태"
+						placeholder={t('appointment.table.filters.allStatus')}
 						className="w-[150px]"
 					/>
 				</div>
 			}
-			searchPlaceholder="예약번호 또는 환자명을 입력해주세요."
+			searchPlaceholder={t('appointment.search.placeholders.appointmentOrPatient')}
 			searchValue={searchTerm}
 			onSearch={setSearchTerm}
 			onExpand={onExpand}
@@ -216,7 +232,7 @@ const AppointmentTable = ({
 				stickyHeader={appointmentTableHeaderFixed}
 				sorting={sorting}
 				onSortingChange={setSorting}
-				emptyState={<EmptyState message="진료 예정 목록이 없습니다." />}
+				emptyState={<EmptyState message={t('appointment.table.empty')} />}
 			/>
 		</Section>
 	);

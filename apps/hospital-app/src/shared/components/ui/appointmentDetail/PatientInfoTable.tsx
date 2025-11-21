@@ -52,8 +52,8 @@ const PatientInfoTable = ({ isEditable = false }: Props) => {
 			<div className="flex flex-col gap-2.5">
 				<div className='flex items-center justify-between'>
 					<div className='flex gap-2 items-center justify-start'>
-						<AppointmentBadge type='regular'>{t('appointment.search.appointmentType.regular')}</AppointmentBadge>
-						<AppointmentBadge type='quick'>{t('appointment.search.appointmentType.fast')}</AppointmentBadge>
+						<AppointmentBadge type='general'>{t('appointment.search.appointmentType.general')}</AppointmentBadge>
+						<AppointmentBadge type='quick'>{t('appointment.search.appointmentType.quick')}</AppointmentBadge>
 						<PatientBadge level='risk'>Risk</PatientBadge>
 						<PatientBadge level='vip'>VIP</PatientBadge>
 						<MedicineBadge theme='gray'>{t('appointment.search.paymentStatus.completed')}</MedicineBadge>

@@ -9,19 +9,19 @@ const AppointmentStatusTab = () => {
 		<div className="flex gap-10 h-12 items-start px-5 self-stretch shrink-0">
 			<div
 				className="cursor-pointer flex flex-col gap-4 items-start"
-				onClick={() => setAppointmentTab('waiting')}
+				onClick={() => setAppointmentTab('pending')}
 			>
 				<h2
 					className={cn(
 						'leading-[normal] text-xl',
-						appointmentTab === 'waiting'
+						appointmentTab === 'pending'
 							? 'font-semibold text-primary-70'
 							: 'font-normal text-text-100',
 					)}
 				>
-					{t('appointment.statusTab.waiting')}(30)
+					{t('appointment.statusTab.pending')}(30)
 				</h2>
-				{appointmentTab === 'waiting' && <div className="bg-primary-70 h-1 w-full" />}
+				{appointmentTab === 'pending' && <div className="bg-primary-70 h-1 w-full" />}
 			</div>
 			<div
 				className="cursor-pointer flex flex-col gap-4 items-start"
