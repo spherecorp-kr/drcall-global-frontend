@@ -82,11 +82,14 @@ describe('authService', () => {
     // 프로필 완성: API 호출 성공 후 임시 토큰(tempJwt) 제거 확인
     it('completes profile and clears tempJwt', async () => {
         localStorage.setItem('tempJwt', 'temp-jwt-token');
-        (apiClient.post as any).mockResolvedValueOnce({ data: { patientId: 123 } });
-        
+        (apiClient.post as any).mockResolvedValueOnce({ data: { success: true, patientId: 123 } });
+
         const request = {
+            tempToken: 'temp-jwt-token',
             channelUserId: 'user-123',
             name: 'Test',
+            phone: '0812345678',
+            phoneCountryCode: '+66',
             email: 'test@test.com',
             dateOfBirth: '1990-01-01',
             gender: 'MALE' as const,
@@ -95,15 +98,25 @@ describe('authService', () => {
         };
 
         const result = await authService.completeProfile(request);
-        
-        expect(apiClient.post).toHaveBeenCalledWith('/api/auth/profile', request, expect.objectContaining({
-            headers: { Authorization: 'Bearer temp-jwt-token' },
+
+        expect(apiClient.post).toHaveBeenCalledWith('/api/v1/auth/profile', expect.objectContaining({
+            tempToken: 'temp-jwt-token',
+            channelUserId: 'user-123',
+            name: 'Test',
+            phone: '0812345678',
+            phoneCountryCode: '+66',
+            email: 'test@test.com',
+            dateOfBirth: '1990-01-01',
+            gender: 'MALE',
+            marketingConsent: true,
+            dataSharingConsent: true
+        }), expect.objectContaining({
             withCredentials: true
         }));
-        
+
         // 쿠키 기반 인증으로 전환되므로 임시 토큰 제거 확인
         expect(localStorage.getItem('tempJwt')).toBeNull();
-        expect(result).toEqual({ patientId: 123 });
+        expect(result).toEqual({ success: true, patientId: 123 });
     });
   });
 });

@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@/shared/components/ui/Button';
 import { Input } from '@/shared/components/ui/Input';
 import icEdit from '@/shared/assets/icons/ic_edit.svg';
@@ -10,7 +10,9 @@ import icCancel from '@/shared/assets/icons/ic_cancel.svg';
 import icSave from '@/shared/assets/icons/ic_register.svg';
 import TextLogo from '@/assets/logo_drcall.svg';
 import CircleLogo from '@/assets/logo_circle.png';
-import { uploadFile } from '@/services/storageService';
+// import { uploadFile } from '@/services/storageService';
+import { hospitalService, type HospitalDetailResponse, type UpdateHospitalRequest } from '@/services/hospitalService';
+import { toast } from 'react-hot-toast';
 
 // Mock data
 const mockHospital = {
@@ -45,15 +47,65 @@ interface ValidationErrors {
 
 export function Hospital() {
 	const navigate = useNavigate();
+	const { id } = useParams<{ id: string }>();
 	const [isEditMode, setIsEditMode] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const [hospitalData, setHospitalData] = useState<HospitalDetailResponse | null>(null);
 	const [formData, setFormData] = useState(mockHospital);
 	const [errors, setErrors] = useState<ValidationErrors>({});
 	const [webBiPreview, setWebBiPreview] = useState<string | null>(null);
 	const [mobileBiPreview, setMobileBiPreview] = useState<string | null>(null);
-	const [webBiFileId, setWebBiFileId] = useState<number | null>(null);
-	const [mobileBiFileId, setMobileBiFileId] = useState<number | null>(null);
+	// const [webBiFileId, setWebBiFileId] = useState<number | null>(null);
+	// const [mobileBiFileId, setMobileBiFileId] = useState<number | null>(null);
 	const webBiInputRef = useRef<HTMLInputElement>(null);
 	const mobileBiInputRef = useRef<HTMLInputElement>(null);
+
+	// 병원 정보 로드
+	useEffect(() => {
+		const fetchHospital = async () => {
+			if (!id) return;
+
+			try {
+				setLoading(true);
+				const hospital = await hospitalService.getHospitalById(id);
+				setHospitalData(hospital);
+
+				// 폼 데이터 설정
+				setFormData({
+					id: hospital.id.toString(),
+					nameLocal: hospital.nameLocal || '',
+					nameEn: hospital.nameEn || '',
+					logoUrl: hospital.logoUrl || '',
+					mobileLogoUrl: hospital.mobileLogoUrl || '',
+					bankName: hospital.bankName || '',
+					accountHolder: hospital.accountHolder || '',
+					accountNumber: hospital.accountNumber || '',
+					website: hospital.website || '',
+					address: hospital.address || '',
+					postalCode: hospital.postalCode || '',
+					addressDetail: hospital.addressDetail || '',
+					phone: hospital.phone || '',
+					phoneCountryCode: hospital.countryCode || '+66',
+				});
+
+				// 로고 미리보기 설정
+				if (hospital.logoUrl) {
+					setWebBiPreview(hospital.logoUrl);
+				}
+				if (hospital.mobileLogoUrl) {
+					setMobileBiPreview(hospital.mobileLogoUrl);
+				}
+			} catch (error) {
+				console.error('병원 정보 로드 실패:', error);
+				toast.error('병원 정보를 불러오는데 실패했습니다.');
+				navigate('/hospitals');
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchHospital();
+	}, [id, navigate]);
 
 	const handleNewHospital = () => {
 		navigate('/hospitals/onboarding');
@@ -65,15 +117,33 @@ export function Hospital() {
 
 	const handleCancelEdit = () => {
 		setIsEditMode(false);
-		setFormData(mockHospital);
+		// 원본 데이터로 복원
+		if (hospitalData) {
+			setFormData({
+				id: hospitalData.id.toString(),
+				nameLocal: hospitalData.nameLocal || '',
+				nameEn: hospitalData.nameEn || '',
+				logoUrl: hospitalData.logoUrl || '',
+				mobileLogoUrl: hospitalData.mobileLogoUrl || '',
+				bankName: hospitalData.bankName || '',
+				accountHolder: hospitalData.accountHolder || '',
+				accountNumber: hospitalData.accountNumber || '',
+				website: hospitalData.website || '',
+				address: hospitalData.address || '',
+				postalCode: hospitalData.postalCode || '',
+				addressDetail: hospitalData.addressDetail || '',
+				phone: hospitalData.phone || '',
+				phoneCountryCode: hospitalData.countryCode || '+66',
+			});
+			setWebBiPreview(hospitalData.logoUrl || null);
+			setMobileBiPreview(hospitalData.mobileLogoUrl || null);
+		}
 		setErrors({});
-		setWebBiPreview(null);
-		setMobileBiPreview(null);
-		setWebBiFileId(null);
-		setMobileBiFileId(null);
+		// setWebBiFileId(null);
+		// setMobileBiFileId(null);
 	};
 
-	const handleSaveEdit = () => {
+	const handleSaveEdit = async () => {
 		// Validation
 		const newErrors: ValidationErrors = {};
 
@@ -113,12 +183,51 @@ export function Hospital() {
 			return;
 		}
 
-		// TODO: API 호출
-		console.log('Save hospital info', formData);
-		console.log('Web BI fileId:', webBiFileId);
-		console.log('Mobile BI fileId:', mobileBiFileId);
-		setIsEditMode(false);
-		setErrors({});
+		if (!id) return;
+
+		try {
+			// 로고 업로드 처리
+			let logoUrl = formData.logoUrl;
+			let mobileLogoUrl = formData.mobileLogoUrl;
+
+			if (webBiPreview && webBiPreview !== formData.logoUrl) {
+				logoUrl = webBiPreview; // 이미 업로드된 URL 사용
+			}
+
+			if (mobileBiPreview && mobileBiPreview !== formData.mobileLogoUrl) {
+				mobileLogoUrl = mobileBiPreview; // 이미 업로드된 URL 사용
+			}
+
+			// 병원 정보 업데이트 요청
+			const updateRequest: UpdateHospitalRequest = {
+				nameEn: formData.nameEn,
+				nameLocal: formData.nameLocal,
+				email: hospitalData?.email, // 기존 이메일 유지
+				phone: formData.phone,
+				website: formData.website,
+				address: formData.address,
+				addressDetail: formData.addressDetail,
+				postalCode: formData.postalCode,
+				countryCode: formData.phoneCountryCode,
+				timezone: hospitalData?.timezone,
+				currency: hospitalData?.currency,
+				logoUrl,
+				mobileLogoUrl,
+				bankName: formData.bankName,
+				accountHolder: formData.accountHolder,
+				accountNumber: formData.accountNumber,
+			};
+
+			const updatedHospital = await hospitalService.updateHospital(id, updateRequest);
+			setHospitalData(updatedHospital);
+
+			toast.success('병원 정보가 성공적으로 수정되었습니다.');
+			setIsEditMode(false);
+			setErrors({});
+		} catch (error) {
+			console.error('병원 정보 수정 실패:', error);
+			toast.error('병원 정보 수정에 실패했습니다.');
+		}
 	};
 
 	const handleInputChange = (field: keyof typeof formData, value: string) => {
@@ -129,112 +238,36 @@ export function Hospital() {
 		}
 	};
 
-	// 이미지 리사이징 및 Blob 변환 유틸리티
-	const resizeImageToBlob = (
-		file: File,
-		maxWidth: number,
-		maxHeight: number,
-		isSquare: boolean = false,
-	): Promise<{ blob: Blob; preview: string }> => {
-		return new Promise((resolve, reject) => {
-			// 파일 크기 체크 (5MB)
-			if (file.size > 5 * 1024 * 1024) {
-				reject(new Error('파일 크기는 5MB 이하여야 합니다.'));
-				return;
-			}
-
-			// 파일 형식 체크
-			if (!file.type.match(/image\/(jpeg|jpg|png)/)) {
-				reject(new Error('JPG, PNG 형식만 업로드 가능합니다.'));
-				return;
-			}
-
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				const img = new Image();
-				img.onload = () => {
-					const canvas = document.createElement('canvas');
-					const ctx = canvas.getContext('2d');
-					if (!ctx) {
-						reject(new Error('Canvas를 생성할 수 없습니다.'));
-						return;
-					}
-
-					let width = img.width;
-					let height = img.height;
-
-					if (isSquare) {
-						// 모바일 BI: 정사각형으로 크롭
-						const size = Math.min(width, height);
-						const x = (width - size) / 2;
-						const y = (height - size) / 2;
-
-						canvas.width = maxWidth;
-						canvas.height = maxHeight;
-						ctx.drawImage(img, x, y, size, size, 0, 0, maxWidth, maxHeight);
-					} else {
-						// 웹 BI: 비율 유지하면서 리사이징
-						if (width > maxWidth || height > maxHeight) {
-							const ratio = Math.min(maxWidth / width, maxHeight / height);
-							width = width * ratio;
-							height = height * ratio;
-						}
-
-						canvas.width = width;
-						canvas.height = height;
-						ctx.drawImage(img, 0, 0, width, height);
-					}
-
-					// Blob으로 변환 (Storage Service 업로드용)
-					canvas.toBlob(
-						(blob) => {
-							if (!blob) {
-								reject(new Error('이미지 변환에 실패했습니다.'));
-								return;
-							}
-							// 미리보기용 base64
-							const preview = canvas.toDataURL('image/jpeg', 0.9);
-							resolve({ blob, preview });
-						},
-						'image/jpeg',
-						0.9
-					);
-				};
-				img.onerror = () => reject(new Error('이미지를 불러올 수 없습니다.'));
-				img.src = e.target?.result as string;
-			};
-			reader.onerror = () => reject(new Error('파일을 읽을 수 없습니다.'));
-			reader.readAsDataURL(file);
-		});
-	};
 
 	const handleWebBiChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
+		if (!id) return;
+
 		try {
-			// 웹 BI: 최대 500px 너비/높이, 비율 유지
-			const { blob, preview } = await resizeImageToBlob(file, 500, 500, false);
-			
+			// 파일 크기 체크 (5MB)
+			if (file.size > 5 * 1024 * 1024) {
+				toast.error('파일 크기는 5MB 이하여야 합니다.');
+				return;
+			}
+
+			// 파일 형식 체크
+			if (!file.type.match(/image\/(jpeg|jpg|png)/)) {
+				toast.error('JPG, PNG 형식만 업로드 가능합니다.');
+				return;
+			}
+
+			// hospitalService를 통해 업로드
+			const fileUrl = await hospitalService.uploadHospitalLogo(id, file, 'web');
+
 			// 미리보기 설정
-			setWebBiPreview(preview);
-
-			// Storage Service에 업로드
-			// TODO: 실제 hospitalId는 인증된 사용자 정보에서 가져와야 함
-			const fileId = await uploadFile(blob, {
-				category: 'LOGO',
-				ownerId: 1, // TODO: 실제 hospital ID
-				ownerType: 'HOSPITAL',
-				hospitalId: 1, // TODO: 실제 hospital ID
-				accessLevel: 'PUBLIC',
-			});
-
-			setWebBiFileId(fileId);
+			setWebBiPreview(fileUrl);
+			toast.success('웹 로고가 업로드되었습니다.');
 		} catch (error) {
 			console.error('웹 BI 업로드 실패:', error);
-			alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
-			setWebBiPreview(null);
-			setWebBiFileId(null);
+			toast.error('이미지 업로드에 실패했습니다.');
+			setWebBiPreview(hospitalData?.logoUrl || null);
 		}
 	};
 
@@ -242,31 +275,42 @@ export function Hospital() {
 		const file = e.target.files?.[0];
 		if (!file) return;
 
+		if (!id) return;
+
 		try {
-			// 모바일 BI: 200x200px 정사각형으로 크롭
-			const { blob, preview } = await resizeImageToBlob(file, 200, 200, true);
-			
+			// 파일 크기 체크 (5MB)
+			if (file.size > 5 * 1024 * 1024) {
+				toast.error('파일 크기는 5MB 이하여야 합니다.');
+				return;
+			}
+
+			// 파일 형식 체크
+			if (!file.type.match(/image\/(jpeg|jpg|png)/)) {
+				toast.error('JPG, PNG 형식만 업로드 가능합니다.');
+				return;
+			}
+
+			// hospitalService를 통해 업로드
+			const fileUrl = await hospitalService.uploadHospitalLogo(id, file, 'mobile');
+
 			// 미리보기 설정
-			setMobileBiPreview(preview);
-
-			// Storage Service에 업로드
-			// TODO: 실제 hospitalId는 인증된 사용자 정보에서 가져와야 함
-			const fileId = await uploadFile(blob, {
-				category: 'LOGO',
-				ownerId: 1, // TODO: 실제 hospital ID
-				ownerType: 'HOSPITAL',
-				hospitalId: 1, // TODO: 실제 hospital ID
-				accessLevel: 'PUBLIC',
-			});
-
-			setMobileBiFileId(fileId);
+			setMobileBiPreview(fileUrl);
+			toast.success('모바일 로고가 업로드되었습니다.');
 		} catch (error) {
 			console.error('모바일 BI 업로드 실패:', error);
-			alert(error instanceof Error ? error.message : '이미지 업로드에 실패했습니다.');
-			setMobileBiPreview(null);
-			setMobileBiFileId(null);
+			toast.error('이미지 업로드에 실패했습니다.');
+			setMobileBiPreview(hospitalData?.mobileLogoUrl || null);
 		}
 	};
+
+	// 로딩 중일 때 표시
+	if (loading) {
+		return (
+			<div className="h-full bg-bg-gray flex items-center justify-center">
+				<div className="text-gray-500">로딩 중...</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="h-full bg-bg-gray flex flex-col overflow-hidden">

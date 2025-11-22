@@ -69,6 +69,7 @@ export default function VideoCallRoom() {
 
     // 자막 세션 생성 (환자: 한국어 → 의사: 태국어)
     subtitle.createSession('ko', 'th');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Attach local stream to video element

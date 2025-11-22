@@ -7,23 +7,15 @@ import i18n from '../i18n/i18n';
  */
 function getApiBaseUrl(): string {
 	const apiUrl = import.meta.env.VITE_API_BASE_URL;
-	const isDevelopment = import.meta.env.DEV;
-	const isProduction = import.meta.env.PROD;
 
-	// In production, API URL must be explicitly set
-	if (isProduction && !apiUrl) {
-		const error = new Error('VITE_API_BASE_URL environment variable must be set in production');
+	// API URL must be explicitly set
+	if (!apiUrl) {
+		const error = new Error('VITE_API_BASE_URL environment variable must be set');
 		console.error('[API] Initialization error:', error);
 		throw error;
 	}
 
-	// In development, allow localhost fallback
-	if (isDevelopment && !apiUrl) {
-		console.warn('VITE_API_BASE_URL not set, using localhost:8080 as fallback');
-		return 'http://localhost:8080';
-	}
-
-	return apiUrl || 'http://localhost:8080';
+	return apiUrl;
 }
 
 const API_BASE_URL = getApiBaseUrl();

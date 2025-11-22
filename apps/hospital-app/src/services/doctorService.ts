@@ -12,7 +12,8 @@ import { DAY_MAP } from '@/shared/types/doctor';
 import { mockDoctors } from '@/mocks/doctorData';
 
 // 개발 환경에서 목 데이터 사용 여부
-const USE_MOCK_DATA = true;
+// 환경변수로 제어: VITE_USE_MOCK_DATA가 'true'일 때만 모킹 사용
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 /**
  * DTO를 UI 모델로 변환하는 유틸리티 함수

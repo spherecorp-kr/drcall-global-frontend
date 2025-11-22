@@ -5,7 +5,7 @@ import MainLayout from '@layouts/MainLayout';
 import EmptyState from '@ui/display/EmptyState';
 import ChatRoom from './ChatRoom';
 import { getChatService, authService, type ChatChannel } from '@services';
-import { formatMessageTime, formatMessageDate, isChannelClosed, isSystemMessage } from '@services/chatService';
+import { formatMessageTime, formatMessageDate, isChannelClosed } from '@services/chatService';
 import { sortByTimestampNewest } from '@utils/sort';
 
 export default function ChatList() {
@@ -32,7 +32,7 @@ export default function ChatList() {
           try {
             const profile = await authService.getProfile();
             currentUserId = `patient-${profile.id}`;
-          } catch (authError) {
+          } catch {
             // Use fallback user ID
           }
         }

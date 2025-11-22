@@ -9,24 +9,15 @@ import { getSubdomain } from '@/utils/channelUtils';
  */
 function getApiBaseUrl(): string {
   const apiUrl = import.meta.env.VITE_API_BASE_URL;
-  const isDevelopment = import.meta.env.DEV;
-  const isProduction = import.meta.env.PROD;
 
-  // In production, API URL must be explicitly set
-  if (isProduction && !apiUrl) {
-    const error = new Error('VITE_API_BASE_URL environment variable must be set in production');
+  // API URL must be explicitly set
+  if (!apiUrl) {
+    const error = new Error('VITE_API_BASE_URL environment variable must be set');
     logError(error, { feature: 'API', action: 'initialization' });
     throw error;
   }
 
-  // In development, allow localhost fallback
-  if (isDevelopment && !apiUrl) {
-    // eslint-disable-next-line no-console
-    console.warn('VITE_API_BASE_URL not set, using localhost:8080 as fallback');
-    return 'http://localhost:8080';
-  }
-
-  return apiUrl || 'http://localhost:8080';
+  return apiUrl;
 }
 
 const API_BASE_URL = getApiBaseUrl();
@@ -64,11 +55,11 @@ apiClient.interceptors.request.use(
     const subdomain = getSubdomain();
     if (subdomain) {
       config.headers['X-Channel-Id'] = subdomain;
-      // eslint-disable-next-line no-console
+       
       console.log(`[API] X-Channel-Id: ${subdomain}`);
     } else {
       // No subdomain detected - backend will reject request if channel is required
-      // eslint-disable-next-line no-console
+       
       console.warn('[API] No subdomain detected - X-Channel-Id header not added. Use {channel}.localhost or {channel}.patient.{env}.drcall.global');
     }
 
@@ -92,12 +83,20 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     const status = error.response?.status;
+    const requestUrl = error.config?.url || '';
+
     // Check if this request wants to skip error toast
     const skipErrorToast = error.config?.skipErrorToast;
 
+    // Auto-skip toast for background/redirect requests
+    // These are requests that happen automatically, not from user button clicks
+    const isBackgroundRequest =
+      requestUrl.includes('/api/v1/auth/profile') ||  // Profile check on mount
+      requestUrl.includes('/api/v1/public/channels/validate');  // Channel validation
+
     // Handle authentication errors
     if (status === 401) {
-      // Clear temp JWT and redirect to login
+      // Clear temp JWT and redirect to login (silent, no toast)
       localStorage.removeItem('tempJwt');
       // Cookies are automatically cleared by backend or expired
       window.location.href = '/auth/phone-verification';
@@ -106,7 +105,7 @@ apiClient.interceptors.response.use(
 
     // Show error toast for user-facing errors (position: bottom to show above button)
     const showErrorToast = (message: string) => {
-      if (skipErrorToast) return; // Skip toast if requested
+      if (skipErrorToast || isBackgroundRequest) return; // Skip toast if requested or background request
       if (typeof window !== 'undefined' && (window as any).showToast) {
         (window as any).showToast(message, 'error', 'bottom');
       }
@@ -114,8 +113,10 @@ apiClient.interceptors.response.use(
 
     // Handle other common errors
     if (status === 403) {
+      // 403 Forbidden: Silent redirect to phone verification (no toast)
+      // This typically means the user needs to authenticate
       logError(error, { feature: 'API', action: 'forbidden', metadata: { url: error.config?.url } });
-      showErrorToast(i18n.t('error.api.forbidden'));
+      // No toast - just let the AuthContext handle redirect
     } else if (status === 404) {
       logError(error, { feature: 'API', action: 'not_found', metadata: { url: error.config?.url } });
       const errorMessage = error.response?.data?.message || i18n.t('error.api.notFound');

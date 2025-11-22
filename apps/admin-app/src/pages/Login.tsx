@@ -49,10 +49,16 @@ const Login = () => {
 
 		try {
 			const response = await authService.login({
-				username,
+				loginId: username,
 				password,
 				rememberMe,
 			});
+
+			// 응답 검증: accessToken과 user 정보가 있어야 함
+			if (!response?.accessToken || !response?.user) {
+				setError('로그인 응답이 올바르지 않습니다. 다시 시도해주세요.');
+				return;
+			}
 
 			// 성공: AuthContext에 로그인 정보 저장
 			authLogin(response.accessToken, response.user);
@@ -63,9 +69,17 @@ const Login = () => {
 			// 실패: 에러 메시지 표시
 			let errorMessage = '아이디 또는 비밀번호가 올바르지 않습니다.';
 			if (err instanceof AxiosError) {
-				errorMessage = err.response?.data?.error?.message ||
-					err.response?.data?.message ||
-					errorMessage;
+				const responseData = err.response?.data;
+				// 백엔드 에러 메시지 추출
+				if (responseData) {
+					errorMessage = responseData.error?.message ||
+						responseData.message ||
+						errorMessage;
+				} else if (err.message) {
+					errorMessage = err.message;
+				}
+			} else if (err instanceof Error) {
+				errorMessage = err.message;
 			}
 			setError(errorMessage);
 		} finally {

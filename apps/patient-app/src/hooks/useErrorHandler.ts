@@ -16,17 +16,21 @@ export function useErrorHandler() {
       // Log error
       logError(error, context);
 
-      // Get user-friendly message
+      // Get user-friendly message (may be i18n key or actual message)
       const message = handleApiError(error);
+
+      // i18n 키인지 확인 (auth., common. 등으로 시작하면 i18n 키)
+      const isI18nKey = message.includes('.');
+      const translatedMessage = isI18nKey ? t(message) : message;
 
       // Show toast if available
       if (typeof window !== 'undefined' && (window as any).showToast) {
-        (window as any).showToast(message, 'error', 'bottom');
+        (window as any).showToast(translatedMessage, 'error', 'bottom');
       }
 
-      return message;
+      return translatedMessage;
     },
-    []
+    [t]
   );
 
   /**

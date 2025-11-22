@@ -72,17 +72,19 @@ export const mockAppointmentService = {
 
     // Create mock appointment
     const newAppointment: Appointment = {
-      id: `apt-${Date.now()}`,
+      id: Date.now(),
       appointmentNumber: `APT${Date.now().toString().slice(-6)}`,
       appointmentType: data.appointmentType,
       status: 'pending_confirmation',
       hospital: {
+        id: 1,
         name: 'Bangkok Hospital',
         nameEn: 'Bangkok Hospital',
         phone: '+66-2-310-3000',
       },
       dateTime: data.dateTime || new Date().toISOString(),
       doctor: {
+        id: 1,
         name: '의사 이름',
         nameEn: 'Doctor Name',
         photo: '/assets/images/doctors/default.jpg',
@@ -133,7 +135,7 @@ export const mockAppointmentService = {
     }
 
     // In real implementation, this would update the status to 'cancelled'
-    // eslint-disable-next-line no-console
+     
     console.info(`Appointment ${id} cancelled. Reason: ${reason || 'None'}`);
   },
 };

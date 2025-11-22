@@ -40,6 +40,7 @@ export interface AuthContextValue {
   refreshProfile: () => Promise<void>;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 interface AuthProviderProps {
@@ -73,7 +74,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
       setError(null);
 
-      const response = await apiClient.get('/api/auth/profile');
+      const response = await apiClient.get('/api/v1/auth/profile');
 
       if (response.data) {
         setUser(response.data);
@@ -117,7 +118,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setIsLoading(true);
 
       // Call backend logout endpoint to clear cookies
-      await apiClient.post('/api/auth/logout');
+      await apiClient.post('/api/v1/auth/logout');
 
       // Clear local storage
       localStorage.removeItem('tempJwt');
@@ -156,7 +157,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       const tempJwt = localStorage.getItem('tempJwt');
-      const hasCookies = document.cookie.includes('sid');
+      // Properly check for 'sid' cookie (exact name match)
+      const hasCookies = document.cookie.split(';').some(cookie =>
+        cookie.trim().startsWith('sid=')
+      );
 
       // Only fetch profile if we have authentication tokens
       if (tempJwt || hasCookies) {

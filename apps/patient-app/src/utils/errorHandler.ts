@@ -46,25 +46,49 @@ class ErrorHandler {
       if (error.response) {
         // Server responded with error
         const status = error.response.status;
+        const errorCode = error.response.data?.error?.code;
+        const errorMessage = error.response.data?.error?.message;
 
-        switch (status) {
-          case 400:
-            userMessage = '잘못된 요청입니다';
-            break;
-          case 401:
-            userMessage = '인증이 필요합니다';
-            break;
-          case 403:
-            userMessage = '접근 권한이 없습니다';
-            break;
-          case 404:
-            userMessage = '요청하신 정보를 찾을 수 없습니다';
-            break;
-          case 500:
-            userMessage = '서버 오류가 발생했습니다';
-            break;
-          default:
-            userMessage = error.response.data?.message || defaultMessage;
+        // OTP 관련 에러 코드 매핑
+        const otpErrorMap: Record<string, string> = {
+          'INVALID_OTP': 'auth.invalidOtp',
+          'OTP_NOT_FOUND': 'auth.otpNotFound',
+          'TOO_MANY_OTP_ATTEMPTS': 'auth.tooManyOtpAttempts',
+          'OTP_SEND_FAILED': 'auth.otpSendFailed',
+        };
+
+        // 에러 코드가 있으면 우선 사용
+        if (errorCode && otpErrorMap[errorCode]) {
+          return otpErrorMap[errorCode]; // i18n 키 반환
+        }
+
+        // 백엔드에서 온 메시지가 있으면 사용
+        if (errorMessage) {
+          userMessage = errorMessage;
+        } else {
+          // HTTP 상태 코드에 따른 기본 메시지
+          switch (status) {
+            case 400:
+              userMessage = '잘못된 요청입니다';
+              break;
+            case 401:
+              userMessage = '인증이 필요합니다';
+              break;
+            case 403:
+              userMessage = '접근 권한이 없습니다';
+              break;
+            case 404:
+              userMessage = '요청하신 정보를 찾을 수 없습니다';
+              break;
+            case 429:
+              userMessage = '너무 많은 요청이 있습니다. 잠시 후 다시 시도해주세요';
+              break;
+            case 500:
+              userMessage = '서버 오류가 발생했습니다';
+              break;
+            default:
+              userMessage = defaultMessage;
+          }
         }
       } else if (error.request) {
         // Request made but no response
@@ -82,7 +106,19 @@ class ErrorHandler {
   /**
    * Type guard for axios errors
    */
-  private isAxiosError(error: unknown): error is { response?: { status: number; data?: { message?: string } }; request?: unknown } {
+  private isAxiosError(error: unknown): error is {
+    response?: {
+      status: number;
+      data?: {
+        message?: string;
+        error?: {
+          code?: string;
+          message?: string;
+        };
+      };
+    };
+    request?: unknown;
+  } {
     return typeof error === 'object' && error !== null && ('response' in error || 'request' in error);
   }
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@hooks/useAuth';
 import MainLayout from '@layouts/MainLayout';
 import BottomButtonLayout from '@layouts/BottomButtonLayout';
 import InputField from '@ui/inputs/InputField';
@@ -16,6 +17,7 @@ type VerificationStep = 'phone' | 'code' | 'verified';
 export default function PhoneVerification() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const { handleError, handleValidationError } = useErrorHandler();
   const [step, setStep] = useState<VerificationStep>('phone');
   const [selectedCountry, setSelectedCountry] = useState<Country>(() =>
@@ -27,6 +29,13 @@ export default function PhoneVerification() {
   const [error, setError] = useState('');
   const [isVerified, setIsVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Redirect to appointments if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/appointments', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   // 타이머 관리
   useEffect(() => {

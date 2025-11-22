@@ -67,8 +67,21 @@ apiClient.interceptors.response.use(
 		// Auto-unwrap ApiResponse<T> wrapper from backend
 		// Backend returns: { success: true, data: {...}, message: null, error: null }
 		// Frontend expects: {...}
-		if (response.data?.success !== undefined && response.data?.data !== undefined) {
-			response.data = response.data.data;
+		if (response.data?.success !== undefined) {
+			// success: false인 경우 에러로 처리
+			if (response.data.success === false) {
+				const error = new Error(response.data.error?.message || response.data.message || '요청에 실패했습니다.') as Error & { response?: unknown };
+				error.response = {
+					...response,
+					status: response.data.error?.status || 400,
+					data: response.data,
+				};
+				return Promise.reject(error);
+			}
+			// success: true이고 data가 있으면 unwrap
+			if (response.data.data !== undefined) {
+				response.data = response.data.data;
+			}
 		}
 		return response;
 	},
@@ -93,8 +106,7 @@ apiClient.interceptors.response.use(
 		const showErrorToast = (message: string) => {
 			if (skipErrorToast) return; // Skip toast if requested
 			if (typeof window !== 'undefined' && 'showToast' in window) {
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				(window as any).showToast(message, 'error', 'bottom');
+				(window as Window & { showToast?: (message: string, type: string, position: string) => void }).showToast?.(message, 'error', 'bottom');
 			}
 		};
 

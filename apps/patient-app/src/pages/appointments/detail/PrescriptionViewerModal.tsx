@@ -153,7 +153,8 @@ export default function PrescriptionViewerModal({
       container.removeEventListener('pointercancel', handlePointerUpOrCancel);
       container.removeEventListener('pointerleave', handlePointerUpOrCancel);
     };
-  }, [pinchZoomPlugin]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 모달 오픈 동안 배경(문서) 스크롤 완전 차단 및 체이닝 방지
   useEffect(() => {

@@ -9,7 +9,6 @@ import DatePickerModal from '@ui/modals/DatePickerModal';
 import AddressSearchModal from '@components/address/modals/AddressSearchModal';
 import PhoneVerificationModal from '@ui/modals/PhoneVerificationModal';
 import ConfirmModal from '@ui/modals/ConfirmModal';
-import Notice from '@ui/display/Notice';
 import PageContainer from '@ui/layout/PageContainer';
 import PageSection from '@ui/layout/PageSection';
 import PageTitle from '@ui/layout/PageTitle';

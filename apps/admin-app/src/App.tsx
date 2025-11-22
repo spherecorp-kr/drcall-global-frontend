@@ -7,6 +7,9 @@ import { PrivateRoute } from '@/components/auth/PrivateRoute';
 import { useAuth } from '@/contexts/AuthContext';
 import {
 	DashboardPage,
+	AdminDashboardPage,
+	HospitalListPage,
+	HospitalPage,
 	HospitalOnboardingPage,
 	LoginPage,
 	MyInfoPage,
@@ -91,9 +94,10 @@ function AppContent() {
 				}
 			>
 				<Route index element={<Navigate to="/dashboard" replace />} />
-				<Route path="dashboard" element={<DashboardPage />} />
-				<Route path="hospitals" element={<DashboardPage />} />
+				<Route path="dashboard" element={<AdminDashboardPage />} />
+				<Route path="hospitals" element={<HospitalListPage />} />
 				<Route path="hospitals/onboarding" element={<HospitalOnboardingPage />} />
+				<Route path="hospitals/:id" element={<HospitalPage />} />
 				<Route path="users" element={<DashboardPage />} />
 				<Route path="monitoring" element={<DashboardPage />} />
 				<Route path="content" element={<DashboardPage />} />

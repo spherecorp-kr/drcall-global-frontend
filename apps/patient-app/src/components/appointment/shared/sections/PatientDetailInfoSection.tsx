@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import EditableTextInput from '@ui/inputs/EditableTextInput';
 import ToggleButtonGroup from '@ui/buttons/ToggleButtonGroup';
 import TextareaField from '@ui/inputs/TextareaField';
-import type { AlcoholConsumption, SmokingStatus } from '@/types/appointment';
 
 interface PatientDetailInfo {
   height?: string;

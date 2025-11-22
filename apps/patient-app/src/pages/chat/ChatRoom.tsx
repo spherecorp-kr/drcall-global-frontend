@@ -70,7 +70,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
           try {
             const profile = await authService.getProfile();
             currentUserId = `patient-${profile.id}`;
-          } catch (authError) {
+          } catch {
             // Use fallback user ID
           }
         }
@@ -212,7 +212,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
   const messages: DisplayMessage[] = [];
   let lastDate: number | null = null;
 
-  chatMessages.forEach((msg, index) => {
+  chatMessages.forEach((msg) => {
     // Add date separator if needed
     const msgDate = msg.created_at;
     if (lastDate === null || !isSameDay(lastDate, msgDate)) {
@@ -353,7 +353,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
 
       // 1초마다 카운터 업데이트
       const interval = setInterval(() => {
-        setCooldownSeconds(prev => {
+        setCooldownSeconds((prev: number) => {
           const next = prev - 1;
           if (next > 0) {
             setLockMessage(`${t('chat.spamWarning')} (${next}s)`);

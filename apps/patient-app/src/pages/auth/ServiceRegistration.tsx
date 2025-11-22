@@ -63,18 +63,49 @@ export default function ServiceRegistration() {
     }
   }, [showAddressSearch, shouldFocusDetail]);
 
-  // Initialize phone from PhoneVerification
+  // Initialize form with hospital-registered patient data
   useEffect(() => {
-    // Get phone from localStorage or profile
     const tempJwt = localStorage.getItem('tempJwt');
     if (tempJwt) {
-      // Try to get profile to pre-fill phone
+      // Try to get profile to pre-fill form with hospital-registered data
       authService.getProfile().then((profile) => {
+        console.log('[ServiceRegistration] Pre-filling form with hospital data:', profile);
+
+        // Pre-fill all available fields from hospital registration
         if (profile.phone) {
           setPhone(profile.phone);
         }
+        if (profile.name) {
+          setName(profile.name);
+        }
+        if (profile.email) {
+          setEmail(profile.email);
+        }
+        if (profile.dateOfBirth) {
+          // Convert YYYY-MM-DD to DD/MM/YYYY for display
+          const parts = profile.dateOfBirth.split('-');
+          if (parts.length === 3) {
+            const formatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+            setBirthdate(formatted);
+          }
+        }
+        if (profile.gender) {
+          setGender(profile.gender.toLowerCase() as Gender);
+        }
+        if (profile.address) {
+          setAddress(profile.address);
+        }
+        if (profile.emergencyContactName) {
+          setEmergencyContactName(profile.emergencyContactName);
+        }
+        if (profile.emergencyContactPhone) {
+          setEmergencyContactPhone(profile.emergencyContactPhone);
+        }
+
+        console.log('[ServiceRegistration] Form pre-filled successfully');
       }).catch(() => {
-        // Ignore error - user can input phone manually
+        // Ignore error - user is new patient, will fill form manually
+        console.log('[ServiceRegistration] No existing profile found (new patient)');
       });
     }
   }, []);
@@ -151,10 +182,16 @@ export default function ServiceRegistration() {
         }
       }
 
-      // 3. Call completeProfile API
+      // 3. Get tempToken from localStorage
+      const tempToken = localStorage.getItem('tempJwt') || '';
+
+      // 4. Call completeProfile API
       const response = await authService.completeProfile({
+        tempToken,
         channelUserId: channelInfo.channelUserId,
         name: name.trim(),
+        phone: phone.trim(), // 전화번호 추가
+        phoneCountryCode: '+66', // 기본값: 태국
         email: email || `${phone}@patient.drcall.global`, // Use temp email if not provided
         dateOfBirth,
         gender: gender === 'male' ? 'MALE' : 'FEMALE',
@@ -162,6 +199,7 @@ export default function ServiceRegistration() {
         emergencyContactName: emergencyContactName || '',
         emergencyContactPhone: emergencyContactPhone || '',
         address: `${address}${detailAddress ? ' ' + detailAddress : ''}`.trim(),
+        postalCode: '', // 우편번호 추가 (address에 포함되어 있을 수 있음)
         marketingConsent: agreements.marketing,
         dataSharingConsent: agreements.personalInfo,
       });
@@ -282,7 +320,7 @@ export default function ServiceRegistration() {
               placeholder={t('auth.birthdatePlaceholder')}
               readOnly
               rightElement={
-                <img src="/src/assets/icons/phr/calendar_today.svg" alt="Calendar"  width={24} height={24} />
+                <img src="/src/assets/icons/phr/calendar_today.svg" alt="Calendar" width={24} height={24} />
               }
             />
           </div>
@@ -333,8 +371,6 @@ export default function ServiceRegistration() {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder={t('auth.enterPhone')}
-            readOnly
-            disabled
           />
 
           {/* Address */}
@@ -366,7 +402,7 @@ export default function ServiceRegistration() {
               }}>
                 {address || t('auth.searchAddress')}
               </div>
-              <img src='/assets/icons/ic_search.svg' alt='search' width={24} height={24}/>
+              <img src='/assets/icons/ic_search.svg' alt='search' width={24} height={24} />
             </div>
 
             {/* Detail Address - 주소가 선택된 후에만 표시 */}

@@ -85,14 +85,6 @@ export default function Confirmation({ appointmentType = 'standard' }: Confirmat
     fetchHospitalInfo();
   }, []);
 
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const handleClose = () => {
-    navigate('/appointments/new');
-  };
-
   const handleConfirm = async () => {
     // Validation
     if (!user?.id) {

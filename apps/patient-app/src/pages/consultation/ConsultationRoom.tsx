@@ -58,8 +58,6 @@ export default function ConsultationRoom() {
   // 현재 표시할 자막 텍스트
   const translatedText = subtitle.currentSubtitle?.translatedText || '';
 
-  const handleClose = () => navigate('/appointments');
-
   const handleEndCall = () => {
     setIsEndCallModalOpen(true);
   };
@@ -102,6 +100,7 @@ export default function ConsultationRoom() {
 
     // 자막 세션 생성 (의사: 태국어 → 환자: 한국어)
     subtitle.createSession('th', 'ko');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Attach local stream to video element

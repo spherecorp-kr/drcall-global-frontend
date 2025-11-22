@@ -7,8 +7,6 @@ import type {
   ChannelsResponse,
   MessagesResponse,
   UnreadCountResponse,
-  ChannelCustomType,
-  ChannelStatus,
 } from './chatService';
 
 /**
@@ -357,7 +355,7 @@ export const mockChatService = {
   /**
    * Mark Channel as Read
    */
-  markAsRead: async (channelUrl: string, userId: string): Promise<void> => {
+  markAsRead: async (channelUrl: string): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 200));
 
     const channel = mockChannels.find((c) => c.channel_url === channelUrl);

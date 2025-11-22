@@ -20,7 +20,7 @@ export default function LiveDeliveryTracking() {
   const overlayCardRef = useRef<HTMLDivElement | null>(null);
 
   const { t } = useTranslation();
-  const [etaMinutes, setEtaMinutes] = useState<number>(15);
+  const [etaMinutes] = useState<number>(15);
   const [etaTimeText, setEtaTimeText] = useState<string>('');
 
   const HEADER_HEIGHT_REM = 3.5; // 3.5rem = 56px

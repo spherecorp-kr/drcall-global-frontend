@@ -12,6 +12,7 @@ import PageSection from '@ui/layout/PageSection';
 import PageTitle from '@ui/layout/PageTitle';
 import Divider from '@ui/layout/Divider';
 import TreatmentInfoSection from '@appointment/shared/sections/TreatmentInfoSection';
+import { storageService } from '@/services/storageService';
 
 interface SymptomsInputProps {
   appointmentType: 'standard' | 'quick';
@@ -31,6 +32,7 @@ export default function SymptomsInput({ appointmentType }: SymptomsInputProps) {
   // Initialize with stored data
   const [symptoms, setSymptoms] = useState(storedSymptoms || '');
   const [images, setImages] = useState<string[]>(storedImages || []);
+  const [uploading, setUploading] = useState(false);
   const maxImages = 10;
 
   const isQuick = appointmentType === 'quick';
@@ -44,20 +46,51 @@ export default function SymptomsInput({ appointmentType }: SymptomsInputProps) {
     return () => clearTimeout(timeoutId);
   }, [symptoms, images, setSymptomsStore]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) return;
 
-    const newImages: string[] = [];
-    Array.from(files).forEach((file) => {
-      if (images.length + newImages.length >= maxImages) return;
+    // 최대 업로드 가능한 개수 확인
+    const remainingSlots = maxImages - images.length;
+    if (remainingSlots <= 0) {
+      showToast(t('appointment.maxImagesReached', { max: maxImages }), 'warning');
+      return;
+    }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImages(prev => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
-    });
+    const filesToUpload = Array.from(files).slice(0, remainingSlots);
+    setUploading(true);
+
+    try {
+      const uploadPromises = filesToUpload.map((file) =>
+        storageService.uploadFile({
+          file,
+          category: 'APPOINTMENT_SYMPTOM_IMAGE',
+        })
+      );
+
+      const uploadedFiles = await Promise.all(uploadPromises);
+
+      // S3 URL 또는 로컬 경로를 이미지 URL로 사용
+      const imageUrls = uploadedFiles.map(
+        (fileMetadata) => fileMetadata.s3Url || fileMetadata.localPath || ''
+      );
+
+      setImages((prev) => [...prev, ...imageUrls]);
+      showToast(
+        t('appointment.imagesUploadedSuccessfully', { count: uploadedFiles.length }),
+        'success'
+      );
+    } catch (error) {
+      console.error('Failed to upload images:', error);
+      showToast(
+        t('error.imageUploadFailed', {
+          message: error instanceof Error ? error.message : 'Unknown error',
+        }),
+        'error'
+      );
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleDeleteImage = (index: number) => {
@@ -134,8 +167,8 @@ export default function SymptomsInput({ appointmentType }: SymptomsInputProps) {
 
       {/* Bottom Button */}
       <BottomButtonLayout fullWidth contentClassName="">
-        <Button onClick={handleNext} disabled={!symptoms.trim()}>
-          {t('common.next')}
+        <Button onClick={handleNext} disabled={!symptoms.trim() || uploading}>
+          {uploading ? t('common.uploading') : t('common.next')}
         </Button>
       </BottomButtonLayout>
 
