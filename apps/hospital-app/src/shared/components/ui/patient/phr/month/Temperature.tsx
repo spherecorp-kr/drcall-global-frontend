@@ -31,7 +31,7 @@ const Temperature = ({ items, period }: MonthlyTempPhrResponse) => {
 			<div className="bg-white border border-stroke-input flex flex-col gap-4 p-5 rounded-[1.25rem]">
 				<MonthlyChartHeader year={period.year} month={period.month} monthName={period.monthName} />
 				<p className="text-base text-center text-text-100" style={{ lineHeight: 'normal' }}>
-					이번 달 평균 체온 : {period.averageTemperature ?? 0}&deg;C
+					{t('phr.lbl.atm')} : {period.averageTemperature ?? 0}&deg;C
 				</p>
 				{hasNoData
 					? <NoDataChart text={t('phr.nodata.btm')} />

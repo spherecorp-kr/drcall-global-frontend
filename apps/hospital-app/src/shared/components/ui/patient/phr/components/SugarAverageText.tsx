@@ -20,7 +20,7 @@ const SugarAverageText = ({ dateType, period, timing }: Props) => {
 	const { t } = useTranslation();
 	const { currentLanguage } = useLanguage();
 
-	const SUGAT_NOTE = useMemo(() => ({
+	const SUGAR_NOTE = useMemo(() => ({
 		morning: {
 			week: t('phr.bloodSugar.aswb'),
 			month: t('phr.bloodSugar.asmb'),
@@ -62,14 +62,14 @@ const SugarAverageText = ({ dateType, period, timing }: Props) => {
 			if (bedtime === null) {
 				return dateType === 'week' ? t('phr.bloodSugar.adw') : t('phr.bloodSugar.adm');
 			}
-			return <>{SUGAT_NOTE.bedtime[dateType]}<br />{bedtime}mg/dL</>;
+			return <>{SUGAR_NOTE.bedtime[dateType]}<br />{bedtime}mg/dL</>;
 		} else {
 			const { before, after } = period[timing];
 			if (before === null && after === null) {
 				return dateType === 'week' ? t('phr.bloodSugar.adw') : t('phr.bloodSugar.adm');
 			}
 
-			const note: string = SUGAT_NOTE[timing][dateType];
+			const note: string = SUGAR_NOTE[timing][dateType];
 			return (
 				<>
 					{note}<br />

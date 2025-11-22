@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Radio } from '@/shared/components/ui';
+import { useTranslation } from 'react-i18next';
 
 interface CancelReasonProps {
 	onDisabledChange?: (disabled: boolean) => void;
 }
 
 const CancelReason = ({ onDisabledChange }: CancelReasonProps) => {
+	const { t } = useTranslation();
 	const [canceller, setCanceller] = useState<string>('');
 	const [reason, setReason] = useState<string>('');
 
@@ -39,7 +41,7 @@ const CancelReason = ({ onDisabledChange }: CancelReasonProps) => {
 			<div className='flex flex-col gap-2.5 items-start w-full'>
 				<Radio
 					checked={canceller === 'HOSPITAL'}
-					label='병원 취소'
+					label={t('appointment.detail.cancel.dialog.hospitalCancel')}
 					name='canceller'
 					onChange={handleCancellerChange}
 					value='HOSPITAL'
@@ -48,13 +50,13 @@ const CancelReason = ({ onDisabledChange }: CancelReasonProps) => {
 					className='border border-stroke-input h-40 leading-[normal] outline-0 px-4 py-2.5 resize-none rounded text-base w-full'
 					maxLength={50}
 					onChange={handleReasonChange}
-					placeholder='예약 취소 사유를 입력해 주세요.&#10;(최대 50자 입력 가능)'
+					placeholder={t('appointment.detail.cancel.dialog.placeholder')}
 					value={reason}
 				></textarea>
 			</div>
 			<Radio
 				checked={canceller === 'PATIENT'}
-				label='환자 취소'
+				label={t('appointment.detail.cancel.dialog.patientCancel')}
 				name='canceller'
 				onChange={handleCancellerChange}
 				value='PATIENT'

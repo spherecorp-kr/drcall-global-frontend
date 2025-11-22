@@ -3,6 +3,7 @@ import { cn } from '@/shared/utils/cn';
 import dropDownIcon from '@/shared/assets/icons/btn_drop_down_grey.svg';
 import dropUpIcon from '@/shared/assets/icons/btn_drop_up_grey.svg';
 import type { DropdownProps } from '@/shared/types/dropdown';
+import { useTranslation } from 'react-i18next';
 
 const ChevronUpDownIcon = ({ direction }: { direction: 'up' | 'down' }) => (
 	<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -35,16 +36,18 @@ const Dropdown = ({
 	onChange,
 	optionClassName = '',
 	options,
-	placeholder = '선택',
+	placeholder,
 	value,
 	variant = 'default',
 	error = false,
 }: DropdownProps) => {
+	const { t } = useTranslation();
 	const [isOpen, setIsOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const selectedOption = options.find((opt) => opt.value === value);
-	const displayText = selectedOption ? selectedOption.label : placeholder;
+	const defaultPlaceholder = placeholder || t('common.placeholders.select');
+	const displayText = selectedOption ? selectedOption.label : defaultPlaceholder;
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -162,9 +165,9 @@ const Dropdown = ({
 					{displayText}
 				</span>
 				{isOpen ? (
-					<img alt="Up" className="h-6 w-6" src={dropUpIcon} />
+					<img alt={t('common.ariaLabels.up')} className="h-6 w-6" src={dropUpIcon} />
 				) : (
-					<img alt="Down" className="h-6 w-6" src={dropDownIcon} />
+					<img alt={t('common.ariaLabels.down')} className="h-6 w-6" src={dropDownIcon} />
 				)}
 			</button>
 

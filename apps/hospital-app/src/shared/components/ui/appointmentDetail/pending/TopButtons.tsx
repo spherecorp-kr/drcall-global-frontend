@@ -8,12 +8,14 @@ import { useCancelReasonDialog } from '@/shared/hooks/useCancelReasonDialog.tsx'
 import { useChatStore } from '@/shared/store/chatStore';
 import type { Appointment } from '@/services/appointmentService';
 import { createChannel, ChannelCustomType } from '@/services/chatService';
+import { useTranslation } from 'react-i18next';
 
 interface TopButtonsProps {
 	appointment: Appointment;
 }
 
 const TopButtons = ({ appointment }: TopButtonsProps) => {
+	const { t } = useTranslation();
 	const { openCancelReasonDialog } = useCancelReasonDialog();
 	const { openChat, setCurrentChannel } = useChatStore();
 	const [isCreatingChat, setIsCreatingChat] = useState(false);
@@ -69,23 +71,23 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 					onClick={handleChatClick}
 					disabled={isCreatingChat}
 				>
-					{isCreatingChat ? 'Loading...' : 'Chat'}
+					{isCreatingChat ? t('appointment.detail.buttons.processing') : t('appointment.detail.buttons.chat')}
 				</Button>
 				<Button
 					className='active:bg-text-90 bg-tap-1 gap-1.5 h-10 hover:bg-text-80 rounded-sm text-white'
 					icon={<img alt='Video Call' className='h-5 w-5' src={videoCallIcon} />}
-				>Video Call</Button>
+				>{t('appointment.detail.buttons.videoCall')}</Button>
 			</div>
 			<div className='flex gap-2.5 items-center'>
 				<Button
 					className='active:bg-white active:border-primary-90 bg-white border border-primary-70 gap-1.5 h-10 hover:bg-bg-blue rounded-sm !text-primary-70'
 					icon={<img alt='Cancel' className='h-5 w-5' src={cancelIcon} />}
 					onClick={openCancelReasonDialog}
-				>예약 취소</Button>
+				>{t('appointment.detail.buttons.cancel')}</Button>
 				<Button
 					className='active:bg-primary-90 bg-primary-70 gap-1.5 h-10 hover:bg-primary-80 rounded-sm text-white'
 					icon={<img alt='Check' className='h-5 w-5' src={checkIcon} />}
-				>예약 확정</Button>
+				>{t('appointment.detail.buttons.confirm')}</Button>
 			</div>
 		</div>
 	);

@@ -32,7 +32,7 @@ const BloodPressure = ({ items, period }: MonthlyPressurePhrResponse) => {
 			<div className="bg-white border border-stroke-input flex flex-col gap-4 p-5 rounded-[1.25rem]">
 				<MonthlyChartHeader year={period.year} month={period.month} monthName={period.monthName} />
 				<p className="text-base text-center text-text-100" style={{ lineHeight: 'normal' }}>
-					이번 달 평균 혈압&맥박 : {period.averageSystolic ?? 0}/{period.averageDiastolic ?? 0}mmHg, {period.averagePulse ?? 0}BPM
+					{t('phr.lbl.abm')} : {period.averageSystolic ?? 0}/{period.averageDiastolic ?? 0}mmHg, {period.averagePulse ?? 0}BPM
 				</p>
 				{hasNoData
 					? <NoDataChart text={t('phr.nodata.bpm')} />

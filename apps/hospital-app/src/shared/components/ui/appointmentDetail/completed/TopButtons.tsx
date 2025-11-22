@@ -10,6 +10,7 @@ import type { BottomButtonProps } from '@/shared/types/dialog';
 import ReAppointmentDialog from './ReAppointmentDialog';
 import type { Appointment } from '@/services/appointmentService';
 import paymentService from '@/services/paymentService';
+import { useTranslation } from 'react-i18next';
 
 interface Fee {
 	treatmentFee: number,
@@ -22,6 +23,7 @@ interface TopButtonsProps {
 }
 
 const TopButtons = ({ appointment }: TopButtonsProps) => {
+	const { t } = useTranslation();
 	const { closeDialog, openDialog } = useDialog();
 	const { setDialog } = useDialogStore();
 
@@ -41,13 +43,13 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 				<SingleDialogBottomButton
 					disabled={buttonDisabled}
 					onClick={() => {}}
-					text={`${formattedTotal}THB 청구`}
+					text={t('appointment.detail.prescription.dialog.charge', { amount: formattedTotal })}
 				/>
 			),
 			dialogId: 'prescriptionRegistrationDialog',
 			isOpen: true,
 		});
-	}, [buttonDisabled, setDialog]);
+	}, [buttonDisabled, setDialog, t]);
 
 	const handleDisabledChange = useCallback((disabled: boolean) => {
 		setButtonDisabled(disabled);
@@ -57,13 +59,13 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 				<SingleDialogBottomButton
 					disabled={disabled}
 					onClick={() => {}}
-					text={`${cost}THB 청구`}
+					text={t('appointment.detail.prescription.dialog.charge', { amount: cost })}
 				/>
 			),
 			dialogId: 'prescriptionRegistrationDialog',
 			isOpen: true,
 		});
-	}, [cost, setDialog]);
+	}, [cost, setDialog, t]);
 
 	const openPrescriptionDialog = useCallback(() => {
 		// 다이얼로그 열 때 초기 상태로 리셋
@@ -73,7 +75,7 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 				<SingleDialogBottomButton
 					disabled={true}
 					onClick={() => {}}
-					text={`${cost}THB 청구`}
+					text={t('appointment.detail.prescription.dialog.charge', { amount: cost })}
 				/>
 			),
 			dialogClass: 'w-[36.25rem]',
@@ -84,17 +86,17 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 				/>
 			),
 			dialogId: 'prescriptionRegistrationDialog',
-			dialogTitle: '처방전·진료비 등록',
+			dialogTitle: t('appointment.detail.prescription.dialog.registerTitle'),
 			hasCloseButton: true
 		});
-	}, [cost, handleCostChange, handleDisabledChange, openDialog]);
+	}, [cost, handleCostChange, handleDisabledChange, openDialog, t]);
 
 	const openPrescriptionEditDialog = useCallback(() => {
 		openDialog({
 			dialogButtons: (
 				<SingleDialogBottomButton
 					onClick={() => {}}
-					text='완료'
+					text={t('appointment.detail.buttons.complete')}
 				/>
 			),
 			dialogClass: 'w-[36.25rem]',
@@ -103,15 +105,15 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 				/>
 			),
 			dialogId: 'prescriptionEditDialog',
-			dialogTitle: '처방전 수정',
+			dialogTitle: t('appointment.detail.prescription.dialog.editTitle'),
 			hasCloseButton: true
 		});
-	}, [openDialog]);
+	}, [openDialog, t]);
 
 	const openReAppointmentDialog = useCallback(() => {
 		const actions: BottomButtonProps[] = [
-			{ onClick: () => closeDialog('reappointmentDialog'), text: '취소' },
-			{ onClick: () => {}, text: '완료' },
+			{ onClick: () => closeDialog('reappointmentDialog'), text: t('appointment.detail.treatmentInfo.dialog.cancel') },
+			{ onClick: () => {}, text: t('appointment.detail.treatmentInfo.dialog.confirm') },
 		];
 
 		openDialog({
@@ -119,10 +121,10 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <ReAppointmentDialog />,
 			dialogId: 'reappointmentDialog',
-			dialogTitle: '예약',
+			dialogTitle: t('appointment.detail.reappointment.title'),
 			hasCloseButton: true
 		});
-	}, [closeDialog, openDialog]);
+	}, [closeDialog, openDialog, t]);
 
 	/**
 	 * 입금 완료 버튼 클릭 핸들러
@@ -179,7 +181,7 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 				variant='primary'
 				size='default'
 				icon={<img alt="Chat" className="h-5 w-5" src={chatIcon} />}
-			>Chat</Button>
+			>{t('appointment.detail.buttons.chat')}</Button>
 			<div className="flex gap-2.5 items-center">
 				<Button
 					icon={
@@ -199,7 +201,7 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 					onClick={openPrescriptionDialog}
 					size='default'
 					variant='outline'
-				>처방전&middot;진료비 등록</Button>
+				>{t('appointment.detail.prescription.register')}</Button>
 				<Button
 					icon={
 						<svg
@@ -218,7 +220,7 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 					onClick={openPrescriptionEditDialog}
 					size='default'
 					variant='outline'
-				>처방전 수정</Button>
+				>{t('appointment.detail.prescription.edit')}</Button>
 				<Button
 					variant='outline'
 					size='default'
@@ -238,7 +240,7 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 							/>
 						</svg>
 					}
-				>{isApproving ? '처리 중...' : '입금 완료'}</Button>
+				>{isApproving ? t('appointment.detail.buttons.processing') : t('appointment.detail.buttons.paymentConfirm')}</Button>
 				<Button
 					onClick={openReAppointmentDialog}
 					icon={
@@ -260,7 +262,7 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 					}
 					size='default'
 					variant='outline'
-				>재예약</Button>
+				>{t('appointment.detail.buttons.reappoint')}</Button>
 			</div>
 		</div>
 	);

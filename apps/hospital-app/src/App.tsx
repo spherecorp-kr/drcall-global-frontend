@@ -11,6 +11,7 @@ import {
 	DashboardPage,
 	DoctorPage,
 	DoctorDetailPage,
+	FindPasswordPage,
 	HospitalPage,
 	MyInfoPage,
 	PatientPage,
@@ -43,13 +44,13 @@ function AppContent() {
 		if (path.includes('appointment')) return t('menu.appointment');
 		if (path.includes('consultation')) return t('menu.consultation');
 		if (path.includes('dashboard')) return t('menu.dashboard');
-		if (path === '/doctor/new') return '의사 등록';
-		if (path.match(/^\/doctor\/\d+$/)) return '의사 계정 상세';
+		if (path === '/doctor/new') return t('common.doctor.register');
+		if (path.match(/^\/doctor\/\d+$/)) return t('common.doctor.detail');
 		if (path.includes('doctor')) return t('menu.doctor');
 		if (path.includes('hospital')) return t('menu.hospital');
 		if (path.includes('myinfo')) return t('menu.myinfo');
-		if (path === '/patient/new') return '환자 등록';
-		if (path.match(/^\/patient\/\d+$/)) return '환자 상세';
+		if (path === '/patient/new') return t('common.patient.register');
+		if (path.match(/^\/patient\/\d+$/)) return t('common.patient.detail');
 		if (path.includes('patient')) return t('menu.patient');
 		if (path.includes('payment')) return t('menu.payment');
 		return t('menu.dashboard');
@@ -76,6 +77,7 @@ function AppContent() {
 return (
 	<Routes>
 		<Route path="/login" element={<LoginPage />} />
+		<Route path="/find-password" element={<FindPasswordPage />} />
 		<Route path="/" element={<Navigate to="/login" replace />} />
 		<Route
 			element={

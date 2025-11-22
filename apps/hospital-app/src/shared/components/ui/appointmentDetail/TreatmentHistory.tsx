@@ -5,6 +5,7 @@ import type { TreatmentHistoryTableColumnProps } from '@/shared/types/appointmen
 import '@/shared/styles/treatmentHistory.css';
 import { cn } from '@/shared/utils/cn';
 import { useDialog } from '@/shared/hooks/useDialog.ts';
+import { useTranslation } from 'react-i18next';
 
 const sampleData: TreatmentHistoryTableColumnProps[] = [
 	{
@@ -57,6 +58,7 @@ interface HistoryDetailDialogContentsProps {
 }
 
 const HistoryDetailDialogContents = ({ disabled }: HistoryDetailDialogContentsProps) => {
+	const { t } = useTranslation();
 	const prescriptionPreview = () => {
 		// TODO URL 바꾸기
 		window.open('https://www.naver.com', '_blank', 'noopener noreferrer');
@@ -66,24 +68,24 @@ const HistoryDetailDialogContents = ({ disabled }: HistoryDetailDialogContentsPr
 		<div className='flex flex-col gap-2.5 items-start'>
 			<div className='cursor-pointer flex gap-2.5 items-center justify-end w-full' onClick={prescriptionPreview}>
 				<ZoomInIcon disabled={disabled} />
-				<span className={`font-medium leading-[normal] text-xl ${disabled ? 'text-text-30' : 'text-primary-70'}`}>처방전 미리보기</span>
+				<span className={`font-medium leading-[normal] text-xl ${disabled ? 'text-text-30' : 'text-primary-70'}`}>{t('appointment.detail.history.preview')}</span>
 			</div>
 			<div className='flex flex-col gap-5 items-start'>
 				<div className='flex flex-col gap-2.5 w-full'>
-					<p className='leading-[normal] text-base text-text-50'>주요 증상</p>
+					<p className='leading-[normal] text-base text-text-50'>{t('appointment.detail.history.dialog.mainSymptom')}</p>
 					<textarea
 						className='border border-stroke-input leading-[normal] min-h-20 px-4 py-2.5 resize-none rounded text-base text-text-100 w-full'
 						disabled></textarea>
 					<ImageViewer images={['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p']} initialIndex={0} />
 				</div>
 				<div className='flex flex-col gap-2.5 w-full'>
-					<p className='leading-[normal] text-base text-text-50'>의사 조언</p>
+					<p className='leading-[normal] text-base text-text-50'>{t('appointment.detail.history.dialog.doctorAdvice')}</p>
 					<textarea
 						className='border border-stroke-input leading-[normal] min-h-20 px-4 py-2.5 resize-none rounded text-base text-text-100 w-full'
 						disabled></textarea>
 				</div>
 				<div className='flex flex-col gap-2.5 w-full'>
-					<p className='leading-[normal] text-base text-text-50'>AI 진료 요약</p>
+					<p className='leading-[normal] text-base text-text-50'>{t('appointment.detail.history.dialog.aiSummary')}</p>
 					<textarea
 						className='border border-stroke-input leading-[normal] min-h-20 px-4 py-2.5 resize-none rounded text-base text-text-100 w-full'
 						disabled></textarea>
@@ -104,58 +106,59 @@ const ColGroup = () => (
 
 const TreatmentHistory = () => {
 	const { openDialog } = useDialog();
+	const { t } = useTranslation();
 
 	const columns = useMemo<ColumnDef<TreatmentHistoryTableColumnProps>[]>(() => [
 		{
 			accessorKey: 'completedDatetime',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '진료 완료 일시',
+			header: t('appointment.detail.history.table.completedDate'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'doctorName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '담당 의사',
+			header: t('appointment.detail.history.table.doctor'),
 			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'symptom',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '증상',
+			header: t('appointment.detail.history.table.symptom'),
 			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'appointmentSequence',
 			cell: () => <button className='treatment-history-action' />,
 			enableSorting: false,
-			header: '액션',
+			header: t('appointment.detail.history.table.action'),
 			meta: { height: '1.875rem' },
 			minSize: 100
 		},
-	], []);
+	], [t]);
 
 	const handleRowClick = useCallback(() => {
 		openDialog({
 			dialogClass: 'w-[36.25rem]',
 			dialogContents: <HistoryDetailDialogContents disabled={false} />,
 			dialogId: 'treatmentHistoryDetailDialog',
-			dialogTitle: '과거 진료 내역',
+			dialogTitle: t('appointment.detail.history.dialog.title'),
 			hasCloseButton: true
 		});
-	}, [openDialog]);
+	}, [openDialog, t]);
 
 	return (
 		<div className='flex flex-1 flex-col gap-2.5 items-start self-stretch'>
-			<h2 className='font-semibold leading-[normal] text-text-100 text-xl'>과거 진료 내역</h2>
+			<h2 className='font-semibold leading-[normal] text-text-100 text-xl'>{t('appointment.detail.history.title')}</h2>
 			<div className='bg-white border border-stroke-input flex flex-1 flex-col gap-4 rounded-[0.625rem] w-full'>
 				<Table
 					colgroup={<ColGroup />}
 					columns={columns}
 					data={sampleData}
-					emptyState={<EmptyState className='h-[43.5rem] mt-5' message="과거 진료 기록이 없습니다." />}
+					emptyState={<EmptyState className='h-[43.5rem] mt-5' message={t('appointment.detail.history.empty')} />}
 					enableSelection
 					getRowClassName={() => cn('active:bg-bg-blue bg-white hover:bg-bg-gray')}
 					onRowClick={handleRowClick}

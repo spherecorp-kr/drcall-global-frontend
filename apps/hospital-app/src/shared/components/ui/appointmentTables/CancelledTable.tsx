@@ -53,14 +53,14 @@ const CancelledTable = () => {
 			accessorKey: 'appointmentNumber',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '예약 번호',
+			header: t('appointment.table.columns.appointmentNumber'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'cancelledDatetime',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '예약 취소 일시',
+			header: t('appointment.table.columns.cancelledDatetime'),
 			minSize: 100
 		},
 		{
@@ -72,21 +72,21 @@ const CancelledTable = () => {
 				);
 			},
 			enableSorting: false,
-			header: '취소자',
+			header: t('appointment.table.columns.canceler'),
 			minSize: 100
 		},
 		{
 			accessorKey: 'doctorName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '의사',
+			header: t('appointment.table.columns.doctor'),
 			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'patientName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '환자명',
+			header: t('appointment.table.columns.patientName'),
 			meta: { truncate: true }
 		}
 	], [t]);

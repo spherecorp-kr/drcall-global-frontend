@@ -99,7 +99,7 @@ const EditPatientInfoForm = () => {
 			{/* 이름 */}
 			<div className="flex flex-col gap-2">
 				<label className="leading-[normal] text-base text-text-70" htmlFor="patientName">
-					이름
+					{t('appointment.detail.patientInfo.editDialog.name')}
 					<Required />
 				</label>
 				<Input
@@ -117,7 +117,7 @@ const EditPatientInfoForm = () => {
 					className="leading-[normal] text-base text-text-70"
 					htmlFor="patientBirthday"
 				>
-					생년월일 (dd/mm/yyyy)
+					{t('appointment.detail.patientInfo.editDialog.birthday')}
 					<Required />
 				</label>
 				<div className="relative">
@@ -223,7 +223,7 @@ const EditPatientInfoForm = () => {
 			{/* Thai ID Number */}
 			<div className="flex flex-col gap-2">
 				<label className="leading-[normal] text-base text-text-70" htmlFor="thaiIdNumber">
-					Thai ID Number
+					{t('appointment.detail.patientInfo.thaiId')}
 					<Required />
 				</label>
 				<Input
@@ -238,18 +238,18 @@ const EditPatientInfoForm = () => {
 			{/* 성별 */}
 			<div className="flex flex-col gap-2">
 				<label className="leading-[normal] text-base text-text-70" htmlFor="patientGender">
-					생년월일 (dd/mm/yyyy)
+					{t('appointment.detail.patientInfo.editDialog.gender')}
 					<Required />
 				</label>
 				<div className="flex gap-5 items-center">
-					<Radio label="남자" name="patientGender" />
-					<Radio label="여자" name="patientGender" />
+					<Radio label={t('appointment.detail.patientInfo.gender.male')} name="patientGender" />
+					<Radio label={t('appointment.detail.patientInfo.gender.female')} name="patientGender" />
 				</div>
 			</div>
 			{/* 휴대폰 번호 */}
 			<div className="flex flex-col gap-2">
 				<label className="leading-[normal] text-base text-text-70" htmlFor="patientPhone">
-					휴대폰 번호
+					{t('appointment.detail.patientInfo.editDialog.phone')}
 					<Required />
 				</label>
 				<Input
@@ -264,7 +264,7 @@ const EditPatientInfoForm = () => {
 			{/* 주소 */}
 			<div className="flex flex-col gap-2">
 				<label className="leading-[normal] text-base text-text-70">
-					주소
+					{t('appointment.detail.patientInfo.editDialog.address')}
 					<Required />
 				</label>
 				<div className="flex flex-col gap-2.5 items-start self-stretch">
@@ -302,7 +302,7 @@ const EditPatientInfoForm = () => {
 			</div>
 			{/* 키/체중/혈액형 */}
 			<div className="flex flex-col gap-2">
-				<label className="leading-[normal] text-base text-text-70">키/체중/혈액형</label>
+				<label className="leading-[normal] text-base text-text-70">{t('appointment.detail.patientInfo.editDialog.physical')}</label>
 				<div className="flex gap-3 items-center">
 					<div className="flex flex-1 gap-1.5 items-center">
 						<Input
@@ -336,7 +336,7 @@ const EditPatientInfoForm = () => {
 			{/* 음주 습관 */}
 			<div className="flex flex-col gap-2">
 				<label className="leading-[normal] text-base text-text-70">
-					음주 습관(200ml, 1W)
+					{t('appointment.detail.patientInfo.editDialog.drinking')}
 				</label>
 				<div className="bg-white border border-stroke-input flex h-8 items-center justify-center p-px rounded self-stretch">
 					<label
@@ -411,7 +411,7 @@ const EditPatientInfoForm = () => {
 			</div>
 			{/* 흡연 */}
 			<div className="flex flex-col gap-2">
-				<label className="leading-[normal] text-base text-text-70">흡연(개비)</label>
+				<label className="leading-[normal] text-base text-text-70">{t('appointment.detail.patientInfo.editDialog.smoking')}</label>
 				<div className="bg-white border border-stroke-input flex h-8 items-center justify-center p-px rounded self-stretch">
 					<label
 						className={cn(HABIT_CLASS, smoking === '1' && 'bg-primary-70')}
@@ -485,22 +485,22 @@ const EditPatientInfoForm = () => {
 			</div>
 			{/* 환자 등급 */}
 			<div className="flex flex-col gap-2">
-				<label className="leading-[normal] text-base text-text-70">환자 등급</label>
+				<label className="leading-[normal] text-base text-text-70">{t('appointment.detail.patientInfo.editDialog.level')}</label>
 				<Dropdown buttonClassName="h-8 px-3" className="h-8" options={LEVEL_OPTIONS} />
 			</div>
 			{/* 복용 중인 약물 */}
 			<div className="flex flex-col gap-2">
-				<label className="leading-[normal] text-base text-text-70">복용 중인 약물</label>
+				<label className="leading-[normal] text-base text-text-70">{t('appointment.detail.patientInfo.editDialog.medication')}</label>
 				<textarea className={TEXTAREA_CLASS}></textarea>
 			</div>
 			{/* 개인력 */}
 			<div className="flex flex-col gap-2">
-				<label className="leading-[normal] text-base text-text-70">개인력</label>
+				<label className="leading-[normal] text-base text-text-70">{t('appointment.detail.patientInfo.editDialog.personalHistory')}</label>
 				<textarea className={TEXTAREA_CLASS}></textarea>
 			</div>
 			{/* 가족력 */}
 			<div className="flex flex-col gap-2">
-				<label className="leading-[normal] text-base text-text-70">가족력</label>
+				<label className="leading-[normal] text-base text-text-70">{t('appointment.detail.patientInfo.editDialog.familyHistory')}</label>
 				<textarea className={TEXTAREA_CLASS}></textarea>
 			</div>
 		</form>

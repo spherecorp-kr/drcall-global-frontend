@@ -9,6 +9,7 @@ import type {
 import { levelBadgeMap } from '@/shared/utils/constants';
 import { PatientBadge } from '@/shared/components/ui/Badge';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // 샘플 데이터
 const sampleData: WaitingTableColumnProps[] = [
@@ -93,34 +94,35 @@ const ColGroup = () => (
 	</colgroup>
 );
 
-const WaitingTable = () => {
+const PendingTable = () => {
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	const columns = useMemo<ColumnDef<WaitingTableColumnProps>[]>(() => [
 		{
 			accessorKey: 'appointmentType',
 			cell: ({ getValue }) => {
 				if (getValue<AppointmentType>() === 'sdn') {
-					return <span className="font-normal leading-[normal] text-base text-primary-70">빠른 진료</span>;
+					return <span className="font-normal leading-[normal] text-base text-primary-70">{t('appointment.search.appointmentType.quick')}</span>;
 				}
-				return <span className={cellSpanClass}>일반 진료</span>;
+				return <span className={cellSpanClass}>{t('appointment.search.appointmentType.general')}</span>;
 			},
 			enableSorting: false,
-			header: '예약 유형',
+			header: t('appointment.table.columns.appointmentType'),
 			minSize: 100,
 		},
 		{
 			accessorKey: 'appointmentDatetime',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>() || '-'}</span>,
 			enableSorting: false,
-			header: '진료 희망 일시',
+			header: t('appointment.table.columns.appointmentDatetime'),
 			minSize: 100,
 		},
 		{
 			accessorKey: 'patientName',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '환자명',
+			header: t('appointment.table.columns.patientName'),
 			meta: { truncate: true }
 		},
 		{
@@ -134,24 +136,24 @@ const WaitingTable = () => {
 				);
 			},
 			enableSorting: false,
-			header: '환자 등급',
+			header: t('appointment.table.columns.patientLevel'),
 			size: 100,
 		},
 		{
 			accessorKey: 'symptom',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '증상',
+			header: t('appointment.table.columns.symptom'),
 			meta: { truncate: true }
 		},
 		{
 			accessorKey: 'appointmentRequestTime',
 			cell: ({ getValue }) => <span className={cellSpanClass}>{getValue<string>()}</span>,
 			enableSorting: false,
-			header: '예약 신청 일시',
+			header: t('appointment.table.columns.requestTime'),
 			minSize: 100,
 		},
-	], []);
+	], [t]);
 
 	// 상세 페이지로 이동
 	const navigateToDetails = useCallback((row: Row<WaitingTableColumnProps>) => {
@@ -176,4 +178,4 @@ const WaitingTable = () => {
 	);
 };
 
-export default WaitingTable;
+export default PendingTable;

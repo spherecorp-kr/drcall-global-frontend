@@ -6,6 +6,7 @@ import { Section } from './Section';
 import { DoctorStatusBadge } from '@/shared/components/ui/Badge';
 import defaultAvatar from '@/assets/img_profile.svg';
 import { useLayoutStore } from '@/shared/store/layoutStore';
+import { useTranslation } from 'react-i18next';
 
 export interface Doctor {
 	id: string;
@@ -14,6 +15,12 @@ export interface Doctor {
 	isOnline: boolean;
 	status: '진료 가능' | '진료 불가능' | '진료 중';
 }
+
+const statusKeyMap: Record<Doctor['status'], string> = {
+	'진료 가능': 'available',
+	'진료 불가능': 'unavailable',
+	'진료 중': 'inProgress',
+};
 
 interface DoctorListTableProps {
 	doctors: Doctor[];
@@ -28,6 +35,7 @@ const DoctorListTable = ({
 	onExpand,
 	isExpanded,
 }: DoctorListTableProps) => {
+	const { t } = useTranslation();
 	const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
 
 	const doctorListTableHeaderFixed = useLayoutStore((state) => state.doctorListTableHeaderFixed);
@@ -41,7 +49,7 @@ const DoctorListTable = ({
 		() => [
 			{
 				accessorKey: 'name',
-				header: '이름',
+				header: t('common.doctor.table.columns.name'),
 				minSize: 180,
 				cell: ({ row }) => (
 					<div className="flex items-center gap-3">
@@ -63,21 +71,26 @@ const DoctorListTable = ({
 			},
 			{
 				accessorKey: 'status',
-				header: '상태',
+				header: t('common.doctor.table.columns.status'),
 				minSize: 110,
 				meta: { align: 'center' },
 				cell: ({ getValue }) => {
 					const status = getValue<Doctor['status']>();
-					return <DoctorStatusBadge status={status}>{status}</DoctorStatusBadge>;
+					const statusKey = statusKeyMap[status];
+					return (
+						<DoctorStatusBadge status={status}>
+							{t(`common.doctor.table.status.${statusKey}`)}
+						</DoctorStatusBadge>
+					);
 				},
 			},
 		],
-		[],
+		[t],
 	);
 
 	return (
 		<Section
-			title="의사 목록"
+			title={t('common.doctor.table.title')}
 			count={doctors.length}
 			className={className}
 			onExpand={onExpand}
@@ -103,7 +116,7 @@ const DoctorListTable = ({
 							: 'bg-bg-gray hover:bg-gray-100',
 					)
 				}
-				emptyState={<EmptyState message="의사 목록이 없습니다." />}
+				emptyState={<EmptyState message={t('common.doctor.table.empty')} />}
 				minWidth="320px"
 			/>
 		</Section>

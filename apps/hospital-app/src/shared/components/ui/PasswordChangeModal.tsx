@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { Input } from './Input';
 import icValidationInfo from '@/shared/assets/icons/ic_validation_info.svg';

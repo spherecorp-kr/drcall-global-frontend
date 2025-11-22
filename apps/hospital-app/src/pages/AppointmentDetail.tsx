@@ -5,7 +5,7 @@ import {
 	CancelledDetailLayout,
 	CompletedDetailLayout,
 	ConfirmedDetailLayout,
-	WaitingDetailLayout,
+	PendingDetailLayout,
 } from '@/shared/components/ui/appointmentDetail';
 import { useAppointmentTabStore } from '@/shared/store/appointmentTabStore.ts';
 import { appointmentService, type Appointment } from '@/services/appointmentService';
@@ -42,12 +42,12 @@ const AppointmentDetail = () => {
 		}
 
 		if (!appointment) {
-			return <div>예약 정보를 찾을 수 없습니다.</div>;
+			return <div>No Data.</div>;
 		}
 
 		switch (appointmentTab) {
-			case 'waiting':
-				return <WaitingDetailLayout appointment={appointment} />;
+			case 'pending':
+				return <PendingDetailLayout appointment={appointment} />;
 			case 'confirmed':
 				return <ConfirmedDetailLayout appointment={appointment} />;
 			case 'completed':

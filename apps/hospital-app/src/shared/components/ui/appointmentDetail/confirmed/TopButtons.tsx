@@ -4,12 +4,14 @@ import cancelIcon from '@/assets/icons/ic_cancel_blue.svg';
 import { Button } from '@/shared/components/ui';
 import { useCancelReasonDialog } from '@/shared/hooks/useCancelReasonDialog.tsx';
 import type { Appointment } from '@/services/appointmentService';
+import { useTranslation } from 'react-i18next';
 
 interface TopButtonsProps {
 	appointment: Appointment;
 }
 
 const TopButtons = ({ appointment }: TopButtonsProps) => {
+	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const { appointmentSequence } = useParams<{ appointmentSequence: string }>();
 	const { openCancelReasonDialog } = useCancelReasonDialog();
@@ -65,7 +67,7 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 						wordWrap: 'break-word',
 					}}
 				>
-					Video Call
+					{t('appointment.detail.buttons.videoCall')}
 				</div>
 			</button>
 			<div className='flex gap-2.5 items-center'>
@@ -74,14 +76,14 @@ const TopButtons = ({ appointment }: TopButtonsProps) => {
 					icon={<img alt='Cancel' className='h-5 w-5' src={cancelIcon} />}
 					onClick={openCancelReasonDialog}
 				>
-					예약 취소
+					{t('appointment.detail.buttons.cancel')}
 				</Button>
 				<Button
 					className='active:bg-primary-90 bg-primary-70 gap-1.5 h-10 hover:bg-primary-80 rounded-sm text-white'
 					icon={<img alt='Edit' className='h-5 w-5' src={editIcon} />}
 					onClick={() => navigate(`/appointment/${appointmentSequence}/edit`)}
 				>
-					예약 수정
+					{t('appointment.detail.buttons.edit')}
 				</Button>
 			</div>
 		</div>

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { ColumnDef } from '@tanstack/react-table';
+import { useTranslation } from 'react-i18next';
 import { Button, EmptyState, Pagination, Table, Tooltip } from '@/shared/components/ui';
 import type { SettlementHistoryItem, SettlementStatus } from '@/shared/types/payment';
 import helpIcon from '@/shared/assets/icons/btn_circle_help.svg';
@@ -35,24 +36,25 @@ const formatDatetime = (dateStr?: string) => {
 	return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 };
 
-const getStatusText = (status: SettlementStatus) => {
+const getStatusText = (status: SettlementStatus, t: (key: string) => string) => {
 	switch (status) {
 		case 'completed':
-			return { text: '완료', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.completed'), color: 'text-text-100' };
 		case 'scheduled':
-			return { text: '예정', color: 'text-[#11AC51]' };
+			return { text: t('payment.search.filter.status.scheduled'), color: 'text-[#11AC51]' };
 		case 'onHold':
-			return { text: '보류', color: 'text-[#F65F06]' };
+			return { text: t('payment.search.filter.status.onHold'), color: 'text-[#F65F06]' };
 		case 'confirmed':
-			return { text: '확정', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.confirmed'), color: 'text-text-100' };
 		case 'pending':
-			return { text: '대기', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.pending'), color: 'text-text-100' };
 		default:
-			return { text: '완료', color: 'text-text-100' };
+			return { text: t('payment.search.filter.status.completed'), color: 'text-text-100' };
 	}
 };
 
 export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
+	const { t } = useTranslation();
 	const [selectedRowIds, setSelectedRowIds] = useState<Set<string>>(new Set());
 	const [currentPage, setCurrentPage] = useState(1);
 	const itemsPerPage = 10;
@@ -66,7 +68,7 @@ export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
 		() => [
 			{
 				accessorKey: 'settlementId',
-				header: '정산 ID 번호',
+				header: t('payment.settlementTable.historyTable.columns.settlementId'),
 				enableSorting: false,
 				cell: ({ row }) => <div className={cellSpanClass}>{row.original.settlementId}</div>,
 			},
@@ -74,15 +76,15 @@ export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
 				accessorKey: 'settlementPeriod',
 				header: () => (
 					<div className="flex items-center gap-1.5">
-						<span>정산 기간</span>
+						<span>{t('payment.settlementTable.historyTable.columns.settlementPeriod')}</span>
 						<Tooltip
-							content="해당 기간 동안 발생한 결제 건의 정산 기준 기간입니다."
+							content={t('payment.settlementTable.historyTable.tooltips.settlementPeriod')}
 							position="bottom"
 						>
 							{({ isOpen }) => (
 								<img
 									src={isOpen ? helpIconBlue : helpIcon}
-									alt="help"
+									alt={t('common.ariaLabels.help')}
 									className="w-4 h-4 cursor-pointer"
 								/>
 							)}
@@ -96,15 +98,15 @@ export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
 				accessorKey: 'expectedAmount',
 				header: () => (
 					<div className="flex items-center gap-1.5">
-						<span>정산 예정 금액</span>
+						<span>{t('payment.settlementTable.historyTable.columns.expectedAmount')}</span>
 						<Tooltip
-							content="수수료를 차감한 후 병원이 받을 예정 금액(Net) 기준입니다."
+							content={t('payment.settlementTable.historyTable.tooltips.expectedAmount')}
 							position="bottom"
 						>
 							{({ isOpen }) => (
 								<img
 									src={isOpen ? helpIconBlue : helpIcon}
-									alt="help"
+									alt={t('common.ariaLabels.help')}
 									className="w-4 h-4 cursor-pointer"
 								/>
 							)}
@@ -123,12 +125,15 @@ export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
 				accessorKey: 'completedAmount',
 				header: () => (
 					<div className="flex items-center gap-1.5">
-						<span>결제 완료 금액</span>
-						<Tooltip content="환자가 결제 완료한 총 금액(Gross 기준)입니다." position="bottom">
+						<span>{t('payment.settlementTable.historyTable.columns.completedAmount')}</span>
+						<Tooltip
+							content={t('payment.settlementTable.historyTable.tooltips.completedAmount')}
+							position="bottom"
+						>
 							{({ isOpen }) => (
 								<img
 									src={isOpen ? helpIconBlue : helpIcon}
-									alt="help"
+									alt={t('common.ariaLabels.help')}
 									className="w-4 h-4 cursor-pointer"
 								/>
 							)}
@@ -145,16 +150,16 @@ export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
 			},
 			{
 				accessorKey: 'status',
-				header: '정산 상태',
+				header: t('payment.settlementTable.historyTable.columns.status'),
 				enableSorting: false,
 				cell: ({ row }) => {
-					const { text, color } = getStatusText(row.original.status);
+					const { text, color } = getStatusText(row.original.status, t);
 					return <div className={`text-16 font-normal font-pretendard ${color}`}>{text}</div>;
 				},
 			},
 			{
 				accessorKey: 'completedDatetime',
-				header: '정산 완료 일시',
+				header: t('payment.settlementTable.historyTable.columns.completedDatetime'),
 				enableSorting: false,
 				cell: ({ row }) => (
 					<div className={cellSpanClass}>{formatDatetime(row.original.completedDatetime)}</div>
@@ -162,14 +167,14 @@ export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
 			},
 			{
 				id: 'action',
-				header: '액션',
+				header: t('payment.settlementTable.historyTable.columns.action'),
 				enableSorting: false,
 				meta: { align: 'center' },
 				cell: ({ row }) => {
 					if (row.original.status === 'scheduled') {
 						return (
 							<Button variant="ghost" size="small">
-								정산받기
+								{t('payment.settlementTable.historyTable.buttons.receiveSettlement')}
 							</Button>
 						);
 					}
@@ -177,18 +182,18 @@ export function SettlementHistoryTable({ data }: SettlementHistoryTableProps) {
 				},
 			},
 		],
-		[]
+		[t],
 	);
 
 	return (
-		<div className="bg-white border border-stroke-input flex flex-col gap-2.5 h-full rounded-[10px]">
+		<div className="bg-white border border-stroke-input flex flex-col gap-2.5 h-full rounded-b-[0.625rem] rounded-tr-[0.625rem]">
 			<Table
 				className="flex-1 h-auto"
 				colgroup={<ColGroup />}
 				columns={columns}
 				data={currentData}
 				disableHorizontalScroll
-				emptyState={<EmptyState message="정산내역 목록이 없습니다." />}
+				emptyState={<EmptyState message={t('payment.settlementTable.historyTable.empty')} />}
 				enableSelection
 				selectedIds={selectedRowIds}
 				onSelectionChange={setSelectedRowIds}

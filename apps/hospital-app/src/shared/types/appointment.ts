@@ -1,4 +1,4 @@
-export type AppointmentStatus = 'waiting' | 'confirmed' | 'completed' | 'cancelled';
+export type AppointmentStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled';
 export type AppointmentType = 'aptmt' | 'sdn'; // 예약 유형
 export type PatientLevel = 'VIP' | 'Risk'; // 환자 등급
 export type Canceler = 'HOSPITAL' | 'PATIENT' | 'SYSTEM';
