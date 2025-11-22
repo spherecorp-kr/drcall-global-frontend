@@ -182,8 +182,12 @@ export default function ServiceRegistration() {
         }
       }
 
-      // 3. Call completeProfile API
+      // 3. Get tempToken from localStorage
+      const tempToken = localStorage.getItem('tempJwt') || '';
+
+      // 4. Call completeProfile API
       const response = await authService.completeProfile({
+        tempToken,
         channelUserId: channelInfo.channelUserId,
         name: name.trim(),
         phone: phone.trim(), // 전화번호 추가

@@ -5,17 +5,19 @@ import { AlcoholConsumption, SmokingStatus, mapAlcoholToEnum, mapSmokingToEnum }
  * Appointment types
  */
 export interface Appointment {
-  id: string;
+  id: number;
   appointmentNumber: string;
   appointmentType: 'standard' | 'quick';
   status: 'pending_confirmation' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
   hospital: {
+    id: number;
     name: string;
     nameEn: string;
     phone: string;
   };
   dateTime: string;
   doctor: {
+    id: number;
     name: string;
     nameEn: string;
     photo: string;
@@ -24,6 +26,12 @@ export interface Appointment {
   symptoms: string;
   symptomImages: string[];
   paymentStatus?: 'pending_payment' | 'payment_complete';
+  // 결제 관련 필드
+  totalFee?: number;
+  consultationFee?: number;
+  serviceFee?: number;
+  patientId?: number;
+  hospitalId?: number;
 }
 
 export interface CreateAppointmentRequest {
@@ -90,7 +98,7 @@ export const appointmentService = {
   /**
    * Get appointment by ID
    */
-  getAppointmentById: async (id: string): Promise<Appointment> => {
+  getAppointmentById: async (id: number | string): Promise<Appointment> => {
     const response = await apiClient.get<Appointment>(`/api/v1/appointments/${id}`);
     return response.data;
   },

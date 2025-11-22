@@ -39,16 +39,16 @@ export default function Payment() {
         setLoading(true);
 
         // 예약 정보 조회
-        const appointment = await appointmentService.getAppointmentById(Number(id));
+        const appointment = await appointmentService.getAppointmentById(id);
 
         // 결제 정보 설정
         setPaymentData({
           totalAmount: appointment.totalFee || 350, // 기본값 350 THB
           consultationFee: appointment.consultationFee || 300,
           serviceFee: appointment.serviceFee || 50,
-          appointmentId: appointment.id,
-          patientId: appointment.patientId,
-          hospitalId: appointment.hospitalId,
+          appointmentId: Number(appointment.id),
+          patientId: appointment.patientId || 0,
+          hospitalId: appointment.hospitalId || appointment.hospital?.id || 0,
         });
       } catch (error) {
         console.error('Failed to load appointment:', error);
@@ -106,6 +106,13 @@ export default function Payment() {
         throw new Error('No payment token or source received from OMISE');
       }
 
+      // 결제 방법 결정
+      let paymentMethod: 'CREDIT_CARD' | 'DEBIT_CARD' | 'MOBILE_BANKING' | 'PROMPTPAY' | 'QR_CODE' = 'CREDIT_CARD';
+      if (omiseSource) {
+        // Source 타입에 따라 결제 방법 결정
+        paymentMethod = 'PROMPTPAY'; // 기본값
+      }
+
       // 결제 생성 API 호출
       const payment = await paymentService.createPayment({
         appointmentId: paymentData.appointmentId,
@@ -113,7 +120,7 @@ export default function Payment() {
         hospitalId: paymentData.hospitalId,
         amount: paymentData.totalAmount,
         currency: 'THB',
-        paymentMethod: omiseToken ? 'CREDIT_CARD' : 'OTHER',
+        paymentMethod,
         omiseToken: omiseToken || undefined,
         omiseSource: omiseSource || undefined,
       });
