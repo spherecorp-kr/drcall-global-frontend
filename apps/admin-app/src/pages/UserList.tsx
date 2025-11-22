@@ -15,17 +15,9 @@ import { toast } from 'react-hot-toast';
 type UserType = 'patients' | 'doctors' | 'admins';
 type UserDto = PatientDto | DoctorDto | AdminDto;
 
-// Type guard functions
+// Type guard function
 function isAdminDto(user: UserDto): user is AdminDto {
   return 'username' in user && 'role' in user;
-}
-
-function isPatientDto(user: UserDto): user is PatientDto {
-  return 'phoneNumber' in user && !('specialty' in user) && !('username' in user);
-}
-
-function isDoctorDto(user: UserDto): user is DoctorDto {
-  return 'specialty' in user && 'licenseNumber' in user;
 }
 
 export function UserList() {
