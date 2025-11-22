@@ -19,6 +19,7 @@ export default function Payment() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { showToast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [paymentData, setPaymentData] = useState<{
     totalAmount: number;
     consultationFee: number;

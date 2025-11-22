@@ -43,9 +43,9 @@ export default function AppointmentEdit() {
   const [appointmentData, setAppointmentData] = useState({
     appointmentNumber: mockData?.appointmentNumber || '',
     appointmentType: mockData?.appointmentType || 'standard',
-    hospital: mockData?.hospital || { name: '', address: '' },
+    hospital: mockData?.hospital || { name: '', phone: '' },
     dateTime: mockData?.dateTime || '',
-    doctor: mockData?.doctor || { name: '', specialty: '' }
+    doctor: mockData?.doctor || ''
   });
 
   // Mock data - 환자 기본 정보 (읽기 전용)

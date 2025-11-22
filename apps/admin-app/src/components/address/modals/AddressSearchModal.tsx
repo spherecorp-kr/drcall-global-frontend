@@ -23,6 +23,7 @@ interface AddressSuggestion {
 	longitude: number | '';
 	placeId?: string;
 	types?: string[];
+	countryCode?: string;
 }
 
 interface AddressSearchModalProps {
@@ -40,7 +41,7 @@ export function AddressSearchModal({ isOpen, onClose, onSelect }: AddressSearchM
 	const [loading, setLoading] = useState(false);
 	const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 	const sessionToken = useRef<google.maps.places.AutocompleteSessionToken | null>(null);
-	const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const searchTimeoutRef = useRef<number | null>(null);
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	// Google Maps 로드
@@ -92,7 +93,7 @@ export function AddressSearchModal({ isOpen, onClose, onSelect }: AddressSearchM
 				return [];
 			}
 
-			const results: AddressSuggestion[] = response.predictions.map(prediction => ({
+			const results: AddressSuggestion[] = response.predictions.map((prediction: google.maps.places.AutocompletePrediction) => ({
 				displayAddress: prediction.structured_formatting.main_text || '',
 				detail: prediction.structured_formatting.secondary_text || '',
 				postalCode: '',
@@ -132,14 +133,14 @@ export function AddressSearchModal({ isOpen, onClose, onSelect }: AddressSearchM
 								placeId: suggestion.placeId!,
 								fields: ['formatted_address', 'address_components', 'geometry'],
 							},
-							(place, status) => {
+							(place: google.maps.places.PlaceResult | null, status: google.maps.places.PlacesServiceStatus) => {
 								if (status === google.maps.places.PlacesServiceStatus.OK && place) {
 									const postalCode = place.address_components?.find(
-										component => component.types.includes('postal_code')
+										(component: google.maps.GeocoderAddressComponent) => component.types.includes('postal_code')
 									)?.long_name || '';
 
 									const countryCode = place.address_components?.find(
-										component => component.types.includes('country')
+										(component: google.maps.GeocoderAddressComponent) => component.types.includes('country')
 									)?.short_name || '';
 
 									resolve({

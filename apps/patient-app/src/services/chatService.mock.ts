@@ -367,7 +367,7 @@ export const mockChatService = {
   /**
    * Close Channel
    */
-  closeChannel: async (channelUrl: string): Promise<void> => {
+  closeChannel: async (channelUrl: string, userId: string): Promise<void> => {
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     const channel = mockChannels.find((c) => c.channel_url === channelUrl);

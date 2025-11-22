@@ -43,6 +43,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
   const messageTimestamps = useRef<number[]>([]);
   const [isInputLocked, setIsInputLocked] = useState(false);
   const [lockMessage, setLockMessage] = useState('');
+  const [cooldownSeconds, setCooldownSeconds] = useState(0);
 
   // Chat state
   const [userId, setUserId] = useState<string>('');
@@ -352,7 +353,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
 
       // 1초마다 카운터 업데이트
       const interval = setInterval(() => {
-        setCooldownSeconds(prev => {
+        setCooldownSeconds((prev: number) => {
           const next = prev - 1;
           if (next > 0) {
             setLockMessage(`${t('chat.spamWarning')} (${next}s)`);

@@ -18,7 +18,7 @@ export function HospitalList() {
 	const [currentPage, setCurrentPage] = useState(0); // API는 0부터 시작
 	const [totalPages, setTotalPages] = useState(0);
 	const [totalElements, setTotalElements] = useState(0);
-	const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+	const [searchTimeout, setSearchTimeout] = useState<number | null>(null);
 
 	// 병원 목록 조회
 	const fetchHospitals = useCallback(async () => {

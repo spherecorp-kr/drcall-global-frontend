@@ -15,6 +15,19 @@ import { toast } from 'react-hot-toast';
 type UserType = 'patients' | 'doctors' | 'admins';
 type UserDto = PatientDto | DoctorDto | AdminDto;
 
+// Type guard functions
+function isAdminDto(user: UserDto): user is AdminDto {
+  return 'username' in user && 'role' in user;
+}
+
+function isPatientDto(user: UserDto): user is PatientDto {
+  return 'phoneNumber' in user && !('specialty' in user) && !('username' in user);
+}
+
+function isDoctorDto(user: UserDto): user is DoctorDto {
+  return 'specialty' in user && 'licenseNumber' in user;
+}
+
 export function UserList() {
   const navigate = useNavigate();
   const [userType, setUserType] = useState<UserType>('patients');
@@ -25,7 +38,7 @@ export function UserList() {
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [searchTimeout, setSearchTimeout] = useState<number | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
 
   // 사용자 목록 조회
@@ -106,7 +119,7 @@ export function UserList() {
 
   // 사용자 삭제/비활성화
   const handleDeleteUser = async (user: UserDto) => {
-    const userName = 'name' in user ? user.name : user.username;
+    const userName = isAdminDto(user) ? user.username : user.name;
     const confirmMessage = userType === 'admins'
       ? `정말로 "${userName}" 관리자를 비활성화하시겠습니까?`
       : `정말로 "${userName}" 사용자를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.`;
@@ -412,7 +425,7 @@ export function UserList() {
                       {currentPage * 20 + index + 1}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900 font-medium">
-                      {'name' in user ? user.name : user.username}
+                      {isAdminDto(user) ? user.username : user.name}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">
                       {userType === 'patients'
