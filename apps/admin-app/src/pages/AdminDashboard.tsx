@@ -14,14 +14,14 @@ import {
   Pie,
   Cell
 } from 'recharts';
-import { dashboardService } from '@/services/dashboardService';
+// import { dashboardService } from '@/services/dashboardService';
 import type {
   DashboardStats,
   AppointmentTrend,
   RevenueTrend,
   RecentActivity,
   TopHospital,
-  TopDoctor
+  // TopDoctor
 } from '@/services/dashboardService';
 import { toast } from 'react-hot-toast';
 
@@ -116,13 +116,14 @@ const mockTopHospitals: TopHospital[] = [
   { id: 5, name: 'Phyathai Hospital', appointmentCount: 1234, revenue: 5678000, patientCount: 420 },
 ];
 
-const mockTopDoctors: TopDoctor[] = [
-  { id: 1, name: 'Dr. Smith', hospitalName: 'Bangkok Medical Center', specialty: '내과', appointmentCount: 234, rating: 4.9 },
-  { id: 2, name: 'Dr. Johnson', hospitalName: 'Bumrungrad Hospital', specialty: '외과', appointmentCount: 212, rating: 4.8 },
-  { id: 3, name: 'Dr. Lee', hospitalName: 'Samitivej Hospital', specialty: '소아과', appointmentCount: 189, rating: 4.9 },
-  { id: 4, name: 'Dr. Kim', hospitalName: 'BNH Hospital', specialty: '피부과', appointmentCount: 167, rating: 4.7 },
-  { id: 5, name: 'Dr. Park', hospitalName: 'Phyathai Hospital', specialty: '정형외과', appointmentCount: 145, rating: 4.8 },
-];
+// Mock data for top doctors (currently unused, but kept for future use)
+// const mockTopDoctors: TopDoctor[] = [
+//   { id: 1, name: 'Dr. Smith', hospitalName: 'Bangkok Medical Center', specialty: '내과', appointmentCount: 234, rating: 4.9 },
+//   { id: 2, name: 'Dr. Johnson', hospitalName: 'Bumrungrad Hospital', specialty: '외과', appointmentCount: 212, rating: 4.8 },
+//   { id: 3, name: 'Dr. Lee', hospitalName: 'Samitivej Hospital', specialty: '소아과', appointmentCount: 189, rating: 4.9 },
+//   { id: 4, name: 'Dr. Kim', hospitalName: 'BNH Hospital', specialty: '피부과', appointmentCount: 167, rating: 4.7 },
+//   { id: 5, name: 'Dr. Park', hospitalName: 'Phyathai Hospital', specialty: '정형외과', appointmentCount: 145, rating: 4.8 },
+// ];
 
 // 통계 카드 컴포넌트
 interface StatCardProps {
@@ -163,12 +164,12 @@ function StatCard({ title, value, subtitle, change, color = 'text-gray-600' }: S
 
 export function AdminDashboard() {
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<DashboardStats>(mockStats);
-  const [appointmentTrends, setAppointmentTrends] = useState<AppointmentTrend[]>(mockAppointmentTrends);
-  const [revenueTrends, setRevenueTrends] = useState<RevenueTrend[]>(mockRevenueTrends);
-  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>(mockRecentActivities);
-  const [topHospitals, setTopHospitals] = useState<TopHospital[]>(mockTopHospitals);
-  const [topDoctors, setTopDoctors] = useState<TopDoctor[]>(mockTopDoctors);
+  const [stats] = useState<DashboardStats>(mockStats);
+  const [appointmentTrends] = useState<AppointmentTrend[]>(mockAppointmentTrends);
+  const [revenueTrends] = useState<RevenueTrend[]>(mockRevenueTrends);
+  const [recentActivities] = useState<RecentActivity[]>(mockRecentActivities);
+  const [topHospitals] = useState<TopHospital[]>(mockTopHospitals);
+  // const [topDoctors] = useState<TopDoctor[]>(mockTopDoctors);
 
   // 데이터 로드
   useEffect(() => {

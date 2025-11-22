@@ -168,9 +168,9 @@ export function UserList() {
       const userIds = Array.from(selectedUsers);
 
       if (userType === 'patients') {
-        await userService.bulkUpdatePatientStatus(userIds, status as any);
+        await userService.bulkUpdatePatientStatus(userIds, status as 'ACTIVE' | 'INACTIVE' | 'SUSPENDED');
       } else if (userType === 'doctors') {
-        await userService.bulkUpdateDoctorStatus(userIds, status as any);
+        await userService.bulkUpdateDoctorStatus(userIds, status as 'ACTIVE' | 'INACTIVE' | 'ON_LEAVE');
       }
 
       toast.success('상태가 변경되었습니다.');

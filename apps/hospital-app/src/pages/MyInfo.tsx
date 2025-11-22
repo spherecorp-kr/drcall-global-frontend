@@ -381,7 +381,7 @@ const AddTimeDialogContents = () => {
 			});
 			return newSlots;
 		});
-	}, [endAmPm, endHour, endMinute, mergeTimeSlots, selectedDays, startAmPm, startHour, startMinute]);
+	}, [endAmPm, endHour, endMinute, mergeTimeSlots, selectedDays, startAmPm, startHour, startMinute, t]);
 
 	// 시간대 삭제 핸들러
 	const handleDeleteTimeSlot = useCallback((day: DayOfWeek, slotId: string) => {
@@ -670,7 +670,7 @@ const MyInfo = () => {
 				setProfilePreview(resizedImage);
 			} catch (error) {
 				console.error(t('common.errors.uploadError'), error);
-				const errorMessage = error instanceof Error 
+				const errorMessage = error instanceof Error
 					? (error.message === 'FILE_SIZE_ERROR' ? t('common.errors.fileSize')
 						: error.message === 'FILE_FORMAT_ERROR' ? t('common.errors.fileFormat')
 						: error.message === 'CANVAS_ERROR' ? t('common.errors.canvasError')
@@ -681,7 +681,7 @@ const MyInfo = () => {
 				alert(errorMessage);
 			}
 		}
-	}, []);
+	}, [t]);
 
 	const handleProfileImageButtonClick = useCallback(() => {
 		profileInputRef.current?.click();

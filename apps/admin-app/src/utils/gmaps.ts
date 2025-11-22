@@ -34,7 +34,7 @@ export function loadGoogleMaps(opts: LoadOptions, onLoaded?: () => void) {
 	loading = true;
 
 	// 전역 콜백 함수 설정
-	(window as any).__onGmapsReady = () => {
+	(window as Window & { __onGmapsReady?: () => void }).__onGmapsReady = () => {
 		isLoaded = true;
 		loading = false;
 		pendingCallbacks.forEach(cb => cb());

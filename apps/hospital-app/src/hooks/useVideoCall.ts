@@ -127,7 +127,8 @@ export function useVideoCall({ appointmentId, patientId, doctorId, onError }: Us
       setIsConnecting(false);
       onError?.(error as Error);
     }
-  }, [appointmentId, patientId, isConnecting, isConnected, onError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appointmentId, patientId, doctorId, isConnecting, isConnected, onError]);
 
   /**
    * Room 이벤트 리스너 설정

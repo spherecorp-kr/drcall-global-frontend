@@ -49,10 +49,10 @@ export const authService = {
     // 응답 데이터 검증: accessToken과 user가 필수
     const responseData = response.data;
     if (!responseData?.accessToken || !responseData?.user) {
-      const error = new Error('로그인 응답이 올바르지 않습니다.');
-      (error as any).response = { 
+      const error = new Error('로그인 응답이 올바르지 않습니다.') as Error & { response?: unknown };
+      error.response = {
         status: 400,
-        data: responseData 
+        data: responseData
       };
       throw error;
     }

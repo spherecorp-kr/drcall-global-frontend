@@ -10,7 +10,7 @@ import icCancel from '@/shared/assets/icons/ic_cancel.svg';
 import icSave from '@/shared/assets/icons/ic_register.svg';
 import TextLogo from '@/assets/logo_drcall.svg';
 import CircleLogo from '@/assets/logo_circle.png';
-import { uploadFile } from '@/services/storageService';
+// import { uploadFile } from '@/services/storageService';
 import { hospitalService, type HospitalDetailResponse, type UpdateHospitalRequest } from '@/services/hospitalService';
 import { toast } from 'react-hot-toast';
 
@@ -55,8 +55,8 @@ export function Hospital() {
 	const [errors, setErrors] = useState<ValidationErrors>({});
 	const [webBiPreview, setWebBiPreview] = useState<string | null>(null);
 	const [mobileBiPreview, setMobileBiPreview] = useState<string | null>(null);
-	const [webBiFileId, setWebBiFileId] = useState<number | null>(null);
-	const [mobileBiFileId, setMobileBiFileId] = useState<number | null>(null);
+	// const [webBiFileId, setWebBiFileId] = useState<number | null>(null);
+	// const [mobileBiFileId, setMobileBiFileId] = useState<number | null>(null);
 	const webBiInputRef = useRef<HTMLInputElement>(null);
 	const mobileBiInputRef = useRef<HTMLInputElement>(null);
 
@@ -139,8 +139,8 @@ export function Hospital() {
 			setMobileBiPreview(hospitalData.mobileLogoUrl || null);
 		}
 		setErrors({});
-		setWebBiFileId(null);
-		setMobileBiFileId(null);
+		// setWebBiFileId(null);
+		// setMobileBiFileId(null);
 	};
 
 	const handleSaveEdit = async () => {
@@ -239,6 +239,7 @@ export function Hospital() {
 	};
 
 	// 이미지 리사이징 및 Blob 변환 유틸리티
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const resizeImageToBlob = (
 		file: File,
 		maxWidth: number,

@@ -114,7 +114,7 @@ export default function HospitalOnboarding() {
 				shipping: shippingData,
 			};
 
-			const response = await hospitalService.onboardHospital(request);
+			await hospitalService.onboardHospital(request);
 
 			toast.success('병원이 성공적으로 등록되었습니다.');
 
