@@ -5,7 +5,6 @@ import MainLayout from '@layouts/MainLayout';
 import PageTitle from '@ui/layout/PageTitle';
 import PageContainer from '@ui/layout/PageContainer';
 import PageSection from '@ui/layout/PageSection';
-import Divider from '@ui/layout/Divider';
 import { useAppointmentStore } from '@store/appointmentStore';
 
 export default function AppointmentNew() {

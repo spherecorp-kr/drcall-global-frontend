@@ -124,6 +124,7 @@ export default function MedicationList() {
     });
 
     return sorted;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedStatus, sortOrder]);
 
   // Infinite Scroll

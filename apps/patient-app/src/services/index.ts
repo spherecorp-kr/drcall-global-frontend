@@ -49,7 +49,7 @@ const USE_MOCK_SERVICES = shouldUseMockServices();
 
 // Log service mode for debugging
 if (import.meta.env.DEV) {
-  // eslint-disable-next-line no-console
+   
   console.info(
     `[Services] Using ${USE_MOCK_SERVICES ? 'MOCK' : 'REAL'} API services`,
     {

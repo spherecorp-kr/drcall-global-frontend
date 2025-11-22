@@ -1,5 +1,5 @@
 import { apiClient } from './api';
-import { AlcoholConsumption, SmokingStatus, mapAlcoholToEnum, mapSmokingToEnum } from '@/types/appointment';
+import { mapAlcoholToEnum, mapSmokingToEnum } from '@/types/appointment';
 
 /**
  * Appointment types

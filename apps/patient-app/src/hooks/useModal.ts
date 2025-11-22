@@ -29,7 +29,7 @@ export function useModal(initialState = false) {
 /**
  * Custom hook for managing multiple modals
  */
-export function useModals<T extends string>(modalKeys: T[]) {
+export function useModals<T extends string>() {
   const [openModals, setOpenModals] = useState<Set<T>>(new Set());
 
   const open = useCallback((key: T) => {

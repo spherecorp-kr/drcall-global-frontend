@@ -28,6 +28,8 @@ export default function ConfirmedAppointmentDetail() {
 
   const appointmentData = mockAppointmentsDetails[id || '4'];
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  // TODO: 실제로는 현재 시간과 예약 시간을 비교해서 버튼 상태 결정
+  const [buttonStatus] = useState<'before_1hour' | 'before_10min' | 'ready'>('ready');
 
   useEffect(() => {
     if (!appointmentData) {
@@ -44,9 +46,6 @@ export default function ConfirmedAppointmentDetail() {
 
   // 예약 확정 일시 (임시 하드코딩)
   const confirmedDateTime = '08/05/2023 15:01';
-
-  // TODO: 실제로는 현재 시간과 예약 시간을 비교해서 버튼 상태 결정
-  const [buttonStatus] = useState<'before_1hour' | 'before_10min' | 'ready'>('ready');
 
   const handleCancelClick = () => {
     setIsCancelModalOpen(true);

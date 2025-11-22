@@ -119,6 +119,7 @@ export function useVideoCall({ appointmentId, patientId, onError }: UseVideoCall
       setIsConnecting(false);
       onError?.(error as Error);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appointmentId, patientId, isConnecting, isConnected, onError]);
 
   /**

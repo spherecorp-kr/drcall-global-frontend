@@ -15,6 +15,7 @@ export function useTabScroll<T extends string>(selectedTab: T, dependencies: any
         inline: 'start',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab, ...dependencies]);
 
   const setTabRef = (key: T) => (el: HTMLButtonElement | null) => {

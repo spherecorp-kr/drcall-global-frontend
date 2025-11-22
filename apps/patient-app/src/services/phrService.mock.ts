@@ -156,7 +156,7 @@ export const mockPhrService = {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     // In real implementation, this would delete the record
-    // eslint-disable-next-line no-console
+     
     console.info(`Record ${id} deleted`);
   },
 

@@ -39,33 +39,22 @@ export default function AppointmentEdit() {
   // Mock data 가져오기
   const mockData = mockAppointmentsDetails[id || '1'];
 
-  // ID가 없거나 데이터가 없으면 404 처리
-  useEffect(() => {
-    if (!mockData) {
-      navigate('/error/404', { replace: true });
-    }
-  }, [mockData, navigate]);
-
-  if (!mockData) {
-    return null;
-  }
-
   // 예약 정보 (편집 가능) - Mock data로 초기화
   const [appointmentData, setAppointmentData] = useState({
-    appointmentNumber: mockData.appointmentNumber,
-    appointmentType: mockData.appointmentType,
-    hospital: mockData.hospital,
-    dateTime: mockData.dateTime,
-    doctor: mockData.doctor
+    appointmentNumber: mockData?.appointmentNumber || '',
+    appointmentType: mockData?.appointmentType || 'standard',
+    hospital: mockData?.hospital || { name: '', address: '' },
+    dateTime: mockData?.dateTime || '',
+    doctor: mockData?.doctor || { name: '', specialty: '' }
   });
 
   // Mock data - 환자 기본 정보 (읽기 전용)
   const patientBasicData = mockPatientBasicInfo;
 
   // 진료 정보 (편집 가능) - Mock data로 초기화
-  const [symptoms, setSymptoms] = useState(mockData.symptoms);
+  const [symptoms, setSymptoms] = useState(mockData?.symptoms || '');
   const [symptomImages, setSymptomImages] = useState<string[]>(
-    mockData.symptomImages?.slice(0, 3) || []
+    mockData?.symptomImages?.slice(0, 3) || []
   );
 
   // 환자 상세 정보 (편집 가능) - Mock data로 초기화
@@ -76,6 +65,17 @@ export default function AppointmentEdit() {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [isCancelConfirmModalOpen, setIsCancelConfirmModalOpen] = useState(false);
   const [isCompleteConfirmModalOpen, setIsCompleteConfirmModalOpen] = useState(false);
+
+  // ID가 없거나 데이터가 없으면 404 처리
+  useEffect(() => {
+    if (!mockData) {
+      navigate('/error/404', { replace: true });
+    }
+  }, [mockData, navigate]);
+
+  if (!mockData) {
+    return null;
+  }
 
   // 핸들러
   const handleBack = () => navigate(-1);

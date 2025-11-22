@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import MainLayout from '@layouts/MainLayout';
 import AddressSearchModal from '@components/address/modals/AddressSearchModal';
 import CountryCodeSelector from '@ui/inputs/CountryCodeSelector';
 import { useErrorHandler } from '@hooks/useErrorHandler';
@@ -96,6 +95,7 @@ export default function DeliveryAddressAdd({
       setPhoneNumber('');
       setIsDefault(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingAddress, isOpen]);
 
   // 모달이 열렸을 때 body 스크롤 막기

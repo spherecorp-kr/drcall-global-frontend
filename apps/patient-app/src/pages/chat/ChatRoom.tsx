@@ -43,7 +43,6 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
   const messageTimestamps = useRef<number[]>([]);
   const [isInputLocked, setIsInputLocked] = useState(false);
   const [lockMessage, setLockMessage] = useState('');
-  const [cooldownSeconds, setCooldownSeconds] = useState(0);
 
   // Chat state
   const [userId, setUserId] = useState<string>('');
@@ -70,7 +69,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
           try {
             const profile = await authService.getProfile();
             currentUserId = `patient-${profile.id}`;
-          } catch (authError) {
+          } catch {
             // Use fallback user ID
           }
         }
@@ -212,7 +211,7 @@ export default function ChatRoom({ channelUrl: propChannelUrl, onClose }: ChatRo
   const messages: DisplayMessage[] = [];
   let lastDate: number | null = null;
 
-  chatMessages.forEach((msg, index) => {
+  chatMessages.forEach((msg) => {
     // Add date separator if needed
     const msgDate = msg.created_at;
     if (lastDate === null || !isSameDay(lastDate, msgDate)) {

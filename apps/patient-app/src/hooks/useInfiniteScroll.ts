@@ -21,6 +21,7 @@ export function useInfiniteScroll({
   // Reset count when dependencies change
   useEffect(() => {
     setDisplayedCount(itemsPerPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencies);
 
   // Intersection Observer callback

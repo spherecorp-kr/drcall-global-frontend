@@ -91,6 +91,7 @@ export default function MedicalHistory() {
     if (selectedTabButton) {
       selectedTabButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab, sortOrder, displayedAppointments.length]);
 
   // 무한 스크롤 Intersection Observer

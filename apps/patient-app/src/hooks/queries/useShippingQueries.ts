@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   shippingService,
   type Shipment,
-  type ShipmentTracking,
 } from '../../services/shippingService';
 
 /**

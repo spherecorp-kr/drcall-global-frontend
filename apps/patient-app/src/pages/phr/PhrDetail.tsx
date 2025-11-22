@@ -46,6 +46,7 @@ export default function PhrDetail() {
         fetchRecordsByType(type);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [typeParam]);
 
   if (!typeInfo) {

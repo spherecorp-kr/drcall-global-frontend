@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { getChannelUserId, getSubdomain } from '@/utils/channelUtils';
+import { getSubdomain } from '@/utils/channelUtils';
 import { apiClient } from '@/services/api';
 import Spinner from '@/components/ui/feedback/Spinner';
 

@@ -19,14 +19,12 @@ import { formatDate } from '@utils/date';
 export default function DoctorSelection() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const setDateTimeDoctor = useAppointmentStore((state) => state.setDateTimeDoctor);
   const setStep = useAppointmentStore((state) => state.setStep);
 
   // Use custom hook for selection logic
   const {
     selectedDate,
     selectedDoctor,
-    selectedDoctorName,
     selectedTimeSlots,
     isCalendarOpen,
     isSelectionComplete,

@@ -135,7 +135,7 @@ export const mockAppointmentService = {
     }
 
     // In real implementation, this would update the status to 'cancelled'
-    // eslint-disable-next-line no-console
+     
     console.info(`Appointment ${id} cancelled. Reason: ${reason || 'None'}`);
   },
 };

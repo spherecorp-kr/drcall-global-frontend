@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import MainLayout from '@layouts/MainLayout';
 import MedicineDeliverySelector, { type MedicineDeliveryMethod } from '@appointment/shared/payment/MedicineDeliverySelector';
@@ -21,7 +21,6 @@ import { shippingService } from '@services/shippingService';
 export default function PaymentWithPrescription() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
 
   const [deliveryMethod, setDeliveryMethod] = useState<MedicineDeliveryMethod | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(null);
@@ -33,7 +32,6 @@ export default function PaymentWithPrescription() {
   // 배송비 관련 상태
   const [shippingFee, setShippingFee] = useState<number>(0);
   const [isLoadingShippingFee, setIsLoadingShippingFee] = useState<boolean>(false);
-  const [shippingFeeError, setShippingFeeError] = useState<string | null>(null);
 
   // TODO: API에서 결제 정보 가져오기
   const baseAmount = 300 + 50 + 50; // consultationFee + prescriptionFee + serviceFee
@@ -164,13 +162,8 @@ export default function PaymentWithPrescription() {
     }
 
     setIsLoadingShippingFee(true);
-    setShippingFeeError(null);
 
     try {
-      // 주소 파싱 (실제로는 더 정교한 파싱이 필요할 수 있음)
-      // 현재는 Mock 데이터로 태국 주소 형식 가정
-      const address = deliveryInfo.address;
-
       // TODO: 실제 주소 파싱 로직 필요
       // 예: "1902, Building 103, Raemian Apartment, 162 Baumoe-ro, Seocho-gu, Seoul, Republic of Korea"
       // → toProvince: "Seoul", toDistrict: "Seocho-gu" 등으로 파싱
@@ -193,7 +186,6 @@ export default function PaymentWithPrescription() {
       }
     } catch (error) {
       console.error('Failed to calculate shipping fee:', error);
-      setShippingFeeError('배송비 조회에 실패했습니다. 기본 배송비가 적용됩니다.');
       setShippingFee(50); // Fallback to default
     } finally {
       setIsLoadingShippingFee(false);
@@ -207,6 +199,7 @@ export default function PaymentWithPrescription() {
     } else {
       setShippingFee(0);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deliveryMethod, selectedAddressId, deliverySource]);
 
   const isPaymentEnabled = deliveryMethod && paymentMethod && !isLoadingShippingFee;

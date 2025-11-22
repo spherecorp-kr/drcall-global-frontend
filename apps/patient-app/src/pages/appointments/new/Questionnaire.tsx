@@ -16,7 +16,6 @@ import Divider from '@ui/layout/Divider';
 import PatientBasicInfoSection from '@appointment/shared/sections/PatientBasicInfoSection';
 import PatientDetailInfoSection from '@appointment/shared/sections/PatientDetailInfoSection';
 import type { PatientDetailInfo } from '@/types/appointment';
-import { mapAlcoholToDisplay, mapSmokingToDisplay } from '@/types/appointment';
 import { mockQuestionnairePatientInfo } from '@mocks/appointment';
 
 type AppointmentType = 'standard' | 'quick';

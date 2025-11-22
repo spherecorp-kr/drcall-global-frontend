@@ -55,11 +55,11 @@ apiClient.interceptors.request.use(
     const subdomain = getSubdomain();
     if (subdomain) {
       config.headers['X-Channel-Id'] = subdomain;
-      // eslint-disable-next-line no-console
+       
       console.log(`[API] X-Channel-Id: ${subdomain}`);
     } else {
       // No subdomain detected - backend will reject request if channel is required
-      // eslint-disable-next-line no-console
+       
       console.warn('[API] No subdomain detected - X-Channel-Id header not added. Use {channel}.localhost or {channel}.patient.{env}.drcall.global');
     }
 
