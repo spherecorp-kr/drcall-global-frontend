@@ -59,144 +59,151 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <ChannelValidator>
-              <ScrollToTop />
-        <Routes>
-        {/* Auth Routes - Public */}
-        <Route path="/" element={<Navigate to="/auth/phone-verification" replace />} />
-        <Route path="/auth/phone-verification" element={<PhoneVerification />} />
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            {/* Error Routes - No AuthProvider, No ChannelValidator */}
+            <Route path="/error/403" element={<Error403 />} />
+            <Route path="/error/404" element={<Error404 />} />
+            <Route path="/error/500" element={<Error500 />} />
+            <Route path="/error/expired" element={<ErrorExpired />} />
+            <Route path="/error/no-channel" element={<NoChannel />} />
 
-        {/* Service Registration - Requires tempJwt */}
-        <Route path="/auth/service-registration" element={
-          <ProtectedRoute>
-            <ServiceRegistration />
-          </ProtectedRoute>
-        } />
+            {/* All other routes - Requires AuthProvider and ChannelValidator */}
+            <Route path="*" element={
+              <AuthProvider>
+                <ChannelValidator>
+                  <Routes>
+                    {/* Auth Routes - Public */}
+                    <Route path="/" element={<Navigate to="/auth/phone-verification" replace />} />
+                    <Route path="/auth/phone-verification" element={<PhoneVerification />} />
 
-        {/* Appointment Routes - Protected */}
-        <Route path="/appointments" element={
-          <ProtectedRoute><AppointmentList /></ProtectedRoute>
-        } />
-        <Route path="/appointments/new" element={
-          <ProtectedRoute><AppointmentNew /></ProtectedRoute>
-        } />
-        <Route path="/appointments/new/standard" element={
-          <ProtectedRoute><StandardAppointment /></ProtectedRoute>
-        } />
-        <Route path="/appointments/new/quick" element={
-          <ProtectedRoute><QuickAppointment /></ProtectedRoute>
-        } />
-        <Route path="/appointments/:id" element={
-          <ProtectedRoute><AppointmentDetailRouter /></ProtectedRoute>
-        } />
-        <Route path="/appointments/:id/edit" element={
-          <ProtectedRoute><AppointmentEdit /></ProtectedRoute>
-        } />
-        <Route path="/appointments/edit/complete" element={
-          <ProtectedRoute><AppointmentEditComplete /></ProtectedRoute>
-        } />
-        <Route path="/appointments/:id/payment" element={
-          <ProtectedRoute><Payment /></ProtectedRoute>
-        } />
-        <Route path="/appointments/:id/payment-with-prescription" element={
-          <ProtectedRoute><PaymentWithPrescription /></ProtectedRoute>
-        } />
-        <Route path="/appointments/payment/complete" element={
-          <ProtectedRoute><PaymentComplete /></ProtectedRoute>
-        } />
+                    {/* Service Registration - Requires tempJwt */}
+                    <Route path="/auth/service-registration" element={
+                      <ProtectedRoute>
+                        <ServiceRegistration />
+                      </ProtectedRoute>
+                    } />
 
-        {/* Medication Routes - Protected */}
-        <Route path="/medications" element={
-          <ProtectedRoute><MedicationList /></ProtectedRoute>
-        } />
-        <Route path="/medications/:id" element={
-          <ProtectedRoute><MedicationDetail /></ProtectedRoute>
-        } />
-        <Route path="/medications/delivery-tracking" element={
-          <ProtectedRoute><DeliveryTracking /></ProtectedRoute>
-        } />
-        <Route path="/medications/live-delivery-tracking" element={
-          <ProtectedRoute><LiveDeliveryTracking /></ProtectedRoute>
-        } />
+                    {/* Appointment Routes - Protected */}
+                    <Route path="/appointments" element={
+                      <ProtectedRoute><AppointmentList /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/new" element={
+                      <ProtectedRoute><AppointmentNew /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/new/standard" element={
+                      <ProtectedRoute><StandardAppointment /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/new/quick" element={
+                      <ProtectedRoute><QuickAppointment /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/:id" element={
+                      <ProtectedRoute><AppointmentDetailRouter /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/:id/edit" element={
+                      <ProtectedRoute><AppointmentEdit /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/edit/complete" element={
+                      <ProtectedRoute><AppointmentEditComplete /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/:id/payment" element={
+                      <ProtectedRoute><Payment /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/:id/payment-with-prescription" element={
+                      <ProtectedRoute><PaymentWithPrescription /></ProtectedRoute>
+                    } />
+                    <Route path="/appointments/payment/complete" element={
+                      <ProtectedRoute><PaymentComplete /></ProtectedRoute>
+                    } />
 
-        {/* Consultation Routes - Protected */}
-        <Route path="/consultation/room" element={
-          <ProtectedRoute><ConsultationRoom /></ProtectedRoute>
-        } />
+                    {/* Medication Routes - Protected */}
+                    <Route path="/medications" element={
+                      <ProtectedRoute><MedicationList /></ProtectedRoute>
+                    } />
+                    <Route path="/medications/:id" element={
+                      <ProtectedRoute><MedicationDetail /></ProtectedRoute>
+                    } />
+                    <Route path="/medications/delivery-tracking" element={
+                      <ProtectedRoute><DeliveryTracking /></ProtectedRoute>
+                    } />
+                    <Route path="/medications/live-delivery-tracking" element={
+                      <ProtectedRoute><LiveDeliveryTracking /></ProtectedRoute>
+                    } />
 
-        {/* PHR (Personal Health Record) Routes - Protected */}
-        <Route path="/phr" element={
-          <ProtectedRoute><PhrDashboard /></ProtectedRoute>
-        } />
-        <Route path="/phr/:type" element={
-          <ProtectedRoute><PhrDetail /></ProtectedRoute>
-        } />
-        <Route path="/phr/:type/add" element={
-          <ProtectedRoute><PhrAdd /></ProtectedRoute>
-        } />
+                    {/* Consultation Routes - Protected */}
+                    <Route path="/consultation/room" element={
+                      <ProtectedRoute><ConsultationRoom /></ProtectedRoute>
+                    } />
 
-        {/* MyPage Routes - Protected */}
-        <Route path="/mypage" element={
-          <ProtectedRoute><MyPage /></ProtectedRoute>
-        } />
-        <Route path="/mypage/profile" element={
-          <ProtectedRoute><ProfileEdit /></ProtectedRoute>
-        } />
-        <Route path="/mypage/delivery" element={
-          <ProtectedRoute><DeliveryManagement /></ProtectedRoute>
-        } />
-        <Route path="/mypage/announcements" element={
-          <ProtectedRoute><AnnouncementList /></ProtectedRoute>
-        } />
-        <Route path="/mypage/announcement/:id" element={
-          <ProtectedRoute><AnnouncementDetail /></ProtectedRoute>
-        } />
-        <Route path="/mypage/terms" element={
-          <ProtectedRoute><TermsList /></ProtectedRoute>
-        } />
-        <Route path="/mypage/terms/:id" element={
-          <ProtectedRoute><TermsDetail /></ProtectedRoute>
-        } />
-        <Route path="/mypage/faq" element={
-          <ProtectedRoute><FaqList /></ProtectedRoute>
-        } />
-        <Route path="/mypage/settings" element={
-          <ProtectedRoute><Settings /></ProtectedRoute>
-        } />
+                    {/* PHR (Personal Health Record) Routes - Protected */}
+                    <Route path="/phr" element={
+                      <ProtectedRoute><PhrDashboard /></ProtectedRoute>
+                    } />
+                    <Route path="/phr/:type" element={
+                      <ProtectedRoute><PhrDetail /></ProtectedRoute>
+                    } />
+                    <Route path="/phr/:type/add" element={
+                      <ProtectedRoute><PhrAdd /></ProtectedRoute>
+                    } />
 
-        {/* Chat Routes - Protected */}
-        <Route path="/chat" element={
-          <ProtectedRoute><ChatList /></ProtectedRoute>
-        } />
-        <Route path="/chat/:channelUrl" element={
-          <ProtectedRoute><ChatRoom /></ProtectedRoute>
-        } />
+                    {/* MyPage Routes - Protected */}
+                    <Route path="/mypage" element={
+                      <ProtectedRoute><MyPage /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/profile" element={
+                      <ProtectedRoute><ProfileEdit /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/delivery" element={
+                      <ProtectedRoute><DeliveryManagement /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/announcements" element={
+                      <ProtectedRoute><AnnouncementList /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/announcement/:id" element={
+                      <ProtectedRoute><AnnouncementDetail /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/terms" element={
+                      <ProtectedRoute><TermsList /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/terms/:id" element={
+                      <ProtectedRoute><TermsDetail /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/faq" element={
+                      <ProtectedRoute><FaqList /></ProtectedRoute>
+                    } />
+                    <Route path="/mypage/settings" element={
+                      <ProtectedRoute><Settings /></ProtectedRoute>
+                    } />
 
-        {/* Error Routes */}
-        <Route path="/error/403" element={<Error403 />} />
-        <Route path="/error/404" element={<Error404 />} />
-        <Route path="/error/500" element={<Error500 />} />
-        <Route path="/error/expired" element={<ErrorExpired />} />
-        <Route path="/error/no-channel" element={<NoChannel />} />
-        <Route path="*" element={<Error404 />} />
-        </Routes>
-            </ChannelValidator>
-      </BrowserRouter>
-    </AuthProvider>
+                    {/* Chat Routes - Protected */}
+                    <Route path="/chat" element={
+                      <ProtectedRoute><ChatList /></ProtectedRoute>
+                    } />
+                    <Route path="/chat/:channelUrl" element={
+                      <ProtectedRoute><ChatRoom /></ProtectedRoute>
+                    } />
 
-    {/* React Query Devtools - only in development */}
-    {import.meta.env.DEV && (
-      <React.Suspense fallback={null}>
-        <ReactQueryDevtoolsLazy
-          initialIsOpen={false}
-          buttonPosition="bottom-right"
-        />
-      </React.Suspense>
-    )}
-    </ToastProvider>
-  </QueryClientProvider>
+                    {/* Catch all - 404 */}
+                    <Route path="*" element={<Error404 />} />
+                  </Routes>
+                </ChannelValidator>
+              </AuthProvider>
+            } />
+          </Routes>
+        </BrowserRouter>
+
+        {/* React Query Devtools - only in development */}
+        {import.meta.env.DEV && (
+          <React.Suspense fallback={null}>
+            <ReactQueryDevtoolsLazy
+              initialIsOpen={false}
+              buttonPosition="bottom-right"
+            />
+          </React.Suspense>
+        )}
+      </ToastProvider>
+    </QueryClientProvider>
   )
 }
 

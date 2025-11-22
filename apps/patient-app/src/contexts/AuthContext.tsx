@@ -156,7 +156,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       const tempJwt = localStorage.getItem('tempJwt');
-      const hasCookies = document.cookie.includes('sid');
+      // Properly check for 'sid' cookie (exact name match)
+      const hasCookies = document.cookie.split(';').some(cookie =>
+        cookie.trim().startsWith('sid=')
+      );
 
       // Only fetch profile if we have authentication tokens
       if (tempJwt || hasCookies) {
